@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>OLT.CloudFlare.API.V4</AssemblyName>
+    <RootNamespace>OLT.CloudFlare</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>CloudFlare DNS Library</Description>
+    <Company>OuterLimits Technologies, Inc.</Company>
+    <Authors>Chris Straw</Authors>
+    <Product>.Net Standard CloudFlare Version 4 Library</Product>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+  </ItemGroup>
+
+</Project>

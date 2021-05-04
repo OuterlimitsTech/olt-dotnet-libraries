@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Company>OuterLimits Technologies, Inc</Company>
+    <Authors>Chris Straw</Authors>
+    <Description>Add Exenestions to service collection for AzureAppConfigurationOptions</Description>
+    <Product>.Net Standard 2.0 Library to include AzureAppConfigurationOptions</Product>
+    <RootNamespace>OLT.Core</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
