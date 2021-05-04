@@ -1,0 +1,67 @@
+jobs:
+  -
+    job: 'framework_build'    
+    pool:
+      vmImage: 'windows-latest'
+
+    variables:
+      directory: 'olt-dotnet'
+      solution: 'OLT Core Libraries.sln'
+      buildPlatform: 'Any CPU'
+      buildConfiguration: 'Release'
+
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+
+          echo Package Version = '$(packageVersion)'
+
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(directory)/$(solution)'
+        feedsToUse: 'select'
+        vstsFeed: 'olt-packages'
+
+    - task: VSBuild@1
+      displayName: 'VS Build'
+      inputs:
+        solution: '$(directory)/$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    # - task: NuGetCommand@2
+    #   displayName: 'NuGet pack'
+    #   inputs:
+    #     command: 'pack'
+    #     configuration: '$(buildConfiguration)'
+    #     packagesToPack: '**/*.csproj'
+    #     versioningScheme: 'byEnvVar'
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'pack'
+        configuration: '$(buildConfiguration)'
+        packagesToPack: '$(directory)\**/*.csproj'
+        versioningScheme: 'byEnvVar'
+        versionEnvVar: 'packageVersion'
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        flattenFolders: true
+        Contents: |
+          $(directory)\**\*.nupkg
+          !$(directory)\packages\**\*.nupkg
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - publish: $(Build.ArtifactStagingDirectory)
+      displayName: 'Publish Package Artifact'
+      artifact: 'olt-dotnet'

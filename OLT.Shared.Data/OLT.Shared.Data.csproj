@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>OuterLimits Technologies, Inc.</Company>
+    <Product>.Net Standard Shared Data Library</Product>
+    <Authors>Chris Straw</Authors>
+    <Version>2.0.0</Version>
+    <Description>Data Adapters
+Queryable Extensions
+Entity Interfaces</Description>
+    <PackageIcon></PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://dev.azure.com/outerlimitstech/OLT/_git/olt-common</RepositoryUrl>
+    <Copyright />
+    <RootNamespace>OLT.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
