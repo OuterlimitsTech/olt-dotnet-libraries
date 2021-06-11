@@ -18,7 +18,7 @@ namespace OLT.Core
         public IOltFileBase64 Generate<TContext>(TContext context, string name)
             where TContext : DbContext, IOltDbContext
         {
-            var genericExporter = _builders.FirstOrDefault(p => p.ExporterName == name);
+            var genericExporter = _builders.FirstOrDefault(p => p.BuilderName == name);
 
             if (genericExporter == null)
             {
@@ -33,7 +33,9 @@ namespace OLT.Core
             return exporter.Build(context);
         }
 
-        public IOltFileBase64 Generate<TContext, TEnum>(TContext context, Enum name) where TContext : DbContext, IOltDbContext where TEnum : Enum
+        public IOltFileBase64 Generate<TContext, TEnum>(TContext context, Enum name) 
+            where TContext : DbContext, IOltDbContext 
+            where TEnum : Enum
         {
             return this.Generate(context, name.GetCodeEnum());
         }
@@ -50,7 +52,7 @@ namespace OLT.Core
             where TContext : DbContext, IOltDbContext
             where TParameterModel : class, IOltGenericParameter
         {
-            var genericExporter = _builders.FirstOrDefault(p => p.ExporterName == name);
+            var genericExporter = _builders.FirstOrDefault(p => p.BuilderName == name);
 
             if (genericExporter == null)
             {
@@ -69,7 +71,7 @@ namespace OLT.Core
             where TContext : DbContext, IOltDbContext
             where TEntity : class, IOltEntity
         {
-            var genericExporter = _builders.FirstOrDefault(p => p.ExporterName == name);
+            var genericExporter = _builders.FirstOrDefault(p => p.BuilderName == name);
 
             if (genericExporter == null)
             {
@@ -85,7 +87,9 @@ namespace OLT.Core
 
         }
 
-        public IOltFileBase64 Generate<TContext, TEntity, TEnum>(TContext context, IOltSearcher<TEntity> searcher, TEnum name) where TContext : DbContext, IOltDbContext where TEntity : class, IOltEntity where TEnum : Enum
+        public IOltFileBase64 Generate<TContext, TEntity, TEnum>(TContext context, IOltSearcher<TEntity> searcher, TEnum name) 
+            where TContext : DbContext, IOltDbContext 
+            where TEntity : class, IOltEntity where TEnum : Enum
         {
             return this.Generate(context, searcher, name.GetCodeEnum());
         }
