@@ -74,9 +74,19 @@ namespace OLT.Core
                 await next();
             });
 
-            if (options.EnableCors)
+            if (options.Cors.UseCors)
             {
-                app.UseCors(OltDefaultsAspNetCore.AspnetCorsPolicy);
+                app.UseCors(options.Cors.Policy.PolicyName ?? new OltAspNetCoreCorsPolicyDisabled().PolicyName);
+            }
+            
+
+            if (options.EnableBuffering)
+            {
+                // needed for NLog ${aspnet-request-posted-body} with an API Controller. Must be before app.UseEndpoints
+                app.Use(async (context, next) => {
+                    context.Request.EnableBuffering();
+                    await next();
+                });
             }
 
             if (options.DisableHttpsRedirect == false)

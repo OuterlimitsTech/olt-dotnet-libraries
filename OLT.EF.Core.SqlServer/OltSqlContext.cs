@@ -29,7 +29,7 @@ namespace OLT.Core
             modelBuilder.EntitiesOfType<IOltEntityId>(builder =>
             {
                 var prop = builder.Property<int>(nameof(IOltEntityId.Id));
-                if (prop.Metadata.ValueGenerated == ValueGenerated.OnAdd)
+                if (prop.Metadata.ValueGenerated == ValueGenerated.OnAdd && prop.Metadata.GetIdentitySeed() < IdentitySeed)
                 {
                     builder.Property<int>(nameof(IOltEntityId.Id)).UseIdentityColumn(IdentitySeed, IdentityIncrement);
                 }

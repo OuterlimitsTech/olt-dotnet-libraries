@@ -5,7 +5,7 @@
 
 trigger:
   # - none
-  # - develop
+  - develop
   - master
 
 pr: none
@@ -86,7 +86,16 @@ jobs:
         artifact: 'olt-nuget-packages'
 
       - task: NuGetCommand@2
-        displayName: 'Publish Nuget Package'
+        displayName: 'Publish Nuget Package - Internal'
+        condition: eq( variables['Build.SourceBranchName'], 'develop' )
+        inputs:
+          command: 'push'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+          nuGetFeedType: 'internal'
+          publishVstsFeed: 'olt-packages'
+
+      - task: NuGetCommand@2
+        displayName: 'Publish Nuget Package - Public'
         condition: eq( variables['Build.SourceBranchName'], 'master' )
         inputs:
           command: 'push'
