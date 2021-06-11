@@ -68,10 +68,11 @@ namespace OLT.Core
                 services.AddOltApiSwagger();
             }
 
-            if (options.EnableCores)
+            options.CorsPolicies?.ForEach(policy =>
             {
-                services.AddOltCors();
-            }
+                services.AddOltCors(policy);
+            });
+            
 
             if (options.JwtSecret.IsNotEmpty())
             {
@@ -83,20 +84,14 @@ namespace OLT.Core
 
 
         /// <summary>
-        /// Adds CORS using default name OltDefaultsAspNetCore.AspnetCorsPolicy
+        /// Adds CORS policy
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="policy"></param>
         /// <returns></returns>
-        public static IServiceCollection AddOltCors(this IServiceCollection services)
+        public static IServiceCollection AddOltCors(this IServiceCollection services, IOltAspNetCoreCorsPolicy policy)
         {
-            return services.AddCors(
-                o => o.AddPolicy(OltDefaultsAspNetCore.AspnetCorsPolicy, builder =>
-                {
-                    builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                }));
+            return policy.AddOltCors(services);
         }
 
         /// <summary>
