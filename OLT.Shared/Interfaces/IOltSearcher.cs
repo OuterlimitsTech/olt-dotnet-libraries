@@ -1,11 +1,8 @@
-﻿using System.Linq;
-
-namespace OLT.Core
+﻿namespace OLT.Core
 {
-    public interface IOltSearcher<TEntity>
+    public interface IOltSearcher<TEntity> : IOltEntityQueryBuilder<TEntity>
         where TEntity : class, IOltEntity
     {
         bool IncludeDeleted { get; }
-        IQueryable<TEntity> BuildQueryable(IQueryable<TEntity> queryable);
     }
 }

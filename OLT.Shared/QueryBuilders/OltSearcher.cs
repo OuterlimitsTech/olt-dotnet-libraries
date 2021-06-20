@@ -2,7 +2,6 @@
 
 namespace OLT.Core
 {
-
     public abstract class OltSearcher<TEntity> : IOltSearcher<TEntity>
         where TEntity : class, IOltEntity
     {
