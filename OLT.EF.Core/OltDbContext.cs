@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace OLT.Core
 {
@@ -169,9 +170,14 @@ namespace OLT.Core
 
             modelBuilder.EntitiesOfType<IOltEntityId>(builder =>
             {
-                var columnName = $"{builder.Metadata.GetTableName()}Id";
-                builder.Property<int>(nameof(IOltEntityId.Id)).HasColumnName(columnName);
+                var prop = builder.Property<int>(nameof(IOltEntityId.Id));
+                if (prop.Metadata.GetColumnName(StoreObjectIdentifier.Table(builder.Metadata.GetTableName(), builder.Metadata.GetSchema())).Equals("Id", StringComparison.OrdinalIgnoreCase))
+                {
+                    var columnName = $"{builder.Metadata.GetTableName()}Id";
+                    builder.Property<int>(nameof(IOltEntityId.Id)).HasColumnName(columnName);
+                }
             });
+
 
             base.OnModelCreating(modelBuilder);
         }
