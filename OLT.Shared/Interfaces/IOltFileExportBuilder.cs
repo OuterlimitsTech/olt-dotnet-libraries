@@ -1,7 +1,9 @@
-﻿namespace OLT.Core
+﻿using System;
+
+namespace OLT.Core
 {
-    public interface IOltFileExportBuilder : IOltInjectableSingleton
+    public interface IOltFileExportBuilder : IOltBuilder
     {
-        string ExporterName { get; }
+
     }
 }

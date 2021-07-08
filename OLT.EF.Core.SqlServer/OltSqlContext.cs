@@ -26,13 +26,15 @@ namespace OLT.Core
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.EntitiesOfType<IOltEntityId>(builder =>
             {
                 var prop = builder.Property<int>(nameof(IOltEntityId.Id));
-                if (prop.Metadata.ValueGenerated == ValueGenerated.OnAdd)
+                if (prop.Metadata.ValueGenerated == ValueGenerated.OnAdd && !prop.Metadata.GetIdentitySeed().HasValue)
                 {
-                    builder.Property<int>(nameof(IOltEntityId.Id)).UseIdentityColumn(IdentitySeed, IdentityIncrement);
+                    prop.UseIdentityColumn(IdentitySeed, IdentityIncrement);
                 }
+                //Console.WriteLine($"{builder.Metadata.GetTableName()} of type {builder.Metadata.ClrType.FullName} -> GetIdentitySeed: {prop.Metadata.GetIdentitySeed()} -> IdentitySeed: {IdentitySeed}{Environment.NewLine}");
             });
 
             base.OnModelCreating(modelBuilder);

@@ -6,21 +6,27 @@ namespace OLT.Core
 {
     public class OltGenericParameters : IOltGenericParameter
     {
-        private readonly Dictionary<string, string> _values;
 
         public OltGenericParameters(Dictionary<string, string> values)
         {
-            _values = values;
+            Values = values;
         }
+
+        public Dictionary<string, string> Values { get; }
 
         public T GetValue<T>(string key, T defaultValue) where T : IConvertible
         {
-            var entry = _values.FirstOrDefault(p => p.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Value;
+            var entry = Values.FirstOrDefault(p => p.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Value;
             if (entry != null)
             {
                 return (T)Convert.ChangeType(entry, typeof(T));
             }
             return defaultValue;
+        }
+
+        public object GetValue(string key)
+        {
+            return Values.FirstOrDefault(p => p.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Value;
         }
     }
 }

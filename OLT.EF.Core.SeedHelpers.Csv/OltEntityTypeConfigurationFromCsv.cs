@@ -21,31 +21,22 @@ namespace OLT.Core
 
         public virtual List<TCsvModel> Load()
         {
-            using (Stream stream = ResourceAssembly.GetEmbeddedResourceStream(ResourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    CsvReader csvReader = new CsvReader(reader, CultureInfo.CurrentCulture);
-                    return csvReader.GetRecords<TCsvModel>().ToList();
-                }
-            }
+            using Stream stream = ResourceAssembly.GetEmbeddedResourceStream(ResourceName);
+            using StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            CsvReader csvReader = new CsvReader(reader, CultureInfo.CurrentCulture);
+            return csvReader.GetRecords<TCsvModel>().ToList();
         }
 
         protected virtual List<TCsvModel> Load<TMCsvModel>(Assembly resourceAssembly, string resourceName)
             where TMCsvModel : class
         {
-            using (Stream stream = resourceAssembly.GetEmbeddedResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    CsvReader csvReader = new CsvReader(reader, CultureInfo.CurrentCulture);
-                    return csvReader.GetRecords<TCsvModel>().ToList();
-                }
-            }
+            using Stream stream = resourceAssembly.GetEmbeddedResourceStream(resourceName);
+            using StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            CsvReader csvReader = new CsvReader(reader, CultureInfo.CurrentCulture);
+            return csvReader.GetRecords<TCsvModel>().ToList();
         }
 
         protected virtual void Seed(EntityTypeBuilder<TEntity> builder, Action<TEntity, TCsvModel> setProperties = null)
-            
         {
             var list = new List<TEntity>();
 

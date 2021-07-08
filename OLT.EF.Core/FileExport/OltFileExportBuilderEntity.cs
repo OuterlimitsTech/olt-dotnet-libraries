@@ -7,7 +7,7 @@ namespace OLT.Core
         where TEntity : class, IOltEntity
         where TContext : DbContext, IOltDbContext
     {
-        public abstract string ExporterName { get; }
+        public abstract string BuilderName { get; }
         public abstract IOltFileBase64 Build(TContext context, IQueryable<TEntity> queryable);
     }
 }
