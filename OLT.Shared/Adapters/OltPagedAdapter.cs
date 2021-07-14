@@ -31,15 +31,15 @@ namespace OLT.Core
             queryable = OrderBy(queryable, sortParams);
 
             var pagedQueryable = this.Map(queryable)
-                .Skip((pagingParams.PageNumber - 1) * pagingParams.PageSize)
-                .Take(pagingParams.PageSize);
+                .Skip((pagingParams.Page - 1) * pagingParams.Size)
+                .Take(pagingParams.Size);
 
 
             return new OltPagedData<TModel>
             {
                 Count = cnt,
-                PageNumber = pagingParams.PageNumber,
-                PageSize = pagingParams.PageSize,
+                Page = pagingParams.Page,
+                Size = pagingParams.Size,
                 Data = pagedQueryable.ToList()
             };
         }
@@ -51,15 +51,15 @@ namespace OLT.Core
             queryable = orderBy(queryable);
 
             var pagedQueryable = this.Map(queryable)
-                .Skip((pagingParams.PageNumber - 1) * pagingParams.PageSize)
-                .Take(pagingParams.PageSize);
+                .Skip((pagingParams.Page - 1) * pagingParams.Size)
+                .Take(pagingParams.Size);
 
 
             return new OltPagedData<TModel>
             {
                 Count = cnt,
-                PageNumber = pagingParams.PageNumber,
-                PageSize = pagingParams.PageSize,
+                Page = pagingParams.Page,
+                Size = pagingParams.Size,
                 Data = pagedQueryable.ToList()
             };
         }
