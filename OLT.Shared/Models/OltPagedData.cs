@@ -6,8 +6,12 @@ namespace OLT.Core
     {
         public virtual string SortBy { get; set; }
         public virtual bool Asc { get; set; }
-        public virtual int PageSize { get; set; }
-        public virtual int PageNumber { get; set; }
+
+        public virtual int PageSize => Size;
+        public virtual int PageNumber => Page;
+
+        public virtual int Size { get; set; }
+        public virtual int Page { get; set; }
 
         //[JsonIgnore]
         //public int PageIndex => PageNumber - 1;
