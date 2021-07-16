@@ -24,6 +24,21 @@ namespace OLT.Core
 
     public class OltAspNetApplicationOptions
     {
+        public OltAspNetApplicationOptions()
+        {
+
+        }
+
+        public OltAspNetApplicationOptions(OltAspNetAppSettings appSettings)
+        {
+
+            EnableDeveloperExceptionPage = appSettings.EnableDeveloperExceptionPage;
+            EnableCors = appSettings.EnableCors;
+            EnableSwagger = appSettings.EnableSwagger;
+            ShowErrorDetails = appSettings.ShowErrorDetails;
+            PathBase = appSettings.PathBase;
+        }
+
         /// <summary>
         /// AppName used for Swagger.  This will default to the AssemblyProductAttribute name of Assembly
         /// </summary>
@@ -34,6 +49,8 @@ namespace OLT.Core
 
         public bool EnableDeveloperExceptionPage { get; set; } = false;
         public bool EnableSwagger { get; set; } = false;
+        public bool EnableCors { get; set; } = false;
+        public string PathBase { get; set; }
 
         /// <summary>
         /// The Cross-Origin Resource Sharing (CORS) policy to apply
