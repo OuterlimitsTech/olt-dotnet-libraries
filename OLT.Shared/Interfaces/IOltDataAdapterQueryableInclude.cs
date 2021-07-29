@@ -2,8 +2,7 @@
 
 namespace OLT.Core
 {
-    public interface IOltDataAdapterQueryableInclude<TSource>
-        where TSource : class, IOltEntity
+    public interface IOltAdapterQueryableInclude<TSource>
     {
         IQueryable<TSource> Include(IQueryable<TSource> queryable);
     }

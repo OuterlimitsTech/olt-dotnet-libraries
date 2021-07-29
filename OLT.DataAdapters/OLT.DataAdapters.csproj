@@ -21,4 +21,8 @@
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>

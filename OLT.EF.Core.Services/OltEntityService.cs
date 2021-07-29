@@ -27,7 +27,7 @@ namespace OLT.Core
 
         protected virtual IQueryable<TEntity> Include(IQueryable<TEntity> queryable, IOltAdapter adapter)
         {
-            if (adapter is IOltDataAdapterQueryableInclude<TEntity> includeAdapter)
+            if (adapter is IOltAdapterQueryableInclude<TEntity> includeAdapter)
             {
                 return includeAdapter.Include(queryable);
             }
@@ -35,7 +35,7 @@ namespace OLT.Core
             return queryable;
         }
 
-        protected IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter)
+        protected IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
             where TModel : class, new()
         {
             if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
@@ -45,7 +45,7 @@ namespace OLT.Core
             return adapter.Map(Include(queryable, adapter).ToList());
         }
 
-        protected IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher, IOltDataAdapter<TEntity, TModel> adapter)
+        protected IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter)
             where TModel : class, new()
         {
             var queryable = this.GetQueryable(searcher);
@@ -59,12 +59,12 @@ namespace OLT.Core
         }
 
 
-        protected virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher, IOltDataAdapter<TEntity, TModel> adapter) where TModel : class, new()
+        protected virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter) where TModel : class, new()
         {
             return Get(GetQueryable(searcher), adapter);
         }
 
-        protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter) where TModel : class, new()
+        protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter) where TModel : class, new()
         {
             return base.Get(queryable, adapter);
         }

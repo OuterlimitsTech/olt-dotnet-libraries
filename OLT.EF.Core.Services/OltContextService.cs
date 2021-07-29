@@ -34,7 +34,7 @@ namespace OLT.Core
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
 
-        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, IOltDataAdapter<TEntity, TModel> adapter)
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter)
             where TEntity : class, IOltEntity
             where TModel : class, new()
         {
@@ -42,7 +42,7 @@ namespace OLT.Core
             return this.GetAll<TEntity, TModel>(queryable, adapter);
         }
 
-        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter)
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
             where TEntity : class, IOltEntity
             where TModel : class, new()
         {
@@ -56,7 +56,7 @@ namespace OLT.Core
         protected virtual IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> queryable, IOltAdapter adapter)
                 where TEntity : class, IOltEntity
         {
-            if (adapter is IOltDataAdapterQueryableInclude<TEntity> includeAdapter)
+            if (adapter is IOltAdapterQueryableInclude<TEntity> includeAdapter)
             {
                 return includeAdapter.Include(queryable);
             }
@@ -64,7 +64,7 @@ namespace OLT.Core
             return queryable;
         }
 
-        protected virtual TModel Get<TModel, TEntity>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter)
+        protected virtual TModel Get<TModel, TEntity>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
             where TModel : class, new()
             where TEntity : class, IOltEntity
         {
