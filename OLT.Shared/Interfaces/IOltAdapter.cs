@@ -1,6 +1,8 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltAdapter : IOltInjectableScoped
+
+    //TODO: Move to DataAdapter package
+    public interface IOltAdapter : IOltInjectableSingleton
     {
         string Name { get; }
     }

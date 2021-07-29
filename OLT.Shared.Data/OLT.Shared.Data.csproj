@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,7 +12,7 @@ Queryable Extensions
 Entity Interfaces</Description>
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
-    <RepositoryUrl>https://dev.azure.com/outerlimitstech/OLT/_git/olt-common</RepositoryUrl>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <Copyright />
     <RootNamespace>OLT.Core</RootNamespace>
   </PropertyGroup>

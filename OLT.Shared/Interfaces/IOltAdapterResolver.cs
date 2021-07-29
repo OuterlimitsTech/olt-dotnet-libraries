@@ -1,18 +1,13 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltAdapterResolver : IOltInjectableScoped
+    //TODO: Move to DataAdapter package
+    public interface IOltAdapterResolver : IOltInjectableSingleton
     {
-        IOltDataAdapter<TSource, TModel> GetAdapter<TSource, TModel>()
-            where TSource : class
-            where TModel : class, new();
+        IOltDataAdapter<TSource, TModel> GetAdapter<TSource, TModel>();
 
 
-        IOltAdapterQueryable<TSource, TModel> GetQueryableAdapter<TSource, TModel>()
-            where TSource : class, IOltEntity
-            where TModel : class, new();
+        IOltAdapterQueryable<TSource, TModel> GetQueryableAdapter<TSource, TModel>();
 
-        IOltAdapterPaged<TSource, TModel> GetPagedAdapter<TSource, TModel>()
-            where TSource : class, IOltEntity
-            where TModel : class, new();
+        IOltAdapterPaged<TSource, TModel> GetPagedAdapter<TSource, TModel>();
     }
 }

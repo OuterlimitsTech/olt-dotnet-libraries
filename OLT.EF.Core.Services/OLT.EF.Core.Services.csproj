@@ -8,7 +8,7 @@
     <Authors>Chris Straw</Authors>
     <Version>2.1.0</Version>
     <Description>Service Manager, Context/Entity Services, Queryable Extensions, Searchers, Expressions</Description>
-    <RepositoryUrl>https://dev.azure.com/outerlimitstech/OLT/_git/olt-common</RepositoryUrl>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <AssemblyName>OLT.EF.Core.Services</AssemblyName>
     <RootNamespace>OLT.Core</RootNamespace>
   </PropertyGroup>

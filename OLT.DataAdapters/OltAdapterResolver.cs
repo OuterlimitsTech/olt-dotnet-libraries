@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.Core
 {
     public class OltAdapterResolver : OltAdapterCore, IOltAdapterResolver
     {
-        private readonly IOltAdapter[] _adapters;
+        
 
-        public OltAdapterResolver(IEnumerable<IOltAdapter> adapters)
+        public OltAdapterResolver(IServiceProvider serviceProvider)
         {
-            this._adapters = adapters.ToArray();
+            Adapters = serviceProvider.GetServices<IOltAdapter>().ToList();
         }
 
+        protected virtual List<IOltAdapter> Adapters { get; }
 
         public virtual IOltDataAdapter<TSource, TModel> GetAdapter<TSource, TModel>()
-            where TSource : class
-            where TModel : class, new()
         {
             var adapterName = base.BuildName<TSource, TModel>();
-            var adapter = this._adapters.FirstOrDefault(p => p.Name == adapterName);
+            var adapter = this.Adapters.FirstOrDefault(p => p.Name == adapterName);
             if (adapter == null)
             {
                 throw new Exception($"Adapter Not Found {adapterName}");
@@ -29,8 +29,6 @@ namespace OLT.Core
         }
 
         public virtual IOltAdapterQueryable<TSource, TModel> GetQueryableAdapter<TSource, TModel>()
-            where TSource : class, IOltEntity
-            where TModel : class, new()
         {
             var adapter = GetAdapter<TSource, TModel>();
 
@@ -44,8 +42,6 @@ namespace OLT.Core
         }
 
         public virtual IOltAdapterPaged<TSource, TModel> GetPagedAdapter<TSource, TModel>()
-            where TSource : class, IOltEntity
-            where TModel : class, new()
         {
             var adapter = GetAdapter<TSource, TModel>();
 
