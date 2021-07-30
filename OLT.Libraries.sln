@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Email.SendGrid", "OLT.E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.EF.Core.SeedHelpers.Csv", "OLT.EF.Core.SeedHelpers.Csv\OLT.EF.Core.SeedHelpers.Csv.csproj", "{4222E4AE-D7D9-46D8-BB57-E7A08A2258A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Libraries.UnitTest", "OLT.Libraries.UnitTest\OLT.Libraries.UnitTest.csproj", "{DA8B96ED-8DC2-4B23-8A93-EDF98C71A841}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Highcharts", "OLT.Highcharts\OLT.Highcharts.csproj", "{B67D8E1D-92E3-46A3-8A14-CDE26F5FEA76}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore", "OLT.AspNetCore\OLT.AspNetCore.csproj", "{514ABC15-AE73-4BB5-945F-4B6433337CEA}"
@@ -38,6 +36,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.DataAdapters", "OLT.DataAdapters\OLT.DataAdapters.csproj", "{16E9F0CD-225C-4165-8642-A47D58F5373A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Extensions.DependencyInjection.AutoMapper", "OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj", "{69968C49-3AAB-4896-BA87-ED2A5255B6A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Libraries.UnitTest", "OLT.Libraries.UnitTest\OLT.Libraries.UnitTest.csproj", "{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,10 +73,6 @@ Global
 		{4222E4AE-D7D9-46D8-BB57-E7A08A2258A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4222E4AE-D7D9-46D8-BB57-E7A08A2258A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4222E4AE-D7D9-46D8-BB57-E7A08A2258A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA8B96ED-8DC2-4B23-8A93-EDF98C71A841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA8B96ED-8DC2-4B23-8A93-EDF98C71A841}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA8B96ED-8DC2-4B23-8A93-EDF98C71A841}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA8B96ED-8DC2-4B23-8A93-EDF98C71A841}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B67D8E1D-92E3-46A3-8A14-CDE26F5FEA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B67D8E1D-92E3-46A3-8A14-CDE26F5FEA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B67D8E1D-92E3-46A3-8A14-CDE26F5FEA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -117,6 +113,10 @@ Global
 		{69968C49-3AAB-4896-BA87-ED2A5255B6A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69968C49-3AAB-4896-BA87-ED2A5255B6A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69968C49-3AAB-4896-BA87-ED2A5255B6A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
