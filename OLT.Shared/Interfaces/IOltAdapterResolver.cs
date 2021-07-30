@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace OLT.Core
 {
-    //TODO: Move to DataAdapter package
     public interface IOltAdapterResolver : IOltInjectableSingleton
     {
 

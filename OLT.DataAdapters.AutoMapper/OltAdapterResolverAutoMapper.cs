@@ -26,12 +26,6 @@ namespace OLT.Core
 
         public override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {
-            if (adapter is IOltAdapterMap autoMapperAdapter)
-            {
-                return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
-                //return queryable.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
-            }
-
             try
             {
                 if (HasAutoMap<TEntity, TDestination>())
@@ -60,11 +54,6 @@ namespace OLT.Core
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
         {
-            if (adapter is IOltAdapterMap autoMapperAdapter)
-            {
-                return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
-            }
-
             try
             {
                 if (HasAutoMap<TSource, TDestination>())
@@ -87,5 +76,21 @@ namespace OLT.Core
 
         #endregion
 
+        public override TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
+        {
+            try
+            {
+                if (HasAutoMap<TSource, TDestination>())
+                {
+                    return Mapper.Map(source, destination);
+                }
+            }
+            catch
+            {
+
+            }
+
+            return base.Map(source, destination);
+        }
     }
 }
