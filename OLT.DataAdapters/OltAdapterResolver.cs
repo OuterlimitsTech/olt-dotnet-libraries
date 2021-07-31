@@ -42,6 +42,18 @@ namespace OLT.Core
 
         #region [ ProjectTo Maps ]
 
+        public virtual bool CanProjectTo<TEntity, TDestination>()
+        {
+            var name = GetAdapterName<TEntity, TDestination>();
+            var adapter = GetAdapter(name, false);
+            if (adapter is IOltAdapterQueryable<TEntity, TDestination> queryableAdapter)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source)
         {
             var name = GetAdapterName<TEntity, TDestination>();

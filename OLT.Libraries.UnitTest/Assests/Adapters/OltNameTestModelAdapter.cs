@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using OLT.Core;
-using OLT.Libraries.UnitTest.Models;
-using OLT.Libraries.UnitTest.Models.Entity;
+using OLT.Libraries.UnitTest.Assests.Entity.Models;
+using OLT.Libraries.UnitTest.Assests.Models;
 
-namespace OLT.Libraries.UnitTest.OLT.Shared.Data.Adapters
+namespace OLT.Libraries.UnitTest.Assests.Adapters
 {
-
-    public class OltUserTestModelAdapter : OltAdapterPaged<OltUserEntity, OltUserTestModel>
+    public class OltUserTestModelAdapter : OltAdapterPaged<UserEntity, OltUserTestModel>
     {
-        public override void Map(OltUserEntity source, OltUserTestModel destination)
+        public override void Map(UserEntity source, OltUserTestModel destination)
         {
             destination.UserGuid = source.UniqueId;
             destination.Name.First = source.FirstName;
@@ -17,7 +16,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data.Adapters
             destination.Name.Suffix = source.NameSuffix;
         }
 
-        public override void Map(OltUserTestModel source, OltUserEntity destination)
+        public override void Map(OltUserTestModel source, UserEntity destination)
         {
             destination.UniqueId = source.UserGuid;
             destination.FirstName = source.Name.First;
@@ -26,7 +25,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data.Adapters
             destination.NameSuffix = source.Name.Suffix;
         }
 
-        public override IQueryable<OltUserTestModel> Map(IQueryable<OltUserEntity> queryable)
+        public override IQueryable<OltUserTestModel> Map(IQueryable<UserEntity> queryable)
         {
             return queryable.Select(entity => new OltUserTestModel
             {
@@ -42,7 +41,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data.Adapters
             });
         }
 
-        public override IQueryable<OltUserEntity> DefaultOrderBy(IQueryable<OltUserEntity> queryable)
+        public override IQueryable<UserEntity> DefaultOrderBy(IQueryable<UserEntity> queryable)
         {
             return queryable.OrderBy(p => p.LastName).ThenBy(p => p.FirstName).ThenBy(p => p.Id);
         }

@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using OLT.Core;
-using OLT.Libraries.UnitTest.Models.Entity;
+using OLT.Libraries.UnitTest.Assests.Entity.Models;
 
-namespace OLT.Libraries.UnitTest.Models
+namespace OLT.Libraries.UnitTest.Assests.Models
 {
     public class OltPersonTestDto : OltPersonName
     {
         public int? PersonId { get; set; }
 
-        public static void BuildMap(IMappingExpression<OltPersonEntity, OltPersonTestDto> mappingExpression)
+        public static void BuildMap(IMappingExpression<PersonEntity, OltPersonTestDto> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.PersonId, opt => opt.MapFrom(t => t.Id))

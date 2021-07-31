@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -34,25 +35,31 @@ namespace OLT.Core
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
 
-        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter)
+        //protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter)
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher)
             where TEntity : class, IOltEntity
             where TModel : class, new()
         {
             var queryable = this.GetQueryable(searcher);
-            return this.GetAll<TEntity, TModel>(queryable, adapter);
+            return this.GetAll<TEntity, TModel>(queryable);
         }
 
-        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
+        //protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
             where TModel : class, new()
         {
-            if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
             {
-                return queryableAdapter.Map(queryable).ToList();
+                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
             }
-            return adapter.Map(Include(queryable, adapter).ToList());
+
+            var model = new List<TModel>();
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
+            return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
+        [Obsolete]
         protected virtual IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> queryable, IOltAdapter adapter)
                 where TEntity : class, IOltEntity
         {
@@ -64,17 +71,20 @@ namespace OLT.Core
             return queryable;
         }
 
-        protected virtual TModel Get<TModel, TEntity>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
+        //protected virtual TModel Get<TModel, TEntity>(IQueryable<TEntity> queryable, IOltAdapter<TModel, TEntity> adapter)
+        protected virtual TModel Get<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
         {
-            if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
+
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
             {
-                return queryableAdapter.Map(queryable).FirstOrDefault();
+                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefault();
             }
+
             var model = new TModel();
-            adapter.Map(Include(queryable, adapter).FirstOrDefault(), model);
-            return model;
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefault();
+            return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
         protected virtual IQueryable<T> Get<T>(IOltSearcher<T> searcher)

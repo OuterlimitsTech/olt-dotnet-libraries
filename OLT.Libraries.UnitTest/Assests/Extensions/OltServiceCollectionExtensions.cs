@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OLT.Core;
 using OLT.Extensions.DependencyInjection.AutoMapper;
-using OLT.Libraries.UnitTest.LocalServices;
+using OLT.Libraries.UnitTest.Assests.LocalServices;
 
-namespace OLT.Libraries.UnitTest.Extensions
+namespace OLT.Libraries.UnitTest.Assests.Extensions
 {
     public static class OltUnitTestServiceCollectionExtensions
     {

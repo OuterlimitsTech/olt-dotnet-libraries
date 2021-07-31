@@ -1,16 +1,15 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using OLT.Core;
-using OLT.Libraries.UnitTest.Models.Entity;
+using OLT.Libraries.UnitTest.Assests.Entity.Models;
 
-namespace OLT.Libraries.UnitTest.Models
+namespace OLT.Libraries.UnitTest.Assests.Models
 {
 
     public class OltNameTestModel : OltPersonName
     {
 
         
-        public static void BuildMap(IMappingExpression<OltPersonEntity, OltNameTestModel> mappingExpression)
+        public static void BuildMap(IMappingExpression<PersonEntity, OltNameTestModel> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.First, opt => opt.MapFrom(t => t.NameFirst))
@@ -19,7 +18,7 @@ namespace OLT.Libraries.UnitTest.Models
                 .ReverseMap();
         }
 
-        public static void BuildMap(IMappingExpression<OltUserEntity, OltNameTestModel> mappingExpression)
+        public static void BuildMap(IMappingExpression<UserEntity, OltNameTestModel> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.First, opt => opt.MapFrom(t => t.FirstName))

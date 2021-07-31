@@ -1,8 +1,9 @@
 ﻿using OLT.Core;
 
-namespace OLT.Libraries.UnitTest.Models.Entity
+namespace OLT.Libraries.UnitTest.Assests.Entity.Models
 {
-    public class OltPersonEntity : OltEntityIdDeletable
+    // ReSharper disable once InconsistentNaming
+    public class PersonEntity : OltEntityIdDeletable
     {
         public string NameFirst { get; set; }
         public string NameMiddle { get; set; }

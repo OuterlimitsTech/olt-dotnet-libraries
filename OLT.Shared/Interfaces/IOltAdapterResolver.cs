@@ -6,7 +6,9 @@ namespace OLT.Core
 {
     public interface IOltAdapterResolver : IOltInjectableSingleton
     {
+        bool CanProjectTo<TEntity, TDestination>();
 
+        IQueryable<TEntity> Include<TEntity, TDestination>(IQueryable<TEntity> queryable);
         IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter);
         IQueryable<TDestination> ProjectTo<TSource, TDestination>(IQueryable<TSource> source);
         IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter);

@@ -23,6 +23,10 @@ namespace OLT.Core
 
         #region [ ProjectTo Maps ]
 
+        public override bool CanProjectTo<TEntity, TDestination>()
+        {
+            return HasAutoMap<TEntity, TDestination>() || base.CanProjectTo<TEntity, TDestination>();
+        }
 
         public override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {

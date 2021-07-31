@@ -1,4 +1,4 @@
-﻿namespace OLT.Libraries.UnitTest.Models
+﻿namespace OLT.Libraries.UnitTest.Assests.Models
 {
     public class OltPersonTestModel 
     {

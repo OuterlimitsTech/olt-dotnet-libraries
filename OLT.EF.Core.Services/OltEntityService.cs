@@ -25,69 +25,41 @@ namespace OLT.Core
             return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
         }
 
-        protected virtual IQueryable<TEntity> Include(IQueryable<TEntity> queryable, IOltAdapter adapter)
-        {
-            if (adapter is IOltAdapterQueryableInclude<TEntity> includeAdapter)
-            {
-                return includeAdapter.Include(queryable);
-            }
 
-            return queryable;
-        }
+        //protected IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
+        //    where TModel : class, new()
+        //{
+        //    if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
+        //    {
+        //        return queryableAdapter.Map(queryable).ToList();
+        //    }
+        //    return adapter.Map(Include(queryable, adapter).ToList());
+        //}
 
-        protected IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
-            where TModel : class, new()
-        {
-            if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
-            {
-                return queryableAdapter.Map(queryable).ToList();
-            }
-            return adapter.Map(Include(queryable, adapter).ToList());
-        }
 
-        protected IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter)
-            where TModel : class, new()
-        {
-            var queryable = this.GetQueryable(searcher);
-            return this.GetAll<TModel>(queryable, adapter);
-        }
 
         protected virtual IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            return this.GetAll<TModel>(queryable, adapter);
+            return base.GetAll<TEntity, TModel>(queryable);
         }
 
-
-        protected virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter) where TModel : class, new()
-        {
-            return Get(GetQueryable(searcher), adapter);
-        }
-
-        protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter) where TModel : class, new()
-        {
-            return base.Get(queryable, adapter);
-        }
 
         protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            return base.Get(queryable, ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>());
+            return base.Get<TEntity, TModel>(queryable);
         }
 
         public virtual TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = Include(GetQueryable(searcher), adapter).FirstOrDefault();
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefault();
 
             if (entity == null)
             {
-                //entity = Repository.Create();
-                //entity = Repository.CreateProxy();
                 entity = new TEntity();
                 Repository.Add(entity);
             }
 
-            adapter.Map(model, entity);
+            ServiceManager.AdapterResolver.Map(model, entity);
 
 
             SaveChanges();

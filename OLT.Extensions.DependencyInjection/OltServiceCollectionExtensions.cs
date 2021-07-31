@@ -98,13 +98,11 @@ namespace OLT.Core
                 });
 
 
-            var names = referencedAssemblies
+            referencedAssemblies
                 .GroupBy(g => g.FullName)
                 .Select(s => s.Key)
                 .OrderBy(o => o)
-                .ToList();
-
-            names
+                .ToList()
                 .ForEach(name =>
                 {
                     var assembly = assembliesToScan.FirstOrDefault(p => string.Equals(p.FullName, name, StringComparison.OrdinalIgnoreCase));
@@ -114,7 +112,7 @@ namespace OLT.Core
                     }
                 });
 
-            var t = assembliesToScan.OrderBy(p => p.FullName).ToList();
+
             return assembliesToScan;
         }
 
@@ -156,8 +154,8 @@ namespace OLT.Core
                     .AsImplementedInterfaces()
                     .WithSingletonLifetime()
             );
-            
-            
+
+
 
 
             return services;

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using OLT.Core;
 
-namespace OLT.Libraries.UnitTest.LocalServices
+namespace OLT.Libraries.UnitTest.Assests.LocalServices
 {
     public class OltUnitTestAppIdentity : OltIdentity
     {

@@ -1,9 +1,10 @@
 ﻿using System;
 using OLT.Core;
 
-namespace OLT.Libraries.UnitTest.Models.Entity
+namespace OLT.Libraries.UnitTest.Assests.Entity.Models
 {
-    public class OltUserEntity : OltEntityId, IOltEntityUniqueId
+    // ReSharper disable once InconsistentNaming
+    public class UserEntity : OltEntityId, IOltEntityUniqueId
     {
         public Guid UniqueId { get; set; }
 
