@@ -69,7 +69,7 @@ namespace OLT.Core
         /// </summary>
         /// <param name="services"></param>
         /// <returns><param typeof="IServiceCollection"></param></returns>
-        public static IServiceCollection OltScan(this IServiceCollection services)
+        public static List<Assembly> OltScanAssemblies(this IServiceCollection services)
         {
             var assembliesToScan = new List<Assembly>
             {
@@ -89,20 +89,45 @@ namespace OLT.Core
                 referencedAssemblies.AddRange(assembly.GetReferencedAssemblies().Select(Assembly.Load));
             });
 
+            AppDomain.CurrentDomain
+                .GetAssemblies()
+                .ToList()
+                .ForEach(assembly =>
+                {
+                    referencedAssemblies.Add(assembly);
+                });
+
+
             referencedAssemblies
                 .GroupBy(g => g.FullName)
                 .Select(s => s.Key)
+                .OrderBy(o => o)
                 .ToList()
                 .ForEach(name =>
                 {
-                    if (assembliesToScan.Any(p => p.FullName != name))
+                    var assembly = assembliesToScan.FirstOrDefault(p => string.Equals(p.FullName, name, StringComparison.OrdinalIgnoreCase));
+                    if (assembly == null)
                     {
                         assembliesToScan.Add(referencedAssemblies.FirstOrDefault(p => p.FullName == name));
                     }
                 });
 
 
-            return OltScan(services, assembliesToScan);
+            return assembliesToScan;
+        }
+
+        /// <summary>
+        /// Scans OLT interfaces to associated DI by name and other default classes for OLT interfaces that do not conform to naming convention
+        /// IOltInjectable
+        /// IOltInjectableScoped
+        /// IOltInjectableTransient
+        /// IOltInjectableSingleton
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns><param typeof="IServiceCollection"></param></returns>
+        public static IServiceCollection OltScan(this IServiceCollection services)
+        {
+            return OltScan(services, services.OltScanAssemblies());
         }
 
         /// <summary>
@@ -129,8 +154,8 @@ namespace OLT.Core
                     .AsImplementedInterfaces()
                     .WithSingletonLifetime()
             );
-            
-            
+
+
 
 
             return services;

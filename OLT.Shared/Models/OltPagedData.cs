@@ -2,7 +2,7 @@
 
 namespace OLT.Core
 {
-    public class OltPagedData<TModel> : IOltPaged<TModel> where TModel : class
+    public class OltPagedData<TModel> : IOltPaged<TModel>
     {
         public virtual string SortBy { get; set; }
         public virtual bool Asc { get; set; }

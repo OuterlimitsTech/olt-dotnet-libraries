@@ -1,7 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OLT.Libraries.UnitTest.Test.Common;
+using System.ComponentModel;
 using OLT.Core;
+using Xunit;
 
 
 namespace OLT.Libraries.UnitTest.OLT.Shared
@@ -9,54 +8,55 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
     public enum TestEnumTypes
     {
         [Code("test-1", 1000)]
-        [System.ComponentModel.Description("Test 1")]
+        [Description("Test 1")]
         Test1 = 1000,
-
-        //[Code("test-2", 1000)]
-        //[System.ComponentModel.Description("Test 2")]
-        //Test2 = 2000,
-
     }
 
-    [TestClass]
+
     public class ExtensionTests
     {
-        
-        [TestMethod]
+
+        [Fact]
         public void GetCodeEnum()
         {
-            //using (var provider = Initialize.Services.BuildServiceProvider())
-            //{
-            //    var log = provider.GetService<IOltLogService>();
-            //}
-
-            var log2 = Initialize.Provider.GetServices<IOltLogService>();
             var code = TestEnumTypes.Test1.GetCodeEnum();
-            Assert.AreEqual(code, "test-1", $"{code} do not equal");
+            Assert.True(code.Equals("test-1"), $"{code} do not equal");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetDescription()
         {
             var code = TestEnumTypes.Test1.GetDescription();
-            Assert.AreEqual(code, "Test 1", $"{code} do not equal");
+            Assert.True(code.Equals("Test 1"), $"{code} do not equal");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAttributeInstance()
         {
             var attribute = OltAttributeExtensions.GetAttributeInstance<CodeAttribute>(TestEnumTypes.Test1);
-            Assert.AreEqual(attribute?.Code, "test-1");
+            Assert.True(attribute?.Code.Equals("test-1"));
         }
 
 
-        [TestMethod]
+        [Fact]
         public void GetAttributeInstance2()
         {
             var attribute = OltAttributeExtensions.GetAttributeInstance<CodeAttribute, TestEnumTypes>(TestEnumTypes.Test1);
-            Assert.AreEqual(attribute?.Code, "test-1");
+            Assert.True(attribute?.Code.Equals("test-1"));
         }
 
-    
+        [Fact]
+        public void FromCodeEnum()
+        {
+            var enumVal = "test-1".FromCodeEnum<TestEnumTypes>();
+            Assert.True(enumVal == TestEnumTypes.Test1);
+        }
+
+        [Fact]
+        public void FromDescription()
+        {
+            var enumVal = "Test 1".FromDescription<TestEnumTypes>();
+            Assert.True(enumVal == TestEnumTypes.Test1);
+        }
     }
 }

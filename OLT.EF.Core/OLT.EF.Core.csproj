@@ -12,7 +12,7 @@ Context Extensions
 Seed Helpers
 Entity Interfaces
 Base Entity Models</Description>
-    <RepositoryUrl>https://dev.azure.com/outerlimitstech/OLT/_git/olt-common</RepositoryUrl>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <RootNamespace>OLT.Core</RootNamespace>
   </PropertyGroup>
 

@@ -1,25 +1,71 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OLT.Libraries.UnitTest.OLT.Shared.Data.Adapters;
-using OLT.Libraries.UnitTest.Test.Common;
-using OLT.Core;
+﻿using OLT.Core;
+using OLT.Libraries.UnitTest.Assests.Entity.Models;
+using OLT.Libraries.UnitTest.Assests.Models;
+using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.Shared.Data
 {
-    [TestClass]
+    
+    // ReSharper disable once InconsistentNaming
     public class AdapterTest
     {
-        [TestMethod]
-        public void TestAdapterResolver()
+        private readonly IOltAdapterResolver _adapterResolver;
+
+        public AdapterTest(IOltAdapterResolver adapterResolver)
         {
-            var adapterResolver = Initialize.Provider.GetService<IOltAdapterResolver>();
-            var from = new TestAdapterFromModel();
-            var to = new TestAdapterToModel();
-            from.First = Faker.Name.First();
-            var adapter = adapterResolver.GetAdapter<TestAdapterFromModel, TestAdapterToModel>();
-            adapter.Map(from, to);
-            Assert.AreEqual(from.First, to.NameFirst);
+            _adapterResolver = adapterResolver;
         }
 
+        [Fact]
+        public void AutoMapperMap()
+        {
+            var to = new NameAutoMapperModel();
+            var from = new PersonEntity();
+            from.NameFirst = Faker.Name.First();
+            from.NameMiddle = Faker.Name.Middle();
+            from.NameLast = Faker.Name.Last();
+            _adapterResolver.Map(from, to);
+            Assert.True(from.NameFirst.Equals(to.First));
+        }
+
+
+        [Fact]
+        public void AutoMapperReverse()
+        {
+             var from = new NameAutoMapperModel();
+            var to = new PersonEntity();
+            from.First = Faker.Name.First();
+            from.Middle = Faker.Name.Middle();
+            from.Last = Faker.Name.Last();
+            _adapterResolver.Map(from, to);
+            Assert.True(from.Last.Equals(to.NameLast));
+        }
+
+
+        [Fact]
+        public void AdapterMap()
+        {
+            var to = new UserModel();
+            var from = new UserEntity();
+            from.Id = 1000;
+            from.FirstName = Faker.Name.First();
+            from.MiddleName = Faker.Name.Middle();
+            from.LastName = Faker.Name.Last();
+            _adapterResolver.Map(from, to);
+            Assert.True(from.FirstName.Equals(to.Name.First));
+        }
+
+
+        [Fact]
+        public void AdapterMapReverse()
+        {
+            var from = new UserModel();
+            var to = new UserEntity();
+            from.Name.First = Faker.Name.First();
+            from.Name.Middle = Faker.Name.Middle();
+            from.Name.Last = Faker.Name.Last();
+            _adapterResolver.Map(from, to);
+            Assert.True(from.Name.Last.Equals(to.LastName));
+        }
     }
 }

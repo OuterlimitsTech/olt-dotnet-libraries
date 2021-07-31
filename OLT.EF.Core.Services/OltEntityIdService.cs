@@ -36,11 +36,8 @@ namespace OLT.Core
 
         public override TModel Add<TModel>(TModel model)
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            //var entity = Repository.Create();
             var entity = new TEntity();
-            //var entity = Repository.CreateProxy();
-            adapter.Map(model, entity);
+            ServiceManager.AdapterResolver.Map(model, entity);
             Repository.Add(entity);
             SaveChanges();
             return Get<TModel>(entity.Id);
@@ -48,11 +45,8 @@ namespace OLT.Core
 
         public override TResponseModel Add<TResponseModel, TSaveModel>(TSaveModel model)
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TSaveModel>();
-            //var entity = Repository.Create();
             var entity = new TEntity();
-            //var entity = Repository.CreateProxy();
-            adapter.Map(model, entity);
+            ServiceManager.AdapterResolver.Map(model, entity);
             Repository.Add(entity);
             SaveChanges();
             return Get<TResponseModel>(entity.Id);
@@ -60,14 +54,11 @@ namespace OLT.Core
 
         public override IEnumerable<TResponseModel> Add<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list)
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TSaveModel>();
             var entities = new List<TEntity>();
             list.ToList().ForEach(model =>
             {
-                //var entity = Repository.Create();
                 var entity = new TEntity();
-                //var entity = Repository.CreateProxy();
-                adapter.Map(model, entity);
+                ServiceManager.AdapterResolver.Map(model, entity);
                 Repository.Add(entity);
                 entities.Add(entity);
             });
@@ -86,9 +77,8 @@ namespace OLT.Core
         public virtual TModel Update<TModel>(int id, TModel model)
             where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = base.Include(GetQueryable(id), adapter).FirstOrDefault();
-            adapter.Map(model, entity);
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(id)).FirstOrDefault();
+            ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TModel>(id);
         }
@@ -98,9 +88,8 @@ namespace OLT.Core
             where TModel : class, new()
             where TResponseModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = base.Include(GetQueryable(id), adapter).FirstOrDefault();
-            adapter.Map(model, entity);
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(id)).FirstOrDefault();
+            ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TResponseModel>(id);
         }
@@ -108,9 +97,8 @@ namespace OLT.Core
         public virtual TModel Update<TModel>(Guid uid, TModel model)
             where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = base.Include(GetQueryable(uid), adapter).FirstOrDefault();
-            adapter.Map(model, entity);
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
+            ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TModel>(uid);
         }
@@ -119,9 +107,8 @@ namespace OLT.Core
             where TModel : class, new()
             where TResponseModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = base.Include(GetQueryable(uid), adapter).FirstOrDefault();
-            adapter.Map(model, entity);
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
+            ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TResponseModel>(uid);
         }

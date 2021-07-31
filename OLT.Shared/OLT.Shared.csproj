@@ -7,22 +7,17 @@
     <Product>.Net Standard Shared Library</Product>
     <Authors>Chris Straw</Authors>
     <Version>2.0.0</Version>
-    <Description>Caching
-Extensions
-Interfaces
-Validation
-Disposable
-Attributes
-Exceptions
-Authentication Models
-General Models</Description>
-    <RepositoryUrl>https://dev.azure.com/outerlimitstech/OLT/_git/olt-common</RepositoryUrl>
+    <Description></Description>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <RootNamespace>OLT.Core</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Adapters\**" />
     <Compile Remove="Exporters\**" />
+    <EmbeddedResource Remove="Adapters\**" />
     <EmbeddedResource Remove="Exporters\**" />
+    <None Remove="Adapters\**" />
     <None Remove="Exporters\**" />
   </ItemGroup>
 

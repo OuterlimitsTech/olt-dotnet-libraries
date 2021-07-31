@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OLT.Core
 {
-    public abstract class OltAdapter<TObj1, TObj2> : OltAdapterCore, IOltDataAdapter<TObj1, TObj2>
+    public abstract class OltAdapter<TObj1, TObj2> : OltAdapterCore, IOltAdapter<TObj1, TObj2>
         //where TObj2 : new()
     {
         public virtual string Name => BuildName<TObj1, TObj2>();

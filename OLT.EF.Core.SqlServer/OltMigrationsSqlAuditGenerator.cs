@@ -108,7 +108,7 @@ namespace OLT.Core
         private string GetColumnGenString(AddColumnOperation operation)
         {
             var type = "";
-            var nullable = "";
+            //var nullable = "";
 
             if (operation.ClrType == typeof(string))  // Add more for other native types
                 type = "NVARCHAR(MAX)";
@@ -126,11 +126,11 @@ namespace OLT.Core
             if (operation.IsNullable == false)
                 nullString = "NOT NULL";
 
-            string schemaString = "";
-            if (operation.Schema != null)
-            {
-                schemaString = $"[{operation.Schema}].";
-            }
+            //string schemaString = "";
+            //if (operation.Schema != null)
+            //{
+            //    schemaString = $"[{operation.Schema}].";
+            //}
 
             string retColString = $"[{operation.Name}] {type} {nullString}";
 
