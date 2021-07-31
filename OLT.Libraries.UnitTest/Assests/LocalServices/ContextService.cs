@@ -12,7 +12,7 @@ namespace OLT.Libraries.UnitTest.Assests.LocalServices
         {
         }
 
-        public OltPersonTestModel Get()
+        public PersonAutoMapperModel Get()
         {
             var entity = new PersonEntity
             {
@@ -25,7 +25,7 @@ namespace OLT.Libraries.UnitTest.Assests.LocalServices
 
             var queryable = Get(new OltSearcherGetAll<PersonEntity>());
 
-            return Get<PersonEntity, OltPersonTestModel>(queryable);
+            return Get<PersonEntity, PersonAutoMapperModel>(queryable);
         }
     }
 }

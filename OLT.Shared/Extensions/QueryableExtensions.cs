@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -33,6 +34,33 @@ namespace OLT.Core
             where TSource : class, IOltEntity
         {
             return searcher.BuildQueryable(queryable);
+        }
+
+        public static IQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> queryable, IOltSortParams sortParams, Func<IQueryable<TSource>, IQueryable<TSource>> defaultOrderBy)
+        {
+            var orderedQueryable = sortParams?.PropertyName != null && !string.IsNullOrEmpty(sortParams.PropertyName)
+                ? queryable.OrderBy(sortParams)
+                : queryable;
+            return defaultOrderBy(orderedQueryable);
+        }
+
+        public static IOltPaged<TDestination> ToPaged<TDestination>(this IQueryable<TDestination> queryable, IOltPagingParams pagingParams)
+        {
+            var cnt = queryable.Count();
+
+            var pagedQueryable = queryable
+                .Skip((pagingParams.Page - 1) * pagingParams.Size)
+                .Take(pagingParams.Size);
+
+
+            return new OltPagedData<TDestination>
+            {
+                Count = cnt,
+                Page = pagingParams.Page,
+                Size = pagingParams.Size,
+                Data = pagedQueryable.ToList()
+            };
+
         }
     }
 }

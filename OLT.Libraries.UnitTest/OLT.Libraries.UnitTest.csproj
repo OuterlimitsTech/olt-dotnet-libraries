@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Assests\Models\Faker\**" />
+    <EmbeddedResource Remove="Assests\Models\Faker\**" />
+    <None Remove="Assests\Models\Faker\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Faker.Net" Version="1.5.138" />
     <PackageReference Include="Microsoft.CodeCoverage" Version="16.10.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
@@ -36,10 +42,6 @@
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Assests\Models\Faker\" />
   </ItemGroup>
 
 </Project>

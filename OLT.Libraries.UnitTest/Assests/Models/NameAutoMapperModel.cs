@@ -4,12 +4,10 @@ using OLT.Libraries.UnitTest.Assests.Entity.Models;
 
 namespace OLT.Libraries.UnitTest.Assests.Models
 {
-
-    public class OltNameTestModel : OltPersonName
+    // ReSharper disable once InconsistentNaming
+    public class NameAutoMapperModel : OltPersonName
     {
-
-        
-        public static void BuildMap(IMappingExpression<PersonEntity, OltNameTestModel> mappingExpression)
+        public static void BuildMap(IMappingExpression<PersonEntity, NameAutoMapperModel> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.First, opt => opt.MapFrom(t => t.NameFirst))
@@ -18,7 +16,7 @@ namespace OLT.Libraries.UnitTest.Assests.Models
                 .ReverseMap();
         }
 
-        public static void BuildMap(IMappingExpression<UserEntity, OltNameTestModel> mappingExpression)
+        public static void BuildMap(IMappingExpression<UserEntity, NameAutoMapperModel> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.First, opt => opt.MapFrom(t => t.FirstName))
@@ -27,7 +25,5 @@ namespace OLT.Libraries.UnitTest.Assests.Models
                 .ForMember(f => f.Suffix, opt => opt.MapFrom(t => t.NameSuffix))
                 .ReverseMap();
         }
-
-      
     }
 }

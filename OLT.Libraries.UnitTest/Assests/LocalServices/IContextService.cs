@@ -5,6 +5,6 @@ namespace OLT.Libraries.UnitTest.Assests.LocalServices
 {
     public interface IContextService : IOltCoreService
     {
-        OltPersonTestModel Get();
+        PersonAutoMapperModel Get();
     }
 }

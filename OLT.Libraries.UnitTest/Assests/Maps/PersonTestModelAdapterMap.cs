@@ -6,9 +6,9 @@ using OLT.Libraries.UnitTest.Assests.Models;
 namespace OLT.Libraries.UnitTest.Assests.Maps
 {
     // ReSharper disable once InconsistentNaming
-    public class PersonTestModelAdapterMap : OltAdapterMap<PersonEntity, OltPersonTestModel>
+    public class PersonTestModelAdapterMap : OltAdapterMap<PersonEntity, PersonAutoMapperModel>
     {
-        public override void BuildMap(IMappingExpression<PersonEntity, OltPersonTestModel> mappingExpression)
+        public override void BuildMap(IMappingExpression<PersonEntity, PersonAutoMapperModel> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.PersonId, opt => opt.MapFrom(t => t.Id))

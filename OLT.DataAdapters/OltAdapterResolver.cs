@@ -22,9 +22,10 @@ namespace OLT.Core
 
         #region [ Include ]
 
-        public virtual IQueryable<TEntity> Include<TEntity, TDestination>(IQueryable<TEntity> queryable)
+        public virtual IQueryable<TSource> Include<TSource, TDestination>(IQueryable<TSource> queryable)
+            where TSource : class, IOltEntity
         {
-            var adapter = this.GetAdapter<TEntity, TDestination>(true);
+            var adapter = this.GetAdapter<TSource, TDestination>(true);
             return this.Include(queryable, adapter);
         }
 
@@ -36,6 +37,25 @@ namespace OLT.Core
             }
 
             return queryable;
+        }
+
+        #endregion
+
+        #region [ Paged ]
+        
+        public virtual IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams)
+            where TSource : class, IOltEntity
+        {
+            var adapter = GetPagedAdapter<TSource, TDestination>(true);
+            if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
+                return adapter.Map(source, pagingParams, pagingWithSortParams);
+            return adapter.Map(source, pagingParams);
+        }
+
+        public virtual IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams, Func<IQueryable<TSource>, IQueryable<TSource>> orderBy) where TSource : class, IOltEntity
+        {
+            var adapter = GetPagedAdapter<TSource, TDestination>(true);
+            return adapter.Map(source, pagingParams, orderBy);
         }
 
         #endregion
@@ -60,6 +80,7 @@ namespace OLT.Core
             var adapter = GetAdapter(name, false);
             return ProjectTo<TEntity, TDestination>(source, adapter);
         }
+
 
         public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {
@@ -129,7 +150,6 @@ namespace OLT.Core
             return GetAdapter(this.GetAdapterName<TSource, TDestination>(), throwException) as IOltAdapter<TSource, TDestination>;
         }
 
-
         protected virtual IOltAdapter GetAdapter(string adapterName, bool throwException)
         {
             var adapter = Adapters.FirstOrDefault(p => p.Name == adapterName);
@@ -149,15 +169,14 @@ namespace OLT.Core
 
         protected virtual IOltAdapterPaged<TSource, TDestination> GetPagedAdapter<TSource, TDestination>(bool throwException)
             where TSource : class, IOltEntity
-            where TDestination : class
         {
-            var adapter = GetAdapter<TSource, TDestination>(throwException);
+            var adapterName = GetAdapterName<TSource, TDestination>();
+            var adapter = GetAdapter(adapterName, throwException);
             var pagedAdapter = adapter as IOltAdapterPaged<TSource, TDestination>;
             if (pagedAdapter == null && throwException)
             {
-                throw new Exception("Paged Adapter Not Found");
+                throw new Exception($"{adapterName} Paged Adapter Not Found");
             }
-
             return pagedAdapter;
         }
 

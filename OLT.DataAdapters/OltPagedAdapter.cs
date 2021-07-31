@@ -18,50 +18,18 @@ namespace OLT.Core
 
         public virtual IQueryable<TSource> OrderBy(IQueryable<TSource> queryable, IOltSortParams sortParams = null)
         {
-            var orderedQueryable = sortParams?.PropertyName != null && !string.IsNullOrEmpty(sortParams.PropertyName)
-                ? queryable.OrderBy(sortParams)
-                : queryable;
-            return DefaultOrderBy(orderedQueryable);
+            return queryable.OrderBy(sortParams, DefaultOrderBy);
         }
 
         public virtual IOltPaged<TModel> Map(IQueryable<TSource> queryable, IOltPagingParams pagingParams, IOltSortParams sortParams = null)
         {
-            var cnt = queryable.Count();
-
-            queryable = OrderBy(queryable, sortParams);
-
-            var pagedQueryable = this.Map(queryable)
-                .Skip((pagingParams.Page - 1) * pagingParams.Size)
-                .Take(pagingParams.Size);
-
-
-            return new OltPagedData<TModel>
-            {
-                Count = cnt,
-                Page = pagingParams.Page,
-                Size = pagingParams.Size,
-                Data = pagedQueryable.ToList()
-            };
+            return this.Map(queryable, pagingParams, sortQueryable => OrderBy(sortQueryable, sortParams));
         }
 
         public virtual IOltPaged<TModel> Map(IQueryable<TSource> queryable, IOltPagingParams pagingParams, Func<IQueryable<TSource>, IQueryable<TSource>> orderBy)
         {
-            var cnt = queryable.Count();
-
-            queryable = orderBy(queryable);
-
-            var pagedQueryable = this.Map(queryable)
-                .Skip((pagingParams.Page - 1) * pagingParams.Size)
-                .Take(pagingParams.Size);
-
-
-            return new OltPagedData<TModel>
-            {
-                Count = cnt,
-                Page = pagingParams.Page,
-                Size = pagingParams.Size,
-                Data = pagedQueryable.ToList()
-            };
+            var mapped = Map(orderBy(queryable));
+            return mapped.ToPaged(pagingParams);
         }
 
     }

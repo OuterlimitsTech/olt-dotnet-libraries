@@ -8,11 +8,12 @@ using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
 {
-    public class OltEntityContextServiceTest
+    // ReSharper disable once InconsistentNaming
+    public class EntityContextServiceTest
     {
         private readonly IContextService _contextService;
         
-        public OltEntityContextServiceTest(IContextService contextService)
+        public EntityContextServiceTest(IContextService contextService)
         {
             _contextService = contextService;
         }

@@ -2,10 +2,11 @@
 
 namespace OLT.Libraries.UnitTest.Assests.Models
 {
-    public class OltUserTestModel
+    // ReSharper disable once InconsistentNaming
+    public class UserModel
     {
         public int? UserId { get; set; }
         public Guid UserGuid { get; set; }
-        public OltNameTestModel Name { get; set; } = new OltNameTestModel();
+        public NameAutoMapperModel Name { get; set; } = new NameAutoMapperModel();
     }
 }

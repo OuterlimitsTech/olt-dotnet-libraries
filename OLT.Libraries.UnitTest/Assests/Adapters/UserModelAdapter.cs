@@ -5,9 +5,10 @@ using OLT.Libraries.UnitTest.Assests.Models;
 
 namespace OLT.Libraries.UnitTest.Assests.Adapters
 {
-    public class OltUserTestModelAdapter : OltAdapterPaged<UserEntity, OltUserTestModel>
+    // ReSharper disable once InconsistentNaming
+    public class UserModelAdapter : OltAdapterPaged<UserEntity, UserModel>
     {
-        public override void Map(UserEntity source, OltUserTestModel destination)
+        public override void Map(UserEntity source, UserModel destination)
         {
             destination.UserGuid = source.UniqueId;
             destination.Name.First = source.FirstName;
@@ -16,7 +17,7 @@ namespace OLT.Libraries.UnitTest.Assests.Adapters
             destination.Name.Suffix = source.NameSuffix;
         }
 
-        public override void Map(OltUserTestModel source, UserEntity destination)
+        public override void Map(UserModel source, UserEntity destination)
         {
             destination.UniqueId = source.UserGuid;
             destination.FirstName = source.Name.First;
@@ -25,13 +26,13 @@ namespace OLT.Libraries.UnitTest.Assests.Adapters
             destination.NameSuffix = source.Name.Suffix;
         }
 
-        public override IQueryable<OltUserTestModel> Map(IQueryable<UserEntity> queryable)
+        public override IQueryable<UserModel> Map(IQueryable<UserEntity> queryable)
         {
-            return queryable.Select(entity => new OltUserTestModel
+            return queryable.Select(entity => new UserModel
             {
                 UserId = entity.Id,
                 UserGuid = entity.UniqueId,
-                Name = new OltNameTestModel
+                Name = new NameAutoMapperModel
                 {
                     First = entity.FirstName,
                     Middle = entity.MiddleName,

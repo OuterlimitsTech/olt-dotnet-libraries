@@ -6,11 +6,12 @@ using Xunit;
 namespace OLT.Libraries.UnitTest.OLT.Shared.Data
 {
     
-    public class OltAdapterTest
+    // ReSharper disable once InconsistentNaming
+    public class AdapterTest
     {
         private readonly IOltAdapterResolver _adapterResolver;
 
-        public OltAdapterTest(IOltAdapterResolver adapterResolver)
+        public AdapterTest(IOltAdapterResolver adapterResolver)
         {
             _adapterResolver = adapterResolver;
         }
@@ -18,7 +19,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data
         [Fact]
         public void AutoMapperMap()
         {
-            var to = new OltNameTestModel();
+            var to = new NameAutoMapperModel();
             var from = new PersonEntity();
             from.NameFirst = Faker.Name.First();
             from.NameMiddle = Faker.Name.Middle();
@@ -31,7 +32,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data
         [Fact]
         public void AutoMapperReverse()
         {
-             var from = new OltNameTestModel();
+             var from = new NameAutoMapperModel();
             var to = new PersonEntity();
             from.First = Faker.Name.First();
             from.Middle = Faker.Name.Middle();
@@ -44,7 +45,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data
         [Fact]
         public void AdapterMap()
         {
-            var to = new OltUserTestModel();
+            var to = new UserModel();
             var from = new UserEntity();
             from.Id = 1000;
             from.FirstName = Faker.Name.First();
@@ -58,7 +59,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data
         [Fact]
         public void AdapterMapReverse()
         {
-            var from = new OltUserTestModel();
+            var from = new UserModel();
             var to = new UserEntity();
             from.Name.First = Faker.Name.First();
             from.Name.Middle = Faker.Name.Middle();

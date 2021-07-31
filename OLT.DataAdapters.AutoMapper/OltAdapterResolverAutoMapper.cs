@@ -34,8 +34,6 @@ namespace OLT.Core
             {
                 if (HasAutoMap<TEntity, TDestination>())
                 {
-                    var ad = GetAdapter<TEntity, TDestination>(false);
-
                     return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
                 }
             }
@@ -76,6 +74,48 @@ namespace OLT.Core
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
         {
             return HasAutoMap<TSource, TDestination>() ? Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source) : base.Map<TSource, TDestination>(source);
+        }
+
+        #endregion
+        
+        #region [ Paged ]
+
+        public override IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams)
+        {
+            if (HasAutoMap<TSource, TDestination>())
+            {
+                var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
+                Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
+                if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
+                {
+                    orderBy = orderByQueryable => orderByQueryable.OrderBy(pagingWithSortParams, mapAdapter.DefaultOrderBy);
+                }
+                return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
+            }
+
+            return base.Paged<TSource, TDestination>(source, pagingParams);
+        }
+
+        public override IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams, Func<IQueryable<TSource>, IQueryable<TSource>> orderBy)
+        {
+            if (HasAutoMap<TSource, TDestination>())
+            {
+                return source.OrderBy(null, orderBy).ProjectTo<TDestination>(Mapper.ConfigurationProvider).ToPaged(pagingParams);
+            }
+            return base.Paged<TSource, TDestination>(source, pagingParams, orderBy);
+        }
+
+        protected virtual IOltAdapterPagedMap<TSource, TDestination> GetPagedAdapterMap<TSource, TDestination>(bool throwException)
+        {
+            var adapterName = GetAdapterName<TSource, TDestination>();
+            var adapter = GetAdapter(adapterName, throwException);
+            var mapAdapter = adapter as IOltAdapterPagedMap<TSource, TDestination>;
+            if (mapAdapter == null && throwException)
+            {
+                throw new Exception($"{adapterName} not of type {nameof(IOltAdapterPagedMap<TSource, TDestination>)}");
+            }
+            return mapAdapter;
+
         }
 
         #endregion
