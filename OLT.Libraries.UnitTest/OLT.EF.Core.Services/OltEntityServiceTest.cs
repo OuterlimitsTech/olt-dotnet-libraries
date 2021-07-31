@@ -10,10 +10,14 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
 {
     public class OltEntityServiceTest
     {
+        private readonly IContextService _contextService;
         private readonly IPersonService _personService;
         
-        public OltEntityServiceTest(IPersonService personService)
+        public OltEntityServiceTest(
+            IContextService contextService,
+            IPersonService personService)
         {
+            _contextService = contextService;
             _personService = personService;
         }
 
