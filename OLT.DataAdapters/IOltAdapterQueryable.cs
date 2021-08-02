@@ -2,8 +2,8 @@
 
 namespace OLT.Core
 {
-    public interface IOltAdapterQueryable<in TEntity, out TModel> : IOltAdapter
+    public interface IOltAdapterQueryable<in TEntity, out TDestination> : IOltAdapter
     {
-        IQueryable<TModel> Map(IQueryable<TEntity> queryable);
+        IQueryable<TDestination> Map(IQueryable<TEntity> queryable);
     }
 }

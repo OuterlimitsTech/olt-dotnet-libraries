@@ -3,11 +3,10 @@ using System.Linq;
 
 namespace OLT.Core
 {
-    //TODO: Move to DataAdapter package
-    public interface IOltAdapterPaged<TEntity, TModel> : IOltAdapterQueryable<TEntity, TModel>
+    public interface IOltAdapterPaged<TEntity, TDestination> : IOltAdapterQueryable<TEntity, TDestination>
     {
-        IOltPaged<TModel> Map(IQueryable<TEntity> queryable, IOltPagingWithSortParams pagingParams);
-        IOltPaged<TModel> Map(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, IOltSortParams sortParams = null);
-        IOltPaged<TModel> Map(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy);
+        IOltPaged<TDestination> Map(IQueryable<TEntity> queryable, IOltPagingWithSortParams pagingParams);
+        IOltPaged<TDestination> Map(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, IOltSortParams sortParams = null);
+        IOltPaged<TDestination> Map(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace OLT.Core
 {
-    public interface IOltAdapterPagedMap<TEntity, TModel> : IOltAdapterMap<TEntity, TModel>, IOltAdapter
+    public interface IOltAdapterPagedMap<TEntity, TDestination> : IOltAdapterMap<TEntity, TDestination>, IOltAdapter
     {
         IQueryable<TEntity> DefaultOrderBy(IQueryable<TEntity> queryable);
     }

@@ -2,12 +2,6 @@
 
 namespace OLT.Core
 {
-    public interface IOltPaged
-    {
-        int Page { get; set; }
-        int Size { get; set; }
-    }
-
     public interface IOltPagingParams : IOltPaged
     {
         [Obsolete("Move to Page")]

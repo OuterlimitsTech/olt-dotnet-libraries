@@ -4,13 +4,13 @@ namespace OLT.Core
 {
     public interface IOltLogService : IOltInjectableSingleton
     {
-        bool IsDebugEnabled { get; }
-        bool IsErrorEnabled { get; }
-        bool IsFatalEnabled { get; }
-        bool IsInfoEnabled { get; }
-        bool IsTraceEnabled { get; }
-        bool IsWarnEnabled { get; }
-        bool IsSqlTraceEnabled { get; }
+        //bool IsDebugEnabled { get; }
+        //bool IsErrorEnabled { get; }
+        //bool IsFatalEnabled { get; }
+        //bool IsInfoEnabled { get; }
+        //bool IsTraceEnabled { get; }
+        //bool IsWarnEnabled { get; }
+        //bool IsSqlTraceEnabled { get; }
 
         void SqlTrace(string message);
 

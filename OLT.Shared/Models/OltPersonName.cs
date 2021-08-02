@@ -8,5 +8,4 @@
         public virtual string Suffix { get; set; }
         public virtual string FullName => System.Text.RegularExpressions.Regex.Replace(($"{First} {Middle} {Last} {Suffix}").Trim(), @"\s+", " ");
     }
-
 }

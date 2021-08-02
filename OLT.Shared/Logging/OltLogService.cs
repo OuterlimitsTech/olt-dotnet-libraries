@@ -4,16 +4,17 @@ using NLog.Config;
 
 namespace OLT.Core
 {
-    public class OltLogService : Logger, IOltLogService
+    public class OltLogService : IOltLogService
     {
         private const string LoggerName = "NLogLogger";
         
-        public static IOltLogService GetLoggingService()
-        {
-            ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition("utc_date", typeof(UtcDateRenderer));
-            var logger = (IOltLogService)LogManager.GetLogger("NLogLogger", typeof(OltLogService));
-            return logger;
-        }
+        
+        //public static IOltLogService GetLoggingService()
+        //{
+        //    ConfigurationItemFactory.Default.LayoutRenderers.RegisterDefinition("utc_date", typeof(UtcDateRenderer));
+        //    var logger = (IOltLogService)LogManager.GetLogger("NLogLogger", typeof(OltLogService));
+        //    return logger;
+        //}
 
         public virtual bool IsSqlTraceEnabled { get; set; } = false;
 
