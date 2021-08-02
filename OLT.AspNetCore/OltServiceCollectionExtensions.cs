@@ -31,7 +31,8 @@ namespace OLT.Core
         /// <param name="services"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IServiceCollection AddOltAspNetCore( this IServiceCollection services, OltAspNetCoreOptions options)
+        public static IServiceCollection AddOltAspNetCore<TSettings>( this IServiceCollection services, OltAspNetCoreOptions<TSettings> options)
+            where TSettings : OltAspNetAppSettings
         {
 
             if (services == null)
@@ -63,10 +64,7 @@ namespace OLT.Core
                     .AddNewtonsoftJson();
             }
 
-            if (options.EnableSwagger)
-            {
-                services.AddOltApiSwagger();
-            }
+            services.AddOltApiSwagger(options.Settings.Swagger);
 
             options.CorsPolicies?.ForEach(policy =>
             {
@@ -98,64 +96,11 @@ namespace OLT.Core
         /// Adds Swagger Configuration
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="settings"><see cref="OltAspNetSwaggerAppSettings"/></param>
         /// <returns></returns>
-        public static IServiceCollection AddOltApiSwagger(this IServiceCollection services)
+        public static IServiceCollection AddOltApiSwagger(this IServiceCollection services, OltAspNetSwaggerAppSettings settings)
         {
-            var apiName = Assembly.GetEntryAssembly()?.GetCustomAttribute<System.Reflection.AssemblyProductAttribute>().Product ?? Assembly.GetCallingAssembly().GetType().Assembly.GetCustomAttribute<System.Reflection.AssemblyProductAttribute>().Product;
-
-            services
-                .AddSwaggerGen(
-                    options =>
-                    {
-                        // Resolve the temp IApiVersionDescriptionProvider service  
-                        var provider = services.BuildServiceProvider()
-                            .GetRequiredService<IApiVersionDescriptionProvider>();
-
-                        // Add a swagger document for each discovered API version  
-                        foreach (var description in provider.ApiVersionDescriptions)
-                        {
-                            options.SwaggerDoc(description.GroupName, new OpenApiInfo
-                            {
-                                //Title = $"{Assembly.GetCallingAssembly().GetType().Assembly.GetCustomAttribute<System.Reflection.AssemblyProductAttribute>().Product} {description.ApiVersion}",
-                                Title = $"{apiName}  {description.ApiVersion}",
-                                Version = description.ApiVersion.ToString(),
-                                Description = description.IsDeprecated
-                                    ? $"{Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Api Methods"} - DEPRECATED"
-                                    : Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Api Methods",
-                            });
-                        }
-
-                        // Add a custom filter for setting the default values  
-                        options.OperationFilter<OltSwaggerDefaultValues>();
-
-                        options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
-                        {
-                            Type = SecuritySchemeType.Http,
-                            Scheme = "bearer",
-                            BearerFormat = "JWT",
-                            Description = "JWT Authorization header using the Bearer scheme."
-                        });
-
-                        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                        {
-                            {
-                                new OpenApiSecurityScheme
-                                {
-                                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
-                                },
-                                new string[] {}
-                            }
-                        });
-
-                        //REMOVED - NOT USING 2020-02-02 Chris
-                        // Tells swagger to pick up the output XML document file  
-                        //options.IncludeXmlComments(Path.Combine(
-                        //    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{this.GetType().Assembly.GetName().Name}.xml"
-                        //));
-
-                    });
-
-            return services;
+            return settings.Apply(services);
         }
 
         /// <summary>

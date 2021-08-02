@@ -5,6 +5,7 @@ using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.Shared
 {
+    // ReSharper disable once InconsistentNaming
     public enum TestEnumTypes
     {
         [Code("test-1", 1000)]
@@ -13,7 +14,8 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
     }
 
 
-    public class ExtensionTests
+    // ReSharper disable once InconsistentNaming
+    public class ExtensionTests : OltDisposable
     {
 
         [Fact]

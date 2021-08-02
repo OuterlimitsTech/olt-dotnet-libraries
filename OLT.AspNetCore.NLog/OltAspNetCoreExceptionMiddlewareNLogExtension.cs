@@ -1,16 +1,23 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using NLog;
+using OLT.Core;
 
-namespace OLT.Core
+namespace OLT.AspNetCore.NLog
 {
-    public static class OltAspNetCoreExceptionMiddlewareExtension
+    public static class OltAspNetCoreExceptionMiddlewareNLogExtension
     {
-
-        public static void UseOltExceptionHandler(this IApplicationBuilder app, bool showErrorDetails, string supportEmail = "support@outerlimitstech.com")
+        public static void UseOltNLogRequestLogging(this IApplicationBuilder app, OltAspNetAppSettings settings)
         {
+
+            app.Use(async (context, next) =>
+            {
+                context.Request.EnableBuffering();
+                await next();
+            });
 
             app.UseExceptionHandler(appError =>
             {
@@ -24,9 +31,9 @@ namespace OLT.Core
                     {
                         LogManager.GetCurrentClassLogger().Error(contextFeature.Error);
 
-                        var errorMsg = $"Internal Server Error.  Please contact support -> {supportEmail}";
+                        var errorMsg = $"Internal Server Error.  Please contact support -> {settings.SupportEmail}";
 
-                        if (showErrorDetails)
+                        if (settings.ShowExceptionDetails)
                         {
                             errorMsg = contextFeature.Error.ToString();
                         }

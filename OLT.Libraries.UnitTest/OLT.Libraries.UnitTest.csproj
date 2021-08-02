@@ -14,10 +14,13 @@
 
   <ItemGroup>
     <PackageReference Include="Faker.Net" Version="1.5.138" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.8" />
     <PackageReference Include="Microsoft.CodeCoverage" Version="16.10.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.XUnit" Version="2.0.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="Xunit.DependencyInjection" Version="7.3.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -31,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OLT.AspNetCore.NLog\OLT.AspNetCore.NLog.csproj" />
+    <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters.AutoMapper\OLT.DataAdapters.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters\OLT.DataAdapters.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />

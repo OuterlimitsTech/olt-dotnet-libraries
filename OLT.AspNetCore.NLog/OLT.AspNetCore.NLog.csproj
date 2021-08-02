@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>OLT.Core</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Adds extenstion to register NLog Middleware to log </Description>
+    <Product>.Net 5.0 AspNetCore Library</Product>
+    <Company>OuterLimits Technologies, Inc</Company>
+    <Authors>Chris Straw</Authors>
+    <Version>5.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.7.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>

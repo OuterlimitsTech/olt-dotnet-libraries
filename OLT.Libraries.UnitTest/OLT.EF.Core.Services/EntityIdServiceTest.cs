@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using OLT.Core;
+using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assests.Entity.Models;
 using OLT.Libraries.UnitTest.Assests.LocalServices;
 using OLT.Libraries.UnitTest.Assests.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
 {
     // ReSharper disable once InconsistentNaming
-    public class EntityIdServiceTest
+    public class EntityIdServiceTest : BaseTest
     {
         private readonly IPersonService _personService;
         
-        public EntityIdServiceTest(IPersonService personService)
+        public EntityIdServiceTest(IPersonService personService, ITestOutputHelper output) : base(output)
         {
             _personService = personService;
         }

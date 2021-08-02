@@ -3,22 +3,19 @@
 namespace OLT.Core
 {
 
-    public class OltAspNetCoreOptions : OltInjectionOptions
+    public class OltAspNetCoreOptions<TSettings> : OltInjectionOptions
+        where TSettings : OltAspNetAppSettings
     {
-        public OltAspNetCoreOptions()
-        {
 
-        }
-
-        public OltAspNetCoreOptions(OltAspNetAppSettings appSettings, string jwtSecret, bool? disableNewtonsoftJson = false, int? cacheExpirationMinutes = 30)
+        public OltAspNetCoreOptions(TSettings settings, string jwtSecret, bool? disableNewtonsoftJson = false, int? cacheExpirationMinutes = 30)
         {
-            EnableSwagger = appSettings.EnableSwagger;
+            Settings = settings;
             JwtSecret = jwtSecret;
             DisableNewtonsoftJson = disableNewtonsoftJson.GetValueOrDefault(false);
             CacheExpirationMinutes = cacheExpirationMinutes.GetValueOrDefault(30);
         }
 
-        public bool EnableSwagger { get; set; } = false;
+        public TSettings Settings { get; }
         public bool DisableNewtonsoftJson { get; set; } = false;
         public string JwtSecret { get; set; }
 

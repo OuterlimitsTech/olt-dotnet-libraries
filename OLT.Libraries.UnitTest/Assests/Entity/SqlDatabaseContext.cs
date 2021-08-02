@@ -24,5 +24,6 @@ namespace OLT.Libraries.UnitTest.Assests.Entity
 
         public virtual DbSet<PersonEntity> People { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
+        public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
     }
 }

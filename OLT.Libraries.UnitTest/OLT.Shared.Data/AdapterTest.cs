@@ -7,7 +7,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.Data
 {
     
     // ReSharper disable once InconsistentNaming
-    public class AdapterTest
+    public class AdapterTest : OltDisposable
     {
         private readonly IOltAdapterResolver _adapterResolver;
 

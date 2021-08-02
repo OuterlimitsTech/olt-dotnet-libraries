@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Castle.DynamicProxy.Internal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,81 +45,26 @@ namespace OLT.Core
             return hostEnvironment.IsEnvironment(OltDefaults.OltEnvironments.Test);
         }
 
-        public static IApplicationBuilder UseOltDefaults(this IApplicationBuilder app)
-        {
-            return UseOltDefaults(app, new OltAspNetApplicationOptions());
-        }
-
-        public static IApplicationBuilder UseOltDefaults(this IApplicationBuilder app, OltAspNetApplicationOptions options)
+        public static IApplicationBuilder UseOltDefaults<TSettings>(this IApplicationBuilder app, TSettings settings, Action<IApplicationBuilder, TSettings> middlewareLogging)
+            where TSettings: OltAspNetAppSettings
         {
 
-            if (options.PathBase.IsNotEmpty())
+            var assembliesToScan = new List<Assembly>
             {
-                app.UsePathBase(options.PathBase);
+                Assembly.GetEntryAssembly(),
+                Assembly.GetExecutingAssembly()
+            };
+
+            var hostingConfig =  assembliesToScan
+                .GetAllReferencedAssemblies()
+                .GetAllImplements<IOltAspNetHostingConfiguration>()
+                .First(p => p.Name == settings.Hosting.ConfigurationName);
+            if (hostingConfig == null)
+            {
+                throw new Exception($"Unable to locate hosting configuration {settings.Hosting.ConfigurationName}");
             }
 
-            if (options.EnableDeveloperExceptionPage)
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            if (options.EnableSwagger)
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-                    // Add a swagger UI for each discovered API version  
-                    foreach (var description in provider.ApiVersionDescriptions)
-                    {
-                        var deprecated = description.IsDeprecated ? " DEPRECATED" : "";
-                        c.SwaggerEndpoint($"{description.GroupName}/swagger.json", $"{options.SwaggerAppName} API {description.GroupName}{deprecated}");
-                    }
-                });
-            }
-
-            // needed for NLog ${aspnet-request-posted-body} with an API Controller. Must be before app.UseEndpoints
-            app.Use(async (context, next) => {
-                context.Request.EnableBuffering();
-                await next();
-            });
-
-            if (options.Cors.UseCors)
-            {
-                app.UseCors(options.Cors.Policy.PolicyName ?? new OltAspNetCoreCorsPolicyDisabled().PolicyName);
-            }
-            
-
-            if (options.EnableBuffering)
-            {
-                // needed for NLog ${aspnet-request-posted-body} with an API Controller. Must be before app.UseEndpoints
-                app.Use(async (context, next) => {
-                    context.Request.EnableBuffering();
-                    await next();
-                });
-            }
-
-            if (options.DisableHttpsRedirect == false)
-            {
-                app.UseHttpsRedirection();
-            }
-
-            app.UseOltExceptionHandler(options.ShowErrorDetails, options.SupportEmail);
-
-            app.UseRouting();
-
-            if (options.DisableUseAuthentication == false)
-            {
-                app.UseAuthentication();
-            }
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
+            hostingConfig.Configure(app, settings, middlewareLogging);
 
             return app;
         }

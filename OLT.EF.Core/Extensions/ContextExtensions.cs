@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 
 // ReSharper disable once CheckNamespace
@@ -51,15 +52,15 @@ namespace OLT.Core
             var entityType = dbContext.Model.FindEntityType(typeof(T));
 
             // Table info 
-            //var tableName = entityType.GetTableName();
-            //var tableSchema = entityType.GetSchema();
+            var tableName = entityType.GetTableName();
+            var tableSchema = entityType.GetSchema();
 
             // Column info 
             foreach (var property in entityType.GetProperties())
             {
                 cols.Add(new DbColumnInfo
                 {
-                    Name = property.GetColumnName(),
+                    Name = property.GetColumnName(StoreObjectIdentifier.Table(tableName, tableSchema)),
                     Type = property.GetColumnType(),
                 });
             };
