@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public class OltPagedSearchData<T, TC> : OltPagedData<T>
+    public class OltPagedSearchJson<T, TC> : OltPagedJson<T>
         where T : class
         where TC : class
     {

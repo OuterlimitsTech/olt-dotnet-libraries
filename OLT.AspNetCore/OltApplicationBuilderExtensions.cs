@@ -48,6 +48,11 @@ namespace OLT.Core
         public static IApplicationBuilder UseOltDefaults(this IApplicationBuilder app, OltAspNetApplicationOptions options)
         {
 
+            if (options.PathBase.IsNotEmpty())
+            {
+                app.UsePathBase(options.PathBase);
+            }
+
             if (options.EnableDeveloperExceptionPage)
             {
                 app.UseDeveloperExceptionPage();

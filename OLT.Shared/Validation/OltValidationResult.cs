@@ -10,7 +10,7 @@
         public OltValidationResult(string message)
         {
             this.ErrorMessage = message;
-            this.Severity = string.IsNullOrEmpty(message) ? OltValidationSeverityTypes.Pass : OltValidationSeverityTypes.Error;
+            this.Severity = string.IsNullOrEmpty(message) ? OltValidationSeverityTypes.Ok : OltValidationSeverityTypes.Error;
         }
 
         public string ErrorMessage { get; set; }

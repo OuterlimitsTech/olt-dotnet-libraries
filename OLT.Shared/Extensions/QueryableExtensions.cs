@@ -53,7 +53,7 @@ namespace OLT.Core
                 .Take(pagingParams.Size);
 
 
-            return new OltPagedData<TDestination>
+            return new OltPagedJson<TDestination>
             {
                 Count = cnt,
                 Page = pagingParams.Page,
