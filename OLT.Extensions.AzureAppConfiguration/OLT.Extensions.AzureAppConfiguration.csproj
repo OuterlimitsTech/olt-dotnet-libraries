@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -8,7 +8,7 @@
     <Description>Add Exenestions to service collection for AzureAppConfigurationOptions</Description>
     <Product>.Net Standard 2.0 Library to include AzureAppConfigurationOptions</Product>
     <RootNamespace>OLT.Core</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>

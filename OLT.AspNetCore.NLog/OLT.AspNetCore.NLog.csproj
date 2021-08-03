@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Adds extenstion to register NLog Middleware to log </Description>
     <Product>AspNetCore NLog Library</Product>

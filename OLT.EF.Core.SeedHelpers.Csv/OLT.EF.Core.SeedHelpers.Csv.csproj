@@ -7,7 +7,7 @@
     <Authors>Chris Straw</Authors>
     <Product>.Net Standard EF Core CSV Seed Entity Type Config</Product>
     <Description>Adds OltEntityTypeConfigurationFromCsv to allow seeding from a CSV embedded resource</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>OLT.Core</RootNamespace>
     <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>

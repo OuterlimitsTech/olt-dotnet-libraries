@@ -34,12 +34,21 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
+      - task: gitversion/setup@0
+        displayName: Confiure Git Version
+        inputs:
+          versionSpec: '5.x'
+
+      - task: gitversion/execute@0
+        displayName: Determine Version Number
+
       - task: Bash@3
         inputs:
           targetType: 'inline'
           script: |
             # Write your commands here
-
+            
+            echo NuGetVersionV2 = $(GitVersion.NuGetVersionV2)
             echo Package Version = '$(packageVersion)'
             echo Package Version = '$(Build.SourcesDirectory)'
 
@@ -50,6 +59,40 @@ jobs:
           projects: '$(solution)'
           feedsToUse: 'select'
           vstsFeed: 'olt-packages'
+
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Build'
+        inputs:
+          command: 'build'
+          projects: '$(solution)'
+          arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.AssemblySemVer)'
+          # arguments: '--configuration $(BuildConfiguration)'
+          # versioningScheme: byEnvVar
+          # versionEnvVar: GitVersion.NuGetVersionV2
+          # versionEnvVar: 'GitVersion.SemVer'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Build'
+        inputs:
+          command: 'pack'
+          projects: '$(solution)'
+          nobuild: true
+          packDirectory: '$(Build.ArtifactStagingDirectory)'
+          versioningScheme: byEnvVar
+          versionEnvVar: GitVersion.NuGetVersionV2
+
+      # - task: CopyFiles@2
+      #   displayName: 'Copy $(Build.SourcesDirectory) to: $(Build.ArtifactStagingDirectory)'
+      #   inputs:
+      #     SourceFolder: '$(Build.SourcesDirectory)'
+      #     Contents: '**/*.nupkg'
+      #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      #     flattenFolders: true
+
+      - publish: $(Build.ArtifactStagingDirectory)
+        displayName: 'Publish Package Artifact'
+        artifact: 'olt-nuget-packages'
 
       - task: DotNetCoreCLI@2
         displayName: 'Running Test'
@@ -65,28 +108,6 @@ jobs:
           codeCoverageTool: 'Cobertura'
           summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
           # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
-
-      - task: DotNetCoreCLI@2
-        displayName: 'Build'
-        inputs:
-          command: 'build'
-          projects: '$(solution)'
-          arguments: '--configuration $(BuildConfiguration)'
-          versioningScheme: byEnvVar
-          versionEnvVar: 'packageVersion'
-          # versionEnvVar: 'GitVersion.SemVer'
-
-      - task: CopyFiles@2
-        displayName: 'Copy $(Build.SourcesDirectory) to: $(Build.ArtifactStagingDirectory)'
-        inputs:
-          SourceFolder: '$(Build.SourcesDirectory)'
-          Contents: '**/*.nupkg'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'
-          flattenFolders: true
-
-      - publish: $(Build.ArtifactStagingDirectory)
-        displayName: 'Publish Package Artifact'
-        artifact: 'olt-nuget-packages'
 
       - task: NuGetCommand@2
         displayName: 'Publish Nuget Package - Internal'

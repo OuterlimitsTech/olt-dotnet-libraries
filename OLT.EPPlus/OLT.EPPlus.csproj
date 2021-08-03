@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>OLT.EPPlus</RootNamespace>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Company>OuterLimits Technologies, Inc</Company>
     <Authors>Chris Straw</Authors>
     <Product>.Net Standard 2.0 EPPlus Helper</Product>
