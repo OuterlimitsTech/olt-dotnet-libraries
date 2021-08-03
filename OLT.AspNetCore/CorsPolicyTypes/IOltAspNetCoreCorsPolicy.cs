@@ -6,8 +6,6 @@ namespace OLT.Core
     {
         string PolicyName { get; }
 
-        OltAspNetCoreCorsPolicyOptions CorsPolicy { get; }
-
         /// <summary>
         /// Sets CORS policy
         /// </summary>

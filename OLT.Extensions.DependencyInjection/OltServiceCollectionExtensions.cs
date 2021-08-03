@@ -17,9 +17,9 @@ namespace OLT.Core
         /// Adds IOltDbAuditUser to resolve to IOltIdentity as scoped
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="options"></param>
+        /// <param name="action"></param>
         /// <returns><param typeof="IServiceCollection"></param></returns>
-        public static IServiceCollection AddOltDefault(this IServiceCollection services, IOltInjectionOptions options)
+        public static IServiceCollection AddOltDefault(this IServiceCollection services, Action action)
         {
 
             if (services == null)
@@ -27,18 +27,19 @@ namespace OLT.Core
                 throw new ArgumentNullException(nameof(services));
             }
 
-            if (options == null)
+            if (action == null)
             {
-                throw new ArgumentNullException(nameof(options));
+                throw new ArgumentNullException(nameof(action));
             }
 
-            services
-                .AddOltAddMemoryCache(options.CacheExpirationMinutes)
+            services                
                 .OltScan()
                 .AddSingleton<IOltMemoryCache, OltMemoryCache>()
                 .AddSingleton<IOltConfigManager, OltConfigManager>()
                 .AddSingleton<IOltLogService, OltLogService>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
+
+            action.Invoke();
 
             return services;
         }

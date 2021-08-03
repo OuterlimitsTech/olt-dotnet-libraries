@@ -31,8 +31,9 @@ namespace OLT.Core
         /// </summary>
         /// <param name="services"></param>
         /// <param name="options"></param>
+        /// <param name="action">Invoked after initialized</param>
         /// <returns></returns>
-        public static IServiceCollection AddOltAspNetCore<TSettings>( this IServiceCollection services, OltAspNetCoreOptions<TSettings> options)
+        public static IServiceCollection AddCtAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Action<IMvcBuilder> action)
             where TSettings : OltAspNetAppSettings
         {
 
@@ -41,46 +42,46 @@ namespace OLT.Core
                 throw new ArgumentNullException(nameof(services));
             }
 
-            if (options == null)
+            if (settings == null)
             {
-                throw new ArgumentNullException(nameof(options));
+                throw new ArgumentNullException(nameof(settings));
             }
+
+            var assembliesToScan = new List<Assembly>
+            {
+                Assembly.GetEntryAssembly(),
+                Assembly.GetExecutingAssembly()
+            };
+
+            assembliesToScan
+                .GetAllReferencedAssemblies()
+                .GetAllImplements<IOltAspNetCoreCorsPolicy>()
+                .ToList()
+                .ForEach(policy => services.AddOltCors(policy));
 
             services
                 .AddOltApiVersioning()
-                .AddOltDefault(options)
-                .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
-                .AddScoped<IOltIdentity, OltIdentityAspNetCore>()
-                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>())
-                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
-            if (options.DisableNewtonsoftJson)
+                .AddOltApiSwagger(settings.Swagger);
+
+            if (settings.JwtSecret.IsNotEmpty())
             {
-                services.AddControllers();
+                services.AddOltJwt(settings.JwtSecret);
             }
-            else
+
+            services.AddOltDefault(() =>
             {
                 services
-                    .AddControllers()
-                    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
-            }
-
-            services.AddOltApiSwagger(options.Settings.Swagger);
-
-            options.CorsPolicies?.ForEach(policy =>
-            {
-                services.AddOltCors(policy);
+                    .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
+                    .AddScoped<IOltIdentity, OltIdentityAspNetCore>()
+                    .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>())
+                    .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             });
-            
 
-            if (options.JwtSecret.IsNotEmpty())
-            {
-                services.AddOltJwt(options.JwtSecret);
-            }
+            action.Invoke(services.AddControllers());
+
 
             return services;
         }
-
 
         /// <summary>
         /// Adds CORS policy

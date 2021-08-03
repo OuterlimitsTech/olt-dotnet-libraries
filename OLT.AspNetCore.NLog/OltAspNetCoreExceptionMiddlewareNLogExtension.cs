@@ -33,7 +33,7 @@ namespace OLT.AspNetCore.NLog
 
                         var errorMsg = $"Internal Server Error.  Please contact support -> {settings.SupportEmail}";
 
-                        if (settings.ShowExceptionDetails)
+                        if (settings.Hosting.ShowExceptionDetails)
                         {
                             errorMsg = contextFeature.Error.ToString();
                         }

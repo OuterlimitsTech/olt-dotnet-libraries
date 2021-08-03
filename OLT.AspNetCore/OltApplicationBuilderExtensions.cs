@@ -40,7 +40,16 @@ namespace OLT.Core
             return hostEnvironment.IsEnvironment(OltDefaults.OltEnvironments.Test);
         }
 
-        public static IApplicationBuilder UseOltDefaults<TSettings>(this IApplicationBuilder app, TSettings settings, Action<IApplicationBuilder, TSettings> middlewareLogging)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSettings"></typeparam>
+        /// <param name="app"></param>
+        /// <param name="settings"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseOltDefaults<TSettings>(this IApplicationBuilder app, TSettings settings, Action action)
             where TSettings: OltAspNetAppSettings
         {
 
@@ -59,7 +68,7 @@ namespace OLT.Core
                 throw new Exception($"Unable to locate hosting configuration {settings.Hosting.ConfigurationName}");
             }
 
-            hostingConfig.Configure(app, settings, middlewareLogging);
+            hostingConfig.Configure(app, settings, action);
 
             return app;
         }

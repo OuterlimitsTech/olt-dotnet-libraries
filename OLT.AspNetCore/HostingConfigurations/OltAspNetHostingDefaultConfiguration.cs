@@ -10,7 +10,7 @@ namespace OLT.Core
         public override string Name => OltAspNetDefaults.HostingConfigurations.Default;
 
 
-        public override IApplicationBuilder Configure<TSettings>(IApplicationBuilder app, TSettings settings, Action<IApplicationBuilder, TSettings> middlewareLogging)
+        public override IApplicationBuilder Configure<TSettings>(IApplicationBuilder app, TSettings settings, Action action)
         {
 
             if (settings.Hosting.PathBase.IsNotEmpty())
@@ -18,12 +18,12 @@ namespace OLT.Core
                 app.UsePathBase(settings.Hosting.PathBase);
             }
 
-            if (settings.ShowExceptionDetails)
+            if (settings.Hosting.ShowExceptionDetails)
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            middlewareLogging?.Invoke(app, settings);
+            action?.Invoke();
 
             if (settings.Hosting.UseHsts)
             {
@@ -38,9 +38,9 @@ namespace OLT.Core
             settings.Swagger.Apply(app);
 
 
-            if (settings.CorsPolicyName.IsNotEmpty())
+            if (settings.Hosting.CorsPolicyName.IsNotEmpty())
             {
-                app.UseCors(settings.CorsPolicyName);
+                app.UseCors(settings.Hosting.CorsPolicyName);
             }
 
             if (settings.Hosting.DisableHttpsRedirect == false)

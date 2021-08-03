@@ -4,8 +4,7 @@ namespace OLT.Core
 {
     public class OltAspNetCoreCorsPolicyDisabled : IOltAspNetCoreCorsPolicy   
     {
-        public OltAspNetCoreCorsPolicyOptions CorsPolicy => OltAspNetCoreCorsPolicyOptions.Disabled;
-        public string PolicyName => OltAspNetDefaults.CorsPolicyName;
+        public string PolicyName => OltAspNetDefaults.CorsPolicies.Disabled;
 
         /// <summary>
         /// Sets CORS policy

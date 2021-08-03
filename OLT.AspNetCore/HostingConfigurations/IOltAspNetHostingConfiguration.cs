@@ -7,8 +7,6 @@ namespace OLT.Core
     {
         string Name { get; }
 
-        IApplicationBuilder Configure<TSettings>(IApplicationBuilder app, TSettings settings,
-            Action<IApplicationBuilder, TSettings> middlewareLogging)
-            where TSettings : OltAspNetAppSettings;
+        IApplicationBuilder Configure<TSettings>(IApplicationBuilder app, TSettings settings, Action middlewareLogging) where TSettings : OltAspNetAppSettings;
     }
 }

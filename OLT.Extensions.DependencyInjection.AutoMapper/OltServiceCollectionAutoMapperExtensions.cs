@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using OLT.Core;
 
-namespace OLT.Extensions.DependencyInjection.AutoMapper
+namespace OLT.Core
 {
     public static class OltServiceCollectionAutoMapperExtensions
     {

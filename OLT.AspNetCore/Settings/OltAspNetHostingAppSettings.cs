@@ -3,6 +3,14 @@
     public class OltAspNetHostingAppSettings : IOltAppSettings
     {
         /// <summary>
+        /// CORS Policy to apply
+        /// </summary>
+        /// <remarks>
+        /// Default Value is Olt_CorsPolicy_Disabled
+        /// </remarks>
+        public virtual string CorsPolicyName { get; set; } = OltAspNetDefaults.CorsPolicyName;
+
+        /// <summary>
         /// Preconfigured Hosting Configuration Name
         /// </summary>
         /// <remarks>
@@ -41,6 +49,14 @@
         /// </summary>
         public virtual bool DisableUseAuthorization { get; set; }
 
+        /// <summary>
+        /// Enables UseDeveloperExceptionPage();
+        /// </summary>
+        /// <remarks>
+        /// This should only be enabled in the Development environment. 
+        /// </remarks>
+        /// <remarks>Default: false</remarks>
+        public virtual bool ShowExceptionDetails { get; set; }
 
     }
 }

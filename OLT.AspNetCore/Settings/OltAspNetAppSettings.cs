@@ -10,28 +10,10 @@ namespace OLT.Core
         /// </summary>
         public OltAspNetHostingAppSettings Hosting { get; set; } = new OltAspNetHostingAppSettings();
 
-
-        /// <summary>
-        /// CORS Policy to apply
-        /// </summary>
-        /// <remarks>
-        /// Default Value is Olt_CorsPolicy_Disabled
-        /// </remarks>
-        public virtual string CorsPolicyName { get; set; } = OltAspNetDefaults.CorsPolicyName;
-
         /// <summary>
         /// Swagger Options
         /// </summary>
         public virtual OltAspNetSwaggerAppSettings Swagger { get; set; } = new OltAspNetSwaggerAppSettings();
-
-        /// <summary>
-        /// Enables UseDeveloperExceptionPage();
-        /// </summary>
-        /// <remarks>
-        /// This should only be enabled in the Development environment. 
-        /// </remarks>
-        /// <remarks>Default: false</remarks>
-        public virtual bool ShowExceptionDetails { get; set; }
 
         /// <summary>
         /// Support email shown on exception responses. 
@@ -41,5 +23,12 @@ namespace OLT.Core
         /// </remarks>
         public virtual string SupportEmail { get; set; } = "support@outerlimitstech.com";
 
+        /// <summary>
+        /// JWT Secret for creating JWT Tokens
+        /// </summary>
+        /// <remarks>
+        /// If empty or null, Jwt Token Authentication will not be enabled.
+        /// </remarks>
+        public string JwtSecret { get; set; }
     }
 }

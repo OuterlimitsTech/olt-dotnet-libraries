@@ -22,7 +22,7 @@ namespace OLT.Libraries.UnitTest
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseOltDefaults(Settings, (builder, settings) => builder.UseOltNLogRequestLogging(settings));
+            app.UseOltDefaults(Settings, () => app.UseOltNLogRequestLogging(Settings));
         }
     }
 }

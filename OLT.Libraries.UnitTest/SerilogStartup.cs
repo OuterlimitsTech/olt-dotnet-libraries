@@ -12,7 +12,7 @@ namespace OLT.Libraries.UnitTest
     {
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseOltDefaults(Settings, (builder, settings) => builder.UseSerilogRequestLogging());
+            app.UseOltDefaults(Settings, () => app.UseSerilogRequestLogging());
         }
     }
 }

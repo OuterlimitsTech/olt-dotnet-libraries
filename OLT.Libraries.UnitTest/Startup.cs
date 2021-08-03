@@ -19,22 +19,25 @@ namespace OLT.Libraries.UnitTest
     {
         protected readonly OltAspNetAppSettings Settings = new OltAspNetAppSettings
         {
-            CorsPolicyName = OltAspNetDefaults.CorsPolicyName,
-            ShowExceptionDetails = true,
             Hosting = new OltAspNetHostingAppSettings
             {
+                CorsPolicyName = OltAspNetDefaults.CorsPolicyName,
+                ShowExceptionDetails = true,
                 ConfigurationName = OltAspNetDefaults.HostingConfigurations.Default
             }
         };
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddOltUnitTesting(new OltInjectionOptions());
+            services.AddOltUnitTesting(() =>
+            {
+                services.AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
+                    optionsBuilder.UseInMemoryDatabase(databaseName: "Test"));
 
-            services.AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
-                optionsBuilder.UseInMemoryDatabase(databaseName: "Test"));
+                services.AddControllers();
+            });
 
-            services.AddControllers();
+
         }
 
         
