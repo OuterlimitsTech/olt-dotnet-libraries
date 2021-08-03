@@ -10,10 +10,6 @@ namespace OLT.Libraries.UnitTest.Assests.Entity
     // ReSharper disable once InconsistentNaming
     public class SqlDatabaseContext : OltSqlDbContext<SqlDatabaseContext>
     {
-        protected SqlDatabaseContext() : base()
-        {
-
-        }
 
         public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options) : base(options)
         {

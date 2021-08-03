@@ -14,11 +14,6 @@ namespace OLT.Core
         private IOltLogService _logService;
         private IOltDbAuditUser _dbAuditUser;
 
-        protected OltDbContext() : base()
-        {
-
-        }
-
         protected OltDbContext(DbContextOptions<TContext> options) : base(options)
         {
 
@@ -32,13 +27,13 @@ namespace OLT.Core
         }
 
 
-        public virtual IOltLogService LogService
+        protected virtual IOltLogService LogService
         {
             get => _logService ??= this.GetService<IOltLogService>();
             set => _logService = value;
         }
 
-        public virtual IOltDbAuditUser DbAuditUser
+        protected virtual IOltDbAuditUser DbAuditUser
         {
             get => _dbAuditUser ??= this.GetService<IOltDbAuditUser>();
             set => _dbAuditUser = value;

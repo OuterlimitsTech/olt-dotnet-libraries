@@ -7,11 +7,6 @@ namespace OLT.Core
         where TContext : DbContext, IOltDbContext
     {
 
-        protected OltSqlDbContext()
-        {
-
-        }
-
         protected OltSqlDbContext(DbContextOptions<TContext> options) : base(options)
         {
 
