@@ -1,0 +1,12 @@
+mode: Mainline
+next-version: 5.2.0
+branches:
+  master:
+    tag: ""
+  develop:
+    tag: beta
+  feature:
+    tag: alpha
+ignore:
+  sha: []
+merge-message-formats: {}
