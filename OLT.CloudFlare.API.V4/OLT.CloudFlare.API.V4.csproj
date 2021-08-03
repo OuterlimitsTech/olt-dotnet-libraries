@@ -1,16 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyName>OLT.CloudFlare.API.V4</AssemblyName>
     <RootNamespace>OLT.CloudFlare</RootNamespace>
     <Product>CloudFlare Version 4 Library</Product>
     <Description>CloudFlare DNS Library</Description>
-    <Company>OuterLimits Technologies, Inc</Company>
-    <Authors>Chris Straw</Authors>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,11 +13,5 @@
     <PackageReference Include="RestSharp" Version="106.12.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
 </Project>

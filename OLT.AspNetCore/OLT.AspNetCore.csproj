@@ -2,14 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>OLT.Core</RootNamespace>
     <Product>OLT AspNetCore Library</Product>
     <Description>OLT AspNetCore Library</Description>
-    <Company>OuterLimits Technologies, Inc</Company>
-    <Authors>Chris Straw</Authors>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,11 +23,5 @@
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
 </Project>

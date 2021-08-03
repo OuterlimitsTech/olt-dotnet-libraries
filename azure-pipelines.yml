@@ -43,6 +43,7 @@ jobs:
         displayName: Determine Version Number
 
       - task: Bash@3
+        displayName: 'Console Echo of some stuff'
         inputs:
           targetType: 'inline'
           script: |
@@ -62,7 +63,7 @@ jobs:
 
 
       - task: DotNetCoreCLI@2
-        displayName: 'Build'
+        displayName: 'Building Solution'
         inputs:
           command: 'build'
           projects: '$(solution)'
@@ -73,7 +74,7 @@ jobs:
           # versionEnvVar: 'GitVersion.SemVer'
 
       - task: DotNetCoreCLI@2
-        displayName: 'Build'
+        displayName: 'Packing Nuget Packages'
         inputs:
           command: 'pack'
           projects: '$(solution)'

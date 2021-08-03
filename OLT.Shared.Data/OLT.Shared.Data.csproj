@@ -2,14 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>OLT.Core</RootNamespace>
     <Product>OLT Shared Data Library</Product>
-    <Description>Data Adapters, Queryable Extensions, Entity Interfaces</Description>
-    <Company>OuterLimits Technologies, Inc</Company>
-    <Authors>Chris Straw</Authors>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
+    <Description>Shared items that require Newtonsoft.Json</Description>
   </PropertyGroup>
 
   <ItemGroup>

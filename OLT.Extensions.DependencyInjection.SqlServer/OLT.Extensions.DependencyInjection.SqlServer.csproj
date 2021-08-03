@@ -5,22 +5,10 @@
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Add Exenestions to service collection for OLT Default injection for SQL Server</Description>
     <Product>Library to include default injection for SQL Server</Product>
-    <Company>OuterLimits Technologies, Inc</Company>
-    <Authors>Chris Straw</Authors>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core.SqlServer\OLT.EF.Core.SqlServer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

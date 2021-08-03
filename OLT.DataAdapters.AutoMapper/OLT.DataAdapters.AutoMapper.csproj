@@ -3,12 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>OLT.Core</RootNamespace>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
-    <Company>OuterLimits Technologies, Inc.</Company>
-    <Authors>Chris Straw</Authors>
-    <Product>.Net Standard DataAdapters AutoMapper Library</Product>
-    <PackageIcon>icon.png</PackageIcon>
+    <Product>DataAdapters AutoMapper Library</Product>
+    <Description>DataAdapters AutoMapper Library</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,13 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.DataAdapters\OLT.DataAdapters.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

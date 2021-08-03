@@ -2,34 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Company>OuterLimits Technologies, Inc.</Company>
     <Product>OLT Shared Library</Product>
-    <Authors>Chris Straw</Authors>
     <Description>Contains all generic assets for OLT Packages</Description>
     <RootNamespace>OLT.Core</RootNamespace>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Adapters\**" />
-    <Compile Remove="Exporters\**" />
-    <EmbeddedResource Remove="Adapters\**" />
-    <EmbeddedResource Remove="Exporters\**" />
-    <None Remove="Adapters\**" />
-    <None Remove="Exporters\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
 </Project>

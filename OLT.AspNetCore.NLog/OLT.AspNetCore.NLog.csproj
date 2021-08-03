@@ -2,14 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Adds extenstion to register NLog Middleware to log </Description>
     <Product>AspNetCore NLog Library</Product>
-    <Company>OuterLimits Technologies, Inc</Company>
-    <Authors>Chris Straw</Authors>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,13 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>
