@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castle.DynamicProxy.Internal;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace OLT.Core

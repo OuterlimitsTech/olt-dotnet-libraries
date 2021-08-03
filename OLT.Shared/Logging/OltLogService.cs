@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using OLT.Core.Extensions;
 
 namespace OLT.Core
 {
@@ -25,14 +24,14 @@ namespace OLT.Core
 
     
 
-        public virtual void Write(OltLogType oltLogType, string message)
+        public virtual void Write(OltLogType logType, string message)
         {
-            _logger.Log(oltLogType.ToLogLevel(), message);
+            _logger.Log(logType.ToLogLevel(), message);
         }
 
-        public virtual void Write(OltLogType oltLogType, string message, params object[] args)
+        public virtual void Write(OltLogType logType, string message, params object[] args)
         {
-            _logger.Log(oltLogType.ToLogLevel(), message, args);
+            _logger.Log(logType.ToLogLevel(), message, args);
         }
 
         public virtual void Write(Exception exception)

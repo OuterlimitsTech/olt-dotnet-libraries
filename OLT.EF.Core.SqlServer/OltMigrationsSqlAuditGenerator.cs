@@ -108,7 +108,6 @@ namespace OLT.Core
         private string GetColumnGenString(AddColumnOperation operation)
         {
             var type = "";
-            //var nullable = "";
 
             if (operation.ClrType == typeof(string))  // Add more for other native types
                 type = "NVARCHAR(MAX)";

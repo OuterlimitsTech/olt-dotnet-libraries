@@ -13,9 +13,6 @@ namespace OLT.Core
         public virtual int Size { get; set; }
         public virtual int Page { get; set; }
 
-        //[JsonIgnore]
-        //public int PageIndex => PageNumber - 1;
-
         public virtual int Count { get; set; }
         public virtual IEnumerable<TModel> Data { get; set; }
 

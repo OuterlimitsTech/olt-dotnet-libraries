@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assests.Entity.Models;
 
@@ -7,11 +10,12 @@ namespace OLT.Libraries.UnitTest.Assests.Entity
     // ReSharper disable once InconsistentNaming
     public class SqlDatabaseContext : OltSqlDbContext<SqlDatabaseContext>
     {
-        public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options) : base(options)
+        protected SqlDatabaseContext() : base()
         {
+
         }
 
-        public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options, IOltLogService logService, IOltDbAuditUser dbAuditUser) : base(options, logService, dbAuditUser)
+        public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options) : base(options)
         {
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
+using OLT.Libraries.UnitTest.Assests.Entity;
 using OLT.Libraries.UnitTest.Assests.Entity.Models;
 using OLT.Libraries.UnitTest.Assests.LocalServices;
 using OLT.Libraries.UnitTest.Assests.Models;
@@ -15,7 +16,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
     {
         private readonly IPersonService _personService;
         
-        public EntityIdServiceTest(IPersonService personService, ITestOutputHelper output) : base(output)
+        public EntityIdServiceTest(SqlDatabaseContext context, IPersonService personService, ITestOutputHelper output) : base(output)
         {
             _personService = personService;
         }

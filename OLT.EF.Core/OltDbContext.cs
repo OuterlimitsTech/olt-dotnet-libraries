@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace OLT.Core
@@ -10,6 +11,9 @@ namespace OLT.Core
     public abstract class OltDbContext<TContext> : DbContext, IOltDbContext
         where TContext: DbContext, IOltDbContext
     {
+        private IOltLogService _logService;
+        private IOltDbAuditUser _dbAuditUser;
+
         protected OltDbContext() : base()
         {
 
@@ -20,11 +24,6 @@ namespace OLT.Core
 
         }
 
-        protected OltDbContext(DbContextOptions<TContext> options, IOltLogService logService, IOltDbAuditUser dbAuditUser) : base(options)
-        {
-            this.LogService = logService;
-            this.DbAuditUser = dbAuditUser;
-        }
 
         public enum DefaultStringTypes
         {
@@ -33,13 +32,21 @@ namespace OLT.Core
         }
 
 
-        public virtual IOltLogService LogService { get; set; }
-        public virtual IOltDbAuditUser DbAuditUser { get; set; }
+        public virtual IOltLogService LogService
+        {
+            get => _logService ??= this.GetService<IOltLogService>();
+            set => _logService = value;
+        }
+
+        public virtual IOltDbAuditUser DbAuditUser
+        {
+            get => _dbAuditUser ??= this.GetService<IOltDbAuditUser>();
+            set => _dbAuditUser = value;
+        }
 
 
         public abstract string DefaultSchema { get; }
         public abstract bool DisableCascadeDeleteConvention { get; }
-        //public abstract bool DisableOneToManyCascadeDeleteConvention { get; }
         public virtual string DefaultAnonymousUser => "GUEST USER";
         public abstract DefaultStringTypes DefaultStringType { get; }
 
@@ -79,7 +86,7 @@ namespace OLT.Core
                 {
                     if (entityEntry.State == EntityState.Added)
                     {
-                        createModel.CreateUser = createModel.CreateUser ?? AuditUser;
+                        createModel.CreateUser ??= AuditUser;
                         createModel.CreateDate = createModel.CreateDate == DateTimeOffset.MinValue ? DateTimeOffset.UtcNow : createModel.CreateDate;
 
                     }

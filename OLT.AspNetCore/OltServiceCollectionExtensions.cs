@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 
 namespace OLT.Core
 {
@@ -61,7 +62,7 @@ namespace OLT.Core
             {
                 services
                     .AddControllers()
-                    .AddNewtonsoftJson();
+                    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
             }
 
             services.AddOltApiSwagger(options.Settings.Swagger);

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 
-namespace OLT.Core.Extensions
+namespace OLT.Core
 {
     public static class EnumExtensions
     {

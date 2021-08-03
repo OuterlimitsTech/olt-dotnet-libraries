@@ -17,10 +17,6 @@ namespace OLT.Core
 
         }
 
-        protected OltSqlDbContext(DbContextOptions<TContext> options, IOltLogService logService, IOltDbAuditUser dbAuditUser) : base(options, logService, dbAuditUser)
-        {
-        }
-
         protected abstract int IdentitySeed { get; }
         protected abstract int IdentityIncrement { get; }
         

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace OLT.Core
 {
-    public static class OltConfigurationExtensions
+    public static class ConfigurationExtensions
     {
         /// <summary>
         /// Looks for the connection string

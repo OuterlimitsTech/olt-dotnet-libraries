@@ -30,8 +30,10 @@ namespace OLT.Libraries.UnitTest
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddOltUnitTesting(new OltInjectionOptions());
-            var optionsBuilder = new DbContextOptionsBuilder<SqlDatabaseContext>().UseInMemoryDatabase(databaseName: "Test");
-            services.AddOltSqlServer(optionsBuilder, (options, logService, auditUser) => new SqlDatabaseContext(options, logService, auditUser));
+
+            services.AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
+                optionsBuilder.UseInMemoryDatabase(databaseName: "Test"));
+
             services.AddControllers();
         }
 
