@@ -93,7 +93,7 @@ jobs:
 
       - publish: $(Build.ArtifactStagingDirectory)
         displayName: 'Publish Package Artifact'
-        artifact: 'olt-nuget-packages'
+        artifact: 'olt-nuget-packages-$(GitVersion.NuGetVersionV2)'
 
       - task: DotNetCoreCLI@2
         displayName: 'Running Test'
