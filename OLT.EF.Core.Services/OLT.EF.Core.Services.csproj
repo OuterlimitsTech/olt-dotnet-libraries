@@ -6,11 +6,11 @@
     <Company>OuterLimits Technologies, Inc.</Company>
     <Product>.Net Standard EF Core Library</Product>
     <Authors>Chris Straw</Authors>
-    <Version>2.1.0</Version>
     <Description>Service Manager, Context/Entity Services, Queryable Extensions, Searchers, Expressions</Description>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <AssemblyName>OLT.EF.Core.Services</AssemblyName>
     <RootNamespace>OLT.Core</RootNamespace>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,13 @@
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
     <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

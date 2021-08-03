@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Product>OLT Extensions for AutoMapper Data Adapters</Product>
+    <Description>Auto Mapper Extensions for Data Adapters</Description>
+    <Company>OuterLimits Technologies, Inc</Company>
+    <Authors>Chris Straw</Authors>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +18,12 @@
   <ItemGroup>
     <ProjectReference Include="..\OLT.DataAdapters.AutoMapper\OLT.DataAdapters.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

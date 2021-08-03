@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>OLT.Core</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
-    <Company>OuterLimits Technologies, Inc.</Company>
-    <Authors>Chris Straw</Authors>
+    <RootNamespace>OLT.Core</RootNamespace>
     <Product>.Net Standard DataAdapters Library</Product>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <Company>OuterLimits Technologies, Inc</Company>
+    <Authors>Chris Straw</Authors>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +23,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

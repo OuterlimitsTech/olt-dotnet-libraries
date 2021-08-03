@@ -8,8 +8,9 @@
     <Product>.Net Standard EF Core CSV Seed Entity Type Config</Product>
     <Description>Adds OltEntityTypeConfigurationFromCsv to allow seeding from a CSV embedded resource</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.0</Version>
     <RootNamespace>OLT.Core</RootNamespace>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,13 @@
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
     <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

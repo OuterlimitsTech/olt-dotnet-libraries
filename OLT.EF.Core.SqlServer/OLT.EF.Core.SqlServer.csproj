@@ -6,11 +6,10 @@
     <Company>OuterLimits Technologies, Inc.</Company>
     <Product>.Net Standard EF Core Sql Server Library</Product>
     <Authors>Chris Straw</Authors>
-    <Version>2.1.0</Version>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
-    <Description>Sql Server EF Context
-</Description>
+    <Description>Sql Server EF Context</Description>
     <RootNamespace>OLT.Core</RootNamespace>
+    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +19,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

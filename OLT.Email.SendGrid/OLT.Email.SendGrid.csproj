@@ -6,9 +6,9 @@
     <Company>OuterLimits Technologies, Inc.</Company>
     <Product>.Net Standard Send Grid Library</Product>
     <Authors>Chris Straw</Authors>
-    <Version>2.0.0</Version>
     <Description>Sends Email via SendGrid</Description>
     <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +17,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
