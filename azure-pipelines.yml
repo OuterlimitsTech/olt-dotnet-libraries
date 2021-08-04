@@ -105,6 +105,9 @@ jobs:
       #     codeCoverageTool: 'Cobertura'
       #     summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
       #     # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
+
+
+      # https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
       - task: Bash@3
         inputs:
           targetType: 'inline'
@@ -112,7 +115,7 @@ jobs:
             dotnet tool install --global dotnet-sonarscanner --version 5.2.2
             dotnet sonarscanner begin /o:outerlimitstech /k:OuterlimitsTech_olt-dotnet-libraries /d:sonar.host.url=https://sonarcloud.io /d:sonar.login="$(ado-sonarcloud-token)"
             dotnet build $(solution) --configuration Release
-            dotnet sonarscanner end
+            dotnet sonarscanner end /d:sonar.login="$(ado-sonarcloud-token)"
 
       # - task: SonarCloudPrepare@1
       #   inputs:
