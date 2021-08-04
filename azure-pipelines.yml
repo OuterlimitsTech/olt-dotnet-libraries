@@ -30,6 +30,20 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
+      # https://medium.com/purplebricks-digital/getting-code-coverage-showing-in-sonar-cloud-99a2295407b3
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud Olt Libs'
+          organization: 'outerlimitstech'
+          scannerMode: 'MSBuild'
+          projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
+          extraProperties: |
+            sonar.exclusions=**/obj/**,**/*.dll,**/*.bin
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
+            sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)\**\*.coveragexml
+           # sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/opencoverCoverage.xml
+           # sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml
+                 
       - task: gitversion/setup@0
         displayName: Confiure Git Version
         inputs:
