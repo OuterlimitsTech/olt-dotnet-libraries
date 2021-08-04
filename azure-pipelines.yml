@@ -39,12 +39,8 @@ jobs:
           projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
           extraProperties: |
             sonar.exclusions=**/obj/**,**/*.dll
-            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
             sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
-           # sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml                       
-           # sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)\**\*.coveragexml
-            
-           
 
       - task: gitversion/setup@0
         displayName: Confiure Git Version
@@ -82,64 +78,41 @@ jobs:
           arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.AssemblySemVer) --no-restore'
 
 
-      # - task: DotNetCoreCLI@2
-      #   displayName: 'Packing Nuget Packages'
-      #   inputs:
-      #     command: 'pack'
-      #     projects: '$(solution)'
-      #     nobuild: true
-      #     packDirectory: '$(Build.ArtifactStagingDirectory)'
-      #     versioningScheme: byEnvVar
-      #     versionEnvVar: GitVersion.NuGetVersionV2
+      - task: DotNetCoreCLI@2
+        displayName: 'Packing Nuget Packages'
+        inputs:
+          command: 'pack'
+          projects: '$(solution)'
+          nobuild: true
+          packDirectory: '$(Build.ArtifactStagingDirectory)'
+          versioningScheme: byEnvVar
+          versionEnvVar: GitVersion.NuGetVersionV2
 
-      # # - task: CopyFiles@2
-      # #   displayName: 'Copy $(Build.SourcesDirectory) to: $(Build.ArtifactStagingDirectory)'
-      # #   inputs:
-      # #     SourceFolder: '$(Build.SourcesDirectory)'
-      # #     Contents: '**/*.nupkg'
-      # #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      # #     flattenFolders: true
-
-      # - publish: $(Build.ArtifactStagingDirectory)
-      #   displayName: 'Publish Package Artifact'
-      #   artifact: 'olt-nuget-packages-$(GitVersion.NuGetVersionV2)'
-
-      # - task: DotNetCoreCLI@2
-      #   displayName: 'Running Test'
-      #   inputs:
-      #     command: 'test'
-      #     projects: '$(solution)'
-      #     testRunTitle: 'Core Unit Test'
-      #     arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage"'
-
-      # - task: PublishCodeCoverageResults@1
-      #   displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
-      #   inputs:
-      #     codeCoverageTool: 'Cobertura'
-      #     summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
-      #     # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
+      - publish: $(Build.ArtifactStagingDirectory)
+        displayName: 'Publish Package Artifact'
+        artifact: 'olt-nuget-packages-$(GitVersion.NuGetVersionV2)'
 
       - task: DotNetCoreCLI@2
         displayName: Test
         inputs:
           command: test
           projects: '$(solution)'
-          testRunTitle: 'Core Unit Test'
+          testRunTitle: 'OLT Library Nuget Unit Test - $(GitVersion.NuGetVersionV2)'
           arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
 
       - task: PublishTestResults@2
         inputs:
-          # testResultsFormat: 'XUnit'
           testResultsFormat: 'VSTest'
-          testResultsFiles: '$(Agent.TempDirectory)/**.*trx'
+          testResultsFiles: '$(Agent.TempDirectory)/**/*.trx'
           mergeTestResults: true
-          testRunTitle: 'Publish Test Results'
+          testRunTitle: 'OLT Library Nuget Test Results - $(GitVersion.NuGetVersionV2)'
+
+
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
         inputs:
           codeCoverageTool: 'Cobertura'
           summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
-          # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
 
       - task: SonarCloudAnalyze@1
 
@@ -147,30 +120,20 @@ jobs:
         inputs:
           pollingTimeoutSec: '300'        
 
-      # # https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
-      # - task: Bash@3
-      #   inputs:
-      #     targetType: 'inline'
-      #     script: |
-      #       dotnet tool install --global dotnet-sonarscanner --version 5.2.2
-      #       dotnet sonarscanner begin /o:outerlimitstech /k:OuterlimitsTech_olt-dotnet-libraries /d:sonar.host.url=https://sonarcloud.io /d:sonar.login="$(ado-sonarcloud-token)"
-      #       dotnet build $(solution) --configuration $(buildConfiguration)
-      #       dotnet sonarscanner end /d:sonar.login="$(ado-sonarcloud-token)"
+      - task: NuGetCommand@2
+        displayName: 'Publish Nuget Package - Internal'
+        condition: eq( variables['Build.SourceBranchName'], 'develop' )
+        inputs:
+          command: 'push'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+          nuGetFeedType: 'internal'
+          publishVstsFeed: 'olt-packages'
 
-      # - task: NuGetCommand@2
-      #   displayName: 'Publish Nuget Package - Internal'
-      #   condition: eq( variables['Build.SourceBranchName'], 'develop' )
-      #   inputs:
-      #     command: 'push'
-      #     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-      #     nuGetFeedType: 'internal'
-      #     publishVstsFeed: 'olt-packages'
-
-      # - task: NuGetCommand@2
-      #   displayName: 'Publish Nuget Package - Public'
-      #   condition: eq( variables['Build.SourceBranchName'], 'master' )
-      #   inputs:
-      #     command: 'push'
-      #     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-      #     nuGetFeedType: 'external'
-      #     publishFeedCredentials: 'OLT Public Nuget'
+      - task: NuGetCommand@2
+        displayName: 'Publish Nuget Package - Public'
+        condition: eq( variables['Build.SourceBranchName'], 'master' )
+        inputs:
+          command: 'push'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+          nuGetFeedType: 'external'
+          publishFeedCredentials: 'OLT Public Nuget'

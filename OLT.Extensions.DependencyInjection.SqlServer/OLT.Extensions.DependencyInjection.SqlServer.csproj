@@ -6,6 +6,7 @@
     <Description>Add Exenestions to service collection for OLT Default injection for SQL Server</Description>
     <Product>Library to include default injection for SQL Server</Product>
     <ProjectGuid>dd25ae05-be23-45e6-9003-b1708d414f18</ProjectGuid>
+    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>
