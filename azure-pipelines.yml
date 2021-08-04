@@ -109,12 +109,24 @@ jobs:
           codeCoverageTool: 'Cobertura'
           summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
           # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
+
       - task: Bash@3
         inputs:
          script: |
+          dotnet tool install --global dotnet-sonarscanner --version 5.2.2
           dotnet sonarscanner begin /o:outerlimitstech /k:OuterlimitsTech_olt-dotnet-libraries /d:sonar.host.url=https://sonarcloud.io 
           dotnet build $(solution) --configuration Release
           dotnet sonarscanner end
+
+      # - task: SonarCloudPrepare@1
+      #   inputs:
+      #     SonarCloud: 'SonarCloud Olt Libs'
+      #     organization: 'outerlimitstech'
+      #     scannerMode: 'CLI'
+      #     configMode: 'manual'
+      #     cliProjectKey: 'outerlimitstech'
+      #     cliProjectName: 'olt-dotnet-libraries'
+      #     cliSources: '.'
 
       - task: NuGetCommand@2
         displayName: 'Publish Nuget Package - Internal'
