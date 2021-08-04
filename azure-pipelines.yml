@@ -124,7 +124,8 @@ jobs:
         inputs:
           command: test
           projects: '$(solution)'
-          arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect "Code coverage"'
+          testRunTitle: 'Core Unit Test'
+          arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
 
       - task: PublishTestResults@2
         inputs:
@@ -133,6 +134,13 @@ jobs:
           testResultsFiles: '$(Agent.TempDirectory)/**.*trx'
           mergeTestResults: true
           testRunTitle: 'Publish Test Results'
+
+      - task: PublishCodeCoverageResults@1
+        displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Agent.TempDirectory)/**/opencoverCoverage.xml'
+          # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
 
       - task: SonarCloudAnalyze@1
 
