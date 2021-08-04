@@ -6,8 +6,8 @@
 
         public static class CorsPolicies
         {
-            public const string Disabled = "Ct_CorsPolicy_Disabled";
-            public const string Wildcard = "Ct_CorsPolicy_Wildcard";
+            public const string Disabled = "Olt_CorsPolicy_Disabled";
+            public const string Wildcard = "Olt_CorsPolicy_Wildcard";
         }
 
         public static class HostingConfigurations

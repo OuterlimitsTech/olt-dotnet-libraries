@@ -1,6 +1,6 @@
 ﻿using OLT.Core;
-using OLT.Libraries.UnitTest.Assests.Entity.Models;
-using OLT.Libraries.UnitTest.Assests.Models;
+using OLT.Libraries.UnitTest.Assets.Entity.Models;
+using OLT.Libraries.UnitTest.Assets.Models;
 using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.Shared.Data

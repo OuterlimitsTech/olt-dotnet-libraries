@@ -1,5 +1,5 @@
 ﻿using OLT.Libraries.UnitTest.Abstract;
-using OLT.Libraries.UnitTest.Assests.LocalServices;
+using OLT.Libraries.UnitTest.Assets.LocalServices;
 using Xunit;
 using Xunit.Abstractions;
 
