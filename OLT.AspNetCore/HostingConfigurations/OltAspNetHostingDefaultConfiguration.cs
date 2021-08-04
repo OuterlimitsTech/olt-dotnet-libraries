@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.Core
 {
@@ -35,8 +37,21 @@ namespace OLT.Core
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            settings.Swagger.Apply(app);
 
+            if (settings.Swagger.Enabled)
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
+                    // Add a swagger UI for each discovered API version  
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        var deprecated = description.IsDeprecated ? " DEPRECATED" : "";
+                        c.SwaggerEndpoint($"{description.GroupName}/swagger.json", $"{settings.Swagger.Title} API {description.GroupName}{deprecated}");
+                    }
+                });
+            }
 
             if (settings.Hosting.CorsPolicyName.IsNotEmpty())
             {

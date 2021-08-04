@@ -42,12 +42,12 @@ namespace OLT.Core
 
 
         /// <summary>
-        /// 
+        /// Scaffolds Hosting Configuration <seealso cref="IOltAspNetHostingConfiguration"/>
         /// </summary>
         /// <typeparam name="TSettings"></typeparam>
         /// <param name="app"></param>
         /// <param name="settings"></param>
-        /// <param name="action"></param>
+        /// <param name="action">Called to configure middleware like <code>app.UseSerilogRequestLogging()</code></param>
         /// <returns></returns>
         public static IApplicationBuilder UseOltDefaults<TSettings>(this IApplicationBuilder app, TSettings settings, Action action)
             where TSettings: OltAspNetAppSettings
@@ -69,6 +69,7 @@ namespace OLT.Core
             }
 
             hostingConfig.Configure(app, settings, action);
+
 
             return app;
         }

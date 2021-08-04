@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,7 +34,7 @@ namespace OLT.Core
         /// <param name="options"></param>
         /// <param name="action">Invoked after initialized</param>
         /// <returns></returns>
-        public static IServiceCollection AddCtAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Action<IMvcBuilder> action)
+        public static IServiceCollection AddOltAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Action<IMvcBuilder> action)
             where TSettings : OltAspNetAppSettings
         {
 
@@ -102,7 +103,60 @@ namespace OLT.Core
         /// <returns></returns>
         public static IServiceCollection AddOltApiSwagger(this IServiceCollection services, OltAspNetSwaggerAppSettings settings)
         {
-            return settings.Apply(services);
+            if (!settings.Enabled)
+            {
+                return services;
+            }
+
+
+            return services
+                .AddSwaggerGen(
+                    options =>
+                    {
+                        // Resolve the temp IApiVersionDescriptionProvider service  
+                        var provider = services.BuildServiceProvider()
+                            .GetRequiredService<IApiVersionDescriptionProvider>();
+
+                        // Add a swagger document for each discovered API version  
+                        foreach (var description in provider.ApiVersionDescriptions)
+                        {
+                            options.SwaggerDoc(description.GroupName, new OpenApiInfo
+                            {
+                                Title = $"{settings.Title}  {description.ApiVersion}",
+                                Version = description.ApiVersion.ToString(),
+                                Description = description.IsDeprecated ? $"{settings.Description} - DEPRECATED" : settings.Description,
+                            });
+                        }
+
+                        // Add a custom filter for setting the default values  
+                        options.OperationFilter<OltSwaggerDefaultValues>();
+
+                        options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                        {
+                            Type = SecuritySchemeType.Http,
+                            Scheme = "bearer",
+                            BearerFormat = "JWT",
+                            Description = "JWT Authorization header using the Bearer scheme."
+                        });
+
+                        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                        {
+                            {
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                        {Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
+                                },
+                                new string[] { }
+                            }
+                        });
+
+                        if (settings.XmlSettings.CommentsFilePath.IsNotEmpty())
+                        {
+                            options.IncludeXmlComments(settings.XmlSettings.CommentsFilePath, settings.XmlSettings.IncludeControllerXmlComments);
+                        }
+                        
+                    });
         }
 
         /// <summary>
