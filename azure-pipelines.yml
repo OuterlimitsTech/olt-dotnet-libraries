@@ -39,9 +39,9 @@ jobs:
           projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
           extraProperties: |
             sonar.exclusions=**/obj/**,**/*.dll
-            sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml
-            sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/opencoverCoverage.xml
-           # sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
+            sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/coverage.opencover.xml
+           # sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml                       
            # sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)\**\*.coveragexml
             
            
@@ -139,7 +139,7 @@ jobs:
         displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/**/opencoverCoverage.xml'
+          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
           # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
 
       - task: SonarCloudAnalyze@1
