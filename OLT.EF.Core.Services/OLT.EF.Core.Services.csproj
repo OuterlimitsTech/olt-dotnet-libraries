@@ -6,6 +6,7 @@
     <Description>Service Manager, Context/Entity Services, Queryable Extensions, Searchers, Expressions</Description>
     <AssemblyName>OLT.EF.Core.Services</AssemblyName>
     <RootNamespace>OLT.Core</RootNamespace>
+    <ProjectGuid>43a16ce6-abae-4d8c-9682-0339703c9590</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Product>OLT Extensions for AutoMapper Data Adapters</Product>
     <Description>Auto Mapper Extensions for Data Adapters</Description>
+    <ProjectGuid>c956c04f-4523-4f68-961c-8174803aa073</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

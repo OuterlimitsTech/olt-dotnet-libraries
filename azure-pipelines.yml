@@ -30,44 +30,41 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
-      # - task: gitversion/setup@0
-      #   displayName: Confiure Git Version
-      #   inputs:
-      #     versionSpec: '5.x'
+      - task: gitversion/setup@0
+        displayName: Confiure Git Version
+        inputs:
+          versionSpec: '5.x'
 
-      # - task: gitversion/execute@0
-      #   displayName: Determine Version Number
+      - task: gitversion/execute@0
+        displayName: Determine Version Number
 
-      # - task: Bash@3
-      #   displayName: 'Console Echo of some stuff'
-      #   inputs:
-      #     targetType: 'inline'
-      #     script: |
-      #       # Write your commands here
+      - task: Bash@3
+        displayName: 'Echo of some stuff'
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your commands here
             
-      #       echo NuGetVersionV2 = $(GitVersion.NuGetVersionV2)
-      #       echo Package Version = '$(packageVersion)'
-      #       echo Package Version = '$(Build.SourcesDirectory)'
+            echo NuGetVersionV2 = $(GitVersion.NuGetVersionV2)
+            echo Package Version = '$(packageVersion)'
+            echo Package Version = '$(Build.SourcesDirectory)'
 
-      # - task: DotNetCoreCLI@2
-      #   displayName: 'Resore Nuget'
-      #   inputs:
-      #     command: 'restore'
-      #     projects: '$(solution)'
-      #     feedsToUse: 'select'
-      #     vstsFeed: 'olt-packages'
+      - task: DotNetCoreCLI@2
+        displayName: 'Resore Nuget'
+        inputs:
+          command: 'restore'
+          projects: '$(solution)'
+          feedsToUse: 'select'
+          vstsFeed: 'olt-packages'
 
 
-      # - task: DotNetCoreCLI@2
-      #   displayName: 'Building Solution'
-      #   inputs:
-      #     command: 'build'
-      #     projects: '$(solution)'
-      #     arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.AssemblySemVer)'
-      #     # arguments: '--configuration $(BuildConfiguration)'
-      #     # versioningScheme: byEnvVar
-      #     # versionEnvVar: GitVersion.NuGetVersionV2
-      #     # versionEnvVar: 'GitVersion.SemVer'
+      - task: DotNetCoreCLI@2
+        displayName: 'Building Solution'
+        inputs:
+          command: 'build'
+          projects: '$(solution)'
+          arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.AssemblySemVer) --no-restore'
+
 
       # - task: DotNetCoreCLI@2
       #   displayName: 'Packing Nuget Packages'
@@ -106,41 +103,50 @@ jobs:
       #     summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
       #     # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
 
-
-      # https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
-      - task: Bash@3
+      - task: DotNetCoreCLI@2
+        displayName: Test
         inputs:
-          targetType: 'inline'
-          script: |
-            dotnet tool install --global dotnet-sonarscanner --version 5.2.2
-            dotnet sonarscanner begin /o:outerlimitstech /k:OuterlimitsTech_olt-dotnet-libraries /d:sonar.host.url=https://sonarcloud.io /d:sonar.login="$(ado-sonarcloud-token)"
-            dotnet build $(solution) --configuration Release
-            dotnet sonarscanner end /d:sonar.login="$(ado-sonarcloud-token)"
+          command: test
+          projects: '$(solution)'
+          arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect "Code coverage"'
 
-      # - task: SonarCloudPrepare@1
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'XUnit'
+          testResultsFiles: '$(Agent.TempDirectory)/**.*trx'
+          mergeTestResults: true
+          testRunTitle: 'Publish Test Results'
+
+      - task: SonarCloudAnalyze@1
+
+      - task: SonarCloudPublish@1
+        inputs:
+          pollingTimeoutSec: '300'        
+
+      # # https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
+      # - task: Bash@3
       #   inputs:
-      #     SonarCloud: 'SonarCloud Olt Libs'
-      #     organization: 'outerlimitstech'
-      #     scannerMode: 'CLI'
-      #     configMode: 'manual'
-      #     cliProjectKey: 'outerlimitstech'
-      #     cliProjectName: 'olt-dotnet-libraries'
-      #     cliSources: '.'
+      #     targetType: 'inline'
+      #     script: |
+      #       dotnet tool install --global dotnet-sonarscanner --version 5.2.2
+      #       dotnet sonarscanner begin /o:outerlimitstech /k:OuterlimitsTech_olt-dotnet-libraries /d:sonar.host.url=https://sonarcloud.io /d:sonar.login="$(ado-sonarcloud-token)"
+      #       dotnet build $(solution) --configuration $(buildConfiguration)
+      #       dotnet sonarscanner end /d:sonar.login="$(ado-sonarcloud-token)"
 
-      - task: NuGetCommand@2
-        displayName: 'Publish Nuget Package - Internal'
-        condition: eq( variables['Build.SourceBranchName'], 'develop' )
-        inputs:
-          command: 'push'
-          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-          nuGetFeedType: 'internal'
-          publishVstsFeed: 'olt-packages'
+      # - task: NuGetCommand@2
+      #   displayName: 'Publish Nuget Package - Internal'
+      #   condition: eq( variables['Build.SourceBranchName'], 'develop' )
+      #   inputs:
+      #     command: 'push'
+      #     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+      #     nuGetFeedType: 'internal'
+      #     publishVstsFeed: 'olt-packages'
 
-      - task: NuGetCommand@2
-        displayName: 'Publish Nuget Package - Public'
-        condition: eq( variables['Build.SourceBranchName'], 'master' )
-        inputs:
-          command: 'push'
-          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-          nuGetFeedType: 'external'
-          publishFeedCredentials: 'OLT Public Nuget'
+      # - task: NuGetCommand@2
+      #   displayName: 'Publish Nuget Package - Public'
+      #   condition: eq( variables['Build.SourceBranchName'], 'master' )
+      #   inputs:
+      #     command: 'push'
+      #     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+      #     nuGetFeedType: 'external'
+      #     publishFeedCredentials: 'OLT Public Nuget'

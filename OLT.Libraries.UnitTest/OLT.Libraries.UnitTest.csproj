@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,11 +6,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Assests\Models\Faker\**" />
-    <EmbeddedResource Remove="Assests\Models\Faker\**" />
-    <None Remove="Assests\Models\Faker\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Faker.Net" Version="1.5.138" />

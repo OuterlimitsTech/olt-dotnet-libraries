@@ -5,6 +5,7 @@
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Add Exenestions to service collection for OLT Default injection</Description>
     <Product>Includes default injection</Product>
+    <ProjectGuid>d98afc07-7d80-47cd-9567-074d017c2c59</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

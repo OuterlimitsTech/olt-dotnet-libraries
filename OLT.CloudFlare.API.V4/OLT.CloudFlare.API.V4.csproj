@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>OLT.CloudFlare.API.V4</AssemblyName>
     <RootNamespace>OLT.CloudFlare</RootNamespace>
     <Product>CloudFlare Version 4 Library</Product>
     <Description>CloudFlare DNS Library</Description>
+    <ProjectGuid>63bdd3c2-33b5-4c77-89c1-96fa0164d888</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

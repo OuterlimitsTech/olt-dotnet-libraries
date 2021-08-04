@@ -5,6 +5,7 @@
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Adds extenstion to register NLog Middleware to log </Description>
     <Product>AspNetCore NLog Library</Product>
+    <ProjectGuid>ba4a8658-6e0b-46dd-b456-7186b7b0eb14</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

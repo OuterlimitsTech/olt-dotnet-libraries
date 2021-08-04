@@ -5,6 +5,7 @@
     <Product>EF Core Sql Server Library</Product>
     <Description>Sql Server EF Context</Description>
     <RootNamespace>OLT.Core</RootNamespace>
+    <ProjectGuid>901ca66e-1949-4568-bc76-d073debb6f1e</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

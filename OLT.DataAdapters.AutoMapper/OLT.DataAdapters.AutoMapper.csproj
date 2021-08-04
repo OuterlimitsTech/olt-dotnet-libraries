@@ -5,6 +5,7 @@
     <RootNamespace>OLT.Core</RootNamespace>
     <Product>DataAdapters AutoMapper Library</Product>
     <Description>DataAdapters AutoMapper Library</Description>
+    <ProjectGuid>a2c1d7ce-6d46-43fb-af9c-357c2949e98b</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

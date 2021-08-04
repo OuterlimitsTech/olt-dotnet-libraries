@@ -5,6 +5,7 @@
     <RootNamespace>OLT.EPPlus</RootNamespace>
     <Product>EPPlus Helper</Product>
     <Description>Provides helper classes and extensions for writing Excel Files using EPPlus</Description>
+    <ProjectGuid>0acb3180-e491-4c1a-a2af-0eff584ec2bc</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

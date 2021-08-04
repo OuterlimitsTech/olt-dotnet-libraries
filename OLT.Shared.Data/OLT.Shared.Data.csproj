@@ -5,6 +5,7 @@
     <RootNamespace>OLT.Core</RootNamespace>
     <Product>OLT Shared Data Library</Product>
     <Description>Shared items that require Newtonsoft.Json</Description>
+    <ProjectGuid>0c7cd272-3002-469d-8131-027e95181491</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

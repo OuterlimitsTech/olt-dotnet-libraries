@@ -5,6 +5,7 @@
     <RootNamespace>OLT.Core</RootNamespace>
     <Product>OLT AspNetCore Library</Product>
     <Description>OLT AspNetCore Library</Description>
+    <ProjectGuid>f7464890-ef2e-48cf-9ea0-3fed39757135</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
