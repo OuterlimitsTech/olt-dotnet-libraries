@@ -38,7 +38,7 @@ jobs:
           scannerMode: 'MSBuild'
           projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
           extraProperties: |
-            sonar.exclusions=**/obj/**,**/*.dll,**/*.bin
+            sonar.exclusions=**/obj/**,**/*.dll
             sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml
             sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/opencoverCoverage.xml
            # sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
