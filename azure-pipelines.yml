@@ -39,11 +39,13 @@ jobs:
           projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
           extraProperties: |
             sonar.exclusions=**/obj/**,**/*.dll,**/*.bin
-            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
-            sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)\**\*.coveragexml
-           # sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/opencoverCoverage.xml
-           # sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml
-                 
+            sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml
+            sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/opencoverCoverage.xml
+           # sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
+           # sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)\**\*.coveragexml
+            
+           
+
       - task: gitversion/setup@0
         displayName: Confiure Git Version
         inputs:
@@ -126,7 +128,8 @@ jobs:
 
       - task: PublishTestResults@2
         inputs:
-          testResultsFormat: 'XUnit'
+          # testResultsFormat: 'XUnit'
+          testResultsFormat: 'VSTest'
           testResultsFiles: '$(Agent.TempDirectory)/**.*trx'
           mergeTestResults: true
           testRunTitle: 'Publish Test Results'
