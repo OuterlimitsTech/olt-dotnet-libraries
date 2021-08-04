@@ -40,7 +40,7 @@ jobs:
           extraProperties: |
             sonar.exclusions=**/obj/**,**/*.dll
             sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
-            sonar.cs.opencover.reportsPaths=${Agent.TempDirectory}/**/coverage.opencover.xml
+            sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
            # sonar.cs.xunit.reportsPaths=${Agent.TempDirectory}/**/XUnit.TestResults.xml                       
            # sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)\**\*.coveragexml
             
@@ -135,11 +135,19 @@ jobs:
           mergeTestResults: true
           testRunTitle: 'Publish Test Results'
 
+      - task: CopyFiles@2
+        displayName: 'Copy $(Build.TempDirectory)/**/coverage.opencover.xml to: $(Build.ArtifactStagingDirectory)'
+        inputs:
+          SourceFolder: '$(Build.TempDirectory)'
+          Contents: '**/coverage.opencover.xml'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          flattenFolders: true
+
       - task: PublishCodeCoverageResults@1
-        displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
+        displayName: 'Publish Test Coverage Results [$(Agent.ArtifactStagingDirectory)]'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
+          summaryFileLocation: '$(Agent.ArtifactStagingDirectory)/**/coverage.opencover.xml'
           # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
 
       - task: SonarCloudAnalyze@1
