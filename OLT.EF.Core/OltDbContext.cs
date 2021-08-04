@@ -26,13 +26,6 @@ namespace OLT.Core
             Varchar
         }
 
-
-        protected virtual IOltLogService LogService
-        {
-            get => _logService ??= this.GetService<IOltLogService>();
-            set => _logService = value;
-        }
-
         protected virtual IOltDbAuditUser DbAuditUser
         {
             get => _dbAuditUser ??= this.GetService<IOltDbAuditUser>();
