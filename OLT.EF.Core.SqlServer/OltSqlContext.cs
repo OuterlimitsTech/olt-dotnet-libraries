@@ -7,18 +7,9 @@ namespace OLT.Core
         where TContext : DbContext, IOltDbContext
     {
 
-        protected OltSqlDbContext()
-        {
-
-        }
-
         protected OltSqlDbContext(DbContextOptions<TContext> options) : base(options)
         {
 
-        }
-
-        protected OltSqlDbContext(DbContextOptions<TContext> options, IOltLogService logService, IOltDbAuditUser dbAuditUser) : base(options, logService, dbAuditUser)
-        {
         }
 
         protected abstract int IdentitySeed { get; }

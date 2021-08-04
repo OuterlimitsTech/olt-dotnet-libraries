@@ -2,17 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Company>OuterLimits Technologies, Inc.</Company>
-    <Product>.Net Standard Highcharts Library</Product>
-    <Authors>Chris Straw</Authors>
-    <Version>2.0.0</Version>
+    <Product>Highcharts Library</Product>
     <Description>Classes and Interfacies to assist in building Highchart graphs</Description>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ProjectGuid>f73db781-d0ca-4a8b-9112-3b865a2a0865</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>

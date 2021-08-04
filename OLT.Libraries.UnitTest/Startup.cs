@@ -2,30 +2,61 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using OLT.Core;
-using OLT.Libraries.UnitTest.Assests.Entity;
-using OLT.Libraries.UnitTest.Assests.Extensions;
+using OLT.Libraries.UnitTest.Assets.Entity;
+using OLT.Libraries.UnitTest.Assets.Extensions;
+using OLT.Libraries.UnitTest.Assets.Models;
 
 namespace OLT.Libraries.UnitTest
 {
+    // ReSharper disable once InconsistentNaming
     public class Startup
     {
-        public void ConfigureServices(IServiceCollection services)
+        protected readonly OltAspNetAppSettings Settings = new OltAspNetAppSettings
         {
-            services.AddOltUnitTesting(new OltInjectionOptions());
-            var optionsBuilder = new DbContextOptionsBuilder<SqlDatabaseContext>().UseInMemoryDatabase(databaseName: "Test");
-            services.AddOltSqlServer(optionsBuilder, (options, logService, auditUser) => new SqlDatabaseContext(options, logService, auditUser));
+            Hosting = new OltAspNetHostingAppSettings
+            {
+                CorsPolicyName = OltAspNetDefaults.CorsPolicyName,
+                ShowExceptionDetails = true,
+                ConfigurationName = OltAspNetDefaults.HostingConfigurations.Default
+            }
+        };
 
-            //services.AddScoped<IPersonService, PersonService>();
-            //services.AddTransient<IOltLo, DependencyClass>();
+        public virtual void ConfigureServices(IServiceCollection services)
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", false, true)
+                .Build();
+
+            services.AddSingleton<IConfiguration>(configuration);
+            var appSettingsSection = configuration.GetSection("AppSettings");
+            services.Configure<AppSettingsDto>(appSettingsSection);
+
+            services.AddOltUnitTesting(() =>
+            {
+                services.AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
+                    optionsBuilder.UseInMemoryDatabase(databaseName: "Test"));
+
+                services.AddControllers();
+            });
+
+
         }
 
-        public void Configure(IServiceProvider provider)
+        
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+            //app.UseOltDefaults(Settings, (builder, settings) => builder.UseOltNLogRequestLogging(settings));
         }
     }
+
+    
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OLT.Core
+﻿namespace OLT.Core
 {
     public interface IOltFileExportBuilder : IOltBuilder
     {

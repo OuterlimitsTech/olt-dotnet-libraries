@@ -13,12 +13,8 @@ trigger:
 
 pr: none
 
-variables:
-  # GitVersion.SemVer: ''
-  majorVersion: 5
-  revisionVersion: 1
-  revision: $[counter(variables['5.1'], 0)]
-  packageVersion: '$(majorVersion).$(revisionVersion).$(revision).0'
+variables:  
+  - group: key-vault-variables
 
 jobs:
   - job: 'build'
@@ -34,12 +30,34 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
+      # https://medium.com/purplebricks-digital/getting-code-coverage-showing-in-sonar-cloud-99a2295407b3
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud Olt Libs'
+          organization: 'outerlimitstech'
+          scannerMode: 'MSBuild'
+          projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
+          extraProperties: |
+            sonar.exclusions=**/obj/**,**/*.dll
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+            sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+
+      - task: gitversion/setup@0
+        displayName: Confiure Git Version
+        inputs:
+          versionSpec: '5.x'
+
+      - task: gitversion/execute@0
+        displayName: Determine Version Number
+
       - task: Bash@3
+        displayName: 'Echo of some stuff'
         inputs:
           targetType: 'inline'
           script: |
             # Write your commands here
-
+            
+            echo NuGetVersionV2 = $(GitVersion.NuGetVersionV2)
             echo Package Version = '$(packageVersion)'
             echo Package Version = '$(Build.SourcesDirectory)'
 
@@ -51,42 +69,56 @@ jobs:
           feedsToUse: 'select'
           vstsFeed: 'olt-packages'
 
+
       - task: DotNetCoreCLI@2
-        displayName: 'Running Test'
+        displayName: 'Building Solution'
         inputs:
-          command: 'test'
+          command: 'build'
           projects: '$(solution)'
-          testRunTitle: 'Core Unit Test'
-          arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage"'
+          arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.AssemblySemVer) --no-restore'
+
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Packing Nuget Packages'
+        inputs:
+          command: 'pack'
+          projects: '$(solution)'
+          nobuild: true
+          packDirectory: '$(Build.ArtifactStagingDirectory)'
+          versioningScheme: byEnvVar
+          versionEnvVar: GitVersion.NuGetVersionV2
+
+      - publish: $(Build.ArtifactStagingDirectory)
+        displayName: 'Publish Package Artifact'
+        artifact: 'olt-nuget-packages-$(GitVersion.NuGetVersionV2)'
+
+      - task: DotNetCoreCLI@2
+        displayName: Test
+        inputs:
+          command: test
+          projects: '$(solution)'
+          testRunTitle: 'OLT Library Nuget Unit Test - $(GitVersion.NuGetVersionV2)'
+          arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
+
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'VSTest'
+          testResultsFiles: '$(Agent.TempDirectory)/**/*.trx'
+          mergeTestResults: true
+          testRunTitle: 'OLT Library Nuget Test Results - $(GitVersion.NuGetVersionV2)'
+
 
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
-          # reportDirectory: '$(Agent.TempDirectory)/CodeCoverage/'
+          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Build'
+      - task: SonarCloudAnalyze@1
+
+      - task: SonarCloudPublish@1
         inputs:
-          command: 'build'
-          projects: '$(solution)'
-          arguments: '--configuration $(BuildConfiguration)'
-          versioningScheme: byEnvVar
-          versionEnvVar: 'packageVersion'
-          # versionEnvVar: 'GitVersion.SemVer'
-
-      - task: CopyFiles@2
-        displayName: 'Copy $(Build.SourcesDirectory) to: $(Build.ArtifactStagingDirectory)'
-        inputs:
-          SourceFolder: '$(Build.SourcesDirectory)'
-          Contents: '**/*.nupkg'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'
-          flattenFolders: true
-
-      - publish: $(Build.ArtifactStagingDirectory)
-        displayName: 'Publish Package Artifact'
-        artifact: 'olt-nuget-packages'
+          pollingTimeoutSec: '300'        
 
       - task: NuGetCommand@2
         displayName: 'Publish Nuget Package - Internal'

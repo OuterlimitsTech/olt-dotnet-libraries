@@ -3,11 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>OLT.Core</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
-    <Company>OuterLimits Technologies, Inc.</Company>
-    <Authors>Chris Straw</Authors>
-    <Product>.Net Standard DataAdapters AutoMapper Library</Product>
+    <Product>DataAdapters AutoMapper Library</Product>
+    <Description>DataAdapters AutoMapper Library</Description>
+    <ProjectGuid>a2c1d7ce-6d46-43fb-af9c-357c2949e98b</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

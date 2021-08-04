@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -8,6 +9,100 @@ namespace System
 
     public static class TypeExtensions
     {
+
+        public static List<Assembly> GetAllReferencedAssemblies(this Assembly assembly)
+        {
+            return GetAllReferencedAssemblies(new List<Assembly> {assembly});
+        }
+
+        public static List<Assembly> GetAllReferencedAssemblies(this Assembly[] assembliesToScan)
+        {
+            return GetAllReferencedAssemblies(assembliesToScan.ToList());
+        }
+
+        public static List<Assembly> GetAllReferencedAssemblies(this List<Assembly> assembliesToScan)
+        {
+            var results = new List<Assembly>();
+            var referencedAssemblies = new List<Assembly>();
+
+            referencedAssemblies.AddRange(assembliesToScan);
+
+            if (assembliesToScan.Any(p => p.FullName != Assembly.GetCallingAssembly().FullName))
+            {
+                referencedAssemblies.Add(Assembly.GetCallingAssembly());
+            }
+
+            assembliesToScan.ForEach(assembly =>
+            {
+                referencedAssemblies.AddRange(assembly.GetReferencedAssemblies().Select(Assembly.Load));
+            });
+
+            AppDomain.CurrentDomain
+                .GetAssemblies()
+                .ToList()
+                .ForEach(assembly =>
+                {
+                    referencedAssemblies.Add(assembly);
+                });
+
+
+            referencedAssemblies
+                .GroupBy(g => g.FullName)
+                .Select(s => s.Key)
+                .OrderBy(o => o)
+                .ToList()
+                .ForEach(name =>
+                {
+                    var assembly = results.FirstOrDefault(p => string.Equals(p.FullName, name, StringComparison.OrdinalIgnoreCase));
+                    if (assembly == null)
+                    {
+                        results.Add(referencedAssemblies.FirstOrDefault(p => p.FullName == name));
+                    }
+                });
+
+
+            return results;
+        }
+
+        public static IEnumerable<T> GetAllImplements<T>(this Assembly[] assemblies)
+        {
+            return GetAllImplements<T>(assemblies.ToList());
+        }
+
+        public static IEnumerable<T> GetAllImplements<T>(this List<Assembly> assemblies)
+        {
+
+            foreach (var assembly in assemblies)
+            {
+                Assembly loaded = null;
+
+                try
+                {
+                    loaded = Assembly.Load(assembly.GetName());
+                }
+                catch
+                {
+
+                }
+
+                if (loaded != null)
+                {
+                    foreach (var ti in loaded.DefinedTypes)
+                    {
+                        if (ti.ImplementedInterfaces.Contains(typeof(T)) && !ti.IsAbstract && !ti.IsInterface && !ti.IsGenericType)
+                        {
+                            yield return (T)assembly.CreateInstance(ti.FullName);
+                        }
+                    }
+
+                }
+
+
+            }
+        }
+
+
+
         /// <summary>
         /// Determines if a type implements the <typeparamref name="TInterface"/> interface.
         /// this.GetType().Implements<IMyInterface>()

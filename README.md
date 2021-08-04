@@ -1,20 +1,24 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+<img src="https://user-images.githubusercontent.com/1365728/127748628-47575d74-a2fb-4539-a31e-74d8b435fc21.png" width="30%" >
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+[![Build Status](https://dev.azure.com/outerlimitstech/OLT/_apis/build/status/OuterlimitsTech.olt-dotnet-libraries?branchName=master)](https://dev.azure.com/outerlimitstech/OLT/_build/latest?definitionId=24&branchName=master)
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+# Packages
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+| Name | Version | Deprecated |
+|--|--|--|
+| OLT.Shared| [![Nuget](https://img.shields.io/nuget/v/OLT.Shared)](https://www.nuget.org/packages/OLT.Shared) | |
+| OLT.Shared.Data | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared.Data )](https://www.nuget.org/packages/OLT.Shared.Data ) | |
+| OLT.AspNetCore | [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore)](https://www.nuget.org/packages/OLT.AspNetCore) | |
+| OLT.EF.Core| [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core)](https://www.nuget.org/packages/OLT.EF.Core) | |
+| OLT.EF.Core.Services | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.Services )](https://www.nuget.org/packages/OLT.EF.Core.Services ) | |
+| OLT.EF.Core.SqlServer | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.Services )](https://www.nuget.org/packages/OLT.EF.Core.SqlServer ) | Yes |
+| OLT.EF.Core.SeedHelpers.Csv | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.SeedHelpers.Csv)](https://www.nuget.org/packages/OLT.EF.Core.SeedHelpers.Csv) | |
+| OLT.Extensions.DependencyInjection | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection )](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection ) | |
+| OLT.Extensions.DependencyInjection.SqlServer | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection.SqlServer)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection.SqlServer) | |
+| OLT.Extensions.AzureAppConfiguration| [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.AzureAppConfiguration)](https://www.nuget.org/packages/OLT.Extensions.AzureAppConfiguration) | |
+| OLT.CloudFlare.API.V4 | [![Nuget](https://img.shields.io/nuget/v/OLT.CloudFlare.API.V4)](https://www.nuget.org/packages/OLT.CloudFlare.API.V4) | |
+| OLT.Email.SendGrid | [![Nuget](https://img.shields.io/nuget/v/OLT.Email.SendGrid)](https://www.nuget.org/packages/OLT.Email.SendGrid) | |
+| OLT.EPPlus | [![Nuget](https://img.shields.io/nuget/v/OLT.EPPlus)](https://www.nuget.org/packages/OLT.EPPlus) | |
+| OLT.Highcharts | [![Nuget](https://img.shields.io/nuget/v/OLT.Highcharts)](https://www.nuget.org/packages/OLT.Highcharts) | |
+

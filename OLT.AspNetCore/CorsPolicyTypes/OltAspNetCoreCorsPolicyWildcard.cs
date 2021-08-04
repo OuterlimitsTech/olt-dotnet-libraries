@@ -4,8 +4,8 @@ namespace OLT.Core
 {
     public class OltAspNetCoreCorsPolicyWildcard : IOltAspNetCoreCorsPolicy
     {
-        public OltAspNetCoreCorsPolicyOptions CorsPolicy => OltAspNetCoreCorsPolicyOptions.Wildcard;
-        public string PolicyName => "Olt_CorsPolicy_Wildcard";
+
+        public string PolicyName => OltAspNetDefaults.CorsPolicies.Wildcard;
 
         /// <summary>
         /// Sets CORS policy

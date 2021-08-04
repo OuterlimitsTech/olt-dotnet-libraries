@@ -2,23 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Company>OuterLimits Technologies, Inc.</Company>
-    <Authors>Chris Straw</Authors>
-    <Product>.Net Standard EF Core CSV Seed Entity Type Config</Product>
-    <Description>Adds OltEntityTypeConfigurationFromCsv to allow seeding from a CSV embedded resource</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.0</Version>
     <RootNamespace>OLT.Core</RootNamespace>
+    <Product>EF Core CSV Seed Entity Type Config</Product>
+    <Description>Adds OltEntityTypeConfigurationFromCsv to allow seeding from a CSV embedded resource</Description>
+    <ProjectGuid>e418066f-c034-4d88-8972-ea3874abedcb</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="19.0.0" />
+    <PackageReference Include="CsvHelper" Version="27.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
     <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
   </ItemGroup>
+
 
 </Project>
