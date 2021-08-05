@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using NLog;
-using OLT.AspNetCore.NLog;
 using OLT.Core;
 
 namespace OLT.Libraries.UnitTest
@@ -22,7 +20,7 @@ namespace OLT.Libraries.UnitTest
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseOltDefaults(Settings, () => app.UseOltNLogRequestLogging(Settings));
+            app.UseOltDefaults(Settings, () => app.UseOltNLogExceptionLogging(Settings.Hosting.ShowExceptionDetails));
         }
     }
 }

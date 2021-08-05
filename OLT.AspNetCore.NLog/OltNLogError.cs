@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace OLT.Core
+﻿namespace OLT.Core
 {
-    public class OltAspNetCoreError
+    public class OltNLogError
     {
         public int StatusCode { get; set; }
         public string Message { get; set; }

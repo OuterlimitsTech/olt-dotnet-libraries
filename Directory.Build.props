@@ -9,6 +9,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
+    <!-- <PackageReadmeFile>readme.md</PackageReadmeFile> -->
  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
