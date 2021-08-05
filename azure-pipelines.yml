@@ -123,7 +123,7 @@ jobs:
           pollingTimeoutSec: '300'
 
       - task: GitHubRelease@1
-        displayName: 'Publish Nuget Package - Internal'
+        displayName: 'GitHub Release'
         condition: eq( variables['Build.SourceBranchName'], 'master' )
         inputs:
           gitHubConnection: 'github.com_chrisstraw'
@@ -131,6 +131,7 @@ jobs:
           action: 'create'
           target: '$(GitVersion.NuGetVersionV2)'
           tagSource: 'gitTag'
+          assets: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
           changeLogCompareToRelease: 'lastFullRelease'
           changeLogType: 'commitBased'
 
