@@ -82,7 +82,7 @@ namespace System
                 }
                 catch
                 {
-
+                    // ignored
                 }
 
                 if (loaded != null)
@@ -126,13 +126,19 @@ namespace System
         /// </summary>
         /// <typeparam name="TInterface">Interface</typeparam>
         /// <param name="type">Extends <see cref="Type"/>.</param>
+        /// <param name="@interface"><see cref="TInterface"/>.</param>
         /// <returns>True if type implements interface</returns>
         public static bool Implements<TInterface>(this Type type, TInterface @interface) where TInterface : class
         {
-            if (((@interface as Type) == null) || !(@interface as Type).IsInterface)
-                throw new ArgumentException("Only interfaces can be 'implemented'.");
+            if (!(@interface is Type))
+            {
+                throw new ArgumentException($"{nameof(@interface)} not of type {type.FullName}");
+            }
 
-            //return (@interface as Type).IsAssignableFrom(type);
+            if (!(@interface as Type).IsInterface)
+            {
+                throw new ArgumentException("Only interfaces can be 'implemented'.");
+            }
 
             return type.GetInterfaces()
                 .Where(i => i.IsGenericType)
@@ -189,7 +195,6 @@ namespace System
                 throw new ArgumentException($"{resourceName} cannot be null or whitespace");
             }
 
-            //Assembly currentAssembly = Assembly.GetExecutingAssembly();
             // Get all embedded resources
             string[] arrResources = assembly.GetManifestResourceNames();
 
@@ -203,18 +208,6 @@ namespace System
 
             return null;
         }
-
-        //public static StreamReader GetEmbeddedResourceStream(this System.Reflection.Assembly assembly, string name)
-        //{
-        //    foreach (string resName in assembly.GetManifestResourceNames())
-        //    {
-        //        if (resName.EndsWith(name))
-        //        {
-        //            return new StreamReader(assembly.GetManifestResourceStream(resName));
-        //        }
-        //    }
-        //    return null;
-        //}
 
         public static string GetEmbeddedResourceString(this System.Reflection.Assembly assembly, string name)
         {

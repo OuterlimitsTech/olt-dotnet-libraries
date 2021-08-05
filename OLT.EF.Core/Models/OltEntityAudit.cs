@@ -17,12 +17,5 @@ namespace OLT.Core
         [StringLength(100)]
         public string ModifyUser { get; set; }
 
-
-        //protected bool FieldChanged<T>(DbEntityEntry entityEntry, string fieldName, T defaultValue)
-        //{
-        //    var orig = entityEntry.OriginalValues[fieldName] == null ? defaultValue : (T)entityEntry.OriginalValues[fieldName];
-        //    var current = entityEntry.CurrentValues[fieldName] == null ? defaultValue : (T)entityEntry.CurrentValues[fieldName];
-        //    return !orig.Equals(current);
-        //}
     }
 }

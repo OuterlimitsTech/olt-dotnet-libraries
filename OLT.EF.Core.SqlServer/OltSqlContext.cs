@@ -25,9 +25,12 @@ namespace OLT.Core
                 {
                     prop.UseIdentityColumn(IdentitySeed, IdentityIncrement);
                 }
-                //Console.WriteLine($"{builder.Metadata.GetTableName()} of type {builder.Metadata.ClrType.FullName} -> GetIdentitySeed: {prop.Metadata.GetIdentitySeed()} -> IdentitySeed: {IdentitySeed}{Environment.NewLine}");
-            });
 
+#pragma warning disable S125 
+                             //Console.WriteLine($"{builder.Metadata.GetTableName()} of type {builder.Metadata.ClrType.FullName} -> GetIdentitySeed: {prop.Metadata.GetIdentitySeed()} -> IdentitySeed: {IdentitySeed}{Environment.NewLine}");
+#pragma warning restore S125 
+
+            });
             base.OnModelCreating(modelBuilder);
         }
     }

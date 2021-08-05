@@ -28,10 +28,9 @@ namespace OLT.Core
         /// AddOltCors()
         /// AddOltJwt()
         /// AddControllers()
-        /// AddNewtonsoftJson();
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="options"></param>
+        /// <param name="settings"></param>
         /// <param name="action">Invoked after initialized</param>
         /// <returns></returns>
         public static IServiceCollection AddOltAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Action<IMvcBuilder> action)
@@ -69,14 +68,13 @@ namespace OLT.Core
                 services.AddOltJwt(settings.JwtSecret);
             }
 
-            services.AddOltDefault(() =>
-            {
-                services
-                    .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
-                    .AddScoped<IOltIdentity, OltIdentityAspNetCore>()
-                    .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>())
-                    .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            });
+            services.AddOltDefault();
+
+            services
+                .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
+                .AddScoped<IOltIdentity, OltIdentityAspNetCore>()
+                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>())
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             action.Invoke(services.AddControllers());
 
@@ -147,7 +145,7 @@ namespace OLT.Core
                                     Reference = new OpenApiReference
                                         {Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
                                 },
-                                new string[] { }
+                                Array.Empty<string>()
                             }
                         });
 
@@ -213,6 +211,7 @@ namespace OLT.Core
                 })
                 .AddJwtBearer(x =>
                 {
+#pragma warning disable S125
                     //x.Events = new JwtBearerEvents
                     //{
                     //    OnTokenValidated = context =>
@@ -233,6 +232,7 @@ namespace OLT.Core
                     //        return Task.CompletedTask;
                     //    }
                     //};
+#pragma warning restore S125
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters

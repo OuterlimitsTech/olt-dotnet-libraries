@@ -65,7 +65,7 @@ namespace OLT.Core
                 .First(p => p.Name == settings.Hosting.ConfigurationName);
             if (hostingConfig == null)
             {
-                throw new Exception($"Unable to locate hosting configuration {settings.Hosting.ConfigurationName}");
+                throw new ArgumentNullException($"Unable to locate hosting configuration {settings.Hosting.ConfigurationName}");
             }
 
             hostingConfig.Configure(app, settings, action);

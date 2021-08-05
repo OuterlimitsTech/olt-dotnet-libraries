@@ -19,7 +19,7 @@ namespace OLT.Core
         /// <param name="services"></param>
         /// <param name="action"></param>
         /// <returns><param typeof="IServiceCollection"></param></returns>
-        public static IServiceCollection AddOltDefault(this IServiceCollection services, Action action)
+        public static IServiceCollection AddOltDefault(this IServiceCollection services)
         {
 
             if (services == null)
@@ -27,21 +27,12 @@ namespace OLT.Core
                 throw new ArgumentNullException(nameof(services));
             }
 
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            services                
+            return services                
                 .OltScan()
                 .AddSingleton<IOltMemoryCache, OltMemoryCache>()
                 .AddSingleton<IOltConfigManager, OltConfigManager>()
                 .AddSingleton<IOltLogService, OltLogService>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
-
-            action.Invoke();
-
-            return services;
         }
 
 
