@@ -115,10 +115,17 @@ jobs:
           summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
 
       - task: SonarCloudAnalyze@1
+        displayName: 'Sonar Cloud Analyze'
 
       - task: SonarCloudPublish@1
+        displayName: 'Sonar Cloud Publish'
         inputs:
           pollingTimeoutSec: '300'        
+
+      - task: git-tag-on-release-task@9
+        displayName: 'Tag Commit'
+        inputs:
+          staticTagName: "$(GitVersion.NuGetVersionV2)"
 
       - task: NuGetCommand@2
         displayName: 'Publish Nuget Package - Internal'
