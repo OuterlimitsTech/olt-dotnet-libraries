@@ -93,7 +93,7 @@ jobs:
         artifact: 'olt-nuget-packages-$(GitVersion.NuGetVersionV2)'
 
       - task: DotNetCoreCLI@2
-        displayName: Test
+        displayName: 'Running Test'
         inputs:
           command: test
           projects: '$(solution)'
@@ -120,12 +120,19 @@ jobs:
       - task: SonarCloudPublish@1
         displayName: 'Sonar Cloud Publish'
         inputs:
-          pollingTimeoutSec: '300'        
+          pollingTimeoutSec: '300'
 
-      - task: git-tag-on-release-task@9
-        displayName: 'Tag Commit'
+      - task: GitHubRelease@1
+        displayName: 'Publish Nuget Package - Internal'
+        condition: eq( variables['Build.SourceBranchName'], 'master' )
         inputs:
-          staticTagName: "$(GitVersion.NuGetVersionV2)"
+          gitHubConnection: 'github.com_chrisstraw'
+          repositoryName: 'OuterlimitsTech/olt-dotnet-libraries'
+          action: 'create'
+          target: '$(GitVersion.NuGetVersionV2)'
+          tagSource: 'gitTag'
+          changeLogCompareToRelease: 'lastFullRelease'
+          changeLogType: 'commitBased'
 
       - task: NuGetCommand@2
         displayName: 'Publish Nuget Package - Internal'
