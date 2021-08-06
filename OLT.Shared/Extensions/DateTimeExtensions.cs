@@ -5,9 +5,6 @@ namespace System
     {
         public static string GetDayNumberSuffix(this DateTime date)
         {
-            if (date == null)
-                throw new ArgumentNullException(nameof(date));
-
             var day = date.Day;
 
             switch (day)

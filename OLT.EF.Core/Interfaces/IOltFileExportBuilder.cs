@@ -3,26 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
 {
-    public interface IOltFileExportBuilder<in TContext, in TParameterModel> : IOltFileExportBuilder
-        where TContext : DbContext, IOltDbContext
-        where TParameterModel : class, IOltGenericParameter
+    public interface IOltFileExportBuilder<in TRequest, in TParameter> : IOltFileExportBuilder, IOltInjectableSingleton
+        where TRequest : IOltRequest
+        where TParameter : class, IOltGenericParameter
     {
-        IOltFileBase64 Build(TContext context, TParameterModel parameters);
+        IOltFileBase64 Build(TRequest request, TParameter parameter);
 
     }
 
-    public interface IOltFileExportBuilder<in TContext> : IOltFileExportBuilder
-        where TContext : DbContext, IOltDbContext
+    public interface IOltFileExportBuilder<in TRequest> : IOltFileExportBuilder, IOltInjectableSingleton
+        where TRequest : IOltRequest
     {
-        IOltFileBase64 Build(TContext context);
-    }
-
-
-    public interface IOltFileExportBuilder<in TContext, in TParameterModel, in TServiceProvider> : IOltFileExportBuilder
-        where TContext : DbContext, IOltDbContext
-        where TParameterModel : class, IOltGenericParameter
-        where TServiceProvider: IServiceProvider
-    {
-        IOltFileBase64 Build(TContext context, TParameterModel parameters, TServiceProvider serviceProvider);
+        IOltFileBase64 Build(TRequest request);
     }
 }

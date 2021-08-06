@@ -13,7 +13,7 @@ namespace System
     /// <summary>
     /// Extends <see cref="string"/>.
     /// </summary>
-    public static class StringExtensions
+    public static partial class OltStringExtensions
     {
 
 
@@ -128,7 +128,9 @@ namespace System
             return long.TryParse(value, out temp);
         }
 
-        private static readonly Regex digitsOnly = new Regex(@"[^\d]");
+        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
+        private static readonly Regex DecimalDigitsOnly = new Regex(@"[^\d\.]");
+
         public static string StripNonNumeric(this string root)
         {
             if (string.IsNullOrEmpty(root))
@@ -136,10 +138,9 @@ namespace System
                 return root;
             }
 
-            return digitsOnly.Replace(root, "");
+            return DigitsOnly.Replace(root, "");
         }
 
-        private static readonly Regex decimalDigitsOnly = new Regex(@"[^\d\.]");
         public static string StripNonNumeric(this string root, bool allowDecimal)
         {
             if (string.IsNullOrEmpty(root))
@@ -149,7 +150,7 @@ namespace System
 
             if (allowDecimal)
             {
-                return decimalDigitsOnly.Replace(root, "");    
+                return DecimalDigitsOnly.Replace(root, "");    
             }
 
             return root.StripNonNumeric();
@@ -178,11 +179,10 @@ namespace System
  
 
 
-        //private static Functions util = new Functions();
         public static DateTime? ToDate(this string self)
         {
             DateTime value;
-            if (String.IsNullOrWhiteSpace(self) || !DateTime.TryParse(self, out value))
+            if (string.IsNullOrWhiteSpace(self) || !DateTime.TryParse(self, out value))
                 return null;
             return value;
         }
@@ -607,26 +607,6 @@ namespace System
             return sr;
         }
 
-        //public static int TextWidth(this string text, string fontName, int fontSize)
-        //{
-        //    Font drawFont = null;
-        //    Graphics drawGraphics = null;
-        //    Bitmap txtBmp = null;
-        //    try
-        //    {
-        //        txtBmp = new Bitmap(1, 1);
-        //        drawGraphics = Graphics.FromImage(txtBmp);
-        //        drawFont = new Font(fontName, fontSize);
-        //        return (int)drawGraphics.MeasureString(text, drawFont).Width;
-        //    }
-        //    finally
-        //    {
-        //        txtBmp?.Dispose();
-        //        drawGraphics?.Dispose();
-        //        drawFont?.Dispose();
-        //    }
-        //}
-
         #region [ Memory Stream ]
 
         public static System.IO.MemoryStream ToMemoryStream(string fileName)
@@ -651,62 +631,56 @@ namespace System
 
         }
 
-        public static bool ToFile(this System.IO.MemoryStream stream, string SaveToFileName)
+        public static bool ToFile(this System.IO.MemoryStream stream, string saveToFileName)
         {
 
-            if (System.IO.File.Exists(SaveToFileName))
+            if (System.IO.File.Exists(saveToFileName))
             {
-                System.IO.File.Delete(SaveToFileName);
+                System.IO.File.Delete(saveToFileName);
             }
 
 
-            var FileOutput = System.IO.File.Create(SaveToFileName, (stream.Length - 1).ToInt(0));
-            stream.WriteTo(FileOutput);
-            //FileOutput.Write(stream, 0, ToInt(stream.Length - 1));
-            FileOutput.Close();
+            var fileOutput = System.IO.File.Create(saveToFileName, (stream.Length - 1).ToInt(0));
+            stream.WriteTo(fileOutput);
+            fileOutput.Close();
             return true;
         }
 
 
-        public static bool ToFile(this byte[] stream, string SaveToFileName)
+        public static bool ToFile(this byte[] stream, string saveToFileName)
         {
 
-           
-            if (System.IO.File.Exists(SaveToFileName))
+            if (System.IO.File.Exists(saveToFileName))
             {
-                System.IO.File.Delete(SaveToFileName);
+                System.IO.File.Delete(saveToFileName);
             }
 
-            var FileOutput = System.IO.File.Create(SaveToFileName, stream.Length - 1);
-            FileOutput.Write(stream, 0, stream.Length - 1);
-            FileOutput.Close();
+            var fileOutput = System.IO.File.Create(saveToFileName, stream.Length - 1);
+            fileOutput.Write(stream, 0, stream.Length - 1);
+            fileOutput.Close();
             return true;
             
 
         }
 
 
-        public static Byte[] FileToBytes(string FileName)
+        public static Byte[] FileToBytes(string fileName)
         {
-  
 
-      
-            if (!System.IO.File.Exists(FileName))
+            if (!System.IO.File.Exists(fileName))
             {
-                return null;
+                return Array.Empty<Byte>();
             }
 
-            var Info = new System.IO.FileInfo(FileName);
-            var FStream = Info.OpenRead();
+            var info = new System.IO.FileInfo(fileName);
+            var fStream = info.OpenRead();
 
-            var fileData = new byte[FStream.Length];
+            var fileData = new byte[fStream.Length];
 
-            FStream.Read(fileData, 0, (FStream.Length).ToInt(0));
-            FStream.Close();
+            fStream.Read(fileData, 0, (fStream.Length).ToInt(0));
+            fStream.Close();
 
             return fileData;
-  
-
         }
 
 
@@ -719,34 +693,7 @@ namespace System
             return val;
         }
 
-        //public System.IO.MemoryStream ToMemoryStream(string FileName)
-        //{
-        //    System.IO.FileStream FStream;
-        //    System.IO.FileInfo Info;
-        //    System.IO.MemoryStream stream;
-        //    try
-        //    {
-        //        if (!System.IO.File.Exists(FileName))
-        //        {
-        //            return null;
-        //        }
-
-        //        Info = new System.IO.FileInfo(FileName);
-        //        FStream = Info.OpenRead();
-
-        //        FStream.Read(fileData, 0, ToInt(FStream.Length));
-        //        stream = FStream;
-        //        FStream.Close();
-
-        //        return stream;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        SetError(ex);
-        //        return null;
-        //    }
-
-        //}
+     
 
         #endregion
 

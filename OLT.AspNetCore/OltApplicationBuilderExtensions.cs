@@ -34,7 +34,7 @@ namespace OLT.Core
         {
             if (hostEnvironment == null)
             {
-                throw new ArgumentNullException(nameof(hostEnvironment));
+                throw new OltException(nameof(hostEnvironment));
             }
 
             return hostEnvironment.IsEnvironment(OltDefaults.OltEnvironments.Test);
@@ -47,9 +47,9 @@ namespace OLT.Core
         /// <typeparam name="TSettings"></typeparam>
         /// <param name="app"></param>
         /// <param name="settings"></param>
-        /// <param name="action">Called to configure middleware like <code>app.UseSerilogRequestLogging()</code></param>
+        /// <param name="middlewareAction">Called to configure middleware like <code>app.UseSerilogRequestLogging()</code></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseOltDefaults<TSettings>(this IApplicationBuilder app, TSettings settings, Action action)
+        public static IApplicationBuilder UseOltDefaults<TSettings>(this IApplicationBuilder app, TSettings settings, Action middlewareAction)
             where TSettings: OltAspNetAppSettings
         {
 
@@ -65,10 +65,10 @@ namespace OLT.Core
                 .First(p => p.Name == settings.Hosting.ConfigurationName);
             if (hostingConfig == null)
             {
-                throw new ArgumentNullException($"Unable to locate hosting configuration {settings.Hosting.ConfigurationName}");
+                throw new OltException($"Unable to locate hosting configuration {settings.Hosting.ConfigurationName}");
             }
 
-            hostingConfig.Configure(app, settings, action);
+            hostingConfig.Configure(app, settings, middlewareAction);
 
 
             return app;

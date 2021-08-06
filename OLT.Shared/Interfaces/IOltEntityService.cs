@@ -30,8 +30,5 @@ namespace OLT.Core
         TModel Update<TModel>(IOltSearcher<TEntity> queryBuilder, TModel model) where TModel : class, new();
         bool SoftDelete(IOltSearcher<TEntity> queryBuilder);
 
-
-        //IOltFileBase64 Export(IOltSearcher<TEntity> queryBuilder);
-        //IOltFileBase64 Export(IOltSearcher<TEntity> queryBuilder, string exporterName);
     }
 }

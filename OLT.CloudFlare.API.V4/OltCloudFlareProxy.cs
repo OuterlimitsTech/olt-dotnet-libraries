@@ -8,44 +8,12 @@ namespace OLT.CloudFlare
     public class OltCloudFlareProxy
     {
 
-        // Objects to encapsulate API methods
-        //public Zones Zones = new Zones();
-        //public Methods.Dns Dns = new Methods.Dns();
-
-
-        // Config values
-        //public OltCloudFlareConfig Config = new OltCloudFlareConfig();
         protected OltCloudFlareOptions Options { get; }
 
-        // API Access Configuration
-        //private readonly string BaseUrl;
-        //private readonly string _apiKey;
-        //private readonly string _email;
-        //private readonly string _zoneName;
-        //private readonly string record;
 
         public OltCloudFlareProxy(OltCloudFlareOptions options)
         {
             Options = options;
-            //BaseUrl = options.BaseUrl;
-            //_email = options.Email;
-            //_apiKey = options.ApiKey;
-            //_zoneName = options.ZoneName;
-
-            //if (options != null)
-            //{
-            //    BaseUrl = options.BaseUrl ?? Config.BaseUrl;
-            //    _apiKey = options.ApiKey ?? Config.ApiKey;
-            //    _email = options.Email ?? Config.Email;
-            //    zoneName = options.ZoneName;
-            //    record = options.Record;
-            //}
-            //else
-            //{
-            //    BaseUrl = Config.BaseUrl;
-            //    _apiKey = Config.ApiKey;
-            //    _email = Config.Email;
-            //}
         }
 
 
@@ -63,8 +31,6 @@ namespace OLT.CloudFlare
             };
 
             client.AddDefaultHeader(OltCloudFlareHeaders.Authorization, $"Bearer {Options.ApiKey}");
-            //client.AddDefaultHeader(OltCloudFlareHeaders.ApiKey, _apiKey);
-            //client.AddDefaultHeader(OltCloudFlareHeaders.Email, _email);
             client.AddDefaultHeader("Content-Type", "application/json");
 
             var response = client.Execute<T>(request);

@@ -21,7 +21,7 @@ namespace OLT.Core
             var rule = _rules.FirstOrDefault(p => p.RuleName == ruleName);
             if (rule == null)
             {
-                throw new Exception($"Rule Not Found {typeof(TRule)}");
+                throw new OltException($"Rule Not Found {typeof(TRule)}");
             }
             return rule as TRule;
         }

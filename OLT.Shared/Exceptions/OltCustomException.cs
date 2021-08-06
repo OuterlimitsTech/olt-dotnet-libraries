@@ -1,21 +1,35 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace OLT.Core
 {
-    public class OltCustomException : Exception
+    [Serializable]
+    public class OltException : SystemException
     {
-        private OltCustomException()
+        private OltException()
         {
 
         }
 
-        public OltCustomException(OltExceptionTypes exceptionType, string message = null) : base(message)
+        public OltException(string message) : base(message)
         {
-            ExceptionType = exceptionType;
 
         }
-        public OltExceptionTypes ExceptionType { get; set; }
 
+        #region [ Serializable Methods ]
 
+        protected OltException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+
+        #endregion
     }
 }

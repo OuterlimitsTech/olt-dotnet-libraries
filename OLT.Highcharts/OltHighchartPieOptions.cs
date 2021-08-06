@@ -2,16 +2,6 @@
 
 namespace OLT.Highcharts
 {
-    public class OltHighchartTooltip
-    {
-        public string PointFormat { get; set; }
-    }
-
-    public class OltHighchartPiePlot
-    {
-        public OltHighchartPiePlotOptions Pie { get; set; } = new OltHighchartPiePlotOptions();
-    }
-
     public class OltHighchartPieOptions : OltHighchartOptionsBase<OltHighchartPieSeries, OltHighchartPieType>
     {
         public OltHighchartPieOptions()

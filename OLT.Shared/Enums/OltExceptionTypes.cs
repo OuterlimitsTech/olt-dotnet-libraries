@@ -1,9 +1,8 @@
-﻿namespace OLT.Core
-{
-    public enum OltExceptionTypes
-    {
-        Unknown,
-        NotFound,
-        ExpectationsFailed
-    }
-}
+﻿////namespace OLT.Core
+////{
+////    public enum OltExceptionTypes
+////    {
+////        Custom,
+////        NotFound,
+////    }
+////}

@@ -24,7 +24,6 @@ namespace OLT.EPPlus
         }
 
         public object Value { get; set; }
-        //public string Formula { get; set; }
 
         public IOltExcelCellStyle Style { get; set; }
 

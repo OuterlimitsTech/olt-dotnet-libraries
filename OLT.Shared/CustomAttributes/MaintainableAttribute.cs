@@ -5,9 +5,9 @@ namespace OLT.Core
     public class MaintainableAttribute : Attribute
     {
 
-        public OltEntityMaintainableEnum Create { get; set; } = OltEntityMaintainableEnum.NotSet;
-        public OltEntityMaintainableEnum Update { get; set; } = OltEntityMaintainableEnum.NotSet;
-        public OltEntityMaintainableEnum Delete { get; set; } = OltEntityMaintainableEnum.NotSet;
+        public OltEntityMaintainable Create { get; set; } = OltEntityMaintainable.NotSet;
+        public OltEntityMaintainable Update { get; set; } = OltEntityMaintainable.NotSet;
+        public OltEntityMaintainable Delete { get; set; } = OltEntityMaintainable.NotSet;
 
         public void SetEntityValues(IOltEntityMaintainable entity)
         {
@@ -16,9 +16,9 @@ namespace OLT.Core
             entity.MaintDelete = ToBool(Delete);
         }
 
-        public bool? ToBool(OltEntityMaintainableEnum value)
+        public bool? ToBool(OltEntityMaintainable value)
         {
-            return value == OltEntityMaintainableEnum.NotSet ? new bool?() : value == OltEntityMaintainableEnum.Yes;
+            return value == OltEntityMaintainable.NotSet ? new bool?() : value == OltEntityMaintainable.Yes;
         }
     }
 }

@@ -31,10 +31,10 @@ namespace OLT.Core
             return $"{schema}.{tableName}";
         }
 
-        public static IEnumerable<DbColumnInfo> GetColumns<T>(this DbContext dbContext)
+        public static IEnumerable<OltDbColumnInfo> GetColumns<T>(this DbContext dbContext)
             where T : class
         {
-            var cols = new List<DbColumnInfo>();
+            var cols = new List<OltDbColumnInfo>();
             var entityType = dbContext.Model.FindEntityType(typeof(T));
 
             // Table info 
@@ -44,12 +44,12 @@ namespace OLT.Core
             // Column info 
             foreach (var property in entityType.GetProperties())
             {
-                cols.Add(new DbColumnInfo
+                cols.Add(new OltDbColumnInfo
                 {
                     Name = property.GetColumnName(StoreObjectIdentifier.Table(tableName, tableSchema)),
                     Type = property.GetColumnType(),
                 });
-            };
+            }
 
             return cols;
         }
@@ -311,23 +311,34 @@ namespace OLT.Core
         /// <param name="ct"></param>
         /// <param name="manageConnection"></param>
         /// <returns></returns>
-        public static async Task ExecuteStoredProcAsync(this DbCommand command, Action<SprocResults> handleResults,
+        public static Task ExecuteStoredProcAsync(this DbCommand command, 
+            Action<SprocResults> handleResults,
             System.Data.CommandBehavior commandBehaviour = System.Data.CommandBehavior.Default,
-            CancellationToken ct = default, bool manageConnection = true)
+            CancellationToken ct = default, 
+            bool manageConnection = true)
         {
             if (handleResults == null)
             {
                 throw new ArgumentNullException(nameof(handleResults));
             }
 
+            return ExecuteStoredProcInternalAsync(command, handleResults, commandBehaviour, ct, manageConnection);
+        }
+
+        private static async Task ExecuteStoredProcInternalAsync(
+            DbCommand command,
+            Action<SprocResults> handleResults,
+            System.Data.CommandBehavior commandBehaviour,
+            CancellationToken ct,
+            bool manageConnection)
+        {
             using (command)
             {
                 if (manageConnection && command.Connection.State == System.Data.ConnectionState.Closed)
                     await command.Connection.OpenAsync(ct).ConfigureAwait(false);
                 try
                 {
-                    using (var reader = await command.ExecuteReaderAsync(commandBehaviour, ct)
-                        .ConfigureAwait(false))
+                    using (var reader = await command.ExecuteReaderAsync(commandBehaviour, ct).ConfigureAwait(false))
                     {
                         var sprocResults = new SprocResults(reader);
                         handleResults(sprocResults);
@@ -352,7 +363,7 @@ namespace OLT.Core
         /// <param name="manageConnection"></param>
         /// <param name="resultActions"></param>
         /// <returns></returns>
-        public static async Task ExecuteStoredProcAsync(this DbCommand command,
+        public static Task ExecuteStoredProcAsync(this DbCommand command,
             CommandBehavior commandBehaviour = CommandBehavior.Default,
             CancellationToken ct = default, bool manageConnection = true, params Action<SprocResults>[] resultActions)
         {
@@ -360,6 +371,15 @@ namespace OLT.Core
             {
                 throw new ArgumentNullException(nameof(resultActions));
             }
+
+            return ExecuteStoredProcInternalAsync(command, commandBehaviour, ct, manageConnection, resultActions);
+        }
+
+        private static async Task ExecuteStoredProcInternalAsync(DbCommand command,
+            CommandBehavior commandBehaviour = CommandBehavior.Default,
+            CancellationToken ct = default, bool manageConnection = true, params Action<SprocResults>[] resultActions)
+        {
+       
 
             using (command)
             {
@@ -484,7 +504,7 @@ namespace OLT.Core
         public static IQueryable<T> NonDeletedQueryable<T>(this IOltDbContext context, IQueryable<T> queryable)
             where T : class, IOltEntity
         {
-            if (typeof(IOltEntityDeletable).IsAssignableFrom(typeof(T)) == false) return queryable;
+            if (!typeof(IOltEntityDeletable).IsAssignableFrom(typeof(T))) return queryable;
             Expression<Func<T, bool>> getNonDeleted = deletableQuery => ((IOltEntityDeletable)deletableQuery).DeletedOn == null;
             getNonDeleted = (Expression<Func<T, bool>>)OltRemoveCastsVisitor.Visit(getNonDeleted);
             return queryable.Where(getNonDeleted);

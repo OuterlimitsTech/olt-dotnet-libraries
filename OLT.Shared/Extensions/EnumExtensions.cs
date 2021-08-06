@@ -26,7 +26,7 @@ namespace OLT.Core
                 case OltNgxLoggerLevel.Off:
                     return LogLevel.None;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(ngxLoggerLevel), ngxLoggerLevel, null);
+                    return LogLevel.Information;
             }
         }
 
@@ -50,7 +50,7 @@ namespace OLT.Core
                 case OltLogType.None:
                     return LogLevel.None;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(logType), logType, null);
+                    return LogLevel.Information;
             }
         }
     }

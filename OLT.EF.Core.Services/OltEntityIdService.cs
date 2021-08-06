@@ -18,10 +18,12 @@ namespace OLT.Core
 
 
         protected virtual TEntity FindBy(int id) => GetQueryable(id).FirstOrDefault();
-        protected virtual IQueryable<TEntity> GetQueryable(int id) => GetQueryable().Where(p => p.Id == id);
+        
         public virtual TModel Get<TModel>(int id) where TModel : class, new() => base.Get<TModel>(GetQueryable(id));
         public TModel Get<TModel>(Guid uid) where TModel : class, new() => Get<TModel>(GetQueryable(uid));
         public IEnumerable<TModel> GetAll<TModel>(Guid uid) where TModel : class, new() => GetAll<TModel>(GetQueryable(uid));
+
+        protected virtual IQueryable<TEntity> GetQueryable(int id) => GetQueryable().Where(p => p.Id == id);
 
         protected IQueryable<TEntity> GetQueryable(Guid uid)
         {
@@ -31,7 +33,7 @@ namespace OLT.Core
                 getByUid = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(getByUid);
                 return this.Repository.Where(getByUid);
             }
-            throw new Exception($"Unable to cast to {nameof(IOltEntityUniqueId)}");
+            throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityUniqueId)}");
         }
 
         public override TModel Add<TModel>(TModel model)

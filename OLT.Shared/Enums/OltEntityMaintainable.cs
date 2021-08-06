@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public enum OltEntityMaintainableEnum
+    public enum OltEntityMaintainable
     {
         NotSet,
         Yes,

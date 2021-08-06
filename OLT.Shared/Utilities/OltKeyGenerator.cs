@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OLT.Core
 {
-    public class OltKeyGenerator
+    public static class OltKeyGenerator
     {
 
         internal static readonly char[] UpperCase = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
@@ -18,8 +18,6 @@ namespace OLT.Core
         internal static readonly char[] Symbols = { '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '{', '[', '}', ']', '-', '_', '=', '+', ':', ';', '|', '/', '?', ',', '<', '.', '>' };
 
         internal static readonly char[] SpecialCharacters = { '!', '@', '#', '$', '%', '&', '*', '+' };
-
-        //internal static readonly char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
 
         public static string GeneratePassword(int length = 8, bool useNumbers = true, bool useLowerCaseLetters = true, bool useUpperCaseLetters = true, bool useSpecialCharacters = true)
         {
@@ -96,7 +94,6 @@ namespace OLT.Core
 
         public static string GetUniqueKeyOriginal_BIASED(int size)
         {
-            //char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
             var chars = (new char[0])
                 .Concat(UpperCase)
                 .Concat(LowerCase)

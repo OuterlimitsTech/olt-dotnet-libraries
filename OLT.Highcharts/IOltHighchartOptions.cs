@@ -4,7 +4,7 @@ namespace OLT.Highcharts
 {
     public interface IOltHighchartOptions
     {
-        //OltHighchartTitle Title { get; set; }
+        
     }
 
     public interface IOltHighchartOptions<TSeries, TType> : IOltHighchartOptions

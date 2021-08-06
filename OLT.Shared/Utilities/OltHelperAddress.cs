@@ -12,22 +12,26 @@ namespace OLT.Core
         public static string EncodePostalCode(string postalCode)
         {
             if (string.IsNullOrEmpty(postalCode))
-                return (string)null;
-            var str = "";
+            {
+                return null;
+            }
+            var str = new StringBuilder();
             for (var index = 0; index < postalCode.Length; ++index)
             {
                 if (char.IsDigit(postalCode, index))
-                    str += postalCode.Substring(index, 1);
+                {
+                    str.Append(postalCode.Substring(index, 1));
+                }
             }
-            if (string.IsNullOrEmpty(str))
-                return (string)null;
-            return str;
+            return str.ToString();
         }
 
         public static string DecodePostalCode(string postalCode)
         {
             if (string.IsNullOrEmpty(postalCode) || postalCode.Trim() == string.Empty)
-                return "";
+            {
+                return string.Empty;
+            }
             postalCode = postalCode.Trim();
             return postalCode.Length == 9 ? $"{(object)postalCode.Substring(0, 5)}-{(object)postalCode.Substring(5)}" : postalCode;
         }

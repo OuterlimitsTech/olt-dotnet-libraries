@@ -11,7 +11,7 @@ namespace OLT.Core
         Contains
     }
 
-    public class OltFullTextSearchUtil
+    public static class OltFullTextSearchUtil
     {
 
         /// <summary>
@@ -37,14 +37,8 @@ namespace OLT.Core
         public static string FreeText(string search, bool matchAllWords = false)
         {
             return Convert(search, OltFtsWildCardType.None, matchAllWords);
-            //return $"({FullTextFreeText}{Convert(search, FtsWildCardType.None, matchAllWords)})";
         }
 
-        ////public static string FreeTextAll(string search, bool matchAllWords = false)
-        ////{
-        ////    return Convert(search, FtsWildCardType.None, matchAllWords);
-        ////    //return $"({FullTextFreeTextAll}{Convert(search, FtsWildCardType.None, matchAllWords)})";
-        ////}
 
         private static string Convert(string search, OltFtsWildCardType wildCardType, bool matchAllWords)
         {
@@ -55,20 +49,12 @@ namespace OLT.Core
                 return search;
             }
 
-
-
             if (!search.Contains(" "))
             {
                 return FormatWordWildCard(search, wildCardType);
             }
 
-            ////Pre-formatted
-            //if (search.StartsWith("\"") && search.EndsWith("\""))
-            //{
-            //    return search;
-            //}
-
-            var words = search.Split(' ', '　').ToList();
+            var words = search.Split(' ', '　', StringSplitOptions.None).ToList();
 
             return matchAllWords
                 ? string.Join(" and ", words.Where(c => c != "and").Select(word => FormatWordWildCard(word, wildCardType)))

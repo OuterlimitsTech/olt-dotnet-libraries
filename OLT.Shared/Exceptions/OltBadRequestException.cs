@@ -1,24 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
 namespace OLT.Core
 {
-
     [Serializable]
-    public class OltValidationException : OltException
+    public class OltBadRequestException : SystemException
     {
-        public readonly IEnumerable<IOltValidationResult> Results;
-
-        public OltValidationException(IEnumerable<IOltValidationResult> results, string errorMessage = "Please correct the validation errors") : base(errorMessage)
+        private OltBadRequestException()
         {
-            this.Results = results;
+
+        }
+
+        public OltBadRequestException(string message) : base(message)
+        {
+
         }
 
         #region [ Serializable Methods ]
 
-        protected OltValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected OltBadRequestException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
         }

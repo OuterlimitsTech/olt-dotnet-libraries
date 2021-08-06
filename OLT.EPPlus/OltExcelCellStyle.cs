@@ -13,7 +13,6 @@ namespace OLT.EPPlus
         public bool Bold { get; set; }
         public bool Italic { get; set; }
         public bool Merge { get; set; }
-        //public bool Center { get; set; }
         public Color? Color { get; set; }
         public Color? Background { get; set; }
         public bool WrapText { get; set; }
@@ -41,11 +40,6 @@ namespace OLT.EPPlus
             {
                 range.Style.VerticalAlignment = VerticalAlignment.Value;
             }
-
-            //if (Center)
-            //{
-            //    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.CenterContinuous;
-            //}
 
             range.Merge = Merge;
             range.Style.WrapText = WrapText;

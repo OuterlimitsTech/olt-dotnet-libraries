@@ -16,24 +16,15 @@ namespace OLT.Core
             return queryable;
         }
 
-        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, IOltSortParams sortParams)
-        {
-            return source.OrderByPropertyName(sortParams.PropertyName, sortParams.IsAscending);
-        }
-
-        public static IOrderedQueryable<T> OrderByPropertyName<T>(this IQueryable<T> source, string memberPath, bool isAscending)
-        {
-            var parameter = Expression.Parameter(typeof(T), "item");
-            var member = memberPath.Split('.').Aggregate((Expression)parameter, Expression.PropertyOrField);
-            var keySelector = Expression.Lambda(member, parameter);
-            var methodCall = Expression.Call(typeof(Queryable), isAscending ? "OrderBy" : "OrderByDescending", new[] { parameter.Type, member.Type }, source.Expression, Expression.Quote(keySelector));
-            return (IOrderedQueryable<T>)source.Provider.CreateQuery(methodCall);
-        }
-
         public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> queryable, IOltSearcher<TSource> searcher)
             where TSource : class, IOltEntity
         {
             return searcher.BuildQueryable(queryable);
+        }
+
+        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, IOltSortParams sortParams)
+        {
+            return source.OrderByPropertyName(sortParams.PropertyName, sortParams.IsAscending);
         }
 
         public static IQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> queryable, IOltSortParams sortParams, Func<IQueryable<TSource>, IQueryable<TSource>> defaultOrderBy)
@@ -61,6 +52,15 @@ namespace OLT.Core
                 Data = pagedQueryable.ToList()
             };
 
+        }
+
+        public static IOrderedQueryable<T> OrderByPropertyName<T>(this IQueryable<T> source, string memberPath, bool isAscending)
+        {
+            var parameter = Expression.Parameter(typeof(T), "item");
+            var member = memberPath.Split('.').Aggregate((Expression)parameter, Expression.PropertyOrField);
+            var keySelector = Expression.Lambda(member, parameter);
+            var methodCall = Expression.Call(typeof(Queryable), isAscending ? "OrderBy" : "OrderByDescending", new[] { parameter.Type, member.Type }, source.Expression, Expression.Quote(keySelector));
+            return (IOrderedQueryable<T>)source.Provider.CreateQuery(methodCall);
         }
     }
 }

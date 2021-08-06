@@ -1,6 +1,8 @@
-﻿namespace OLT.Core
+﻿using System;
+
+namespace OLT.Core
 {
-    public interface IOltBuilder : IOltInjectableSingleton
+    public interface IOltBuilder : IDisposable
     {
         string BuilderName { get; }
     }
