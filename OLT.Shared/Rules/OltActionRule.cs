@@ -16,10 +16,8 @@
     {
         public abstract IOltResult CanExecute(TRequest request);
         public abstract IOltResult Execute(TRequest request);
-        //public abstract string RuleName { get; }
         public virtual string RuleName => this.GetType().FullName;
         protected virtual IOltResult Success() => new OltRuleResult();
         protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
-
     }
 }

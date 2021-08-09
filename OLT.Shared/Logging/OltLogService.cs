@@ -12,18 +12,6 @@ namespace OLT.Core
             _logger = logger;
         }
 
-        public virtual bool IsSqlTraceEnabled { get; set; } = false;
-
-        public virtual void SqlTrace(string message)
-        {
-            if (IsSqlTraceEnabled)
-            {
-                Write(OltLogType.Trace, message);
-            }
-        }
-
-    
-
         public virtual void Write(OltLogType logType, string message)
         {
             _logger.Log(logType.ToLogLevel(), message);

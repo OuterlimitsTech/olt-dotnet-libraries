@@ -4,9 +4,4 @@
     {
         string RuleName { get; }
     }
-
-
-
-
-
 }

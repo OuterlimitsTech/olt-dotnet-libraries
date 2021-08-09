@@ -4,30 +4,21 @@ namespace OLT.Core
 {
     public interface IOltLogService : IOltInjectableSingleton
     {
-        //bool IsDebugEnabled { get; }
-        //bool IsErrorEnabled { get; }
-        //bool IsFatalEnabled { get; }
-        //bool IsInfoEnabled { get; }
-        //bool IsTraceEnabled { get; }
-        //bool IsWarnEnabled { get; }
-        //bool IsSqlTraceEnabled { get; }
-
-        void SqlTrace(string message);
 
         /// <summary>
         /// Formats and writes a log message at the specified log level.
         /// </summary>
-        /// <param name="oltLogType">Entry will be written on this level.</param>
+        /// <param name="logType">Entry will be written on this level.</param>
         /// <param name="message">Format string of the log message.</param>
-        void Write(OltLogType oltLogType, string message);
+        void Write(OltLogType logType, string message);
 
         /// <summary>
         /// Formats and writes a log message at the specified log level.
         /// </summary>
-        /// <param name="oltLogType">Entry will be written on this level.</param>
+        /// <param name="logType">Entry will be written on this level.</param>
         /// <param name="message">Format string of the log message.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
-        void Write(OltLogType oltLogType, string message, params object[] args);
+        void Write(OltLogType logType, string message, params object[] args);
 
         /// <summary>Formats and writes an error log message.</summary>
         /// <param name="exception">The exception to log.</param>

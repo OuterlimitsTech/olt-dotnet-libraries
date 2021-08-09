@@ -68,9 +68,8 @@ namespace OLT.Core
                 services.AddOltJwt(settings.JwtSecret);
             }
 
-            services.AddOltDefault();
-
             services
+				.AddOltDefault()
                 .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
                 .AddScoped<IOltIdentity, OltIdentityAspNetCore>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>())

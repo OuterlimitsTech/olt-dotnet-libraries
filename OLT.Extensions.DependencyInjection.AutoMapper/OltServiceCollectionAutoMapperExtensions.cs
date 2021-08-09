@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.Core
@@ -7,9 +9,21 @@ namespace OLT.Core
     {
         public static IServiceCollection AddOltAutoMapper(this IServiceCollection services)
         {
-            var assembliesToScan = services.OltScanAssemblies();
+            return services.AddOltAutoMapper(new List<Assembly>());
+        }
+
+        public static IServiceCollection AddOltAutoMapper(this IServiceCollection services, List<Assembly> includeAssembliesScan)
+        {
+            var assembliesToScan = new List<Assembly>
+            {
+                Assembly.GetEntryAssembly(),
+                Assembly.GetExecutingAssembly()
+            };
+
+            assembliesToScan.AddRange(includeAssembliesScan);
+
             services.AddSingleton<IOltAdapterResolver, OltAdapterResolverAutoMapper>();
-            services.AddAutoMapper(assembliesToScan);
+            services.AddAutoMapper(assembliesToScan.GetAllReferencedAssemblies());
             return services;
         }
     }

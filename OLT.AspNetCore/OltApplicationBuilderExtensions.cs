@@ -70,7 +70,6 @@ namespace OLT.Core
 
             hostingConfig.Configure(app, settings, middlewareAction);
 
-
             return app;
         }
 
