@@ -12,6 +12,11 @@ namespace OLT.Core
             return services.AddOltAutoMapper(new List<Assembly>());
         }
 
+        public static IServiceCollection AddOltAutoMapper(this IServiceCollection services, Assembly includeAssemblyScan)
+        {
+            return AddOltAutoMapper(services, new List<Assembly> { includeAssemblyScan });
+        }
+
         public static IServiceCollection AddOltAutoMapper(this IServiceCollection services, List<Assembly> includeAssembliesScan)
         {
             var assembliesToScan = new List<Assembly>

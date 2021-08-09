@@ -38,7 +38,24 @@ namespace OLT.Core
         /// <remarks>
         /// </remarks>
         /// <param name="services"></param>
-        /// <param name="includeAssembliesScan">List of assemblies to start scan for interfaces</param>
+        /// <param name="includeAssemblyScan">Assembly to include in scan for interfaces</param>
+        /// <returns><param typeof="IServiceCollection"></param></returns>
+        public static IServiceCollection AddOltDefault(this IServiceCollection services, Assembly includeAssemblyScan)
+        {
+            return AddOltDefault(services, new List<Assembly>() { includeAssemblyScan });
+        }
+
+        /// <summary>
+        /// Configures Default Assembly Scan along with the mentioned interfaces
+        /// </summary>
+        /// <remarks>
+        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// </remarks>
+        /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
+        /// <remarks>
+        /// </remarks>
+        /// <param name="services"></param>
+        /// <param name="includeAssembliesScan">List of assemblies to include in scan for interfaces</param>
         /// <returns><param typeof="IServiceCollection"></param></returns>
         public static IServiceCollection AddOltDefault(this IServiceCollection services, List<Assembly> includeAssembliesScan)
         {

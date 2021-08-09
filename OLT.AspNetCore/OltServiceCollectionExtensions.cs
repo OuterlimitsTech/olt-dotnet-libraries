@@ -22,18 +22,38 @@ namespace OLT.Core
 
         /// <summary>
         /// Build Default AspNetCore Service and configures Dependency Injection
-        /// AddOltApiVersioning()
-        /// AddOltDefault()
-        /// AddOltApiSwagger()
-        /// AddOltCors()
-        /// AddOltJwt()
-        /// AddControllers()
         /// </summary>
         /// <param name="services"></param>
         /// <param name="settings"></param>
         /// <param name="action">Invoked after initialized</param>
         /// <returns></returns>
-        public static IServiceCollection AddOltAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Action<IMvcBuilder> action)
+        public static IServiceCollection AddOltAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Action<IMvcBuilder> action) where TSettings : OltAspNetAppSettings
+        {
+            return services.AddOltAspNetCore(settings, new List<Assembly>(), action);
+        }
+
+        /// <summary>
+        /// Build Default AspNetCore Service and configures Dependency Injection
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="settings"></param>
+        /// <param name="includeAssemblyScan">Assembly to include in scan for interfaces</param>
+        /// <param name="action">Invoked after initialized</param>
+        /// <returns></returns>
+        public static IServiceCollection AddOltAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, Assembly includeAssemblyScan, Action<IMvcBuilder> action) where TSettings : OltAspNetAppSettings
+        {
+            return services.AddOltAspNetCore(settings, new List<Assembly>() {includeAssemblyScan}, action);
+        }
+
+        /// <summary>
+        /// Build Default AspNetCore Service and configures Dependency Injection
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="settings"></param>
+        /// <param name="includeAssembliesScan">List of assemblies to include in scan for interfaces</param>
+        /// <param name="action">Invoked after initialized</param>
+        /// <returns></returns>
+        public static IServiceCollection AddOltAspNetCore<TSettings>(this IServiceCollection services, TSettings settings, List<Assembly> includeAssembliesScan, Action<IMvcBuilder> action)
             where TSettings : OltAspNetAppSettings
         {
 
@@ -53,6 +73,8 @@ namespace OLT.Core
                 Assembly.GetExecutingAssembly()
             };
 
+            assembliesToScan.AddRange(includeAssembliesScan);
+
             assembliesToScan
                 .GetAllReferencedAssemblies()
                 .GetAllImplements<IOltAspNetCoreCorsPolicy>()
@@ -69,7 +91,7 @@ namespace OLT.Core
             }
 
             services
-				.AddOltDefault()
+				.AddOltDefault(includeAssembliesScan)
                 .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
                 .AddScoped<IOltIdentity, OltIdentityAspNetCore>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>())
