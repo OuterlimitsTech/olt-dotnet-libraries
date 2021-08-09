@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
 {
-    public interface IOltFileExportBuilder<in TRequest, in TParameter> : IOltFileExportBuilder, IOltInjectableSingleton
+    public interface IOltFileBuilder<in TRequest, in TParameter> : IOltFileBuilder, IOltInjectableSingleton
         where TRequest : IOltRequest
         where TParameter : class, IOltGenericParameter
     {
@@ -11,7 +11,7 @@ namespace OLT.Core
 
     }
 
-    public interface IOltFileExportBuilder<in TRequest> : IOltFileExportBuilder, IOltInjectableSingleton
+    public interface IOltFileBuilder<in TRequest> : IOltFileBuilder, IOltInjectableSingleton
         where TRequest : IOltRequest
     {
         IOltFileBase64 Build(TRequest request);
