@@ -2,15 +2,15 @@
 {
     public interface IOltActionRule : IOltRule, IOltInjectableSingleton
     {
-        IOltRuleResult CanExecute(IOltRuleRequest request);
-        IOltRuleResult Execute(IOltRuleRequest request);
+        IOltResult CanExecute(IOltRequest request);
+        IOltResult Execute(IOltRequest request);
     }
 
     public interface IOltActionRule<in TRequest> : IOltRule, IOltInjectableSingleton
-        where TRequest : class, IOltRuleRequest
+        where TRequest : class, IOltRequest
     {
-        IOltRuleResult CanExecute(TRequest request);
-        IOltRuleResult Execute(TRequest request);
+        IOltResult CanExecute(TRequest request);
+        IOltResult Execute(TRequest request);
     }
 
 }

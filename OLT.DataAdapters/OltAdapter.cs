@@ -19,7 +19,6 @@ namespace OLT.Core
             ConcurrentBag<TObj2> result = new ConcurrentBag<TObj2>();
             Parallel.ForEach(sourceItems, obj1 =>
             {
-                //var obj2 = new TObj2();
                 var obj2 = (TObj2)Activator.CreateInstance(typeof(TObj2));
                 Map(obj1, obj2);
                 result.Add(obj2);

@@ -71,9 +71,6 @@ namespace OLT.Core
 
         private void Generate(AddColumnOperation operation, MigrationCommandListBuilder builder)
         {
-            var sqlHelper = Dependencies.SqlGenerationHelper;
-            var stringMapping = Dependencies.TypeMappingSource.FindMapping(typeof(string));
-
             var columnDefString = GetColumnGenString(operation);
 
             string schemaString = "";
@@ -122,14 +119,8 @@ namespace OLT.Core
 
             string nullString = "NULL";  // Check for other properties.
 
-            if (operation.IsNullable == false)
+            if (!operation.IsNullable)
                 nullString = "NOT NULL";
-
-            //string schemaString = "";
-            //if (operation.Schema != null)
-            //{
-            //    schemaString = $"[{operation.Schema}].";
-            //}
 
             string retColString = $"[{operation.Name}] {type} {nullString}";
 

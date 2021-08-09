@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using OLT.Core;
 
 namespace OLT.EPPlus
 {
@@ -27,7 +28,7 @@ namespace OLT.EPPlus
                 }
             }
 
-            throw new Exception("Column Not Found");
+            throw new OltException("Column Not Found");
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace OLT.EPPlus
             {
                 var mod = (div - 1) % 26;
                 colLetter = (char)(65 + mod) + colLetter;
-                div = (int)((div - mod) / 26);
+                div = (div - mod) / 26;
             }
             return colLetter;
         }

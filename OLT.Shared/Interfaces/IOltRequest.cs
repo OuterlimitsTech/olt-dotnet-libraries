@@ -1,7 +1,9 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltRuleResult
+    public interface IOltRequest
     {
 
     }
+
+  
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace OLT.Core
@@ -38,14 +39,17 @@ namespace OLT.Core
         {
             if (string.IsNullOrEmpty(number)) return number;
 
-            var str = string.Empty;
+            var builder = new StringBuilder();
 
             for (var index = 0; index < number.Length; ++index)
             {
                 if (char.IsDigit(number, index))
-                    str += number.Substring(index, 1);
+                {
+                    builder.Append(number.Substring(index, 1));
+                }
             }
 
+            var str = builder.ToString();
             if (string.IsNullOrEmpty(str) || str.Length < 9)
                 return number;
 

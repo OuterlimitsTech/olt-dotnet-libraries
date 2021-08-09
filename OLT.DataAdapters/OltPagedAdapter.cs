@@ -8,17 +8,16 @@ namespace OLT.Core
         where TDestination : class, new()
     {
 
-
-        public virtual IOltPaged<TDestination> Map(IQueryable<TSource> queryable, IOltPagingWithSortParams pagingParams)
-        {
-            return Map(queryable, pagingParams, pagingParams);
-        }
-
         public abstract IQueryable<TSource> DefaultOrderBy(IQueryable<TSource> queryable);
 
         public virtual IQueryable<TSource> OrderBy(IQueryable<TSource> queryable, IOltSortParams sortParams = null)
         {
             return queryable.OrderBy(sortParams, DefaultOrderBy);
+        }
+
+        public virtual IOltPaged<TDestination> Map(IQueryable<TSource> queryable, IOltPagingWithSortParams pagingParams)
+        {
+            return Map(queryable, pagingParams, pagingParams);
         }
 
         public virtual IOltPaged<TDestination> Map(IQueryable<TSource> queryable, IOltPagingParams pagingParams, IOltSortParams sortParams = null)

@@ -73,7 +73,7 @@ namespace OLT.Email.SendGrid
         {
             var result = CreateResult(request, from);
 
-            if (SendEmail(result) == false)
+            if (!SendEmail(result))
             {
                 return result;
             }
@@ -100,11 +100,6 @@ namespace OLT.Email.SendGrid
                 msg.SetClickTracking(true, true);
             }
 
-            //var tags = request.Tags?.ToList();
-            //if (tags != null && tags.Any())
-            //{
-            //    msg.SetTemplateData(ToDictionary(tags));
-            //}
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (request is IOltEmailAttachmentRequest attachmentRequest)
@@ -125,7 +120,7 @@ namespace OLT.Email.SendGrid
         {
             var result = CreateResult(request, from);
 
-            if (SendEmail(result) == false)
+            if (!SendEmail(result))
             {
                 return result;
             }

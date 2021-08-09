@@ -39,7 +39,7 @@ namespace OLT.Core
             }
             catch
             {
-
+                // ignored
             }
 
             return base.ProjectTo<TEntity, TDestination>(source, adapter);
@@ -65,7 +65,7 @@ namespace OLT.Core
             }
             catch
             {
-
+                // ignored
             }
 
             return base.Map<TSource, TDestination>(source, adapter);
@@ -112,7 +112,7 @@ namespace OLT.Core
             var mapAdapter = adapter as IOltAdapterPagedMap<TSource, TDestination>;
             if (mapAdapter == null && throwException)
             {
-                throw new Exception($"{adapterName} not of type {nameof(IOltAdapterPagedMap<TSource, TDestination>)}");
+                throw new InvalidCastException($"{adapterName} not of type {nameof(IOltAdapterPagedMap<TSource, TDestination>)}");
             }
             return mapAdapter;
 
@@ -131,7 +131,7 @@ namespace OLT.Core
             }
             catch
             {
-
+                // ignored
             }
 
             return base.Map(source, destination);

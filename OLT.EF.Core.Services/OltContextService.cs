@@ -18,8 +18,7 @@ namespace OLT.Core
 
         protected TContext Context { get; private set; }
         protected int SaveChanges() => Context.SaveChanges();
-        //protected Task<int> SaveChangesAsync() => Context.SaveChangesAsync();
-
+        
         protected IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
             var queryable = InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
@@ -35,7 +34,12 @@ namespace OLT.Core
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
 
-        //protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, IOltAdapter<TEntity, TModel> adapter)
+        protected virtual IQueryable<T> GetQueryable<T>(IOltSearcher<T> queryBuilder)
+            where T : class, IOltEntity
+        {
+            return Context.GetQueryable(queryBuilder);
+        }
+
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher)
             where TEntity : class, IOltEntity
             where TModel : class, new()
@@ -44,7 +48,6 @@ namespace OLT.Core
             return this.GetAll<TEntity, TModel>(queryable);
         }
 
-        //protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
             where TModel : class, new()
@@ -71,7 +74,6 @@ namespace OLT.Core
             return queryable;
         }
 
-        //protected virtual TModel Get<TModel, TEntity>(IQueryable<TEntity> queryable, IOltAdapter<TModel, TEntity> adapter)
         protected virtual TModel Get<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
@@ -118,12 +120,6 @@ namespace OLT.Core
             return Context.NonDeletedQueryable(queryable);
         }
 
-        protected virtual IQueryable<T> GetQueryable<T>(IOltSearcher<T> queryBuilder)
-            where T : class, IOltEntity
-        {
-            return Context.GetQueryable(queryBuilder);
-        }
-
         protected virtual bool MarkDeleted<T>(T entity)
             where T : class, IOltEntity
         {
@@ -135,7 +131,7 @@ namespace OLT.Core
                 return true;
             }
 
-            throw new Exception($"Unable to cast to {nameof(IOltEntityDeletable)}");
+            throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityDeletable)}");
 
         }
 

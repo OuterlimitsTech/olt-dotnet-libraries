@@ -12,18 +12,6 @@ namespace OLT.Core
             _logger = logger;
         }
 
-        public virtual bool IsSqlTraceEnabled { get; set; } = false;
-
-        public virtual void SqlTrace(string message)
-        {
-            if (IsSqlTraceEnabled)
-            {
-                Write(OltLogType.Trace, message);
-            }
-        }
-
-    
-
         public virtual void Write(OltLogType logType, string message)
         {
             _logger.Log(logType.ToLogLevel(), message);
@@ -52,10 +40,14 @@ namespace OLT.Core
 
         public virtual void Write(IOltNgxLoggerMessage loggerMessage, string userName)
         {
-            //var logger = LogManager.GetCurrentClassLogger();
-            //var logEventInfo = GetLogEvent(LoggerName, LogLevel.Error, loggerMessage.ToException(), null);
-            //logEventInfo.Message = $"Ngx User: {userName}";
-            //logger.Log(logEventInfo);
+            var message = $"Token User: {userName}{Environment.NewLine}{loggerMessage.Message}";
+            if (loggerMessage.IsError)
+            {
+                _logger.LogError(loggerMessage.ToException(), message);
+                return;
+            }
+            var logType = loggerMessage.Level.GetValueOrDefault(OltNgxLoggerLevel.Info).ToLogLevel();
+            _logger.Log(logType, $"{message}{Environment.NewLine}{Environment.NewLine}{loggerMessage.ToException().Message}");
         }
 
 
@@ -78,9 +70,10 @@ namespace OLT.Core
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             Disposed = true;
         }
     }
 }
+ 

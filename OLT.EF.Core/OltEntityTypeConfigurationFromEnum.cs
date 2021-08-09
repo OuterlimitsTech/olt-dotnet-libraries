@@ -17,12 +17,12 @@ namespace OLT.Core
             var eType = typeof(TEnum);
 
             if (!eType.IsEnum)
-                throw new Exception($"Type '{eType.AssemblyQualifiedName}' must be enum");
+                throw new InvalidCastException($"Type '{eType.AssemblyQualifiedName}' must be enum");
 
             var nType = Enum.GetUnderlyingType(eType);
 
             if (nType == typeof(long) || nType == typeof(ulong) || nType == typeof(uint))
-                throw new Exception($"Type '{eType.AssemblyQualifiedName}' must be of type long, ulong, uint");
+                throw new InvalidCastException($"Type '{eType.AssemblyQualifiedName}' must be of type long, ulong, uint");
 
             var list = new List<TEntity>();
             foreach (TEnum enumValue in Enum.GetValues(eType))
@@ -31,7 +31,7 @@ namespace OLT.Core
 
                 if (id <= 0)
                 {
-                    throw new Exception("Enum underlying value must be positive");
+                    throw new InvalidCastException("Enum underlying value must be positive");
                 }
 
                 var item = new TEntity

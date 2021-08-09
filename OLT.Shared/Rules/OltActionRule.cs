@@ -2,26 +2,22 @@
 {
     public abstract class OltActionRule : OltDisposable, IOltActionRule
     {
-        public abstract IOltRuleResult CanExecute(IOltRuleRequest request);
-        public abstract IOltRuleResult Execute(IOltRuleRequest request);
-        //public virtual string RuleName => BuildName<TObj1, TObj2>();
-        //public abstract string RuleName { get; }
+        public abstract IOltResult CanExecute(IOltRequest request);
+        public abstract IOltResult Execute(IOltRequest request);
         public virtual string RuleName => this.GetType().FullName;
 
-        protected virtual IOltRuleResult Success() => new OltRuleResult();
-        protected virtual IOltRuleResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
+        protected virtual IOltResult Success() => new OltRuleResult();
+        protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
     }
 
 
     public abstract class OltActionRule<TRequest> : OltDisposable, IOltActionRule<TRequest>
-        where TRequest : class, IOltRuleRequest
+        where TRequest : class, IOltRequest
     {
-        public abstract IOltRuleResult CanExecute(TRequest request);
-        public abstract IOltRuleResult Execute(TRequest request);
-        //public abstract string RuleName { get; }
+        public abstract IOltResult CanExecute(TRequest request);
+        public abstract IOltResult Execute(TRequest request);
         public virtual string RuleName => this.GetType().FullName;
-        protected virtual IOltRuleResult Success() => new OltRuleResult();
-        protected virtual IOltRuleResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
-
+        protected virtual IOltResult Success() => new OltRuleResult();
+        protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
     }
 }

@@ -28,16 +28,17 @@ namespace OLT.Core
                 {
                     parameter.Name = description.ModelMetadata?.Name;
                 }
-                if (parameter.Description == null)
-                {
-                    parameter.Description = description.ModelMetadata?.Description;
-                }
+
+                parameter.Description ??= description.ModelMetadata?.Description;
 
                 if (parameter.Name == "api-version")
                 {
                     parameter.Required = description.IsRequired;
                     parameter.AllowEmptyValue = false;
-                    parameter.Example = new OpenApiString(description.DefaultValue.ToString());
+                    if (description.DefaultValue != null)
+                    {
+                        parameter.Example = new OpenApiString(description.DefaultValue.ToString());
+                    }
                 }
 
 

@@ -12,7 +12,7 @@ namespace OLT.Core
         public override string Name => OltAspNetDefaults.HostingConfigurations.Default;
 
 
-        public override IApplicationBuilder Configure<TSettings>(IApplicationBuilder app, TSettings settings, Action action)
+        public override IApplicationBuilder Configure<TSettings>(IApplicationBuilder app, TSettings settings, Action middlewareAction)
         {
 
             if (settings.Hosting.PathBase.IsNotEmpty())
@@ -25,7 +25,7 @@ namespace OLT.Core
                 app.UseDeveloperExceptionPage();
             }
 
-            action?.Invoke();
+            middlewareAction?.Invoke();
 
             if (settings.Hosting.UseHsts)
             {
@@ -58,19 +58,19 @@ namespace OLT.Core
                 app.UseCors(settings.Hosting.CorsPolicyName);
             }
 
-            if (settings.Hosting.DisableHttpsRedirect == false)
+            if (!settings.Hosting.DisableHttpsRedirect)
             {
                 app.UseHttpsRedirection();
             }
             
             app.UseRouting();
 
-            if (settings.Hosting.DisableUseAuthentication == false)
+            if (!settings.Hosting.DisableUseAuthentication)
             {
                 app.UseAuthentication();
             }
 
-            if (settings.Hosting.DisableUseAuthorization == false)
+            if (!settings.Hosting.DisableUseAuthorization)
             {
                 app.UseAuthorization();
             }

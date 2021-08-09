@@ -11,7 +11,6 @@ namespace OLT.Core
     public abstract class OltDbContext<TContext> : DbContext, IOltDbContext
         where TContext: DbContext, IOltDbContext
     {
-        private IOltLogService _logService;
         private IOltDbAuditUser _dbAuditUser;
 
         protected OltDbContext(DbContextOptions<TContext> options) : base(options)
@@ -88,7 +87,7 @@ namespace OLT.Core
                     uniqueModel.UniqueId = Guid.NewGuid();
                 }
 
-                if (entityEntry.Entity is IOltEntitySortable sortOrder && !(sortOrder.SortOrder > 0))
+                if (entityEntry.Entity is IOltEntitySortable sortOrder && sortOrder.SortOrder <= 0)
                 {
                     sortOrder.SortOrder = 9999;
                 }
@@ -108,7 +107,7 @@ namespace OLT.Core
                     (entityEntry.Entity as IOltDeletingRecord)?.DeletingRecord(this, entityEntry);
                 }
 
-                var str = typeof(string).Name;
+                var str = nameof(String);
                 var properties = from p in entityEntry.Entity.GetType().GetProperties()
                                  where p.PropertyType.Name == str
                                  select p;

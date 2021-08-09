@@ -59,27 +59,27 @@ namespace OLT.Email
                 errors.Add("Requires To Recipient");
             }
 
-            if (request is IOltEmailTemplateRequest templateRequest)
+            if (request is IOltEmailTemplateRequest templateRequest && string.IsNullOrWhiteSpace(templateRequest.TemplateName))
             {
-                if (string.IsNullOrWhiteSpace(templateRequest.TemplateName))
-                {
-                    errors.Add("Template Name Missing");
-                }
-
+                errors.Add("Template Name Missing");
             }
 
-            if (request is IOltEmailCalendarRequest calendarRequest)
+            switch (request)
             {
-                if (string.IsNullOrWhiteSpace(calendarRequest.Subject))
+                case IOltEmailCalendarRequest calendarRequest:
                 {
-                    errors.Add("Subject Missing");
-                }
+                    if (string.IsNullOrWhiteSpace(calendarRequest.Subject))
+                    {
+                        errors.Add("Subject Missing");
+                    }
 
-                if (!(calendarRequest.CalendarInvite?.Bytes.Length > 0))
-                {
-                    errors.Add("Calendar Invite Missing");
-                }
+                    if (!(calendarRequest.CalendarInvite?.Bytes.Length > 0))
+                    {
+                        errors.Add("Calendar Invite Missing");
+                    }
 
+                    break;
+                }
             }
 
             return errors;

@@ -24,7 +24,7 @@ namespace OLT.EPPlus
         /// <param name="row">Current Row</param>
         /// <param name="col">Current Col</param>
         /// <returns><param name="col"></param> + 1</returns>
-        public int Write(ExcelWorksheet worksheet, int col, int row)
+        public virtual int Write(ExcelWorksheet worksheet, int col, int row)
         {
             return Write(worksheet, col, row, null);
         }
@@ -37,7 +37,7 @@ namespace OLT.EPPlus
         /// <param name="col">Current Col</param>
         /// <param name="rangeAction"></param>
         /// <returns><param name="col"></param> + 1</returns>
-        public virtual int Write(ExcelWorksheet worksheet, int row, int col, Action<ExcelRange> rangeAction)
+        public virtual int Write(ExcelWorksheet worksheet, int col, int row, Action<ExcelRange> rangeAction)
         {
             var colName = OltExcelPackageHelpers.ColumnIndexToColumnLetter(col);
 

@@ -12,42 +12,74 @@ namespace OLT.Core
     {
 
         /// <summary>
-        /// Configures Default Assembly Scan and adds memory cache
-        /// Adds IOltMemoryCache, IOltConfigManager, IOltLogService as Singletons
-        /// Adds IOltDbAuditUser to resolve to IOltIdentity as scoped
+        /// Configures Default Assembly Scan along with the mentioned interfaces
         /// </summary>
+        /// <remarks>
+        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// </remarks>
+        /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
+        /// <remarks>
+        /// </remarks>
         /// <param name="services"></param>
-        /// <param name="action"></param>
         /// <returns><param typeof="IServiceCollection"></param></returns>
-        public static IServiceCollection AddOltDefault(this IServiceCollection services, Action action)
+        public static IServiceCollection AddOltDefault(this IServiceCollection services)
         {
-
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            services                
-                .OltScan()
-                .AddSingleton<IOltMemoryCache, OltMemoryCache>()
-                .AddSingleton<IOltConfigManager, OltConfigManager>()
-                .AddSingleton<IOltLogService, OltLogService>()
-                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
-
-            action.Invoke();
-
-            return services;
+            return AddOltDefault(services, new List<Assembly>());
         }
 
 
         /// <summary>
+        /// Configures Default Assembly Scan along with the mentioned interfaces
+        /// </summary>
+        /// <remarks>
+        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// </remarks>
+        /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
+        /// <remarks>
+        /// </remarks>
+        /// <param name="services"></param>
+        /// <param name="includeAssemblyScan">Assembly to include in scan for interfaces</param>
+        /// <returns><param typeof="IServiceCollection"></param></returns>
+        public static IServiceCollection AddOltDefault(this IServiceCollection services, Assembly includeAssemblyScan)
+        {
+            return AddOltDefault(services, new List<Assembly>() { includeAssemblyScan });
+        }
+
+        /// <summary>
+        /// Configures Default Assembly Scan along with the mentioned interfaces
+        /// </summary>
+        /// <remarks>
+        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// </remarks>
+        /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
+        /// <remarks>
+        /// </remarks>
+        /// <param name="services"></param>
+        /// <param name="includeAssembliesScan">List of assemblies to include in scan for interfaces</param>
+        /// <returns><param typeof="IServiceCollection"></param></returns>
+        public static IServiceCollection AddOltDefault(this IServiceCollection services, List<Assembly> includeAssembliesScan)
+        {
+            var assembliesToScan = new List<Assembly>
+            {
+                Assembly.GetEntryAssembly(),
+                Assembly.GetExecutingAssembly()
+            };
+
+            assembliesToScan.AddRange(includeAssembliesScan);
+
+            return services
+                .OltScan(assembliesToScan.GetAllReferencedAssemblies())
+                .AddSingleton<IOltConfigManager, OltConfigManager>()
+                .AddSingleton<IOltLogService, OltLogService>()
+                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
+        }
+
+        /// <summary>
         /// Adds Memory Cache
         /// </summary>
+        /// <remarks>
+        /// Registers <see cref="IOltMemoryCache"/> as a singleton
+        /// </remarks>
         /// <param name="services"></param>
         /// <param name="expirationMinutes"></param>
         /// <returns><param typeof="IServiceCollection"></param></returns>
@@ -58,57 +90,48 @@ namespace OLT.Core
                 throw new ArgumentNullException(nameof(expirationMinutes));
             }
 
-            return services.AddMemoryCache(o => new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddMinutes(expirationMinutes)));
+
+            return services
+                .AddSingleton<IOltMemoryCache, OltMemoryCache>()
+                .AddMemoryCache(o => new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddMinutes(expirationMinutes)));
         }
 
-        /// <summary>
-        /// Scans OLT interfaces to associated DI by name and other default classes for OLT interfaces that do not conform to naming convention
-        /// IOltInjectable
-        /// IOltInjectableScoped
-        /// IOltInjectableTransient
-        /// IOltInjectableSingleton
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns><param typeof="IServiceCollection"></param></returns>
-        public static List<Assembly> OltScanAssemblies(this IServiceCollection services)
-        {
-            var assembliesToScan = new List<Assembly>
-            {
-                Assembly.GetEntryAssembly(),
-                Assembly.GetExecutingAssembly()
-            };
+        ///// <summary>
+        ///// Builds a collection of assemblies referenced by the root assemblies
+        ///// </summary>
+        ///// <param name="services"></param>
+        ///// <returns><param typeof="IServiceCollection"></param></returns>
+        //public static List<Assembly> OltScanAssemblies(this IServiceCollection services)
+        //{
+        //    var assembliesToScan = new List<Assembly>
+        //    {
+        //        Assembly.GetEntryAssembly(),
+        //        Assembly.GetExecutingAssembly()
+        //    };
 
-            return assembliesToScan.GetAllReferencedAssemblies();
-        }
+        //    return assembliesToScan.GetAllReferencedAssemblies();
+        //}
 
-        /// <summary>
-        /// Scans OLT interfaces to associated DI by name and other default classes for OLT interfaces that do not conform to naming convention
-        /// IOltInjectable
-        /// IOltInjectableScoped
-        /// IOltInjectableTransient
-        /// IOltInjectableSingleton
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns><param typeof="IServiceCollection"></param></returns>
-        public static IServiceCollection OltScan(this IServiceCollection services)
-        {
-            return OltScan(services, services.OltScanAssemblies());
-        }
+        ///// <summary>
+        ///// Scans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
+        ///// </summary>
+        ///// <param name="services"></param>
+        ///// <returns><param typeof="IServiceCollection"></param></returns>
+        //public static IServiceCollection OltScan(this IServiceCollection services)
+        //{
+        //    return OltScan(services, services.OltScanAssemblies());
+        //}
 
         /// <summary>
-        /// Scans OLT interfaces to associated DI by name and other default classes for OLT interfaces that do not conform to naming convention
+        /// SScans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
         /// </summary>
         /// <param name="services"></param>
         /// <param name="assembliesToScan">List of Assemblies To Scan for interfaces</param>
         /// <returns></returns>
         public static IServiceCollection OltScan(this IServiceCollection services, List<Assembly> assembliesToScan)
         {
-
-            services.Scan(sc =>
+            return services.Scan(sc =>
                 sc.FromAssemblies(assembliesToScan)
-                    //.AddClasses(classes => classes.AssignableTo<IOltInjectable>())
-                    //.AsImplementedInterfaces()
-                    //.WithScopedLifetime()
                     .AddClasses(classes => classes.AssignableTo<IOltInjectableScoped>())
                     .AsImplementedInterfaces()
                     .WithScopedLifetime()
@@ -119,11 +142,6 @@ namespace OLT.Core
                     .AsImplementedInterfaces()
                     .WithSingletonLifetime()
             );
-
-
-
-
-            return services;
         }
 
 

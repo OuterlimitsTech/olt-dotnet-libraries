@@ -5,15 +5,10 @@ using Newtonsoft.Json;
 
 namespace OLT.Core
 {
-
-
     public class OltNgxLoggerMessage : IOltNgxLoggerMessage
     {
-
-
         public virtual string Message { get; set; }
         public virtual List<List<OltNgxLoggerDetail>> Additional { get; set; } = new List<List<OltNgxLoggerDetail>>();
-        //public List<List<Dictionary<string,string>>> Additional { get; set; } = new List<List<Dictionary<string, string>>>();
         public virtual OltNgxLoggerLevel? Level { get; set; }
         public virtual DateTimeOffset? Timestamp { get; set; }
         public virtual string FileName { get; set; }
@@ -29,7 +24,7 @@ namespace OLT.Core
         {
             var detail = Additional.FirstOrDefault()?.FirstOrDefault();
             var ex = detail != null ? detail.ToException() : new Exception(Message);
-            //var ex = new Exception(Message);
+            ex.Data.Add("Username", Username);
             ex.Data.Add("Level", Level?.ToString());
             ex.Data.Add("LineNumber", LineNumber);
             ex.Data.Add("FileName", FileName);

@@ -4,7 +4,7 @@ using System.Linq;
 namespace OLT.Core
 {
 
-    public class OltRuleResult : IOltRuleResult
+    public class OltRuleResult : IOltResult
     {
         public OltRuleResult() { }
 

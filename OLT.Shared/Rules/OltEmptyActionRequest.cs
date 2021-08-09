@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public class OltEmptyActionRequest : IOltRuleRequest
+    public class OltEmptyActionRequest : OltRequest
     {
 
     }

@@ -90,7 +90,7 @@ namespace OLT.Core
                 return queryableAdapter.Map(source);
             }
 
-            throw new Exception($"{GetAdapterName<TEntity, TDestination>()} Adapter is not of type ${nameof(IOltAdapterQueryable<TEntity, TDestination>)}");
+            throw new OltException($"{GetAdapterName<TEntity, TDestination>()} Adapter is not of type ${nameof(IOltAdapterQueryable<TEntity, TDestination>)}");
         }
 
         #endregion
@@ -115,7 +115,7 @@ namespace OLT.Core
                 case IOltAdapter<TSource, TDestination> mapAdapter:
                     return mapAdapter.Map(source.ToList());
                 default:
-                    throw new Exception($"{GetAdapterName<TSource, TDestination>()} Adapter is not of type ${nameof(IOltAdapter<TSource, TDestination>)}");
+                    throw new OltException($"{GetAdapterName<TSource, TDestination>()} Adapter is not of type ${nameof(IOltAdapter<TSource, TDestination>)}");
             }
         }
 
@@ -155,7 +155,7 @@ namespace OLT.Core
             var adapter = Adapters.FirstOrDefault(p => p.Name == adapterName);
             if (adapter == null && throwException)
             {
-                throw new Exception($"Adapter Not Found {adapterName}");
+                throw new OltException($"Adapter Not Found {adapterName}");
             }
             return adapter;
         }
@@ -175,7 +175,7 @@ namespace OLT.Core
             var pagedAdapter = adapter as IOltAdapterPaged<TSource, TDestination>;
             if (pagedAdapter == null && throwException)
             {
-                throw new Exception($"{adapterName} Paged Adapter Not Found");
+                throw new OltException($"{adapterName} Paged Adapter Not Found");
             }
             return pagedAdapter;
         }
@@ -192,7 +192,7 @@ namespace OLT.Core
             var adapter = this.Adapters.FirstOrDefault(p => p.Name == adapterName);
             if (adapter == null)
             {
-                throw new Exception($"Adapter Not Found {adapterName}");
+                throw new OltException($"Adapter Not Found {adapterName}");
             }
 
             return adapter as IOltAdapter<TSource, TModel>;
@@ -204,10 +204,6 @@ namespace OLT.Core
             var adapter = GetAdapter<TSource, TModel>();
 
             var queryableAdapter = adapter as IOltAdapterQueryable<TSource, TModel>;
-            if (queryableAdapter == null)
-            {
-                return null;
-            }
 
             return queryableAdapter;
         }
@@ -220,7 +216,7 @@ namespace OLT.Core
             var pagedAdapter = adapter as IOltAdapterPaged<TSource, TModel>;
             if (pagedAdapter == null)
             {
-                throw new Exception("Paged Adapter Not Found");
+                throw new OltException("Paged Adapter Not Found");
             }
 
             return pagedAdapter;

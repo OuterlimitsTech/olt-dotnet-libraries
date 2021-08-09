@@ -9,8 +9,6 @@ namespace OLT.CloudFlare
     /// </summary>
     public abstract class OltCloudFlareResponseBase
     {
-        //public static OltCloudFlareResponseBase FromJson(string json) => JsonConvert.DeserializeObject<OltCloudFlareResponseBase>(json, OltCloudFlareConverter.Settings);
-
         [JsonProperty("result", NullValueHandling = NullValueHandling.Ignore)]
         public Object Result { get; set; }
 

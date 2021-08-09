@@ -22,35 +22,6 @@ namespace System
 
 
         /// <summary>
-        /// Clones an object using Serialization.  ALL CLASSES MUST HAVE THE SERIALIZABLE ATTRIBUTE
-        /// </summary>
-        public static T DeepClone<T>(this T obj) where T : class
-        {
-            if (obj == null) return null;
-
-            using (var ms = new MemoryStream())
-            {
-                var bf = new BinaryFormatter();
-                bf.Serialize(ms, obj);
-                ms.Position = 0;
-                return (T)bf.Deserialize(ms);
-            }
-        }
-
-        /// <summary>
-        /// Clones an object using Serialization.  ALL CLASSES MUST HAVE THE SERIALIZABLE ATTRIBUTE
-        /// </summary>
-        public static string ToXml<T>(this T obj) where T : class
-        {
-            if (obj == null) return null;
-
-            var x = new System.Xml.Serialization.XmlSerializer(obj.GetType());
-            var textWriter = new StringWriter();
-            x.Serialize(textWriter, obj);
-            return textWriter.ToString();
-        }
-
-        /// <summary>
         /// Copies matching properies from one object to another
         /// </summary>
         public static T CopyFrom<T>(this T toObject, object fromObject) where T : class
@@ -127,30 +98,17 @@ namespace System
         public static IEnumerable<TItem> Each<TItem>(this IEnumerable<TItem> values, Action<TItem> eachAction)
         {
 
-            if (values == null) throw new ArgumentNullException("values");
+            if (values == null) throw new ArgumentNullException(nameof(values));
 
-            foreach (var item in values)
+            var items = values.ToList();
+            foreach (var item in items)
             {
                 eachAction(item);
             }
 
-            return values;
+            return items;
         }
 
-        /////<summary>
-        ///// Checks to see if the collection contains a specific item.  
-        /////</summary>
-        /////<remarks>
-        ///// The test is performed by executing Equals on the item.
-        ///// </remarks>
-        /////<param name="values">Extends <see cref="IEnumerable{T}"/>.</param>
-        /////<param name="item">The item to be searched for in the collection.</param>
-        /////<typeparam name="TItem">The <c>type</c> of the items in the colllection.</typeparam>
-        /////<returns><c>true</c> if the collection contains an item that matches item; otherwise <c>false</c>.</returns>
-        //public static bool Contains<TItem>(this IEnumerable<TItem> values, TItem item)
-        //{
-        //    return values.Contains(value => value.Equals(item));
-        //}
 
         ///<summary>
         /// Checks to see if the collection contains a specific item.  
@@ -257,8 +215,6 @@ namespace System
 
             return dataTable;
         }
-        // ReSharper restore MethodOverloadWithOptionalParameter
-
 
         public static string ToHex(this System.Drawing.Color c)
         {

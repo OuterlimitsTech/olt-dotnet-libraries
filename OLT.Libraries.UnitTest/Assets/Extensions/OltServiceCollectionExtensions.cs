@@ -1,7 +1,9 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.LocalServices;
+using OLT.Libraries.UnitTest.Assets.Models;
 
 namespace OLT.Libraries.UnitTest.Assets.Extensions
 {
@@ -15,11 +17,11 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
         /// <param name="services"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static IServiceCollection AddOltUnitTesting(this IServiceCollection services, Action action)
+        public static IServiceCollection AddOltUnitTesting(this IServiceCollection services)
         {
             services
                 .AddOltAddMemoryCache()
-                .AddOltDefault(action)
+                .AddOltDefault()
                 .AddOltAutoMapper()
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());                
