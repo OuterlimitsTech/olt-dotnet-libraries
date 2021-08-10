@@ -15,12 +15,12 @@ namespace OLT.Email
             Port = configuration.Port;
             Username = configuration.Username;
             Password = configuration.Password;
-            EnableSsl = configuration.EnableSsl;
+            DisableSsl = configuration.DisableSsl;
         }
 
         public virtual string Server { get; set; }
         public virtual int Port { get; set; }
-        public bool EnableSsl { get; set; } = true;
+        public bool DisableSsl { get; set; } 
         public virtual string Username { get; set; }
         public virtual string Password { get; set; }
     }

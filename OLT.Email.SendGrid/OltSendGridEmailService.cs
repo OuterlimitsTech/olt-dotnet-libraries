@@ -128,7 +128,10 @@ namespace OLT.Email.SendGrid
 
             using (var smtp = new System.Net.Mail.SmtpClient(smtpConfiguration.Server, smtpConfiguration.Port))
             {
-                smtp.EnableSsl = smtpConfiguration.EnableSsl;
+                if (!smtpConfiguration.DisableSsl)
+                {
+                    smtp.EnableSsl = true;
+                }
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new System.Net.NetworkCredential(smtpConfiguration.Username, smtpConfiguration.Password);
 

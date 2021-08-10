@@ -6,7 +6,7 @@ namespace OLT.Email
     public interface IOltSmtpConfiguration : IDisposable
     {
         string Server { get; }
-        bool EnableSsl { get; }
+        bool DisableSsl { get; }
         int Port { get; }
         string Username { get; }
         string Password { get; }

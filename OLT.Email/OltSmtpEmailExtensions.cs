@@ -34,7 +34,10 @@ namespace OLT.Core
             {
                 using (var client = new SmtpClient(email.SmtpConfiguration.Server, email.SmtpConfiguration.Port))
                 {
-                    client.EnableSsl = email.SmtpConfiguration.EnableSsl;
+                    if (!email.SmtpConfiguration.DisableSsl)
+                    {
+                        client.EnableSsl = true;
+                    }
                     client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential(email.SmtpConfiguration.Username, email.SmtpConfiguration.Password);
                     client.Send(mailMessage);
@@ -78,7 +81,10 @@ namespace OLT.Core
 
                 using (var client = new SmtpClient(email.SmtpConfiguration.Server, email.SmtpConfiguration.Port))
                 {
-                    client.EnableSsl = email.SmtpConfiguration.EnableSsl;
+                    if (!email.SmtpConfiguration.DisableSsl)
+                    {
+                        client.EnableSsl = true;
+                    }
                     client.UseDefaultCredentials = false;
                     client.Port = email.SmtpConfiguration.Port;
                     client.Credentials = new NetworkCredential(email.SmtpConfiguration.Username, email.SmtpConfiguration.Password);

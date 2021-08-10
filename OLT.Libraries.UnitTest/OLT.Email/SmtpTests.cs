@@ -38,9 +38,14 @@ namespace OLT.Libraries.UnitTest.OLT.Email
         [Fact]
         public void SendTestEmail()
         {
+            var buildVersion = _configuration.GetValue<string>("BUILD_VERSION") ??
+                               Environment.GetEnvironmentVariable("BUILD_VERSION") ?? 
+                               $"[No Build Version]";
+
+            var now = DateTimeOffset.Now;
             var smtpEmail = new OltSmtpEmail
             {
-                Subject = "Unit Test Email",
+                Subject = $"Unit Test Email {now:f} Run - {buildVersion} ",
                 To = new List<IOltEmailAddress>
                 {
                     new OltEmailAddress
@@ -56,7 +61,6 @@ namespace OLT.Libraries.UnitTest.OLT.Email
                 },
                 SmtpConfiguration = new OltSmtpConfiguration
                 {
-                    EnableSsl = true,
                     Server = _configuration.GetValue<string>("SMTP_HOST") ?? Environment.GetEnvironmentVariable("SMTP_HOST"),
                     Port = (_configuration.GetValue<string>("SMTP_PORT") ?? Environment.GetEnvironmentVariable("SMTP_PORT")).ToInt(587),
                     Username = _configuration.GetValue<string>("SMTP_USERNAME") ?? Environment.GetEnvironmentVariable("SMTP_USERNAME"),
@@ -67,7 +71,7 @@ namespace OLT.Libraries.UnitTest.OLT.Email
 
             try
             {
-                Assert.True(smtpEmail.OltEmail("This is a test email", true));
+                Assert.True(smtpEmail.OltEmail($"{buildVersion} -> This was generated on {now:f} from OLT.Libraries.UnitTest", true));
             }
             catch (Exception e)
             {

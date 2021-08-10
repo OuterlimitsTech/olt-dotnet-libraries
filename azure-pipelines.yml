@@ -102,6 +102,7 @@ jobs:
           SMTP_PORT: $(smtp-port)
           SMTP_FROM_ADDRESS: $(smtp-from-address)
           SMTP_TO_ADDRESS: $(smtp-to-address)
+          BUILD_VERSION: $(GitVersion.NuGetVersionV2)
         inputs:
           command: test
           projects: '$(solution)'
