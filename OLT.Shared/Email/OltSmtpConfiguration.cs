@@ -17,9 +17,9 @@ namespace OLT.Email
             SmtpPassword = configuration.SmtpPassword;
         }
 
-        public string SmtpServer { get; set; }
-        public int SmtpPort { get; set; }
-        public string SmtpUsername { get; set; }
-        public string SmtpPassword { get; set; }
+        public virtual string SmtpServer { get; set; }
+        public virtual int SmtpPort { get; set; }
+        public virtual string SmtpUsername { get; set; }
+        public virtual string SmtpPassword { get; set; }
     }
 }

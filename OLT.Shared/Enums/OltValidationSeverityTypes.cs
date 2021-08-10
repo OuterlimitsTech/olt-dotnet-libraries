@@ -4,8 +4,8 @@
     {
         Ok,
         Error,
+        BadRequest,
         Warning,
-        Information,
-        DeveloperOnly
+        Information
     }
 }

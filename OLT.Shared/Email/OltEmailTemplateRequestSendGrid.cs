@@ -2,7 +2,7 @@
 {
     public class OltEmailTemplateRequestSendGrid : OltEmailTemplateRequest, IOltEmailTemplateRequestSendGrid
     {
-        public int? UnsubscribeGroupId { get; set; }
-        public object TemplateData { get; set; }
+        public virtual int? UnsubscribeGroupId { get; set; }
+        public virtual object TemplateData { get; set; }
     }
 }

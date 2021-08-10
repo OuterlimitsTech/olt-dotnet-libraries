@@ -1,6 +1,10 @@
-﻿namespace OLT.Email
+﻿// ReSharper disable VirtualMemberCallInConstructor
+
+using OLT.Core;
+
+namespace OLT.Email
 {
-    public class OltEmailAddressResult : OltEmailAddress
+    public class OltEmailAddressResult : OltEmailAddress, IOltResult
     {
         public OltEmailAddressResult(IOltEmailAddress copyFrom, IOltEmailConfiguration configuration)
         {
@@ -14,10 +18,12 @@
             }
         }
 
-        public bool Sent => !Skipped && string.IsNullOrWhiteSpace(Error);
+        public bool Success => Sent;
+        public virtual bool Sent => !Skipped && string.IsNullOrWhiteSpace(Error);
 
-        public bool Skipped { get; set; }
-        public string SkipReason { get; set; }
-        public string Error { get; set; }
+        public virtual bool Skipped { get; set; }
+        public virtual string SkipReason { get; set; }
+        public virtual string Error { get; set; }
+        
     }
 }

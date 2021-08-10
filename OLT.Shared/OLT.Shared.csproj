@@ -13,7 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="docs\readme.md" Pack="true" PackagePath="\"/>
+    <None Include="docs\readme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Request-Response\" />
   </ItemGroup>
 
 </Project>
