@@ -4,21 +4,22 @@
 
 # Packages
 
-| Name | Version | Deprecated |
-|--|--|--|
-| OLT.Shared| [![Nuget](https://img.shields.io/nuget/v/OLT.Shared)](https://www.nuget.org/packages/OLT.Shared) | |
-| OLT.Shared.Data | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared.Data )](https://www.nuget.org/packages/OLT.Shared.Data ) | |
-| OLT.AspNetCore | [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore)](https://www.nuget.org/packages/OLT.AspNetCore) | |
-| OLT.AspNetCore.Shared | [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore.Shared)](https://www.nuget.org/packages/OLT.AspNetCore.NLog) | |
-| OLT.AspNetCore.NLog| [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore.NLog)](https://www.nuget.org/packages/OLT.AspNetCore.Shared) | |
-| OLT.EF.Core| [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core)](https://www.nuget.org/packages/OLT.EF.Core) | |
-| OLT.EF.Core.Services | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.Services )](https://www.nuget.org/packages/OLT.EF.Core.Services ) | |
-| OLT.EF.Core.SqlServer | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.Services )](https://www.nuget.org/packages/OLT.EF.Core.SqlServer ) | |
-| OLT.EF.Core.SeedHelpers.Csv | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.SeedHelpers.Csv)](https://www.nuget.org/packages/OLT.EF.Core.SeedHelpers.Csv) | |
-| OLT.Extensions.DependencyInjection | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection )](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection ) | |
-| OLT.Extensions.DependencyInjection.SqlServer | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection.SqlServer)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection.SqlServer) | Yes |
-| OLT.Extensions.AzureAppConfiguration| [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.AzureAppConfiguration)](https://www.nuget.org/packages/OLT.Extensions.AzureAppConfiguration) | |
-| OLT.CloudFlare.API.V4 | [![Nuget](https://img.shields.io/nuget/v/OLT.CloudFlare.API.V4)](https://www.nuget.org/packages/OLT.CloudFlare.API.V4) | |
-| OLT.Email.SendGrid | [![Nuget](https://img.shields.io/nuget/v/OLT.Email.SendGrid)](https://www.nuget.org/packages/OLT.Email.SendGrid) | |
-| OLT.EPPlus | [![Nuget](https://img.shields.io/nuget/v/OLT.EPPlus)](https://www.nuget.org/packages/OLT.EPPlus) | |
-| OLT.Highcharts | [![Nuget](https://img.shields.io/nuget/v/OLT.Highcharts)](https://www.nuget.org/packages/OLT.Highcharts) | |
+| Name                                         | Version                                                                                                                                                              | Deprecated |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| OLT.Shared                                   | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared)](https://www.nuget.org/packages/OLT.Shared)                                                                     |            |
+| OLT.Shared.Data                              | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared.Data)](https://www.nuget.org/packages/OLT.Shared.Data)                                                           |            |
+| OLT.AspNetCore                               | [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore)](https://www.nuget.org/packages/OLT.AspNetCore)                                                             |            |
+| OLT.AspNetCore.Shared                        | [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore.Shared)](https://www.nuget.org/packages/OLT.AspNetCore.NLog)                                                 |            |
+| OLT.AspNetCore.NLog                          | [![Nuget](https://img.shields.io/nuget/v/OLT.AspNetCore.NLog)](https://www.nuget.org/packages/OLT.AspNetCore.Shared)                                                 |            |
+| OLT.EF.Core                                  | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core)](https://www.nuget.org/packages/OLT.EF.Core)                                                                   |            |
+| OLT.EF.Core.Services                         | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.Services)](https://www.nuget.org/packages/OLT.EF.Core.Services)                                                 |            |
+| OLT.EF.Core.SqlServer                        | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.Services)](https://www.nuget.org/packages/OLT.EF.Core.SqlServer)                                                |            |
+| OLT.EF.Core.SeedHelpers.Csv                  | [![Nuget](https://img.shields.io/nuget/v/OLT.EF.Core.SeedHelpers.Csv)](https://www.nuget.org/packages/OLT.EF.Core.SeedHelpers.Csv)                                   |            |
+| OLT.Extensions.DependencyInjection           | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection)                     |            |
+| OLT.Extensions.DependencyInjection.SqlServer | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection.SqlServer)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection.SqlServer) | Yes        |
+| OLT.Extensions.AzureAppConfiguration         | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.AzureAppConfiguration)](https://www.nuget.org/packages/OLT.Extensions.AzureAppConfiguration)                 |            |
+| OLT.CloudFlare.API.V4                        | [![Nuget](https://img.shields.io/nuget/v/OLT.CloudFlare.API.V4)](https://www.nuget.org/packages/OLT.CloudFlare.API.V4)                                               |            |
+| OLT.Email                                    | [![Nuget](https://img.shields.io/nuget/v/OLT.Email)](https://www.nuget.org/packages/OLT.Email)                                                                       |            |
+| OLT.Email.SendGrid                           | [![Nuget](https://img.shields.io/nuget/v/OLT.Email.SendGrid)](https://www.nuget.org/packages/OLT.Email.SendGrid)                                                     |            |
+| OLT.EPPlus                                   | [![Nuget](https://img.shields.io/nuget/v/OLT.EPPlus)](https://www.nuget.org/packages/OLT.EPPlus)                                                                     |            |
+| OLT.Highcharts                               | [![Nuget](https://img.shields.io/nuget/v/OLT.Highcharts)](https://www.nuget.org/packages/OLT.Highcharts)                                                             |            |

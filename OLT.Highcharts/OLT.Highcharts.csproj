@@ -2,17 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Product>Highcharts Library</Product>
     <Description>Classes and Interfacies to assist in building Highchart graphs</Description>
     <ProjectGuid>f73db781-d0ca-4a8b-9112-3b865a2a0865</ProjectGuid>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
-  </ItemGroup>
 
 </Project>

@@ -4,7 +4,6 @@
     {
         Ok,
         Error,
-        BadRequest,
         Warning,
         Information
     }

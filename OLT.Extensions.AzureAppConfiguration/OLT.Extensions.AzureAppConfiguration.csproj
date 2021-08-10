@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Add Exenestions to service collection for AzureAppConfigurationOptions</Description>
-    <Product>Include AzureAppConfigurationOptions</Product>
     <RootNamespace>OLT.Core</RootNamespace>
     <ProjectGuid>bcc320b4-3e58-4c33-b22f-efeaa620f546</ProjectGuid>
   </PropertyGroup>
