@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Shared", "OL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Email", "OLT.Email\OLT.Email.csproj", "{1A62E4A6-759C-43B2-B08A-96AE186F3DFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Email.SendGrid.Shared", "OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj", "{F8F7C905-AED0-4E8B-AD56-322F7E1CB10F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,10 @@ Global
 		{1A62E4A6-759C-43B2-B08A-96AE186F3DFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A62E4A6-759C-43B2-B08A-96AE186F3DFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A62E4A6-759C-43B2-B08A-96AE186F3DFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8F7C905-AED0-4E8B-AD56-322F7E1CB10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8F7C905-AED0-4E8B-AD56-322F7E1CB10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8F7C905-AED0-4E8B-AD56-322F7E1CB10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8F7C905-AED0-4E8B-AD56-322F7E1CB10F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

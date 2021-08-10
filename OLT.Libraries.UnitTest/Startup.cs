@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,7 +10,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Extensions;
@@ -17,33 +21,55 @@ using OLT.Libraries.UnitTest.Assets.Models;
 
 namespace OLT.Libraries.UnitTest
 {
-    
+   
+
     // ReSharper disable once InconsistentNaming
     public class Startup
     {
-
-        
-        protected IConfiguration BuildConfiguration(IServiceCollection services)
+      
+        public static void LoadLocalEnvironmentVariables()
         {
-            var builder = new ConfigurationBuilder();
-            builder
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", false, true);
+            using var file = File.OpenText("Properties\\launchSettings.json");
+            var reader = new JsonTextReader(file);
+            var jObject = JObject.Load(reader);
 
+            var variables = jObject
+                .GetValue("profiles")
+                //select a proper profile here
+                .SelectMany(profiles => profiles.Children())
+                .SelectMany(profile => profile.Children<JProperty>())
+                .Where(prop => prop.Name == "environmentVariables")
+                .SelectMany(prop => prop.Value.Children<JProperty>())
+                .ToList();
 
-            var configuration = builder.Build();
-
-            services.AddSingleton<IConfiguration>(configuration);
-
-            var appSettingsSection = configuration.GetSection("AppSettings");
-            services.Configure<AppSettingsDto>(appSettingsSection);
-
-            return configuration;
+            foreach (var variable in variables)
+            {
+                Environment.SetEnvironmentVariable(variable.Name, variable.Value.ToString());
+            }
         }
 
-        public virtual void ConfigureServices(IServiceCollection services)
+        // custom host build
+        public void ConfigureHost(IHostBuilder hostBuilder)
         {
-            var configuration = BuildConfiguration(services);
+
+#if DEBUG
+            LoadLocalEnvironmentVariables();
+#endif
+
+            hostBuilder.ConfigureHostConfiguration(builder =>
+            {
+                builder
+                    .SetBasePath(AppContext.BaseDirectory)
+                    .AddUserSecrets<Startup>()
+                    .AddJsonFile("appsettings.json", false, true)
+                    .AddEnvironmentVariables();
+            });
+        }
+
+        public virtual void ConfigureServices(IServiceCollection services, HostBuilderContext hostBuilderContext)
+        {
+            var appSettingsSection = hostBuilderContext.Configuration.GetSection("AppSettings");
+            services.Configure<AppSettingsDto>(appSettingsSection);
 
             services
                 .AddOltUnitTesting()

@@ -5,9 +5,10 @@ namespace OLT.Email
 {
     public interface IOltSmtpConfiguration : IDisposable
     {
-        string SmtpServer { get; }
-        int SmtpPort { get; }
-        string SmtpUsername { get; }
-        string SmtpPassword { get; }
+        string Server { get; }
+        bool EnableSsl { get; }
+        int Port { get; }
+        string Username { get; }
+        string Password { get; }
     }
 }

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OLT.Email\OLT.Email.csproj" />
+    <ProjectReference Include="..\OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj" />
   </ItemGroup>
 
 </Project>

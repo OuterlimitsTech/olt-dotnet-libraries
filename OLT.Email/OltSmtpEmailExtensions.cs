@@ -15,7 +15,8 @@ namespace OLT.Core
         /// </summary>
         /// <param name="email"></param>
         /// <param name="message"></param>
-        public static void OltEmail(IOltSmtpEmail email, string message)
+        /// <param name="throwException"></param>
+        public static bool OltEmail(this IOltSmtpEmail email, string message, bool throwException)
         {
 
             MailMessage mailMessage = new MailMessage
@@ -29,24 +30,27 @@ namespace OLT.Core
             mailMessage.Subject = email.Subject;
 
 
-
-
-
             try
             {
-                using (var client = new SmtpClient(email.SmtpConfiguration.SmtpServer))
+                using (var client = new SmtpClient(email.SmtpConfiguration.Server, email.SmtpConfiguration.Port))
                 {
+                    client.EnableSsl = email.SmtpConfiguration.EnableSsl;
                     client.UseDefaultCredentials = false;
-                    client.Port = email.SmtpConfiguration.SmtpPort;
-                    client.Credentials = new NetworkCredential(email.SmtpConfiguration.SmtpUsername, email.SmtpConfiguration.SmtpPassword);
+                    client.Credentials = new NetworkCredential(email.SmtpConfiguration.Username, email.SmtpConfiguration.Password);
                     client.Send(mailMessage);
+                    return true;
                 }
             }
             catch (Exception mailException)
             {
                 Console.Write(mailException);
+                if (throwException)
+                {
+                    throw;
+                }
             }
 
+            return false;
 
         }
 
@@ -55,12 +59,14 @@ namespace OLT.Core
         /// </summary>
         /// <param name="ex"></param>
         /// <param name="email"></param>
-        public static void OltEmailError(this Exception ex, IOltApplicationErrorEmail email)
+        /// <param name="fromAddress"></param>
+        /// <param name="throwException"></param>
+        public static bool OltEmailError(this Exception ex, IOltApplicationErrorEmail email, bool throwException)
         {
 
             MailMessage mailMessage = new MailMessage
             {
-                From = new MailAddress("noreply@outerlimitstech.com")
+                From = new MailAddress(email.From.Email, email.From.Name)
             };
 
             email.To.ToList().ForEach(rec => mailMessage.To.Add(new MailAddress(rec.Email, rec.Name)));
@@ -70,21 +76,27 @@ namespace OLT.Core
             try
             {
 
-                using (var client = new SmtpClient(email.SmtpConfiguration.SmtpServer))
+                using (var client = new SmtpClient(email.SmtpConfiguration.Server, email.SmtpConfiguration.Port))
                 {
+                    client.EnableSsl = email.SmtpConfiguration.EnableSsl;
                     client.UseDefaultCredentials = false;
-                    client.Port = email.SmtpConfiguration.SmtpPort;
-                    client.Credentials = new NetworkCredential(email.SmtpConfiguration.SmtpUsername, email.SmtpConfiguration.SmtpPassword);
+                    client.Port = email.SmtpConfiguration.Port;
+                    client.Credentials = new NetworkCredential(email.SmtpConfiguration.Username, email.SmtpConfiguration.Password);
                     client.Send(mailMessage);
+                    return true;
                 }
 
             }
             catch (Exception mailException)
             {
                 Console.Write(mailException);
+                if (throwException)
+                {
+                    throw;
+                }
             }
 
-
+            return false;
         }
     }
 }

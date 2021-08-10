@@ -126,10 +126,11 @@ namespace OLT.Email.SendGrid
             }
 
 
-            using (var smtp = new System.Net.Mail.SmtpClient(smtpConfiguration.SmtpServer, smtpConfiguration.SmtpPort))
+            using (var smtp = new System.Net.Mail.SmtpClient(smtpConfiguration.Server, smtpConfiguration.Port))
             {
+                smtp.EnableSsl = smtpConfiguration.EnableSsl;
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new System.Net.NetworkCredential(smtpConfiguration.SmtpUsername, smtpConfiguration.SmtpPassword);
+                smtp.Credentials = new System.Net.NetworkCredential(smtpConfiguration.Username, smtpConfiguration.Password);
 
                 var msg = new System.Net.Mail.MailMessage
                 {

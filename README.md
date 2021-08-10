@@ -21,5 +21,6 @@
 | OLT.CloudFlare.API.V4                        | [![Nuget](https://img.shields.io/nuget/v/OLT.CloudFlare.API.V4)](https://www.nuget.org/packages/OLT.CloudFlare.API.V4)                                               |            |
 | OLT.Email                                    | [![Nuget](https://img.shields.io/nuget/v/OLT.Email)](https://www.nuget.org/packages/OLT.Email)                                                                       |            |
 | OLT.Email.SendGrid                           | [![Nuget](https://img.shields.io/nuget/v/OLT.Email.SendGrid)](https://www.nuget.org/packages/OLT.Email.SendGrid)                                                     |            |
+| OLT.Email.SendGrid.Shared                    | [![Nuget](https://img.shields.io/nuget/v/OLT.Email.SendGrid.Shared)](https://www.nuget.org/packages/OLT.Email.SendGrid.Shared)                                       |            |
 | OLT.EPPlus                                   | [![Nuget](https://img.shields.io/nuget/v/OLT.EPPlus)](https://www.nuget.org/packages/OLT.EPPlus)                                                                     |            |
 | OLT.Highcharts                               | [![Nuget](https://img.shields.io/nuget/v/OLT.Highcharts)](https://www.nuget.org/packages/OLT.Highcharts)                                                             |            |

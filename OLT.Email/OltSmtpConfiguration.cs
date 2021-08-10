@@ -11,15 +11,17 @@ namespace OLT.Email
 
         public OltSmtpConfiguration(IOltSmtpConfiguration configuration)
         {
-            SmtpServer = configuration.SmtpServer;
-            SmtpPort = configuration.SmtpPort;
-            SmtpUsername = configuration.SmtpUsername;
-            SmtpPassword = configuration.SmtpPassword;
+            Server = configuration.Server;
+            Port = configuration.Port;
+            Username = configuration.Username;
+            Password = configuration.Password;
+            EnableSsl = configuration.EnableSsl;
         }
 
-        public virtual string SmtpServer { get; set; }
-        public virtual int SmtpPort { get; set; }
-        public virtual string SmtpUsername { get; set; }
-        public virtual string SmtpPassword { get; set; }
+        public virtual string Server { get; set; }
+        public virtual int Port { get; set; }
+        public bool EnableSsl { get; set; } = true;
+        public virtual string Username { get; set; }
+        public virtual string Password { get; set; }
     }
 }
