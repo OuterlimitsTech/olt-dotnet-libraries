@@ -3,7 +3,7 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
-trigger: 
+trigger:
    branches:
     include:
       - '*'
@@ -13,8 +13,9 @@ trigger:
 
 pr: none
 
-variables:  
+variables:
   - group: key-vault-variables
+  - group: olt-smtp
 
 jobs:
   - job: 'build'
@@ -56,7 +57,7 @@ jobs:
           targetType: 'inline'
           script: |
             # Write your commands here
-            
+
             echo NuGetVersionV2 = $(GitVersion.NuGetVersionV2)
             echo Package Version = '$(packageVersion)'
             echo Package Version = '$(Build.SourcesDirectory)'
@@ -94,6 +95,14 @@ jobs:
 
       - task: DotNetCoreCLI@2
         displayName: 'Running Test'
+        env:
+          SMTP_HOST: $(smtp-host)
+          SMTP_USERNAME: $(smtp-username)
+          SMTP_PASSWORD: $(smtp-password)
+          SMTP_PORT: $(smtp-port)
+          SMTP_FROM_ADDRESS: $(smtp-from-address)
+          SMTP_TO_ADDRESS: $(smtp-to-address)
+          BUILD_VERSION: $(GitVersion.NuGetVersionV2)
         inputs:
           command: test
           projects: '$(solution)'

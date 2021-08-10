@@ -22,7 +22,7 @@ namespace OLT.EPPlus
 
         public virtual int Write(ExcelWorksheet worksheet, int col, int row, Action<ExcelRange> rangeAction)
         {
-            if (Format.IsNotEmpty())
+            if (!string.IsNullOrWhiteSpace(Format))
             {
                 worksheet.Column(col).Style.Numberformat.Format = Format;
             }

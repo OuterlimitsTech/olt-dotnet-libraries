@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Product>Send Grid Library</Product>
     <Description>Sends Email via SendGrid</Description>
     <ProjectGuid>14aad8bd-1405-491f-8371-091945376ecb</ProjectGuid>
   </PropertyGroup>
@@ -12,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
+    <ProjectReference Include="..\OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj" />
   </ItemGroup>
 
 </Project>

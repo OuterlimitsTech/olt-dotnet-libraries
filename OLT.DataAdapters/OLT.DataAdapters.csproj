@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>OLT.Core</RootNamespace>
-    <Product>DataAdapters Library</Product>
     <Description>DataAdapters Library</Description>
     <ProjectGuid>2571f65f-cdcc-4af8-a4ce-124fd347b0a0</ProjectGuid>
   </PropertyGroup>

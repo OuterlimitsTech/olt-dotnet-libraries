@@ -11,7 +11,7 @@ namespace OLT.Email
             recipients.CarbonCopy?.ToList().ForEach(rec => CarbonCopy.Add(new OltEmailAddressResult(rec, configuration)));
         }
 
-        public List<OltEmailAddressResult> To { get; set; } = new List<OltEmailAddressResult>();
-        public List<OltEmailAddressResult> CarbonCopy { get; set; } = new List<OltEmailAddressResult>();
+        public virtual List<OltEmailAddressResult> To { get; set; } = new List<OltEmailAddressResult>();
+        public virtual List<OltEmailAddressResult> CarbonCopy { get; set; } = new List<OltEmailAddressResult>();
     }
 }

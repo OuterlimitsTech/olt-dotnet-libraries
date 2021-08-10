@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Product>OLT Shared Library</Product>
     <Description>Contains all generic assets for OLT Packages</Description>
     <RootNamespace>OLT.Core</RootNamespace>
     <ProjectGuid>51c74595-d676-464c-becd-395627521a65</ProjectGuid>
@@ -13,7 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="docs\readme.md" Pack="true" PackagePath="\"/>
+    <None Include="docs\readme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Request-Response\" />
   </ItemGroup>
 
 </Project>
