@@ -96,34 +96,8 @@ namespace OLT.Core
                 .AddMemoryCache(o => new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddMinutes(expirationMinutes)));
         }
 
-        ///// <summary>
-        ///// Builds a collection of assemblies referenced by the root assemblies
-        ///// </summary>
-        ///// <param name="services"></param>
-        ///// <returns><param typeof="IServiceCollection"></param></returns>
-        //public static List<Assembly> OltScanAssemblies(this IServiceCollection services)
-        //{
-        //    var assembliesToScan = new List<Assembly>
-        //    {
-        //        Assembly.GetEntryAssembly(),
-        //        Assembly.GetExecutingAssembly()
-        //    };
-
-        //    return assembliesToScan.GetAllReferencedAssemblies();
-        //}
-
-        ///// <summary>
-        ///// Scans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
-        ///// </summary>
-        ///// <param name="services"></param>
-        ///// <returns><param typeof="IServiceCollection"></param></returns>
-        //public static IServiceCollection OltScan(this IServiceCollection services)
-        //{
-        //    return OltScan(services, services.OltScanAssemblies());
-        //}
-
         /// <summary>
-        /// SScans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
+        /// Scans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
         /// </summary>
         /// <param name="services"></param>
         /// <param name="assembliesToScan">List of Assemblies To Scan for interfaces</param>

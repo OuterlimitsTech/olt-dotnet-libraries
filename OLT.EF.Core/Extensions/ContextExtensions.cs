@@ -325,6 +325,29 @@ namespace OLT.Core
             return ExecuteStoredProcInternalAsync(command, handleResults, commandBehaviour, ct, manageConnection);
         }
 
+
+        /// <summary>
+        /// Executes a DbDataReader asynchronously and passes the results thru all <paramref name="resultActions"/>
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="commandBehaviour"></param>
+        /// <param name="ct"></param>
+        /// <param name="manageConnection"></param>
+        /// <param name="resultActions"></param>
+        /// <returns></returns>
+        public static Task ExecuteStoredProcAsync(this DbCommand command,
+            CommandBehavior commandBehaviour = CommandBehavior.Default,
+            CancellationToken ct = default, bool manageConnection = true, params Action<SprocResults>[] resultActions)
+        {
+            if (resultActions == null)
+            {
+                throw new ArgumentNullException(nameof(resultActions));
+            }
+
+            return ExecuteStoredProcInternalAsync(command, commandBehaviour, ct, manageConnection, resultActions);
+        }
+
+
         private static async Task ExecuteStoredProcInternalAsync(
             DbCommand command,
             Action<SprocResults> handleResults,
@@ -352,27 +375,6 @@ namespace OLT.Core
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Executes a DbDataReader asynchronously and passes the results thru all <paramref name="resultActions"/>
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="commandBehaviour"></param>
-        /// <param name="ct"></param>
-        /// <param name="manageConnection"></param>
-        /// <param name="resultActions"></param>
-        /// <returns></returns>
-        public static Task ExecuteStoredProcAsync(this DbCommand command,
-            CommandBehavior commandBehaviour = CommandBehavior.Default,
-            CancellationToken ct = default, bool manageConnection = true, params Action<SprocResults>[] resultActions)
-        {
-            if (resultActions == null)
-            {
-                throw new ArgumentNullException(nameof(resultActions));
-            }
-
-            return ExecuteStoredProcInternalAsync(command, commandBehaviour, ct, manageConnection, resultActions);
         }
 
         private static async Task ExecuteStoredProcInternalAsync(DbCommand command,

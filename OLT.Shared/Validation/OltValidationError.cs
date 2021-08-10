@@ -1,13 +1,13 @@
 ﻿namespace OLT.Core
 {
-    public class OltValidationResult : IOltValidationResult
+    public class OltValidationError : IOltValidationError
     {
-        public OltValidationResult()
+        public OltValidationError()
         {
 
         }
 
-        public OltValidationResult(string message)
+        public OltValidationError(string message)
         {
             this.ErrorMessage = message;
             this.Severity = string.IsNullOrEmpty(message) ? OltValidationSeverityTypes.Ok : OltValidationSeverityTypes.Error;

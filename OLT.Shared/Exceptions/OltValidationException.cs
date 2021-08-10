@@ -9,9 +9,9 @@ namespace OLT.Core
     [Serializable]
     public class OltValidationException : OltException
     {
-        public readonly IEnumerable<IOltValidationResult> Results;
+        public readonly IEnumerable<IOltValidationError> Results;
 
-        public OltValidationException(IEnumerable<IOltValidationResult> results, string errorMessage = "Please correct the validation errors") : base(errorMessage)
+        public OltValidationException(IEnumerable<IOltValidationError> results, string errorMessage = "Please correct the validation errors") : base(errorMessage)
         {
             this.Results = results;
         }

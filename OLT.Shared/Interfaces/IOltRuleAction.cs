@@ -1,16 +1,28 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltRuleAction : IOltRule, IOltInjectableSingleton
+    public interface IOltRuleAction : IOltRuleValidation
     {
-        IOltResultValidation CanExecute(IOltRequest request);
         IOltResult Execute(IOltRequest request);
     }
 
-    public interface IOltRuleAction<in TRequest> : IOltRule, IOltInjectableSingleton
-        where TRequest : class, IOltRequest
+    public interface IOltRuleAction<in TRequest> : IOltRuleValidation<TRequest>
+        where TRequest : IOltRequest
     {
-        IOltResultValidation CanExecute(TRequest request);
         IOltResult Execute(TRequest request);
     }
 
+    public interface IOltRuleAction<in TRequest, out TResult> : IOltRuleValidation<TRequest>
+        where TRequest : IOltRequest
+        where TResult : IOltResult
+    {
+        TResult Execute(TRequest request);
+    }
+
+    public interface IOltRuleAction<in TRequest, out TResult, out TValidationResult> : IOltRuleValidation<TRequest, TValidationResult>
+        where TRequest : IOltRequest
+        where TResult : IOltResult
+        where TValidationResult : IOltResultValidation
+    {
+        TResult Execute(TRequest request);
+    }
 }
