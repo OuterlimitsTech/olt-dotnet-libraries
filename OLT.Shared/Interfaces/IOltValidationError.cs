@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltValidationResult
+    public interface IOltValidationError
     {
         string ErrorMessage { get; set; }
         OltValidationSeverityTypes Severity { get; set; }
