@@ -1,8 +1,9 @@
 <Project>
- <PropertyGroup>
+  <PropertyGroup>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Company>OuterLimits Technologies, Inc</Company>
+    <Product>OuterLimits Technologies Scaffolding Libraries</Product>
     <Authors>Chris Straw</Authors>
     <Copyright>Copyright © 2003-2021, OuterLimits Technologies, Inc Plainfield, IN</Copyright>
     <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
@@ -10,7 +11,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
     <!-- <PackageReadmeFile>readme.md</PackageReadmeFile> -->
- </PropertyGroup>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
@@ -19,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
- 
+
   <ItemGroup>
     <None Include="..\icon.png">
       <Pack>True</Pack>

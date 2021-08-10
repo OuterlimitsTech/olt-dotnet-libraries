@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using OLT.Core;
 
 namespace OLT.EPPlus
 {
@@ -17,7 +14,7 @@ namespace OLT.EPPlus
         /// <param name="heading">string to find in the first row</param>
         /// <param name="row">row to search (Default 1)</param>
         /// <returns>index or throws exception</returns>
-        public static int GetColIdx(this ExcelWorksheet worksheet, string heading, int? row = 1)
+        public static int? GetColIdx(this ExcelWorksheet worksheet, string heading, int? row = 1)
         {
             var rowIdx = row.GetValueOrDefault(1);
             for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
@@ -28,7 +25,7 @@ namespace OLT.EPPlus
                 }
             }
 
-            throw new OltException("Column Not Found");
+            return null;
         }
 
         /// <summary>

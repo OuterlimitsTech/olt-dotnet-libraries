@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace OLT.Email
 {
@@ -12,8 +13,8 @@ namespace OLT.Email
             Value = value;
         }
 
-        public string Tag { get; set; }
-        public string Value { get; set; }
+        public virtual string Tag { get; set; }
+        public virtual string Value { get; set; }
 
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using OLT.Core;
 using Xunit;
 
@@ -19,7 +20,16 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         public AspNetCoreServerTest()
         {
             var webBuilder = new WebHostBuilder();
-            webBuilder.UseStartup<NLogStartup>();
+            webBuilder
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder
+                        .SetBasePath(AppContext.BaseDirectory)
+                        .AddUserSecrets<Startup>()
+                        .AddJsonFile("appsettings.json", false, true)
+                        .AddEnvironmentVariables();
+                })
+                .UseStartup<NLogStartup>();
             _testServer = new TestServer(webBuilder);
         }
 

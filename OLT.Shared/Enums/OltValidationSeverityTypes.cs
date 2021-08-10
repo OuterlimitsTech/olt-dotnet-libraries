@@ -5,7 +5,6 @@
         Ok,
         Error,
         Warning,
-        Information,
-        DeveloperOnly
+        Information
     }
 }

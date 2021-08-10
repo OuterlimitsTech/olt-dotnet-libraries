@@ -4,7 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Adds extenstion to register NLog Middleware to log all exceptions</Description>
-    <Product>AspNetCore NLog Exception Middleware Library</Product>
     <ProjectGuid>ba4a8658-6e0b-46dd-b456-7186b7b0eb14</ProjectGuid>
   </PropertyGroup>
 

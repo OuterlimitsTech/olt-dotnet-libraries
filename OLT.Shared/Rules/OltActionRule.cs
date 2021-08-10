@@ -1,23 +1,23 @@
 ﻿namespace OLT.Core
 {
-    public abstract class OltActionRule : OltDisposable, IOltActionRule
+    public abstract class OltRuleAction : OltDisposable, IOltRuleAction
     {
-        public abstract IOltResult CanExecute(IOltRequest request);
+        public abstract IOltResultValidation CanExecute(IOltRequest request);
         public abstract IOltResult Execute(IOltRequest request);
         public virtual string RuleName => this.GetType().FullName;
 
-        protected virtual IOltResult Success() => new OltRuleResult();
-        protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
+        protected virtual IOltResult Success() => new OltResultValidation();
+        protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltResultValidation(severity, message);
     }
 
 
-    public abstract class OltActionRule<TRequest> : OltDisposable, IOltActionRule<TRequest>
+    public abstract class OltRuleAction<TRequest> : OltDisposable, IOltRuleAction<TRequest>
         where TRequest : class, IOltRequest
     {
-        public abstract IOltResult CanExecute(TRequest request);
+        public abstract IOltResultValidation CanExecute(TRequest request);
         public abstract IOltResult Execute(TRequest request);
         public virtual string RuleName => this.GetType().FullName;
-        protected virtual IOltResult Success() => new OltRuleResult();
-        protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
+        protected virtual IOltResult Success() => new OltResultValidation();
+        protected virtual IOltResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltResultValidation(severity, message);
     }
 }

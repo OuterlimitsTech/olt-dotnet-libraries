@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OLT.Libraries.UnitTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Testing": "Testing"
+      }
+    }
+  }
+}

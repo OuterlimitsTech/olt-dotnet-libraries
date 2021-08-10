@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using OLT.Core;
-
-namespace OLT.Highcharts
+﻿namespace OLT.Highcharts
 {
     public class OltHighchartType : IOltHighchartType
     {
@@ -9,12 +6,11 @@ namespace OLT.Highcharts
 
         public OltHighchartType(OltHighchartTypes type)
         {
+            // ReSharper disable once VirtualMemberCallInConstructor
             ChartType = type;
         }
 
-        [JsonIgnore]
-        public OltHighchartTypes ChartType { get; set; }
+        public virtual OltHighchartTypes ChartType { get; set; }
 
-        public string Type => ChartType.GetCodeEnum();
     }
 }
