@@ -25,7 +25,11 @@ namespace OLT.Core
         public virtual IQueryable<TSource> Include<TSource, TDestination>(IQueryable<TSource> queryable)
             where TSource : class, IOltEntity
         {
-            var adapter = this.GetAdapter<TSource, TDestination>(true);
+            var adapter = this.GetAdapter<TSource, TDestination>(false);
+            if (adapter == null)
+            {
+                return queryable;
+            }
             return this.Include(queryable, adapter);
         }
 

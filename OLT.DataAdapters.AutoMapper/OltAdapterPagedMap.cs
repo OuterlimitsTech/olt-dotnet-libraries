@@ -1,13 +1,23 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Linq;
 
 namespace OLT.Core
 {
-    public abstract class OltAdapterPagedMap<TEntity, TModel> : OltAdapterMap<TEntity, TModel>, IOltAdapterPagedMap<TEntity, TModel>
+    public abstract class OltAdapterPagedMap<TEntity, TModel> : AutoMapper.Profile, IOltAdapterPagedMap<TEntity, TModel>
         where TEntity : class, IOltEntity
     {
+
+        protected OltAdapterPagedMap() => CreateMaps();
+
         public string Name => $"{typeof(TEntity).FullName}->{typeof(TModel).FullName}";
 
+        public void CreateMaps()
+        {
+            BuildMap(CreateMap<TEntity, TModel>());
+        }
+
+        public abstract void BuildMap(IMappingExpression<TEntity, TModel> mappingExpression);
         public abstract IQueryable<TEntity> DefaultOrderBy(IQueryable<TEntity> queryable);
 
         #region [ Dispose ]
@@ -35,6 +45,8 @@ namespace OLT.Core
         {
             Disposed = true;
         }
+
+        
 
         #endregion
 

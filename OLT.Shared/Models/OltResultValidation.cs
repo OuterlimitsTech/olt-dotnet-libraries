@@ -13,7 +13,7 @@ namespace OLT.Core
             Results.Add(new OltValidationError
             {
                 Severity = severity,
-                ErrorMessage = errorMessage
+                Message = errorMessage
             });
         }
 

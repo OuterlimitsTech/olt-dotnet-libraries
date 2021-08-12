@@ -7,7 +7,7 @@ namespace OLT.Core
     public static class OltModelBuilderExtensions
     {
         public static ModelBuilder EntitiesOfType<T>(this ModelBuilder modelBuilder,
-            Action<EntityTypeBuilder> buildAction) where T : class
+            Action<EntityTypeBuilder> buildAction) 
         {
             return modelBuilder.EntitiesOfType(typeof(T), buildAction);
         }

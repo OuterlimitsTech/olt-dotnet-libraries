@@ -18,7 +18,7 @@ namespace OLT.Core
         [Obsolete("This extension is being removed in a future release.  USe services.AddDbContextPool<TContext>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString)); ")]
         public static IServiceCollection AddOltSqlServer<TContext>(this IServiceCollection services, string connectionString, Func<DbContextOptions<TContext>, IOltLogService, IOltDbAuditUser, TContext> createContext) where TContext : OltDbContext<TContext>, IOltDbContext
         {
-            return services.AddDbContextPool<TContext>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString));
+            return services.AddDbContext<TContext>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString));
         }
 
 
