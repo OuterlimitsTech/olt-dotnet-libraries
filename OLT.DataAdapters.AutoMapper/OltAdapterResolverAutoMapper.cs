@@ -4,13 +4,19 @@ using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
     public class OltAdapterResolverAutoMapper : OltAdapterResolver
     {
-        public OltAdapterResolverAutoMapper(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly ILogger<OltAdapterResolverAutoMapper> _logger;
+
+        public OltAdapterResolverAutoMapper(
+            ILogger<OltAdapterResolverAutoMapper> logger,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            _logger = logger;
             Mapper = serviceProvider.GetService<IMapper>();
         }
 
@@ -37,9 +43,9 @@ namespace OLT.Core
                     return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                // ignored
+                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}", nameof(IOltAdapterMap<TEntity, TDestination>));
             }
 
             return base.ProjectTo<TEntity, TDestination>(source, adapter);
@@ -63,10 +69,11 @@ namespace OLT.Core
                     return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}", nameof(IOltAdapterMap<TSource, TDestination>));
             }
+
 
             return base.Map<TSource, TDestination>(source, adapter);
         }
@@ -129,9 +136,9 @@ namespace OLT.Core
                     return Mapper.Map(source, destination);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}", nameof(IOltAdapterMap<TSource, TDestination>));
             }
 
             return base.Map(source, destination);

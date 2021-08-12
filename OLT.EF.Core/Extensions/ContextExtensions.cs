@@ -543,41 +543,26 @@ namespace OLT.Core
         /// <typeparam name="TInterface"></typeparam>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
-        public static void ApplyGlobalFilters<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> expression)
+        public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, Expression<Func<T, bool>> expression)
         {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            modelBuilder.EntitiesOfType<T>(builder =>
             {
-                if (entityType.ClrType.GetInterface(typeof(TInterface).Name) != null)
+                var clrType = builder.Metadata.ClrType;
+                if (!builder.Metadata.GetDefaultTableName().Equals(builder.Metadata.GetTableName(), StringComparison.OrdinalIgnoreCase))  //TPH class
                 {
-                    var newParam = Expression.Parameter(entityType.ClrType);
-                    var newbody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
-                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(Expression.Lambda(newbody, newParam));
+#pragma warning disable S125
+                    //Console.WriteLine($"{builder.Metadata.GetTableName()} <> {builder.Metadata.GetDefaultTableName()} of type {builder.Metadata.ClrType.FullName}");
+#pragma warning restore S125
+                    clrType = clrType.BaseType;
                 }
-            }
+
+                var newParam = Expression.Parameter(clrType);
+                var newBody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
+                modelBuilder.Entity(clrType).HasQueryFilter(Expression.Lambda(newBody, newParam));
+
+            });
         }
 
 
-        
-        /// <summary>
-        /// modelBuilder.ApplyGlobalFilters<DateTimeOffset?>("DeletedOn", null)
-        /// https://davecallan.com/entity-framework-core-query-filters-multiple-entities/
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="modelBuilder"></param>
-        /// <param name="propertyName"></param>
-        /// <param name="value"></param>
-        public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, string propertyName, T value)
-        {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var foundProperty = entityType.FindProperty(propertyName);
-                if (foundProperty != null && foundProperty.ClrType == typeof(T))
-                {
-                    var newParam = Expression.Parameter(entityType.ClrType);
-                    var filter = Expression.Lambda(Expression.Equal(Expression.Property(newParam, propertyName), Expression.Constant(value)), newParam);
-                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
-                }
-            }
-        }
     }
 }

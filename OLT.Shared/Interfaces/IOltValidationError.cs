@@ -2,7 +2,7 @@
 {
     public interface IOltValidationError
     {
-        string ErrorMessage { get; set; }
+        string Message { get; set; }
         OltValidationSeverityTypes Severity { get; set; }
     }
 }
