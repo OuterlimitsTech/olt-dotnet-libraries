@@ -14,12 +14,9 @@ namespace OLT.Logging.NLog
         /// <summary>
         /// Adds middleware for global error log logging.  
         /// </summary>
-        /// <remarks>
-        /// Will prevent the exception details from showing unless set using <param name="showExceptionDetails"></param>
-        /// </remarks>
         /// <param name="app">The application builder.</param>
-        /// <param name="configuration"><seealso cref="LogConfig"/></param>
-        public static void UseOltNLogExceptionLogging(this IApplicationBuilder app, Func<OltOptionsNLog, OltOptionsNLog> configuration) 
+        /// <param name="options"><seealso cref="OltOptionsNLog"/></param>
+        public static void UseOltNLogExceptionLogging(this IApplicationBuilder app, Action<OltOptionsNLog> options) 
         {
 
             app.Use(async (context, next) =>
@@ -41,10 +38,7 @@ namespace OLT.Logging.NLog
                         LogManager.GetCurrentClassLogger().Error(contextFeature.Error);
 
                         var config = new OltOptionsNLog();
-                        if (configuration != null)
-                        {
-                            config = configuration.Invoke(new OltOptionsNLog());
-                        }
+                        options?.Invoke(config);
                         
                         var responseMessage = "An error has occurred.";
 

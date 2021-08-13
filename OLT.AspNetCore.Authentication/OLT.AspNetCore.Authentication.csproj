@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProjectGuid>0518122c-a418-4eba-a8d5-7211c4b4ead0</ProjectGuid>
+    <Description>OLT AspNetCore Library</Description>
   </PropertyGroup>
 
   <ItemGroup>
