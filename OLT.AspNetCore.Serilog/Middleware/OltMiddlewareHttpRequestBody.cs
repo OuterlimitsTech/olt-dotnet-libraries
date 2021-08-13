@@ -67,7 +67,7 @@ namespace OLT.Logging.Serilog
             }
         }
 
-        private string FormatServerError(HttpContext context, Exception exception, string requestBodyText)
+        private static string FormatServerError(HttpContext context, Exception exception, string requestBodyText)
         {
             Guid errorId = Guid.NewGuid();
             Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
@@ -88,7 +88,7 @@ namespace OLT.Logging.Serilog
         }
 
 
-        private async Task<string> FormatRequest(HttpRequest request)
+        private static async Task<string> FormatRequest(HttpRequest request)
         {
             //This line allows us to set the reader for the request back at the beginning of its stream.
             request.EnableBuffering();
@@ -98,7 +98,7 @@ namespace OLT.Logging.Serilog
             return string.IsNullOrWhiteSpace(body) ? null : body;
         }
 
-        private async Task<string> FormatResponse(HttpResponse response)
+        private static async Task<string> FormatResponse(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
             var body = await new StreamReader(response.Body).ReadToEndAsync();

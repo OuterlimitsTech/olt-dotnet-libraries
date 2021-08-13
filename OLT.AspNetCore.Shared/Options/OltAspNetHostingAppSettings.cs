@@ -1,12 +1,7 @@
 ﻿namespace OLT.Core
 {
-
-
     public class OltAspNetHostingOptions : IOltOptionsAspNetHosting
     {
-
-
-
         /// <summary>
         /// CORS Policy to apply
         /// </summary>
@@ -14,14 +9,6 @@
         /// Default Value is Olt_CorsPolicy_Disabled
         /// </remarks>
         public virtual string CorsPolicyName { get; set; } = OltAspNetDefaults.CorsPolicyName;
-
-        ///// <summary>
-        ///// Preconfigured Hosting Configuration Name
-        ///// </summary>
-        ///// <remarks>
-        ///// Default Value is HostingDefault <seealso cref="OltAspNetDefaults.HostingConfigurations"/>
-        ///// </remarks>
-        //public virtual string ConfigurationName { get; set; } = OltAspNetDefaults.HostingConfigurations.Default;
 
         /// <summary>
         /// Adds middleware for using HSTS, which adds the Strict-Transport-Security header.

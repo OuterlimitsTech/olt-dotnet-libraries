@@ -25,7 +25,7 @@ namespace OLT.Core
 
     }
 
-    public class OltOptionsAspNetSwagger : IOltOptionsAspNetSwagger, IOltOptionsAspNetSwaggerUI
+    public class OltOptionsAspNetSwagger : IOltOptionsAspNetSwaggerUI
     {
         /// <summary>
         /// Enable Swagger Document

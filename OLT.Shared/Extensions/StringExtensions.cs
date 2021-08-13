@@ -53,27 +53,6 @@ namespace System
 
         #region [ Left, Right, Mid ]
 
-        public static string Mid(this string param, int startIndex, int length)
-        {
-            //start at the specified index in the string ang get N number of
-            //characters depending on the lenght and assign it to a variable
-            string result = param.Substring(startIndex, length);
-            //return the result of the operation
-            return result;
-        }
-
-        public static string Mid(this string value, int startIndex)
-        {
-            if (value.IsEmpty()) return value;
-
-            //start at the specified index and return all characters after it
-            //and assign it to a variable
-            string result = value.Substring(startIndex);
-            //return the result of the operation
-            return result;
-        }
-
-
         /// <summary>
         /// Get substring of specified number of characters on the right.
         /// </summary>
@@ -411,9 +390,9 @@ namespace System
 
         }
 
-        public static bool StartsWithAny(this string self, string[] Comparisons)
+        public static bool StartsWithAny(this string self, params string[] comparisons)
         {
-            foreach (string x in Comparisons)
+            foreach (string x in comparisons)
             {
                 if (self.StartsWith(x))
                     return true;
@@ -422,9 +401,9 @@ namespace System
             return false;
         }
 
-        public static bool EqualsAny(this string self, string[] Comparisons)
+        public static bool EqualsAny(this string self, params string[] comparisons)
         {
-            foreach (string x in Comparisons)
+            foreach (string x in comparisons)
             {
                 if (self.Equals(x))
                     return true;
@@ -435,23 +414,23 @@ namespace System
 
         public static object DBNullIfEmpty(this string self)
         {
-            if (String.IsNullOrEmpty(self))
+            if (string.IsNullOrEmpty(self))
                 return DBNull.Value;
 
             return self;
         }
 
-        public static object DBNullIfEmpty(this string self, Func<string, string> Process)
+        public static object DBNullIfEmpty(this string self, Func<string, string> process)
         {
-            if (String.IsNullOrEmpty(self))
+            if (string.IsNullOrEmpty(self))
                 return DBNull.Value;
 
-            return Process(self);
+            return process(self);
         }
 
-        public static object DBNullOnCriteria(this string self, Func<string, bool> Compare)
+        public static object DBNullOnCriteria(this string self, Func<string, bool> compare)
         {
-            if (Compare(self))
+            if (compare(self))
                 return DBNull.Value;
 
             return self;
