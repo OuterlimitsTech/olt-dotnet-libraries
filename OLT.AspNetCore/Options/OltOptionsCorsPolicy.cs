@@ -1,9 +1,9 @@
 ﻿namespace OLT.Core
 {
-    public class OltAspNetApplicationCorsOption
+    public class OltOptionCorsPolicy
     {
 
-        public OltAspNetApplicationCorsOption(IOltAspNetCoreCorsPolicy policy)
+        public OltOptionCorsPolicy(IOltAspNetCoreCorsPolicy policy)
         {
             Policy = policy;
         }

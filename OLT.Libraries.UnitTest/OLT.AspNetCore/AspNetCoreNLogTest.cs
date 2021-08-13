@@ -13,11 +13,11 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
     //https://www.roundthecode.com/dotnet/asp-net-core-web-api/asp-net-core-testserver-xunit-test-web-api-endpoints
 
     // ReSharper disable once InconsistentNaming
-    public class AspNetCoreServerTest : OltDisposable
+    public class AspNetCoreNLogTest : OltDisposable
     {
         private readonly TestServer _testServer;
 
-        public AspNetCoreServerTest()
+        public AspNetCoreNLogTest()
         {
             var webBuilder = new WebHostBuilder();
             webBuilder

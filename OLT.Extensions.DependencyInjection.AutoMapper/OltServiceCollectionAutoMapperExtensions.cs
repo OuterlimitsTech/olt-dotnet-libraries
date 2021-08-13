@@ -7,17 +7,17 @@ namespace OLT.Core
 {
     public static class OltServiceCollectionAutoMapperExtensions
     {
-        public static IServiceCollection AddOltAutoMapper(this IServiceCollection services)
+        public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services)
         {
-            return services.AddOltAutoMapper(new List<Assembly>());
+            return services.AddOltInjectionAutoMapper(new List<Assembly>());
         }
 
-        public static IServiceCollection AddOltAutoMapper(this IServiceCollection services, Assembly includeAssemblyScan)
+        public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services, Assembly includeAssemblyScan)
         {
-            return AddOltAutoMapper(services, new List<Assembly> { includeAssemblyScan });
+            return AddOltInjectionAutoMapper(services, new List<Assembly> { includeAssemblyScan });
         }
 
-        public static IServiceCollection AddOltAutoMapper(this IServiceCollection services, List<Assembly> includeAssembliesScan)
+        public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services, List<Assembly> includeAssembliesScan)
         {
             var assembliesToScan = new List<Assembly>
             {

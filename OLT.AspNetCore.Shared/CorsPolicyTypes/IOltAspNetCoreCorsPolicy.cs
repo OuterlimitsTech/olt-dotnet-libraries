@@ -11,6 +11,6 @@ namespace OLT.Core
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        IServiceCollection AddOltCors(IServiceCollection services);
+        IServiceCollection AddCors(IServiceCollection services);
     }
 }

@@ -21,10 +21,11 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
         {
             services
                 .AddOltAddMemoryCache()
-                .AddOltDefault()
-                .AddOltAutoMapper()
+                .AddOltInjection()
+                .AddOltInjectionAutoMapper()
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
-                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());                
+                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());             
+            
             return services;
         }
     }

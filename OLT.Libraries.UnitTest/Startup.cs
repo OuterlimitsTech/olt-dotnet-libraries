@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OLT.AspNetCore.Authentication;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Extensions;
@@ -66,10 +67,14 @@ namespace OLT.Libraries.UnitTest
             });
         }
 
+
         public virtual void ConfigureServices(IServiceCollection services, HostBuilderContext hostBuilderContext)
         {
             var appSettingsSection = hostBuilderContext.Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsDto>(appSettingsSection);
+            var settings = appSettingsSection.Get<AppSettingsDto>();
+
+            //services.AddAuthentication(new OltAuthenticationJwtBearer(settings.JwtSecret), null);
 
             services
                 .AddOltUnitTesting()
