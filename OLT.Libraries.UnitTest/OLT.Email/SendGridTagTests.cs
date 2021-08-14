@@ -96,7 +96,7 @@ namespace OLT.Libraries.UnitTest.OLT.Email
                     TemplateData = OltEmailTag.ToDictionary(templateDto.Tags.ToList()),
                 });
 
-            Assert.True(result.Success);
+            Assert.True(result.Success, string.Join(',', result.Errors));
         }
     }
 }

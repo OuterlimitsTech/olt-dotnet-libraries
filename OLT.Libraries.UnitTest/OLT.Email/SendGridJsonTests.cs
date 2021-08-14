@@ -75,7 +75,7 @@ namespace OLT.Libraries.UnitTest.OLT.Email
                     TemplateData = templateDto.TemplateData
                 });
 
-            Assert.True(result.Success);
+            Assert.True(result.Success, string.Join(',', result.Errors));
         }
     }
 }
