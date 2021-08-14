@@ -21,15 +21,6 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             _personService = personService;
         }
 
-        private PersonDto createDtoModel()
-        {
-            return new PersonDto
-            {
-                First = Faker.Name.First(),
-                Middle = Faker.Name.Middle(),
-                Last = Faker.Name.Last()
-            };
-        }
 
         private PersonAutoMapperModel createTestAutoMapperModel()
         {
@@ -64,7 +55,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         [Fact]
         public void UpdateAutoMapper()
         {
-            var addModel = createDtoModel();
+            var addModel = UnitTestHelper.CreatePersonDto();
             var model = _personService.Add(addModel);
             model.First = Faker.Name.First();
             var updated = _personService.Update(model.PersonId.Value, model);
@@ -75,7 +66,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         [Fact]
         public void Update()
         {
-            var addModel = createDtoModel();
+            var addModel = UnitTestHelper.CreatePersonDto();
             var model = _personService.Add(addModel);
             model.First = Faker.Name.First();
             var updated = _personService.Update<PersonAutoMapperModel, PersonDto>(model.PersonId.Value, model);
@@ -85,14 +76,14 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         [Fact]
         public void SoftDelete()
         {
-            var model = _personService.Add(createDtoModel());
+            var model = _personService.Add(UnitTestHelper.CreatePersonDto());
             Assert.True(_personService.SoftDelete(model.PersonId.Value));
         }
 
         [Fact]
         public void Get()
         {
-            var model = _personService.Add(createDtoModel());
+            var model = _personService.Add(UnitTestHelper.CreatePersonDto());
             var rec = _personService.Get<PersonAutoMapperModel>(model.PersonId.Value);
             Assert.True(rec.PersonId.Equals(model.PersonId) && rec.Name.First.Equals(model.First));
         }

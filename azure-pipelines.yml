@@ -16,6 +16,7 @@ pr: none
 variables:
   - group: key-vault-variables
   - group: olt-smtp
+  - group: olt-send-grid
 
 jobs:
   - job: 'build'
@@ -130,19 +131,6 @@ jobs:
         displayName: 'Sonar Cloud Publish'
         inputs:
           pollingTimeoutSec: '300'
-
-      - task: GitHubRelease@1
-        displayName: 'GitHub Release'
-        condition: eq( variables['Build.SourceBranchName'], 'master' )
-        inputs:
-          gitHubConnection: 'github.com_chrisstraw'
-          repositoryName: 'OuterlimitsTech/olt-dotnet-libraries'
-          action: 'create'
-          target: '$(GitVersion.NuGetVersionV2)'
-          tagSource: 'gitTag'
-          assets: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-          changeLogCompareToRelease: 'lastFullRelease'
-          changeLogType: 'commitBased'
 
       - task: NuGetCommand@2
         displayName: 'Publish Nuget Package - Internal'

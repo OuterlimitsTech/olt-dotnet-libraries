@@ -9,26 +9,16 @@ namespace OLT.Core
     public static class OltKeyGenerator
     {
 
-        internal static readonly char[] UpperCase = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-
-        internal static readonly char[] LowerCase = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-
-        internal static readonly char[] Numerals = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
-        internal static readonly char[] Symbols = { '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '{', '[', '}', ']', '-', '_', '=', '+', ':', ';', '|', '/', '?', ',', '<', '.', '>' };
-
-        internal static readonly char[] SpecialCharacters = { '!', '@', '#', '$', '%', '&', '*', '+' };
-
         public static string GeneratePassword(int length = 8, bool useNumbers = true, bool useLowerCaseLetters = true, bool useUpperCaseLetters = true, bool useSpecialCharacters = true)
         {
 
             var chars = (new char[0])
-                .Concat(useUpperCaseLetters ? UpperCase : new char[0])
-                .Concat(useLowerCaseLetters ? LowerCase : new char[0])
-                .Concat(useNumbers ? Numerals : new char[0])
+                .Concat(useUpperCaseLetters ? OltDefaults.UpperCase : new char[0])
+                .Concat(useLowerCaseLetters ? OltDefaults.LowerCase : new char[0])
+                .Concat(useNumbers ? OltDefaults.Numerals : new char[0])
                 .ToArray();
 
-            var specialChars = SpecialCharacters.ToArray();
+            var specialChars = OltDefaults.SpecialCharacters.ToArray();
             int? specialCharIdx = null;
             if (useSpecialCharacters)
             {
@@ -69,9 +59,9 @@ namespace OLT.Core
         public static string GetUniqueKey(int size)
         {
             var chars = (new char[0])
-                .Concat(UpperCase)
-                .Concat(LowerCase)
-                .Concat(Numerals)
+                .Concat(OltDefaults.UpperCase)
+                .Concat(OltDefaults.LowerCase)
+                .Concat(OltDefaults.Numerals)
                 .ToArray();
 
 
@@ -95,9 +85,9 @@ namespace OLT.Core
         public static string GetUniqueKeyOriginal_BIASED(int size)
         {
             var chars = (new char[0])
-                .Concat(UpperCase)
-                .Concat(LowerCase)
-                .Concat(Numerals)
+                .Concat(OltDefaults.UpperCase)
+                .Concat(OltDefaults.LowerCase)
+                .Concat(OltDefaults.Numerals)
                 .ToArray();
 
             byte[] data = new byte[size];

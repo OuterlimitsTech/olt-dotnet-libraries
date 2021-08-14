@@ -1,5 +1,6 @@
 using System;
 using OLT.Core;
+using OLT.Libraries.UnitTest.Assets;
 using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.Shared
@@ -10,103 +11,98 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [Fact]
         public void CleanForSearch()
         {
-            var name = "Mouse, Mickey   & Duck, Daffy";
-            Assert.True(name.CleanForSearch().Equals("Mouse Mickey Duck Daffy"));
+            var value = $"   -> ? {UnitTestConstants.StringValues.HelloWorld},   & {UnitTestConstants.StringValues.ThisIsATest}";
+            var eval = $"{UnitTestConstants.StringValues.HelloWorld} {UnitTestConstants.StringValues.ThisIsATest}";
+            Assert.True(value.CleanForSearch().Equals(eval), $"|{value.CleanForSearch()}|  |{eval}|");
         }
 
         [Fact]
         public void ToWords()
         {
-            var value = "Hello World";
-            Assert.Collection(value.ToWords(), item => Assert.Equal("Hello", item), item => Assert.Equal("World", item));
+            Assert.Collection(UnitTestConstants.StringValues.HelloWorld.ToWords(), 
+                item => Assert.Equal(UnitTestConstants.StringValues.Hello, item), 
+                item => Assert.Equal(UnitTestConstants.StringValues.World, item));
         }
 
         [Fact]
         public void Right()
         {
-            var value = "Hello World";
-            Assert.True(value.Right(5).Equals("World"));
+            Assert.True(UnitTestConstants.StringValues.HelloWorld.Right(5).Equals(UnitTestConstants.StringValues.World));
         }
 
         [Fact]
         public void Left()
         {
-            var value = "Hello World";
-            Assert.True(value.Left(5).Equals("Hello"));
+            Assert.True(UnitTestConstants.StringValues.HelloWorld.Left(5).Equals(UnitTestConstants.StringValues.Hello));
         }
 
-        [Fact]
-        public void IsGuid()
+        [Theory]
+        [InlineData(UnitTestConstants.GuidValues.String, true)]
+        [InlineData(UnitTestConstants.GuidValues.String2, true)]
+        [InlineData(UnitTestConstants.GuidValues.String3, true)]
+        [InlineData(UnitTestConstants.StringValues.FooBar, false)]
+        [InlineData(UnitTestConstants.StringValues.Hex, false)]
+        [InlineData(UnitTestConstants.IntValues.String, false)]
+        public void IsGuid(string value, bool expectedResult)
         {
-            var value = Guid.NewGuid().ToString();
-            Assert.True(value.IsGuid());
+            Assert.Equal(value.IsGuid(), expectedResult);
         }
 
-        [Fact]
-        public void IsNotGuid()
+
+        [Theory]
+        [InlineData(UnitTestConstants.GuidValues.String, UnitTestConstants.GuidValues.String)]
+        [InlineData(UnitTestConstants.GuidValues.String, UnitTestConstants.GuidValues.String, UnitTestConstants.GuidValues.String2)]
+        [InlineData(UnitTestConstants.StringValues.FooBar, null)]
+        [InlineData(UnitTestConstants.StringValues.FooBar, UnitTestConstants.GuidValues.String2, UnitTestConstants.GuidValues.String2)]
+        [InlineData(UnitTestConstants.StringValues.Hex, null)]
+        [InlineData(UnitTestConstants.StringValues.Hex, UnitTestConstants.GuidValues.String, UnitTestConstants.GuidValues.String)]
+        [InlineData(UnitTestConstants.IntValues.String, null)]
+        public void ToGuid(string value, string expectedResult, string defaultValue = null)
         {
-            var value = "FooBar";
-            Assert.False(value.IsGuid());
+            var eval = defaultValue != null ? value.ToGuid(new Guid(defaultValue)).ToString() : value.ToGuid()?.ToString();
+            Assert.Equal(eval, expectedResult?.ToLower());
         }
 
-        [Fact]
-        public void IsNumeric()
+
+        [Theory]
+        [InlineData(UnitTestConstants.IntValues.String, true)]
+        [InlineData(UnitTestConstants.DecimalValues.String, true)]
+        [InlineData(UnitTestConstants.StringValues.FooBar, false)]
+        public void IsNumeric(string value, bool expectedResult)
         {
-            var value = "1234";
-            Assert.True(value.IsNumeric());
+            Assert.Equal(value.IsNumeric(), expectedResult);
         }
 
-        [Fact]
-        public void IsNotNumeric()
-        {
-            var value = "FooBar";
-            Assert.False(value.IsNumeric());
-        }
 
         [Fact]
         public void StripNonNumeric()
         {
-            var value = "(317) 555-1234";
-            var result = "3175551234";
-            Assert.True(value.StripNonNumeric().Equals(result), $"{value.StripNonNumeric()} <> {result}");
+            Assert.True(UnitTestConstants.StringValues.PhoneValues.Formatted.StripNonNumeric().Equals(UnitTestConstants.StringValues.PhoneValues.Clean), 
+                $"{UnitTestConstants.StringValues.PhoneValues.Formatted.StripNonNumeric()} <> {UnitTestConstants.StringValues.PhoneValues.Clean}");
         }
 
         [Fact]
         public void StripNonNumericDecimal()
         {
-            var value = "3.1415ABC";
-            Assert.True(value.StripNonNumeric(true).Equals("3.1415"));
+            var value = $"{UnitTestConstants.DecimalValues.String} {UnitTestConstants.StringValues.HelloWorld}";
+            Assert.True(value.StripNonNumeric(true).Equals(UnitTestConstants.DecimalValues.String));
         }
 
         [Fact]
         public void Slugify()
         {
-            var value = "Hello World   Test";
-            Assert.True(value.Slugify().Equals("hello-world-test"));
+            var value = $"{UnitTestConstants.StringValues.HelloWorld}   ${UnitTestConstants.StringValues.Test}";
+            Assert.True(value.Slugify().Equals($"{UnitTestConstants.StringValues.Hello.ToLower()}-{UnitTestConstants.StringValues.World.ToLower()}-{UnitTestConstants.StringValues.Test.ToLower()}"));
         }
 
 
         [Fact]
         public void ToDate()
         {
-            var value = "9/1/2000";
-            var result = new DateTime(2000, 9, 1);
-            Assert.True(value.ToDate().Equals(result));
+            Assert.True(UnitTestConstants.DateTimeValues.String.ToDate().Equals(UnitTestConstants.DateTimeValues.Value));
         }
 
-        [Fact]
-        public void ToGuid()
-        {
-            var value = Guid.NewGuid();
-            Assert.True(value.ToString().ToGuid().Equals(value));
-        }
 
-        [Fact]
-        public void ToGuidDefaultValue()
-        {
-            var value = Guid.NewGuid();
-            Assert.True("Hello World".ToGuid(value).Equals(value));
-        }
 
         [Fact]
         public void ToInt()
@@ -119,7 +115,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void ToIntDefaultValue()
         {
             int value = int.MaxValue - 100;
-            Assert.True("Hello World".ToInt(value).Equals(value));
+            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToInt(value).Equals(value));
         }
 
 
@@ -134,7 +130,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void ToLongDefaultValue()
         {
             long value = long.MaxValue - 500;
-            Assert.True("Hello World".ToLong(value).Equals(value));
+            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToLong(value).Equals(value));
         }
 
 
@@ -149,7 +145,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void ToDecimalDefaultValue()
         {
             decimal value = decimal.MaxValue - 500;
-            Assert.True("Hello World".ToDecimal(value).Equals(value));
+            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToDecimal(value).Equals(value));
         }
 
 
@@ -164,91 +160,97 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void ToDoubleDefaultValue()
         {
             double value = double.MaxValue - 500;
-            Assert.True("Hello World".ToDouble(value).Equals(value));
+            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToDouble(value).Equals(value));
         }
 
 
-        [Fact]
-        public void IsBool()
+        [Theory]
+        [InlineData(UnitTestConstants.BoolValues.TrueValues.String, true)]
+        [InlineData(UnitTestConstants.BoolValues.TrueValues.Int, true)]
+        [InlineData(UnitTestConstants.StringValues.AlphaNumeric, false)]
+        [InlineData(UnitTestConstants.BoolValues.FalseValues.String, true)]
+        [InlineData(UnitTestConstants.BoolValues.FalseValues.Int, true)]
+        public void IsBool(string value, bool expectedResult)
         {
-            var value = "true";
-            Assert.True(value.ToBool());
+            Assert.Equal(value.IsBool(), expectedResult);
         }
 
-        [Fact]
-        public void IsNotBool()
+        [Theory]
+        [InlineData(UnitTestConstants.BoolValues.TrueValues.String, true)]
+        [InlineData(UnitTestConstants.BoolValues.TrueValues.String, true, false)]
+        [InlineData(UnitTestConstants.BoolValues.TrueValues.Int, true)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, null)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, true, true)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, false, false)]
+        [InlineData(UnitTestConstants.BoolValues.FalseValues.String, false)]
+        [InlineData(UnitTestConstants.BoolValues.FalseValues.String, false, true)]
+        [InlineData(UnitTestConstants.BoolValues.FalseValues.Int, false)]
+        public void ToBool(string value, bool? expectedResult, bool? defaultValue = null)
         {
-            var value = "ABC1234";
-            Assert.Null(value.ToBool());
+            if (defaultValue.HasValue)
+            {
+                Assert.Equal(value.ToBool(defaultValue.Value), expectedResult);
+                return;
+            }
+            Assert.Equal(value.ToBool(), expectedResult);
         }
 
-        [Fact]
-        public void ToTrueBool()
-        {
-            var value = "true";
-            Assert.True(value.ToBool());
-        }
 
-        [Fact]
-        public void ToTrueBoolDefaultValue()
+        [Theory]
+        [InlineData(UnitTestConstants.StringValues.Hex, true)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, false)]
+        public void FromHexToByte(string value, bool expectedResult)
         {
-            Assert.True("Hello World".ToBool(true));
-        }
-
-        [Fact]
-        public void ToFalseBool()
-        {
-            var value = "false";
-            Assert.False(value.ToBool());
-        }
-
-        [Fact]
-        public void ToFalseBoolDefaultValue()
-        {
-            Assert.False("Hello World".ToBool(false));
-        }
-
-        [Fact]
-        public void FromHexToByte()
-        {
-            var value = "af8a0f2ba21a7eea22f31dcf693d6efb";
-            Assert.NotEmpty(value.FromHexToByte());
+            Assert.Equal(value.FromHexToByte().Length > 0, expectedResult);
         }
 
         [Fact]
         public void Reverse()
         {
-            var value = "Hello";
-            Assert.True(value.Reverse().Equals("olleH"));
+            Assert.True(UnitTestConstants.StringValues.Hello.Reverse().Equals(UnitTestConstants.StringValues.HelloReverse));
+        }
+
+        [Theory]
+        [InlineData(UnitTestConstants.StringValues.HelloReverse, false)]
+        [InlineData(UnitTestConstants.StringValues.ThisIsATest, true)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, true)]
+        public void StartsWithAny(string value, bool expectedResult)
+        {
+            Assert.Equal(value.StartsWithAny(UnitTestConstants.StringValues.Test, UnitTestConstants.StringValues.Hello, UnitTestConstants.StringValues.This), expectedResult);
+        }
+
+
+        [Theory]
+        [InlineData(UnitTestConstants.StringValues.HelloReverse, false)]
+        [InlineData(UnitTestConstants.StringValues.ThisIsATest, true)]
+        public void EqualsAny(string value, bool expectedResult)
+        {
+            Assert.Equal(value.EqualsAny(UnitTestConstants.StringValues.ThisIsATest, UnitTestConstants.StringValues.Hex), expectedResult);
+        }
+
+        [Theory]
+        [InlineData("", true)]
+        [InlineData(UnitTestConstants.StringValues.Hello, false)]
+        public void DBNullIfEmpty(string value, bool expectedResult)
+        {
+            Assert.Equal(value.DBNullIfEmpty().Equals(DBNull.Value), expectedResult);
         }
 
         [Fact]
-        public void StartsWithAny()
+        public void GeneratePassword()
         {
-            var value = "This is a Test";
-            Assert.True(value.StartsWithAny("This", "Hello"));
+            var password = OltKeyGenerator.GeneratePassword(16);
+            Assert.True(password.Length == 16);
         }
 
-
-        [Fact]
-        public void EqualsAny()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(25)]
+        [InlineData(10)]
+        public void GetUniqueKey(int size)
         {
-            var value = "This is a Hello";
-            Assert.True(value.EqualsAny("This is a Hello", "Mickey Mouse"));
-        }
-
-        [Fact]
-        public void DBNullIfEmpty()
-        {
-            var value = string.Empty;
-            Assert.True(value.DBNullIfEmpty().Equals(DBNull.Value));
-        }
-
-        [Fact]
-        public void DBNullIfEmptyFalse()
-        {
-            var value = "Hello";
-            Assert.False(value.DBNullIfEmpty().Equals(DBNull.Value));
+            var password = OltKeyGenerator.GetUniqueKey(size);
+            Assert.True(password.Length == size);
         }
 
     }

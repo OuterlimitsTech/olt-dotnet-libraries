@@ -1,25 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using OLT.Core;
 
 namespace OLT.Email
 {
-    public class OltEmailTestingWhitelist
+    public class OltEmailConfiguration : OltDisposable, IOltEmailConfiguration
     {
-        public List<string> Domain { get; set; }
-        public List<string> Email { get; set; }
-    }
+        public virtual OltEmailAddress From { get; set; } = new OltEmailAddress();
 
-    public abstract class OltEmailConfiguration : OltDisposable, IOltEmailConfiguration
-    {
-        public abstract OltEmailAddress From { get; }
-        public abstract bool IsProduction { get; }
-        public virtual OltEmailTestingWhitelist TestWhitelist { get; set; } = new OltEmailTestingWhitelist();
+        /// <summary>
+        /// Test Environment whitelist 
+        /// </summary>
+        public virtual OltEmailConfigurationWhitelist TestWhitelist { get; set; } = new OltEmailConfigurationWhitelist();
+
+        public virtual bool Production { get; set; }
 
         public virtual bool SendEmail(string emailAddress)
         {
-            if (IsProduction)
+            if (Production)
             {
                 return true;
             }
