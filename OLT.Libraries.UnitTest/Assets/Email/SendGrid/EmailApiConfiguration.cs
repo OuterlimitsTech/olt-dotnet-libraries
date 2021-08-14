@@ -8,24 +8,28 @@ namespace OLT.Libraries.UnitTest.Assets.Email.SendGrid
     public class EmailApiConfiguration : OltEmailConfiguration, IOltEmailConfigurationSendGrid
     {
 
-        private readonly IOptions<OltSendGridAppSettings> _settings;
+        private readonly OltAppSettingsSendGrid _settings;
 
-        public EmailApiConfiguration(IOptions<OltSendGridAppSettings> settings)
+        public EmailApiConfiguration(OltAppSettingsSendGrid settings)
         {
             _settings = settings;
         }
 
+        public EmailApiConfiguration(IOptions<OltAppSettingsSendGrid> settings)
+        {
+            _settings = settings.Value;
+            
+        }
+
         public override OltEmailAddress From => new OltEmailAddress
         {
-            Name = _settings.Value.FromName ?? "OLT",
-            Email = _settings.Value.FromEmail ?? "noreply@outerlimitstech.com"
+            Name = _settings.From.Name ?? "OLT",
+            Email = _settings.From.Email ?? "noreply@outerlimitstech.com"
         };
 
-        public override bool IsProduction => _settings.Value.Production;
-        
-        //public override List<string> DomainWhiteList => _settings.Value.DomainWhitelist?.Split(';').ToList() ?? new List<string>();
-        //public override List<string> EmailWhiteList => _settings.Value.EmailWhitelist?.Split(';').ToList() ?? new List<string>();
-        public string ApiKey => _settings.Value.ApiKey;
+        public override bool Production => _settings.Production;
+        public override OltEmailConfigurationWhitelist TestWhitelist => _settings.TestWhitelist;
+        public string ApiKey => _settings.ApiKey;
         public bool ClickTracking => true;
     }
 

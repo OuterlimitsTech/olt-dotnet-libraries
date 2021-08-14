@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using OLT.AspNetCore.Authentication;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity;
@@ -76,32 +78,36 @@ namespace OLT.Libraries.UnitTest
             var appSettingsSection = hostBuilderContext.Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsDto>(appSettingsSection);
             var settings = appSettingsSection.Get<AppSettingsDto>();
+            var sendGridSettings = settings.SendGrid;
 
-            var sendGridSettings =
-                hostBuilderContext.Configuration.GetSection("AppSettings:SendGrid").Get<OltSendGridAppSettings>();
-            var x = sendGridSettings.FromEmail;
 
-            services.Configure<OltSendGridAppSettings>(settings =>
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                settings.FromEmail = sendGridSettings.FromEmail;
-                settings.FromName = sendGridSettings.FromName;
-                settings.Production = sendGridSettings.Production;
-                settings.DomainWhitelist = sendGridSettings.DomainWhitelist;
-                settings.EmailWhitelist = sendGridSettings.EmailWhitelist;
-                settings.ApiKey = hostBuilderContext.Configuration.GetValue<string>("SENDGRID_TOKEN") ?? Environment.GetEnvironmentVariable("SENDGRID_TOKEN");
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+
+            services.Configure<OltAppSettingsSendGrid>(opt =>
+            {
+                opt.From = new OltEmailAddress
+                {
+                    Name = sendGridSettings.From.Name,
+                    Email = sendGridSettings.From.Email,
+                };
+                opt.TestWhitelist = new OltEmailConfigurationWhitelist
+                {
+                    Domain = sendGridSettings.TestWhitelist.Domain,
+                    Email = sendGridSettings.TestWhitelist.Email
+                };
+                opt.Production = sendGridSettings.Production;
+                opt.ApiKey = hostBuilderContext.Configuration.GetValue<string>("SENDGRID_TOKEN") ?? Environment.GetEnvironmentVariable("SENDGRID_TOKEN");
             });
 
-            
-
-            
-            //sendGridSettings.ApiKey = ;
-
-            //services.AddAuthentication(new OltAuthenticationJwtBearer(settings.JwtSecret), null);
 
             services
                 .AddOltUnitTesting()
                 .AddScoped<IOltEmailService, OltSendGridEmailService>()
                 .AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>()
+                //.AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>(opt => new EmailApiConfiguration(sendGridSettings))
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
                     optionsBuilder.UseInMemoryDatabase(databaseName: "Test");
