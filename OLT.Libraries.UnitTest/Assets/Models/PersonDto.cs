@@ -6,5 +6,6 @@ namespace OLT.Libraries.UnitTest.Assets.Models
     public class PersonDto : OltPersonName
     {
         public int? PersonId { get; set; }
-    }
+        public string Email { get; set; }
+    }    
 }

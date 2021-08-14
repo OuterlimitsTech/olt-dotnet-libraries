@@ -50,7 +50,7 @@ namespace OLT.Libraries.UnitTest.OLT.Email
                 {
                     new OltEmailAddress
                     {
-                        Name = "Chris Straw",
+                        Name = Faker.Name.FullName(),
                         Email = _configuration.GetValue<string>("SMTP_TO_ADDRESS") ?? Environment.GetEnvironmentVariable("SMTP_TO_ADDRESS")
                     }
                 },

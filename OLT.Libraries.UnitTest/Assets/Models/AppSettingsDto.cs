@@ -1,4 +1,5 @@
 ﻿using OLT.Core;
+using OLT.Email;
 
 namespace OLT.Libraries.UnitTest.Assets.Models
 {
@@ -6,5 +7,6 @@ namespace OLT.Libraries.UnitTest.Assets.Models
     public class AppSettingsDto : OltAspNetAppSettings
     {
         public string JwtSecret { get; set; }
+        public OltSendGridAppSettings SendGrid { get; set; } = new OltSendGridAppSettings();
     }
 }

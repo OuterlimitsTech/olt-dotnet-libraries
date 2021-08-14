@@ -3,7 +3,7 @@
 namespace OLT.Libraries.UnitTest.Assets
 {
     // ReSharper disable once InconsistentNaming
-    public static class UnitTestConstants
+    public static partial class UnitTestConstants
     {
         public static class GuidValues
         {

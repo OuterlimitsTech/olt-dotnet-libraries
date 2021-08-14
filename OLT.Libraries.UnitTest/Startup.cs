@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +19,9 @@ using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Extensions;
 using OLT.Libraries.UnitTest.Assets.Models;
+using OLT.Email;
+using OLT.Email.SendGrid;
+using OLT.Libraries.UnitTest.Assets.Email.SendGrid;
 
 namespace OLT.Libraries.UnitTest
 {
@@ -74,10 +77,31 @@ namespace OLT.Libraries.UnitTest
             services.Configure<AppSettingsDto>(appSettingsSection);
             var settings = appSettingsSection.Get<AppSettingsDto>();
 
+            var sendGridSettings =
+                hostBuilderContext.Configuration.GetSection("AppSettings:SendGrid").Get<OltSendGridAppSettings>();
+            var x = sendGridSettings.FromEmail;
+
+            services.Configure<OltSendGridAppSettings>(settings =>
+            {
+                settings.FromEmail = sendGridSettings.FromEmail;
+                settings.FromName = sendGridSettings.FromName;
+                settings.Production = sendGridSettings.Production;
+                settings.DomainWhitelist = sendGridSettings.DomainWhitelist;
+                settings.EmailWhitelist = sendGridSettings.EmailWhitelist;
+                settings.ApiKey = hostBuilderContext.Configuration.GetValue<string>("SENDGRID_TOKEN") ?? Environment.GetEnvironmentVariable("SENDGRID_TOKEN");
+            });
+
+            
+
+            
+            //sendGridSettings.ApiKey = ;
+
             //services.AddAuthentication(new OltAuthenticationJwtBearer(settings.JwtSecret), null);
 
             services
                 .AddOltUnitTesting()
+                .AddScoped<IOltEmailService, OltSendGridEmailService>()
+                .AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
                     optionsBuilder.UseInMemoryDatabase(databaseName: "Test");
