@@ -29,19 +29,25 @@ namespace System
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
+        public static string RemoveSpecialCharacters(this string input)
+        {
+            Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            return r.Replace(input, string.Empty);
+        }
 
         public static string CleanForSearch(this string param)
         {
-            var result = param.Trim()
-                .Replace("\"", string.Empty)
-                .Replace("*", string.Empty)
-                .Replace(")", string.Empty)
-                .Replace("&", string.Empty)
-                .Replace("$", string.Empty)
-                .Replace("(", string.Empty)
-                .Replace("#", string.Empty)
-                .Replace(".", string.Empty)
-                .Replace(",", " ");
+            var result = param.RemoveSpecialCharacters().Trim();
+                //.Replace("\"", string.Empty)
+                //.Replace("*", string.Empty)
+                //.Replace(")", string.Empty)
+                //.Replace("&", string.Empty)
+                //.Replace("$", string.Empty)
+                //.Replace("(", string.Empty)
+                //.Replace("?", string.Empty)
+                //.Replace("#", string.Empty)
+                //.Replace(".", string.Empty)
+                //.Replace(",", " ");
 
             return Regex.Replace(result, @"\s+", " ");  //Remove double spaces
         }
@@ -103,8 +109,9 @@ namespace System
 
         public static bool IsNumeric(this string value)
         {
-            long temp;
-            return long.TryParse(value, out temp);
+            long longVal;
+            double doubleVal;
+            return long.TryParse(value, out longVal) || double.TryParse(value, out doubleVal);
         }
 
         private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
@@ -173,11 +180,10 @@ namespace System
         /// </summary>
         /// <param name="self">Extends <see cref="string"/>.</param>
         /// <returns>Returns converted value to <see cref="System.Guid"/>, if cast fails, Empty Guid </returns>
-        public static Guid ToGuid(this string self)
+        public static Guid? ToGuid(this string self)
         {
-            Guid value;
-            if (String.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out value))
-                return Guid.Empty;
+            if (string.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out var value))
+                return null;
             return value;
         }
 
@@ -189,8 +195,7 @@ namespace System
         /// <returns>Returns converted value to <see cref="System.Guid"/>. If cast fails, default value</returns>
         public static Guid ToGuid(this string self, Guid defaultValue)
         {
-            Guid value;
-            if (String.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out value))
+            if (string.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out var value))
                 return defaultValue;
             return value;
         }
@@ -337,47 +342,88 @@ namespace System
 
         #region [ Boolean ]
 
-        public static bool IsBool(this string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
+        public static readonly string[] BoolTrueStrings = { "1", "yes", "y" };
+        public static readonly string[] BoolFalseStrings = { "0", "no", "n" };
 
-            bool temp;
-            return bool.TryParse(value, out temp);
+        public static bool IsBool(this string self)
+        {
+            return ToBoolInternal(self, out var value); 
         }
 
         public static bool? ToBool(this string self)
         {
-            bool value;
-            if (String.IsNullOrWhiteSpace(self) || !Boolean.TryParse(self, out value))
-                return null;
+            ToBoolInternal(self, out var value);
             return value;
         }
         
         public static bool ToBool(this string self, bool defaultValue)
         {
-            bool value;
-            if (String.IsNullOrWhiteSpace(self) || !Boolean.TryParse(self, out value))
-                return defaultValue;
-            return value;
+            ToBoolInternal(self, out var value);
+            return value.GetValueOrDefault(defaultValue);
         }
 
+        private static bool ToBoolInternal(string self, out bool? value)
+        {
+            if (string.IsNullOrWhiteSpace(self))
+            {
+                value = null;
+                return false;
+            }
+
+            var eval = self.ToLower();
+            if (BoolTrueStrings.Any(compareTo => string.Equals(eval, compareTo, StringComparison.OrdinalIgnoreCase)))
+            {
+                value = true;
+                return true;
+            }
+
+            if (BoolFalseStrings.Any(compareTo => string.Equals(eval, compareTo, StringComparison.OrdinalIgnoreCase)))
+            {
+                value = false;
+                return true;
+            }
+
+            if (bool.TryParse(eval, out var val))
+            {
+                value = val;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+
         #endregion
+
 
         /// <summary>
         /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
         /// </summary>
         /// <param name="hexString"></param>
         /// <returns></returns>
-        /// <remarks></remarks>
+        public static bool IsHex(this string value)
+        {
+            // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
+            return System.Text.RegularExpressions.Regex.IsMatch(value, @"\A\b[0-9a-fA-F]+\b\Z");
+        }
+
+        /// <summary>
+        /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns>byte array or empty if invalid</returns>
         public static byte[] FromHexToByte(this string hexString)
         {
-            var returnBytes = new byte[hexString.Length / 2];
-            for (int i = 0; i < returnBytes.Length; i++)
-                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
-            return returnBytes;
+            if (IsHex(hexString))
+            {
+                var returnBytes = new byte[hexString.Length / 2];
+                for (int i = 0; i < returnBytes.Length; i++)
+                    returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                return returnBytes;
+            }
+
+            return Array.Empty<byte>();
         }
 
         public static string Reverse(this string value)

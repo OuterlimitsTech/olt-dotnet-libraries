@@ -45,7 +45,7 @@ namespace OLT.Libraries.UnitTest
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)
         {
-            var x = "1234";
+            //var x = "1234";
             //app.UseOltDefaults(options.Value, () => app.UseOltNLogExceptionLogging(options.Value.Hosting.ShowExceptionDetails));
         }
     }
