@@ -12,7 +12,7 @@ namespace OLT.Core
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public IServiceCollection AddOltCors(IServiceCollection services)
+        public IServiceCollection AddCors(IServiceCollection services)
         {
 
             return services.AddCors(

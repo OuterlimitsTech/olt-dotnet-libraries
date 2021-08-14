@@ -61,4 +61,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.True(enumVal == TestEnumTypes.Test1);
         }
     }
+
+
+    // ReSharper disable once InconsistentNaming
 }

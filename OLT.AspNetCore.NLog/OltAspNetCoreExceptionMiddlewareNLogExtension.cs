@@ -6,20 +6,17 @@ using Microsoft.AspNetCore.Http;
 using NLog;
 
 
-namespace OLT.Core
+namespace OLT.Logging.NLog
 {
+
     public static class OltAspNetCoreExceptionMiddlewareNLogExtension
     {
         /// <summary>
         /// Adds middleware for global error log logging.  
         /// </summary>
-        /// <remarks>
-        /// Will prevent the exception details from showing unless set using <param name="showExceptionDetails"></param>
-        /// </remarks>
         /// <param name="app">The application builder.</param>
-        /// <param name="showExceptionDetails">Include Exception Details in the Response</param>
-        /// <param name="defaultErrorMessage">Message returned when an error occurs</param>
-        public static void UseOltNLogExceptionLogging(this IApplicationBuilder app, bool showExceptionDetails, string defaultErrorMessage = "Internal Server Error")
+        /// <param name="options"><seealso cref="OltOptionsNLog"/></param>
+        public static void UseOltNLogExceptionLogging(this IApplicationBuilder app, Action<OltOptionsNLog> options) 
         {
 
             app.Use(async (context, next) =>
@@ -40,16 +37,18 @@ namespace OLT.Core
                     {
                         LogManager.GetCurrentClassLogger().Error(contextFeature.Error);
 
-                        if (showExceptionDetails)
+                        var config = new OltOptionsNLog();
+                        options?.Invoke(config);
+                        
+                        var responseMessage = "An error has occurred.";
+
+                        if (config.ShowExceptionDetails && contextFeature?.Error != null)
                         {
-                            defaultErrorMessage = $"{defaultErrorMessage}{Environment.NewLine}Error:{Environment.NewLine}{contextFeature.Error}";
+                            responseMessage = contextFeature.Error.Message;
                         }
 
-                        await context.Response.WriteAsync(new OltNLogError
-                        {
-                            StatusCode = context.Response.StatusCode,
-                            Message = defaultErrorMessage
-                        }.ToString());
+                        var json = new OltErrorHttp { Message = responseMessage }.ToJson();
+                        await context.Response.WriteAsync(json);
                     }
                 });
             });

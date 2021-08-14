@@ -3,7 +3,7 @@
 namespace OLT.Email
 {
     
-    public class OltSendGridAppSettings : IOltAppSettings
+    public class OltSendGridAppSettings 
     {
         public string FromEmail { get; set; }
         public string FromName { get; set; }

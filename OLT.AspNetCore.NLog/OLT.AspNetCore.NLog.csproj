@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>OLT.Core</RootNamespace>
+    <RootNamespace>OLT.Logging.NLog</RootNamespace>
     <Description>Adds extenstion to register NLog Middleware to log all exceptions</Description>
     <ProjectGuid>ba4a8658-6e0b-46dd-b456-7186b7b0eb14</ProjectGuid>
   </PropertyGroup>
@@ -10,6 +10,10 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="NLog" Version="4.7.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,16 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Request-Response\**" />
+    <EmbeddedResource Remove="Request-Response\**" />
+    <None Remove="Request-Response\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="docs\readme.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Request-Response\" />
   </ItemGroup>
 
 </Project>

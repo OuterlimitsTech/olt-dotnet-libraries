@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace OLT.Core
 {
-    public static class HttpRequestExtensions
+    public static class OltHttpRequestExtensions
     {
 
         /// <summary>
@@ -19,11 +19,10 @@ namespace OLT.Core
         /// <returns></returns>
         public static async Task<string> GetRawBodyStringAsync(this HttpRequest request, Encoding encoding = null)
         {
-            if (encoding == null)
-                encoding = Encoding.UTF8;
+            encoding ??= Encoding.UTF8;
 
-            using (StreamReader reader = new StreamReader(request.Body, encoding))
-                return await reader.ReadToEndAsync();
+            using StreamReader reader = new StreamReader(request.Body, encoding);
+            return await reader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -33,11 +32,9 @@ namespace OLT.Core
         /// <returns></returns>
         public static async Task<byte[]> GetRawBodyBytesAsync(this HttpRequest request)
         {
-            using (var ms = new MemoryStream(2048))
-            {
-                await request.Body.CopyToAsync(ms);
-                return ms.ToArray();
-            }
+            await using var ms = new MemoryStream(2048);
+            await request.Body.CopyToAsync(ms);
+            return ms.ToArray();
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace OLT.Core
 {
 
-    public class OltAspNetSwaggerXmlAppSettings
+    public class OltOptionsAspNetSwaggerXml : IOltOptionsAspNetSwaggerXml
     {
         /// <summary>
         /// OPTIONAL: File that contains XML Comments to display in Swagger. 
@@ -25,7 +25,7 @@ namespace OLT.Core
 
     }
 
-    public class OltAspNetSwaggerAppSettings : IOltAppSettings
+    public class OltOptionsAspNetSwagger : IOltOptionsAspNetSwaggerUI
     {
         /// <summary>
         /// Enable Swagger Document
@@ -38,7 +38,7 @@ namespace OLT.Core
         /// <summary>
         /// Swagger XML Settings
         /// </summary>
-        public OltAspNetSwaggerXmlAppSettings XmlSettings { get; set; } = new OltAspNetSwaggerXmlAppSettings();
+        public IOltOptionsAspNetSwaggerXml XmlSettings { get; set; } = new OltOptionsAspNetSwaggerXml();
 
         /// <summary>
         /// Title used for Swagger.  This will default to the AssemblyProductAttribute name of Assembly
@@ -59,7 +59,7 @@ namespace OLT.Core
             "Api Methods";
 
 
-     
+
     }
 
 
