@@ -1,18 +1,26 @@
-﻿namespace OLT.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace OLT.Core
 {
-    public interface IOltAdapterResolver : IOltInjectableScoped
+    public interface IOltAdapterResolver : IOltInjectableSingleton
     {
-        IOltDataAdapter<TSource, TModel> GetAdapter<TSource, TModel>()
-            where TSource : class
-            where TModel : class, new();
+        bool CanProjectTo<TEntity, TDestination>();
 
+        IQueryable<TSource> Include<TSource, TDestination>(IQueryable<TSource> queryable) where TSource : class, IOltEntity;
 
-        IOltAdapterQueryable<TSource, TModel> GetQueryableAdapter<TSource, TModel>()
-            where TSource : class, IOltEntity
-            where TModel : class, new();
+        IQueryable<TDestination> ProjectTo<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter);
+        IQueryable<TDestination> ProjectTo<TSource, TDestination>(IQueryable<TSource> source);
 
-        IOltAdapterPaged<TSource, TModel> GetPagedAdapter<TSource, TModel>()
-            where TSource : class, IOltEntity
-            where TModel : class, new();
+        IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams) where TSource : class, IOltEntity;
+        IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams, Func<IQueryable<TSource>, IQueryable<TSource>> orderBy) where TSource : class, IOltEntity;
+
+        IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter);
+        IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source);
+        IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source);
+
+        TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
+
     }
 }

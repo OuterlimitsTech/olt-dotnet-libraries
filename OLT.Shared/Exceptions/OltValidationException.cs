@@ -1,23 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace OLT.Core
 {
-    public class OltValidationException : OltCustomException
-    {
-        public readonly IEnumerable<IOltValidationResult> Results;
 
-        public OltValidationException(IEnumerable<IOltValidationResult> results, string errorMessage = "Please correct the validation errors")
-            : base(OltExceptionTypes.ExpectationsFailed, errorMessage)
+    [Serializable]
+    public class OltValidationException : OltException
+    {
+        public readonly IEnumerable<IOltValidationError> Results;
+
+        public OltValidationException(IEnumerable<IOltValidationError> results, string errorMessage = "Please correct the validation errors") : base(errorMessage)
         {
             this.Results = results;
         }
 
-        public OltValidationException(string errorMessage) : base(OltExceptionTypes.ExpectationsFailed, errorMessage)
+        #region [ Serializable Methods ]
+
+        protected OltValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            //Results = new List<IOltValidationResult>
-            //{
-            //    new OltValidationResult(errorMessage)
-            //};
+
         }
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+
+        #endregion
     }
 }

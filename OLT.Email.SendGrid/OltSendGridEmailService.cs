@@ -73,7 +73,7 @@ namespace OLT.Email.SendGrid
         {
             var result = CreateResult(request, from);
 
-            if (SendEmail(result) == false)
+            if (!SendEmail(result))
             {
                 return result;
             }
@@ -100,11 +100,6 @@ namespace OLT.Email.SendGrid
                 msg.SetClickTracking(true, true);
             }
 
-            //var tags = request.Tags?.ToList();
-            //if (tags != null && tags.Any())
-            //{
-            //    msg.SetTemplateData(ToDictionary(tags));
-            //}
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (request is IOltEmailAttachmentRequest attachmentRequest)
@@ -125,16 +120,20 @@ namespace OLT.Email.SendGrid
         {
             var result = CreateResult(request, from);
 
-            if (SendEmail(result) == false)
+            if (!SendEmail(result))
             {
                 return result;
             }
 
 
-            using (var smtp = new System.Net.Mail.SmtpClient(smtpConfiguration.SmtpServer, smtpConfiguration.SmtpPort))
+            using (var smtp = new System.Net.Mail.SmtpClient(smtpConfiguration.Server, smtpConfiguration.Port))
             {
+                if (!smtpConfiguration.DisableSsl)
+                {
+                    smtp.EnableSsl = true;
+                }
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new System.Net.NetworkCredential(smtpConfiguration.SmtpUsername, smtpConfiguration.SmtpPassword);
+                smtp.Credentials = new System.Net.NetworkCredential(smtpConfiguration.Username, smtpConfiguration.Password);
 
                 var msg = new System.Net.Mail.MailMessage
                 {

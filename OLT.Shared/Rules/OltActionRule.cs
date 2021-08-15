@@ -1,27 +1,28 @@
 ﻿namespace OLT.Core
 {
-    public abstract class OltActionRule : OltDisposable, IOltActionRule
+    public abstract class OltRuleAction : OltRuleValidation, IOltRuleAction
     {
-        public abstract IOltRuleResult CanExecute(IOltRuleRequest request);
-        public abstract IOltRuleResult Execute(IOltRuleRequest request);
-        //public virtual string RuleName => BuildName<TObj1, TObj2>();
-        //public abstract string RuleName { get; }
-        public virtual string RuleName => this.GetType().FullName;
-
-        protected virtual IOltRuleResult Success() => new OltRuleResult();
-        protected virtual IOltRuleResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
+        public abstract IOltResult Execute(IOltRequest request);
     }
 
-
-    public abstract class OltActionRule<TRequest> : OltDisposable, IOltActionRule<TRequest>
-        where TRequest : class, IOltRuleRequest
+    public abstract class OltRuleAction<TRequest> : OltRuleValidation<TRequest>, IOltRuleAction<TRequest>
+        where TRequest : class, IOltRequest
     {
-        public abstract IOltRuleResult CanExecute(TRequest request);
-        public abstract IOltRuleResult Execute(TRequest request);
-        //public abstract string RuleName { get; }
-        public virtual string RuleName => this.GetType().FullName;
-        protected virtual IOltRuleResult Success() => new OltRuleResult();
-        protected virtual IOltRuleResult BadRequest(OltValidationSeverityTypes severity, string message) => new OltRuleResult(severity, message);
+        public abstract IOltResult Execute(TRequest request);
+    }
 
+    public abstract class OltRuleAction<TRequest, TResult> : OltRuleValidation<TRequest>, IOltRuleAction<TRequest, TResult>
+        where TRequest : IOltRequest
+        where TResult : IOltResult
+    {
+        public abstract TResult Execute(TRequest request);
+    }
+
+    public abstract class OltRuleAction<TRequest, TResult, TValidationResult> : OltRuleValidation<TRequest, TValidationResult>, IOltRuleAction<TRequest, TResult, TValidationResult>
+        where TRequest : IOltRequest
+        where TResult : IOltResult
+        where TValidationResult: IOltResultValidation
+    {
+        public abstract TResult Execute(TRequest request);
     }
 }

@@ -42,11 +42,6 @@
         /// <value>ClaimTypes.Email</value>
         string Email { get; }
 
-        ///// <summary>
-        ///// Home Phone of User
-        ///// </summary>
-        ///// <value>ClaimTypes.HomePhone</value>
-        //string Phone { get; }
 
         /// <summary>
         /// Full Name of User

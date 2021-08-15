@@ -13,35 +13,14 @@ namespace OLT.Core
         /// <typeparam name="TContext"></typeparam>
         /// <param name="services"></param>
         /// <param name="connectionString"></param>
-        /// <param name="createContext">Return a new instance of Context</param>
+        /// <param name="createContext">WARNING!  This method is no longer called</param>
         /// <returns></returns>
+        [Obsolete("This extension is being removed in a future release.  USe services.AddDbContextPool<TContext>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString)); ")]
         public static IServiceCollection AddOltSqlServer<TContext>(this IServiceCollection services, string connectionString, Func<DbContextOptions<TContext>, IOltLogService, IOltDbAuditUser, TContext> createContext) where TContext : OltDbContext<TContext>, IOltDbContext
         {
-
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
-            if (connectionString == null)
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
-
-
-            services.AddDbContextPool<TContext>(optionsBuilder => { optionsBuilder.UseSqlServer("Injected by DI"); });
-
-            services.AddScoped(ctx =>
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<TContext>();
-                optionsBuilder.UseSqlServer(connectionString);
-                var context = createContext(optionsBuilder.Options, ctx.GetService<IOltLogService>(), ctx.GetService<IOltDbAuditUser>());
-                return context;
-            });
-
-            return services;
+            return services.AddDbContext<TContext>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString));
         }
 
-      
+
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace OLT.Core
 {
@@ -36,6 +37,29 @@ namespace OLT.Core
             return attribute;
         }
 
+        /// <summary>
+        /// Returns first instance of <typeparamref name="T"/> attribute on a class property
+        /// </summary>
+        /// <typeparam name="T">Type of <see cref="Attribute"/> to search for</typeparam>
+        /// <param name="property"><see cref="PropertyInfo"/></param>
+        /// <param name="inherit">include inherited attributes</param>
+        /// <returns>First instance of <see cref="Attribute"/> to search for or Null</returns>
+        public static T GetAttributeInstance<T>(this PropertyInfo property, bool inherit = false) where T : Attribute
+        {
+            return property.GetAttributeInstances<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns all instances of <typeparamref name="T"/> attribute on a class property
+        /// </summary>
+        /// <typeparam name="T">Type of <see cref="Attribute"/> to search for</typeparam>
+        /// <param name="property"><see cref="PropertyInfo"/></param>
+        /// <param name="inherit">include inherited attributes</param>
+        /// <returns>Returns all instances of <see cref="Attribute"/> to search for or Null</returns>
+        public static List<T> GetAttributeInstances<T>(this PropertyInfo property, bool inherit = false) where T : Attribute
+        {
+            return property.GetCustomAttributes(typeof(T), inherit).Cast<T>().ToList();
+        }
 
         public static string GetDescription(this Enum value)
         {

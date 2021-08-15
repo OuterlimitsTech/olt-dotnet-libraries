@@ -115,16 +115,16 @@ namespace System.Linq
 
 
 
-            protected override Expression VisitParameter(ParameterExpression p)
+            protected override Expression VisitParameter(ParameterExpression node)
             {
-                if (map.TryGetValue(p, out var replacement))
+                if (map.TryGetValue(node, out var replacement))
                 {
 
-                    p = replacement;
+                    node = replacement;
 
                 }
 
-                return base.VisitParameter(p);
+                return base.VisitParameter(node);
 
             }
         }

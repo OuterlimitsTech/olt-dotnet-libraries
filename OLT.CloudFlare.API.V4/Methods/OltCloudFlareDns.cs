@@ -11,8 +11,6 @@ namespace OLT.CloudFlare
         /// <summary>
         /// The request
         /// </summary>
-        //private static readonly RestRequest request = new RestRequest(Method.POST);
-
         public OltCloudFlareDns(OltCloudFlareOptions options) : base(options)
         {
         }
@@ -30,12 +28,9 @@ namespace OLT.CloudFlare
 
                 request.AddParameter(OltCloudFlareParameters.Page, page);
                 request.AddParameter(OltCloudFlareParameters.PageSize, pageSize);
-                ////if (string.IsNullOrEmpty(name))
-                ////    name = this.record;
 
                 if (!string.IsNullOrEmpty(name))
                     request.AddParameter(OltCloudFlareParameters.Name, $"{name.ToLower()}.{zoneName}");
-                //request.Method = Method.GET;
 
                 var response = Execute<OltCloudFlareSimpleResponse>(request, method);
                 return OltCloudFlareDnsResult.FromJson(response.Result.ToString());
@@ -132,7 +127,6 @@ namespace OLT.CloudFlare
 
         private string GetZoneId(string zoneName)
         {
-            //var cfOptions = new OltCloudFlareOptions(this._apiKey, this._email, this.BaseUrl, this.zoneName, this.record);
             OltCloudFlareZones zonesProxy = new OltCloudFlareZones(Options);
             var zone = zonesProxy.GetZone(zoneName);
             return (zone != null) ? zone.Id : string.Empty;

@@ -13,7 +13,7 @@ namespace System
     /// <summary>
     /// Extends <see cref="string"/>.
     /// </summary>
-    public static class StringExtensions
+    public static partial class OltStringExtensions
     {
 
 
@@ -29,19 +29,25 @@ namespace System
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
+        public static string RemoveSpecialCharacters(this string input)
+        {
+            Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            return r.Replace(input, string.Empty);
+        }
 
         public static string CleanForSearch(this string param)
         {
-            var result = param.Trim()
-                .Replace("\"", string.Empty)
-                .Replace("*", string.Empty)
-                .Replace(")", string.Empty)
-                .Replace("&", string.Empty)
-                .Replace("$", string.Empty)
-                .Replace("(", string.Empty)
-                .Replace("#", string.Empty)
-                .Replace(".", string.Empty)
-                .Replace(",", " ");
+            var result = param.RemoveSpecialCharacters().Trim();
+                //.Replace("\"", string.Empty)
+                //.Replace("*", string.Empty)
+                //.Replace(")", string.Empty)
+                //.Replace("&", string.Empty)
+                //.Replace("$", string.Empty)
+                //.Replace("(", string.Empty)
+                //.Replace("?", string.Empty)
+                //.Replace("#", string.Empty)
+                //.Replace(".", string.Empty)
+                //.Replace(",", " ");
 
             return Regex.Replace(result, @"\s+", " ");  //Remove double spaces
         }
@@ -52,27 +58,6 @@ namespace System
         }
 
         #region [ Left, Right, Mid ]
-
-        public static string Mid(this string param, int startIndex, int length)
-        {
-            //start at the specified index in the string ang get N number of
-            //characters depending on the lenght and assign it to a variable
-            string result = param.Substring(startIndex, length);
-            //return the result of the operation
-            return result;
-        }
-
-        public static string Mid(this string value, int startIndex)
-        {
-            if (value.IsEmpty()) return value;
-
-            //start at the specified index and return all characters after it
-            //and assign it to a variable
-            string result = value.Substring(startIndex);
-            //return the result of the operation
-            return result;
-        }
-
 
         /// <summary>
         /// Get substring of specified number of characters on the right.
@@ -124,11 +109,14 @@ namespace System
 
         public static bool IsNumeric(this string value)
         {
-            long temp;
-            return long.TryParse(value, out temp);
+            long longVal;
+            double doubleVal;
+            return long.TryParse(value, out longVal) || double.TryParse(value, out doubleVal);
         }
 
-        private static readonly Regex digitsOnly = new Regex(@"[^\d]");
+        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
+        private static readonly Regex DecimalDigitsOnly = new Regex(@"[^\d\.]");
+
         public static string StripNonNumeric(this string root)
         {
             if (string.IsNullOrEmpty(root))
@@ -136,10 +124,9 @@ namespace System
                 return root;
             }
 
-            return digitsOnly.Replace(root, "");
+            return DigitsOnly.Replace(root, "");
         }
 
-        private static readonly Regex decimalDigitsOnly = new Regex(@"[^\d\.]");
         public static string StripNonNumeric(this string root, bool allowDecimal)
         {
             if (string.IsNullOrEmpty(root))
@@ -149,7 +136,7 @@ namespace System
 
             if (allowDecimal)
             {
-                return decimalDigitsOnly.Replace(root, "");    
+                return DecimalDigitsOnly.Replace(root, "");    
             }
 
             return root.StripNonNumeric();
@@ -178,11 +165,10 @@ namespace System
  
 
 
-        //private static Functions util = new Functions();
         public static DateTime? ToDate(this string self)
         {
             DateTime value;
-            if (String.IsNullOrWhiteSpace(self) || !DateTime.TryParse(self, out value))
+            if (string.IsNullOrWhiteSpace(self) || !DateTime.TryParse(self, out value))
                 return null;
             return value;
         }
@@ -194,11 +180,10 @@ namespace System
         /// </summary>
         /// <param name="self">Extends <see cref="string"/>.</param>
         /// <returns>Returns converted value to <see cref="System.Guid"/>, if cast fails, Empty Guid </returns>
-        public static Guid ToGuid(this string self)
+        public static Guid? ToGuid(this string self)
         {
-            Guid value;
-            if (String.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out value))
-                return Guid.Empty;
+            if (string.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out var value))
+                return null;
             return value;
         }
 
@@ -210,8 +195,7 @@ namespace System
         /// <returns>Returns converted value to <see cref="System.Guid"/>. If cast fails, default value</returns>
         public static Guid ToGuid(this string self, Guid defaultValue)
         {
-            Guid value;
-            if (String.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out value))
+            if (string.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out var value))
                 return defaultValue;
             return value;
         }
@@ -358,47 +342,88 @@ namespace System
 
         #region [ Boolean ]
 
-        public static bool IsBool(this string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
+        public static readonly string[] BoolTrueStrings = { "1", "yes", "y" };
+        public static readonly string[] BoolFalseStrings = { "0", "no", "n" };
 
-            bool temp;
-            return bool.TryParse(value, out temp);
+        public static bool IsBool(this string self)
+        {
+            return ToBoolInternal(self, out var value); 
         }
 
         public static bool? ToBool(this string self)
         {
-            bool value;
-            if (String.IsNullOrWhiteSpace(self) || !Boolean.TryParse(self, out value))
-                return null;
+            ToBoolInternal(self, out var value);
             return value;
         }
         
         public static bool ToBool(this string self, bool defaultValue)
         {
-            bool value;
-            if (String.IsNullOrWhiteSpace(self) || !Boolean.TryParse(self, out value))
-                return defaultValue;
-            return value;
+            ToBoolInternal(self, out var value);
+            return value.GetValueOrDefault(defaultValue);
         }
 
+        private static bool ToBoolInternal(string self, out bool? value)
+        {
+            if (string.IsNullOrWhiteSpace(self))
+            {
+                value = null;
+                return false;
+            }
+
+            var eval = self.ToLower();
+            if (BoolTrueStrings.Any(compareTo => string.Equals(eval, compareTo, StringComparison.OrdinalIgnoreCase)))
+            {
+                value = true;
+                return true;
+            }
+
+            if (BoolFalseStrings.Any(compareTo => string.Equals(eval, compareTo, StringComparison.OrdinalIgnoreCase)))
+            {
+                value = false;
+                return true;
+            }
+
+            if (bool.TryParse(eval, out var val))
+            {
+                value = val;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+
         #endregion
+
 
         /// <summary>
         /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
         /// </summary>
         /// <param name="hexString"></param>
         /// <returns></returns>
-        /// <remarks></remarks>
+        public static bool IsHex(this string value)
+        {
+            // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
+            return System.Text.RegularExpressions.Regex.IsMatch(value, @"\A\b[0-9a-fA-F]+\b\Z");
+        }
+
+        /// <summary>
+        /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns>byte array or empty if invalid</returns>
         public static byte[] FromHexToByte(this string hexString)
         {
-            var returnBytes = new byte[hexString.Length / 2];
-            for (int i = 0; i < returnBytes.Length; i++)
-                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
-            return returnBytes;
+            if (IsHex(hexString))
+            {
+                var returnBytes = new byte[hexString.Length / 2];
+                for (int i = 0; i < returnBytes.Length; i++)
+                    returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                return returnBytes;
+            }
+
+            return Array.Empty<byte>();
         }
 
         public static string Reverse(this string value)
@@ -411,9 +436,9 @@ namespace System
 
         }
 
-        public static bool StartsWithAny(this string self, string[] Comparisons)
+        public static bool StartsWithAny(this string self, params string[] comparisons)
         {
-            foreach (string x in Comparisons)
+            foreach (string x in comparisons)
             {
                 if (self.StartsWith(x))
                     return true;
@@ -422,9 +447,9 @@ namespace System
             return false;
         }
 
-        public static bool EqualsAny(this string self, string[] Comparisons)
+        public static bool EqualsAny(this string self, params string[] comparisons)
         {
-            foreach (string x in Comparisons)
+            foreach (string x in comparisons)
             {
                 if (self.Equals(x))
                     return true;
@@ -435,23 +460,23 @@ namespace System
 
         public static object DBNullIfEmpty(this string self)
         {
-            if (String.IsNullOrEmpty(self))
+            if (string.IsNullOrEmpty(self))
                 return DBNull.Value;
 
             return self;
         }
 
-        public static object DBNullIfEmpty(this string self, Func<string, string> Process)
+        public static object DBNullIfEmpty(this string self, Func<string, string> process)
         {
-            if (String.IsNullOrEmpty(self))
+            if (string.IsNullOrEmpty(self))
                 return DBNull.Value;
 
-            return Process(self);
+            return process(self);
         }
 
-        public static object DBNullOnCriteria(this string self, Func<string, bool> Compare)
+        public static object DBNullOnCriteria(this string self, Func<string, bool> compare)
         {
-            if (Compare(self))
+            if (compare(self))
                 return DBNull.Value;
 
             return self;
@@ -607,26 +632,6 @@ namespace System
             return sr;
         }
 
-        //public static int TextWidth(this string text, string fontName, int fontSize)
-        //{
-        //    Font drawFont = null;
-        //    Graphics drawGraphics = null;
-        //    Bitmap txtBmp = null;
-        //    try
-        //    {
-        //        txtBmp = new Bitmap(1, 1);
-        //        drawGraphics = Graphics.FromImage(txtBmp);
-        //        drawFont = new Font(fontName, fontSize);
-        //        return (int)drawGraphics.MeasureString(text, drawFont).Width;
-        //    }
-        //    finally
-        //    {
-        //        txtBmp?.Dispose();
-        //        drawGraphics?.Dispose();
-        //        drawFont?.Dispose();
-        //    }
-        //}
-
         #region [ Memory Stream ]
 
         public static System.IO.MemoryStream ToMemoryStream(string fileName)
@@ -651,62 +656,56 @@ namespace System
 
         }
 
-        public static bool ToFile(this System.IO.MemoryStream stream, string SaveToFileName)
+        public static bool ToFile(this System.IO.MemoryStream stream, string saveToFileName)
         {
 
-            if (System.IO.File.Exists(SaveToFileName))
+            if (System.IO.File.Exists(saveToFileName))
             {
-                System.IO.File.Delete(SaveToFileName);
+                System.IO.File.Delete(saveToFileName);
             }
 
 
-            var FileOutput = System.IO.File.Create(SaveToFileName, (stream.Length - 1).ToInt(0));
-            stream.WriteTo(FileOutput);
-            //FileOutput.Write(stream, 0, ToInt(stream.Length - 1));
-            FileOutput.Close();
+            var fileOutput = System.IO.File.Create(saveToFileName, (stream.Length - 1).ToInt(0));
+            stream.WriteTo(fileOutput);
+            fileOutput.Close();
             return true;
         }
 
 
-        public static bool ToFile(this byte[] stream, string SaveToFileName)
+        public static bool ToFile(this byte[] stream, string saveToFileName)
         {
 
-           
-            if (System.IO.File.Exists(SaveToFileName))
+            if (System.IO.File.Exists(saveToFileName))
             {
-                System.IO.File.Delete(SaveToFileName);
+                System.IO.File.Delete(saveToFileName);
             }
 
-            var FileOutput = System.IO.File.Create(SaveToFileName, stream.Length - 1);
-            FileOutput.Write(stream, 0, stream.Length - 1);
-            FileOutput.Close();
+            var fileOutput = System.IO.File.Create(saveToFileName, stream.Length - 1);
+            fileOutput.Write(stream, 0, stream.Length - 1);
+            fileOutput.Close();
             return true;
             
 
         }
 
 
-        public static Byte[] FileToBytes(string FileName)
+        public static Byte[] FileToBytes(string fileName)
         {
-  
 
-      
-            if (!System.IO.File.Exists(FileName))
+            if (!System.IO.File.Exists(fileName))
             {
-                return null;
+                return Array.Empty<Byte>();
             }
 
-            var Info = new System.IO.FileInfo(FileName);
-            var FStream = Info.OpenRead();
+            var info = new System.IO.FileInfo(fileName);
+            var fStream = info.OpenRead();
 
-            var fileData = new byte[FStream.Length];
+            var fileData = new byte[fStream.Length];
 
-            FStream.Read(fileData, 0, (FStream.Length).ToInt(0));
-            FStream.Close();
+            fStream.Read(fileData, 0, (fStream.Length).ToInt(0));
+            fStream.Close();
 
             return fileData;
-  
-
         }
 
 
@@ -719,34 +718,7 @@ namespace System
             return val;
         }
 
-        //public System.IO.MemoryStream ToMemoryStream(string FileName)
-        //{
-        //    System.IO.FileStream FStream;
-        //    System.IO.FileInfo Info;
-        //    System.IO.MemoryStream stream;
-        //    try
-        //    {
-        //        if (!System.IO.File.Exists(FileName))
-        //        {
-        //            return null;
-        //        }
-
-        //        Info = new System.IO.FileInfo(FileName);
-        //        FStream = Info.OpenRead();
-
-        //        FStream.Read(fileData, 0, ToInt(FStream.Length));
-        //        stream = FStream;
-        //        FStream.Close();
-
-        //        return stream;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        SetError(ex);
-        //        return null;
-        //    }
-
-        //}
+     
 
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -17,8 +18,7 @@ namespace OLT.Core
 
         protected TContext Context { get; private set; }
         protected int SaveChanges() => Context.SaveChanges();
-        //protected Task<int> SaveChangesAsync() => Context.SaveChangesAsync();
-
+        
         protected IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
             var queryable = InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
@@ -34,29 +34,39 @@ namespace OLT.Core
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
 
-        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, IOltDataAdapter<TEntity, TModel> adapter)
+        protected virtual IQueryable<T> GetQueryable<T>(IOltSearcher<T> queryBuilder)
+            where T : class, IOltEntity
+        {
+            return Context.GetQueryable(queryBuilder);
+        }
+
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher)
             where TEntity : class, IOltEntity
             where TModel : class, new()
         {
             var queryable = this.GetQueryable(searcher);
-            return this.GetAll<TEntity, TModel>(queryable, adapter);
+            return this.GetAll<TEntity, TModel>(queryable);
         }
 
-        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter)
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
             where TModel : class, new()
         {
-            if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
             {
-                return queryableAdapter.Map(queryable).ToList();
+                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
             }
-            return adapter.Map(Include(queryable, adapter).ToList());
+
+            var model = new List<TModel>();
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
+            return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
+        [Obsolete]
         protected virtual IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> queryable, IOltAdapter adapter)
                 where TEntity : class, IOltEntity
         {
-            if (adapter is IOltDataAdapterQueryableInclude<TEntity> includeAdapter)
+            if (adapter is IOltAdapterQueryableInclude<TEntity> includeAdapter)
             {
                 return includeAdapter.Include(queryable);
             }
@@ -64,17 +74,19 @@ namespace OLT.Core
             return queryable;
         }
 
-        protected virtual TModel Get<TModel, TEntity>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter)
+        protected virtual TModel Get<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
         {
-            if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
+
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
             {
-                return queryableAdapter.Map(queryable).FirstOrDefault();
+                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefault();
             }
+
             var model = new TModel();
-            adapter.Map(Include(queryable, adapter).FirstOrDefault(), model);
-            return model;
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefault();
+            return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
         protected virtual IQueryable<T> Get<T>(IOltSearcher<T> searcher)
@@ -108,12 +120,6 @@ namespace OLT.Core
             return Context.NonDeletedQueryable(queryable);
         }
 
-        protected virtual IQueryable<T> GetQueryable<T>(IOltSearcher<T> queryBuilder)
-            where T : class, IOltEntity
-        {
-            return Context.GetQueryable(queryBuilder);
-        }
-
         protected virtual bool MarkDeleted<T>(T entity)
             where T : class, IOltEntity
         {
@@ -125,7 +131,7 @@ namespace OLT.Core
                 return true;
             }
 
-            throw new Exception($"Unable to cast to {nameof(IOltEntityDeletable)}");
+            throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityDeletable)}");
 
         }
 

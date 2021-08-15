@@ -37,19 +37,12 @@ namespace OLT.Core
         }
 
         public static Microsoft.EntityFrameworkCore.Migrations.Operations.Builders.OperationBuilder<Microsoft.EntityFrameworkCore.Migrations.Operations.SqlOperation>
-            AddColumn2<T>(this MigrationBuilder migrationBuilder,
+            AddColumn<T>(this MigrationBuilder migrationBuilder,
                 string name,
                 string table,
                 string type = null,
-                bool? unicode = null,
-                int? maxLength = null,
-                bool rowVersion = false,
                 string schema = null,
-                bool nullable = false,
-                object defaultValue = null,
-                string defaultValueSql = null,
-                string computedColumnSql = null,
-                bool? fixedLength = null)
+                bool nullable = false)
         {
 
             if (typeof(T) == typeof(string))  // Add more for other native types
@@ -59,7 +52,7 @@ namespace OLT.Core
 
             string nullString = "NULL";  // Check for other properties.
 
-            if (nullable == false)
+            if (!nullable)
                 nullString = "NOT NULL";
 
             string schemaString = "";

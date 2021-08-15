@@ -5,12 +5,6 @@ namespace OLT.Core
 {
     public abstract class OltMemoryCacheBase : OltDisposable, IOltMemoryCache
     {
-        //private readonly IMemoryCache _memoryCache;
-
-        //public OltMemoryCache(IMemoryCache memoryCache)
-        //{
-        //    _memoryCache = memoryCache;
-        //}
 
         public virtual int DefaultExpirationInMinutes { get; set; } = 30;
 
@@ -54,15 +48,6 @@ namespace OLT.Core
 
         public abstract void Remove(string key);
 
-        //public virtual TEntry Get<TEntry>(string key, DateTimeOffset absoluteExpiration, Func<TEntry> factory)
-        //{
-        //    return _memoryCache.GetOrCreate(key, entry => factory.Invoke());
-        //}
-
-        //public virtual void Remove(string key)
-        //{
-        //    _memoryCache.Remove(key);
-        //}
     }
 
 }

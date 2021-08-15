@@ -2,11 +2,14 @@
 
 namespace OLT.Core
 {
-    public interface IOltPaged<TModel> where TModel : class
+    public interface IOltPaged
     {
-        int PageSize { get; set; }
-        int PageNumber { get; set; }
-        //int PageIndex { get; }
+        int Page { get; set; }
+        int Size { get; set; }
+    }
+
+    public interface IOltPaged<TModel> : IOltPaged
+    {
         int Count { get; set; }
         IEnumerable<TModel> Data { get; set; }
     }

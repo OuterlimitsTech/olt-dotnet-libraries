@@ -14,5 +14,10 @@ namespace OLT.Core
     public abstract class OltApiControllerBase : ControllerBase
     {
 
+        [NonAction]
+        public virtual BadRequestObjectResult BadRequest(string error)
+        {
+            return BadRequest(new { message = error });
+        }
     }
 }

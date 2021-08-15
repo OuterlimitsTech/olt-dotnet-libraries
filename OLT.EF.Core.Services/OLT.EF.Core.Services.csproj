@@ -2,15 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Company>OuterLimits Technologies, Inc.</Company>
-    <Product>.Net Standard EF Core Library</Product>
-    <Authors>Chris Straw</Authors>
-    <Version>2.1.0</Version>
     <Description>Service Manager, Context/Entity Services, Queryable Extensions, Searchers, Expressions</Description>
-    <RepositoryUrl>https://dev.azure.com/outerlimitstech/OLT/_git/olt-common</RepositoryUrl>
     <AssemblyName>OLT.EF.Core.Services</AssemblyName>
     <RootNamespace>OLT.Core</RootNamespace>
+    <ProjectGuid>43a16ce6-abae-4d8c-9682-0339703c9590</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,5 +16,6 @@
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
     <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
   </ItemGroup>
+
 
 </Project>

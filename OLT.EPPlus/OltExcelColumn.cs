@@ -15,14 +15,14 @@ namespace OLT.EPPlus
 
         public IOltExcelCellStyle Style { get; set; } = new OltExcelCellStyle();
 
-        public int Write(ExcelWorksheet worksheet, int col, int row)
+        public virtual int Write(ExcelWorksheet worksheet, int col, int row)
         {
             return Write(worksheet, col, row, null);
         }
 
-        public int Write(ExcelWorksheet worksheet, int col, int row, Action<ExcelRange> rangeAction)
+        public virtual int Write(ExcelWorksheet worksheet, int col, int row, Action<ExcelRange> rangeAction)
         {
-            if (Format.IsNotEmpty())
+            if (!string.IsNullOrWhiteSpace(Format))
             {
                 worksheet.Column(col).Style.Numberformat.Format = Format;
             }

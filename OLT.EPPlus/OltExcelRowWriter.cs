@@ -22,7 +22,7 @@ namespace OLT.EPPlus
         /// <param name="worksheet"></param>
         /// <param name="row"></param>
         /// <returns><paramref name="row"/> + 1</returns>
-        public int Write(ExcelWorksheet worksheet, int row)
+        public virtual int Write(ExcelWorksheet worksheet, int row)
         {
             return Write(worksheet, row, 1);
         }
@@ -34,7 +34,7 @@ namespace OLT.EPPlus
         /// <param name="row"></param>
         /// <param name="col">column to start at</param>
         /// <returns><paramref name="row"/> + 1</returns>
-        public int Write(ExcelWorksheet worksheet, int row, int col)
+        public virtual int Write(ExcelWorksheet worksheet, int row, int col)
         {
             Cells.ForEach(cell =>
             {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace OLT.Core
@@ -10,21 +11,13 @@ namespace OLT.Core
     public abstract class OltDbContext<TContext> : DbContext, IOltDbContext
         where TContext: DbContext, IOltDbContext
     {
-        protected OltDbContext() : base()
-        {
-
-        }
+        private IOltDbAuditUser _dbAuditUser;
 
         protected OltDbContext(DbContextOptions<TContext> options) : base(options)
         {
 
         }
 
-        protected OltDbContext(DbContextOptions<TContext> options, IOltLogService logService, IOltDbAuditUser dbAuditUser) : base(options)
-        {
-            this.LogService = logService;
-            this.DbAuditUser = dbAuditUser;
-        }
 
         public enum DefaultStringTypes
         {
@@ -32,14 +25,15 @@ namespace OLT.Core
             Varchar
         }
 
-
-        public virtual IOltLogService LogService { get; set; }
-        public virtual IOltDbAuditUser DbAuditUser { get; set; }
+        protected virtual IOltDbAuditUser DbAuditUser
+        {
+            get => _dbAuditUser ??= this.GetService<IOltDbAuditUser>();
+            set => _dbAuditUser = value;
+        }
 
 
         public abstract string DefaultSchema { get; }
         public abstract bool DisableCascadeDeleteConvention { get; }
-        //public abstract bool DisableOneToManyCascadeDeleteConvention { get; }
         public virtual string DefaultAnonymousUser => "GUEST USER";
         public abstract DefaultStringTypes DefaultStringType { get; }
 
@@ -79,7 +73,7 @@ namespace OLT.Core
                 {
                     if (entityEntry.State == EntityState.Added)
                     {
-                        createModel.CreateUser = createModel.CreateUser ?? AuditUser;
+                        createModel.CreateUser ??= AuditUser;
                         createModel.CreateDate = createModel.CreateDate == DateTimeOffset.MinValue ? DateTimeOffset.UtcNow : createModel.CreateDate;
 
                     }
@@ -93,7 +87,7 @@ namespace OLT.Core
                     uniqueModel.UniqueId = Guid.NewGuid();
                 }
 
-                if (entityEntry.Entity is IOltEntitySortable sortOrder && !(sortOrder.SortOrder > 0))
+                if (entityEntry.Entity is IOltEntitySortable sortOrder && sortOrder.SortOrder <= 0)
                 {
                     sortOrder.SortOrder = 9999;
                 }
@@ -113,7 +107,7 @@ namespace OLT.Core
                     (entityEntry.Entity as IOltDeletingRecord)?.DeletingRecord(this, entityEntry);
                 }
 
-                var str = typeof(string).Name;
+                var str = nameof(String);
                 var properties = from p in entityEntry.Entity.GetType().GetProperties()
                                  where p.PropertyType.Name == str
                                  select p;

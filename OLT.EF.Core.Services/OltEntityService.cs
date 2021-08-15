@@ -25,69 +25,41 @@ namespace OLT.Core
             return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
         }
 
-        protected virtual IQueryable<TEntity> Include(IQueryable<TEntity> queryable, IOltAdapter adapter)
-        {
-            if (adapter is IOltDataAdapterQueryableInclude<TEntity> includeAdapter)
-            {
-                return includeAdapter.Include(queryable);
-            }
 
-            return queryable;
-        }
+        //protected IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable, IOltAdapter<TEntity, TModel> adapter)
+        //    where TModel : class, new()
+        //{
+        //    if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
+        //    {
+        //        return queryableAdapter.Map(queryable).ToList();
+        //    }
+        //    return adapter.Map(Include(queryable, adapter).ToList());
+        //}
 
-        protected IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter)
-            where TModel : class, new()
-        {
-            if (adapter is IOltAdapterQueryable<TEntity, TModel> queryableAdapter)
-            {
-                return queryableAdapter.Map(queryable).ToList();
-            }
-            return adapter.Map(Include(queryable, adapter).ToList());
-        }
 
-        protected IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher, IOltDataAdapter<TEntity, TModel> adapter)
-            where TModel : class, new()
-        {
-            var queryable = this.GetQueryable(searcher);
-            return this.GetAll<TModel>(queryable, adapter);
-        }
 
         protected virtual IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            return this.GetAll<TModel>(queryable, adapter);
+            return base.GetAll<TEntity, TModel>(queryable);
         }
 
-
-        protected virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher, IOltDataAdapter<TEntity, TModel> adapter) where TModel : class, new()
-        {
-            return Get(GetQueryable(searcher), adapter);
-        }
-
-        protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable, IOltDataAdapter<TEntity, TModel> adapter) where TModel : class, new()
-        {
-            return base.Get(queryable, adapter);
-        }
 
         protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            return base.Get(queryable, ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>());
+            return base.Get<TEntity, TModel>(queryable);
         }
 
         public virtual TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = Include(GetQueryable(searcher), adapter).FirstOrDefault();
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefault();
 
             if (entity == null)
             {
-                //entity = Repository.Create();
-                //entity = Repository.CreateProxy();
                 entity = new TEntity();
                 Repository.Add(entity);
             }
 
-            adapter.Map(model, entity);
+            ServiceManager.AdapterResolver.Map(model, entity);
 
 
             SaveChanges();
@@ -109,15 +81,10 @@ namespace OLT.Core
             return this.GetPaged<TModel>(GetQueryable(queryBuilder), pagingParams);
         }
 
-        protected virtual IOltPaged<TModel> GetPaged<TModel>(
-           IQueryable<TEntity> queryable,
-           IOltPagingParams pagingParams)
+        protected virtual IOltPaged<TModel> GetPaged<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
            where TModel : class, new()
         {
-            IOltAdapterPaged<TEntity, TModel> pagedAdapter = ServiceManager.AdapterResolver.GetPagedAdapter<TEntity, TModel>();
-            if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
-                return pagedAdapter.Map(queryable, pagingParams, pagingWithSortParams);
-            return pagedAdapter.Map(queryable, pagingParams);
+            return ServiceManager.AdapterResolver.Paged<TEntity, TModel>(queryable, pagingParams);
         }
 
         public virtual IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> queryBuilder, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
@@ -129,21 +96,18 @@ namespace OLT.Core
         public virtual IOltPaged<TModel> GetPaged<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TModel : class, new()
         {
-            IOltAdapterPaged<TEntity, TModel> pagedAdapter = ServiceManager.AdapterResolver.GetPagedAdapter<TEntity, TModel>();
-            return pagedAdapter.Map(queryable, pagingParams, orderBy);
+            return ServiceManager.AdapterResolver.Paged<TEntity, TModel>(queryable, pagingParams, orderBy);
         }
 
         public virtual TModel Add<TModel>(TModel model)
                    where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            //var entity = Repository.CreateProxy();
             var entity = new TEntity();
-            adapter.Map(model, entity);
+            ServiceManager.AdapterResolver.Map(model, entity);
             Repository.Add(entity);
             SaveChanges();
             var response = new TModel();
-            adapter.Map(entity, response);
+            ServiceManager.AdapterResolver.Map(entity, response);
             return response;
         }
 
@@ -151,15 +115,12 @@ namespace OLT.Core
             where TSaveModel : class, new()
             where TResponseModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TSaveModel>();
             var entity = new TEntity();
-            //var entity = Repository.CreateProxy();
-            adapter.Map(model, entity);
+            ServiceManager.AdapterResolver.Map(model, entity);
             Repository.Add(entity);
             SaveChanges();
-            var adapterResponse = ServiceManager.AdapterResolver.GetAdapter<TEntity, TResponseModel>();
             var response = new TResponseModel();
-            adapterResponse.Map(entity, response);
+            ServiceManager.AdapterResolver.Map(entity, response);
             return response;
         }
 
@@ -167,24 +128,21 @@ namespace OLT.Core
             where TSaveModel : class, new()
             where TResponseModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TSaveModel>();
             var entities = new List<TEntity>();
             list.ToList().ForEach(model =>
             {
                 var entity = new TEntity();
-                //var entity = Repository.CreateProxy();
-                adapter.Map(model, entity);
+                ServiceManager.AdapterResolver.Map(model, entity);
                 Repository.Add(entity);
                 entities.Add(entity);
             });
 
             SaveChanges();
-            var adapterResponse = ServiceManager.AdapterResolver.GetAdapter<TEntity, TResponseModel>();
             var returnList = new List<TResponseModel>();
             entities.ForEach(entity =>
             {
                 var response = new TResponseModel();
-                adapterResponse.Map(entity, response);
+                ServiceManager.AdapterResolver.Map(entity, response);
                 returnList.Add(response);
             });
             return returnList;
@@ -192,12 +150,11 @@ namespace OLT.Core
 
         public TModel Update<TModel>(IOltSearcher<TEntity> queryBuilder, TModel model) where TModel : class, new()
         {
-            var adapter = ServiceManager.AdapterResolver.GetAdapter<TEntity, TModel>();
-            var entity = Include(GetQueryable(queryBuilder), adapter).FirstOrDefault();
-            adapter.Map(model, entity);
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(queryBuilder)).FirstOrDefault();
+            ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             var response = new TModel();
-            adapter.Map(entity, response);
+            ServiceManager.AdapterResolver.Map(entity, response);
             return response;
         }
 
@@ -219,9 +176,5 @@ namespace OLT.Core
             return entity != null && MarkDeleted(entity);
         }
 
-        //public IOltFileBase64 Export(IOltFileExportUtility exportUtility,  IOltSearcher<TEntity> queryBuilder, string exporterName)
-        //{
-                
-        //}
     }
 }

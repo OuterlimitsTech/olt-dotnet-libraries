@@ -2,11 +2,9 @@
 {
     public enum OltValidationSeverityTypes
     {
-        Pass,
+        Ok,
         Error,
         Warning,
-        Information,
-        Education,
-        DeveloperOnly
+        Information
     }
 }

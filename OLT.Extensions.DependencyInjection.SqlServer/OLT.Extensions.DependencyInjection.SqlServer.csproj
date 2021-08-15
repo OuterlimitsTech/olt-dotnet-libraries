@@ -1,14 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Add Exenestions to service collection for OLT Default injection for SQL Server</Description>
-    <Product>.Net Standard 2.1 Library to include default injection for SQL Server</Product>
-    <Company>OuterLimits Technologies, Inc</Company>
-    <Authors>Chris Straw</Authors>
-    <Version>5.0.0</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ProjectGuid>dd25ae05-be23-45e6-9003-b1708d414f18</ProjectGuid>
+    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>

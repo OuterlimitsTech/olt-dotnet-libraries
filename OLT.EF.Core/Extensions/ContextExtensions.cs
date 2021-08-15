@@ -1,18 +1,4 @@
-﻿////using System;
-////using System.Collections.Generic;
-////using System.Data;
-////using System.Data.Entity;
-////using System.Data.Entity.Core.Mapping;
-////using System.Data.Entity.Core.Metadata.Edm;
-////using System.Data.Entity.Core.Objects;
-////using System.Data.Entity.Infrastructure;
-////using System.Data.SqlClient;
-////using System.Diagnostics;
-////using System.Linq;
-////using System.Reflection;
-////using System.Text.RegularExpressions;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -22,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 
 // ReSharper disable once CheckNamespace
@@ -44,25 +31,25 @@ namespace OLT.Core
             return $"{schema}.{tableName}";
         }
 
-        public static IEnumerable<DbColumnInfo> GetColumns<T>(this DbContext dbContext)
+        public static IEnumerable<OltDbColumnInfo> GetColumns<T>(this DbContext dbContext)
             where T : class
         {
-            var cols = new List<DbColumnInfo>();
+            var cols = new List<OltDbColumnInfo>();
             var entityType = dbContext.Model.FindEntityType(typeof(T));
 
             // Table info 
-            //var tableName = entityType.GetTableName();
-            //var tableSchema = entityType.GetSchema();
+            var tableName = entityType.GetTableName();
+            var tableSchema = entityType.GetSchema();
 
             // Column info 
             foreach (var property in entityType.GetProperties())
             {
-                cols.Add(new DbColumnInfo
+                cols.Add(new OltDbColumnInfo
                 {
-                    Name = property.GetColumnName(),
+                    Name = property.GetColumnName(StoreObjectIdentifier.Table(tableName, tableSchema)),
                     Type = property.GetColumnType(),
                 });
-            };
+            }
 
             return cols;
         }
@@ -324,23 +311,57 @@ namespace OLT.Core
         /// <param name="ct"></param>
         /// <param name="manageConnection"></param>
         /// <returns></returns>
-        public static async Task ExecuteStoredProcAsync(this DbCommand command, Action<SprocResults> handleResults,
+        public static Task ExecuteStoredProcAsync(this DbCommand command, 
+            Action<SprocResults> handleResults,
             System.Data.CommandBehavior commandBehaviour = System.Data.CommandBehavior.Default,
-            CancellationToken ct = default, bool manageConnection = true)
+            CancellationToken ct = default, 
+            bool manageConnection = true)
         {
             if (handleResults == null)
             {
                 throw new ArgumentNullException(nameof(handleResults));
             }
 
+            return ExecuteStoredProcInternalAsync(command, handleResults, commandBehaviour, ct, manageConnection);
+        }
+
+
+        /// <summary>
+        /// Executes a DbDataReader asynchronously and passes the results thru all <paramref name="resultActions"/>
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="commandBehaviour"></param>
+        /// <param name="ct"></param>
+        /// <param name="manageConnection"></param>
+        /// <param name="resultActions"></param>
+        /// <returns></returns>
+        public static Task ExecuteStoredProcAsync(this DbCommand command,
+            CommandBehavior commandBehaviour = CommandBehavior.Default,
+            CancellationToken ct = default, bool manageConnection = true, params Action<SprocResults>[] resultActions)
+        {
+            if (resultActions == null)
+            {
+                throw new ArgumentNullException(nameof(resultActions));
+            }
+
+            return ExecuteStoredProcInternalAsync(command, commandBehaviour, ct, manageConnection, resultActions);
+        }
+
+
+        private static async Task ExecuteStoredProcInternalAsync(
+            DbCommand command,
+            Action<SprocResults> handleResults,
+            System.Data.CommandBehavior commandBehaviour,
+            CancellationToken ct,
+            bool manageConnection)
+        {
             using (command)
             {
                 if (manageConnection && command.Connection.State == System.Data.ConnectionState.Closed)
                     await command.Connection.OpenAsync(ct).ConfigureAwait(false);
                 try
                 {
-                    using (var reader = await command.ExecuteReaderAsync(commandBehaviour, ct)
-                        .ConfigureAwait(false))
+                    using (var reader = await command.ExecuteReaderAsync(commandBehaviour, ct).ConfigureAwait(false))
                     {
                         var sprocResults = new SprocResults(reader);
                         handleResults(sprocResults);
@@ -356,23 +377,11 @@ namespace OLT.Core
             }
         }
 
-        /// <summary>
-        /// Executes a DbDataReader asynchronously and passes the results thru all <paramref name="resultActions"/>
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="commandBehaviour"></param>
-        /// <param name="ct"></param>
-        /// <param name="manageConnection"></param>
-        /// <param name="resultActions"></param>
-        /// <returns></returns>
-        public static async Task ExecuteStoredProcAsync(this DbCommand command,
+        private static async Task ExecuteStoredProcInternalAsync(DbCommand command,
             CommandBehavior commandBehaviour = CommandBehavior.Default,
             CancellationToken ct = default, bool manageConnection = true, params Action<SprocResults>[] resultActions)
         {
-            if (resultActions == null)
-            {
-                throw new ArgumentNullException(nameof(resultActions));
-            }
+       
 
             using (command)
             {
@@ -497,7 +506,7 @@ namespace OLT.Core
         public static IQueryable<T> NonDeletedQueryable<T>(this IOltDbContext context, IQueryable<T> queryable)
             where T : class, IOltEntity
         {
-            if (typeof(IOltEntityDeletable).IsAssignableFrom(typeof(T)) == false) return queryable;
+            if (!typeof(IOltEntityDeletable).IsAssignableFrom(typeof(T))) return queryable;
             Expression<Func<T, bool>> getNonDeleted = deletableQuery => ((IOltEntityDeletable)deletableQuery).DeletedOn == null;
             getNonDeleted = (Expression<Func<T, bool>>)OltRemoveCastsVisitor.Visit(getNonDeleted);
             return queryable.Where(getNonDeleted);
@@ -534,41 +543,26 @@ namespace OLT.Core
         /// <typeparam name="TInterface"></typeparam>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
-        public static void ApplyGlobalFilters<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> expression)
+        public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, Expression<Func<T, bool>> expression)
         {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            modelBuilder.EntitiesOfType<T>(builder =>
             {
-                if (entityType.ClrType.GetInterface(typeof(TInterface).Name) != null)
+                var clrType = builder.Metadata.ClrType;
+                if (!builder.Metadata.GetDefaultTableName().Equals(builder.Metadata.GetTableName(), StringComparison.OrdinalIgnoreCase))  //TPH class
                 {
-                    var newParam = Expression.Parameter(entityType.ClrType);
-                    var newbody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
-                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(Expression.Lambda(newbody, newParam));
+#pragma warning disable S125
+                    //Console.WriteLine($"{builder.Metadata.GetTableName()} <> {builder.Metadata.GetDefaultTableName()} of type {builder.Metadata.ClrType.FullName}");
+#pragma warning restore S125
+                    clrType = clrType.BaseType;
                 }
-            }
+
+                var newParam = Expression.Parameter(clrType);
+                var newBody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
+                modelBuilder.Entity(clrType).HasQueryFilter(Expression.Lambda(newBody, newParam));
+
+            });
         }
 
 
-        
-        /// <summary>
-        /// modelBuilder.ApplyGlobalFilters<DateTimeOffset?>("DeletedOn", null)
-        /// https://davecallan.com/entity-framework-core-query-filters-multiple-entities/
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="modelBuilder"></param>
-        /// <param name="propertyName"></param>
-        /// <param name="value"></param>
-        public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, string propertyName, T value)
-        {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var foundProperty = entityType.FindProperty(propertyName);
-                if (foundProperty != null && foundProperty.ClrType == typeof(T))
-                {
-                    var newParam = Expression.Parameter(entityType.ClrType);
-                    var filter = Expression.Lambda(Expression.Equal(Expression.Property(newParam, propertyName), Expression.Constant(value)), newParam);
-                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
-                }
-            }
-        }
     }
 }
