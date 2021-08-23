@@ -1,13 +1,28 @@
-﻿namespace OLT.Core
-{
-    public static class OltDefaults
-    {
-        /// <summary>
-        /// Default value for AuthenticationScheme property in the JwtBearerAuthenticationOptions
-        /// </summary>
-        public const string JwtAuthenticationScheme = "Bearer";
+﻿// ReSharper disable InconsistentNaming
+using System;
 
-        public const string JwtIssuer = "http://jwt.outerlimitstech.com/local";
+namespace OLT.Core
+{
+    public static partial class OltDefaults
+    {
+
+        public static class Authentication
+        {
+            public static class Jwt
+            {
+                /// <summary>
+                /// Default value for AuthenticationScheme property in the JwtBearerAuthenticationOptions
+                /// </summary>
+                public const string AuthenticationScheme = "Bearer";
+
+                /// <summary>
+                /// Default issuer for AuthenticationScheme property in the JwtBearerAuthenticationOptions
+                /// </summary>
+                public const string Issuer = "http://jwt.outerlimitstech.com/local";
+            }
+        }
+
+
 
         public static class CalendarInvite
         {
@@ -33,6 +48,8 @@
         public static readonly char[] Symbols = { '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '{', '[', '}', ']', '-', '_', '=', '+', ':', ';', '|', '/', '?', ',', '<', '.', '>' };
         public static readonly char[] SpecialCharacters = { '!', '@', '#', '$', '%', '&', '*', '+' };
 
+
+     
     }
 
 
