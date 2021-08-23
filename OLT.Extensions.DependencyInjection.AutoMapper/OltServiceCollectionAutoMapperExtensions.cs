@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.Core
@@ -14,10 +16,16 @@ namespace OLT.Core
 
         public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services, Assembly includeAssemblyScan)
         {
-            return AddOltInjectionAutoMapper(services, new List<Assembly> { includeAssemblyScan });
+            return services.AddOltInjectionAutoMapper(new List<Assembly> { includeAssemblyScan });
         }
 
-        public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services, List<Assembly> includeAssembliesScan)
+        public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services,
+            List<Assembly> includeAssembliesScan)
+        {
+            return services.AddOltInjectionAutoMapper(includeAssembliesScan, null);
+        }
+
+        public static IServiceCollection AddOltInjectionAutoMapper(this IServiceCollection services, List<Assembly> includeAssembliesScan, Action<IMapperConfigurationExpression> configAction, ServiceLifetime serviceLifetime = ServiceLifetime.Transient)
         {
             var assembliesToScan = new List<Assembly>
             {
@@ -28,8 +36,14 @@ namespace OLT.Core
             assembliesToScan.AddRange(includeAssembliesScan);
 
             services.AddSingleton<IOltAdapterResolver, OltAdapterResolverAutoMapper>();
-            services.AddAutoMapper(assembliesToScan.GetAllReferencedAssemblies());
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddCollectionMappers();
+                configAction?.Invoke(cfg);
+            }, assembliesToScan.GetAllReferencedAssemblies(), serviceLifetime);
             return services;
         }
+
+        
     }
 }
