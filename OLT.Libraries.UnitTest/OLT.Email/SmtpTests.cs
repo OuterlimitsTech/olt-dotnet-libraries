@@ -40,7 +40,7 @@ namespace OLT.Libraries.UnitTest.OLT.Email
         {
             var buildVersion = _configuration.GetValue<string>("BUILD_VERSION") ??
                                Environment.GetEnvironmentVariable("BUILD_VERSION") ?? 
-                               $"[No Build Version]";
+                               "[No Build Version]";
 
             var now = DateTimeOffset.Now;
             var smtpEmail = new OltSmtpEmail
