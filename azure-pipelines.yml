@@ -122,7 +122,8 @@ jobs:
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
         inputs:
-          codeCoverageTool: 'Cobertura'
+          # codeCoverageTool: 'Cobertura'
+          codeCoverageTool: opencover
           summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
           reportDirectory: $(Agent.TempDirectory)/coverage
 
