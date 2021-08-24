@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,8 +34,7 @@ namespace OLT.Libraries.UnitTest
         public void ConfigureServices(IServiceCollection services)
         {
             var settings = _configuration.GetSection("AppSettings").Get<AppSettingsDto>();
-
-            //services.AddAuthentication(new OltAuthenticationJwtBearer(settings.JwtSecret), null);
+            var jwtSecret = "Lk4EtzXKDmX3bLDRsbWDTPmnPh7RXvTV";
 
             services
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)
@@ -43,8 +43,9 @@ namespace OLT.Libraries.UnitTest
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
-                    optionsBuilder.UseInMemoryDatabase(databaseName: $"{nameof(SerilogStartup)}_Test");
-                });
+                    optionsBuilder.UseInMemoryDatabase(databaseName: $"{nameof(SerilogStartup)}_{Guid.NewGuid()}");
+                })
+                .AddAuthentication(new OltAuthenticationJwtBearer(jwtSecret));
 
             // services.AddControllers().AddApplicationPart(Assembly.Load("RoundTheCode.CrudApi.Web")).AddControllersAsServices();
         }

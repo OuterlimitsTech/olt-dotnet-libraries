@@ -16,40 +16,28 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
     {
         private readonly IPersonService _personService;
         
-        public EntityIdServiceTest(SqlDatabaseContext context, IPersonService personService, ITestOutputHelper output) : base(output)
+        public EntityIdServiceTest(
+            IPersonService personService, 
+            ITestOutputHelper output) : base(output)
         {
             _personService = personService;
-        }
-
-
-        private PersonAutoMapperModel createTestAutoMapperModel()
-        {
-            return new PersonAutoMapperModel
-            {
-                Name = {
-                    First = Faker.Name.First(),
-                    Middle = Faker.Name.Middle(),
-                    Last = Faker.Name.Last()
-                }
-            };
         }
 
         [Fact]
         public void Add1()
         {
-            var model = createTestAutoMapperModel();
-            var dto = _personService.Add(model);
+            var model = UnitTestHelper.CreateTestAutoMapperModel();
+            var dto = UnitTestHelper.AddPerson(_personService, model);
             Assert.True(dto.Name.First.Equals(model.Name.First));
         }
 
         [Fact]
         public void Add2()
         {
-            var model = createTestAutoMapperModel();
+            var model = UnitTestHelper.CreateTestAutoMapperModel();
             var dto = _personService.Add<PersonDto, PersonAutoMapperModel>(model);
             Assert.True(dto.First.Equals(model.Name.First));
         }
-
 
 
         [Fact]
@@ -94,7 +82,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             for (var idx = 0; idx <= 5; idx++)
             {
-                _personService.Add(createTestAutoMapperModel());
+                _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
             }
             var records = _personService.GetAll<PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>()).ToList();
             Assert.True(records.Any());
@@ -105,7 +93,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             for (var idx = 0; idx <= 500; idx++)
             {
-                _personService.Add(createTestAutoMapperModel());
+                _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
             }
             var pagedParams = new OltPagingParams {Page = 2, Size = 25};
             var paged = _personService.GetPaged<PersonDto>(new OltSearcherGetAll<PersonEntity>(), pagedParams);
@@ -117,7 +105,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             for (var idx = 0; idx <= 500; idx++)
             {
-                _personService.Add(createTestAutoMapperModel());
+                _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
             }
             var pagedParams = new OltPagingParams { Page = 4, Size = 50 };
             var paged = _personService.GetPaged<PersonAutoMapperDto>(new OltSearcherGetAll<PersonEntity>(), pagedParams);

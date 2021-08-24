@@ -10,12 +10,12 @@
         public OltValidationError(string message)
         {
             this.Message = message;
-            this.Severity = string.IsNullOrEmpty(message) ? OltValidationSeverityTypes.Ok : OltValidationSeverityTypes.Error;
+            this.Severity = string.IsNullOrEmpty(message) ? OltSeverityTypes.Ok : OltSeverityTypes.Error;
         }
 
         public string Message { get; set; }
         public bool IsValid => string.IsNullOrEmpty(Message);
 
-        public OltValidationSeverityTypes Severity { get; set; }
+        public OltSeverityTypes Severity { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace OLT.Core
     {
         public OltResultValidation() { }
 
-        public OltResultValidation(OltValidationSeverityTypes severity, string errorMessage)
+        public OltResultValidation(OltSeverityTypes severity, string errorMessage)
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             Results.Add(new OltValidationError
@@ -17,6 +17,7 @@ namespace OLT.Core
             });
         }
 
+        public bool Invalid => Results.Any();
         public virtual List<IOltValidationError> Results { get; } = new List<IOltValidationError>();
         public virtual bool Success => !Results.Any();
     }

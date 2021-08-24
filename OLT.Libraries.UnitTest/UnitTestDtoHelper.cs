@@ -3,12 +3,31 @@ using System.Collections.Generic;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid.Json;
+using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 
 namespace OLT.Libraries.UnitTest
 {
     public static partial class UnitTestHelper
     {
+
+        public static PersonAutoMapperModel AddPerson(IPersonService personService, PersonAutoMapperModel dto)
+        {
+            return personService.Add(dto);
+        }
+
+        public static PersonAutoMapperModel CreateTestAutoMapperModel()
+        {
+            return new PersonAutoMapperModel
+            {
+                Name = {
+                    First = Faker.Name.First(),
+                    Middle = Faker.Name.Middle(),
+                    Last = Faker.Name.Last()
+                }
+            };
+        }
+
         public static PersonDto CreatePersonDto()
         {
             return new PersonDto

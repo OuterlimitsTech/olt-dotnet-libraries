@@ -3,29 +3,25 @@ using OLT.Core;
 
 namespace OLT.Libraries.UnitTest.Assets.Rules
 {
-    public interface IDoSomethingRuleDb : IOltRuleAction<DoSomethingRuleDbRequest>
+    public class DoSomethingRuleDb : OltRuleAction<DoSomethingRuleContextRequest>, IDoSomethingRule, IDoSomethingRuleDb
     {
-
-    }
-
-    public class DoSomethingRuleDb : OltRuleAction<DoSomethingRuleDbRequest>, IDoSomethingRule, IDoSomethingRuleDb
-    {
-        public override IOltResultValidation Validate(DoSomethingRuleDbRequest request)
+        public override IOltResultValidation Validate(DoSomethingRuleContextRequest request)
         {
-            if (request.Value.People.Any())
+            if (request.Context.People.Any())
             {
                 return Valid;
             }
-            return BadRequest(OltValidationSeverityTypes.Error, "No People");
+            return BadRequest(OltSeverityTypes.Error, "No People");
         }
 
-        public override IOltResult Execute(DoSomethingRuleDbRequest request)
+        public override IOltResult Execute(DoSomethingRuleContextRequest request)
         {
-            if (request.Value.People.Any())
+            if (request.Context.People.Any())
             {
                 return Success;
             }
-            return new OltResultFailure("Nothing to Process");
+
+            throw Failure("Nothing to Process");
         }
 
     }

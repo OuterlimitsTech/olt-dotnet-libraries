@@ -3,9 +3,9 @@ using OLT.Libraries.UnitTest.Assets.Entity;
 
 namespace OLT.Libraries.UnitTest.Assets.Rules
 {
-    public class DoSomethingRuleDbRequest : OltRequest<SqlDatabaseContext>
+    public class DoSomethingRuleContextRequest : OltRequestContext<SqlDatabaseContext>
     {
-        public DoSomethingRuleDbRequest(SqlDatabaseContext value) : base(value)
+        public DoSomethingRuleContextRequest(SqlDatabaseContext context) : base(context)
         {
         }
     }

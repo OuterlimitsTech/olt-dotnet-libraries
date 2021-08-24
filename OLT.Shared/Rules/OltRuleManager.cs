@@ -22,7 +22,7 @@ namespace OLT.Core
                        _rules.FirstOrDefault(p => p.GetType().Implements<TRule>());
             if (rule == null)
             {
-                throw new OltException($"Rule Not Found {typeof(TRule)}");
+                throw new OltRuleNotFoundException(typeof(TRule));
             }
             return rule as TRule;
         }
