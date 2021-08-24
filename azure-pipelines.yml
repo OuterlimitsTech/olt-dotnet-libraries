@@ -109,7 +109,8 @@ jobs:
           # projects: '$(solution)'
           projects: '**/*Test*.csproj'
           testRunTitle: 'OLT Library Nuget Unit Test - $(GitVersion.NuGetVersionV2)'
-          arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
+          arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=\"opencover,Cobertura\" /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
+          # arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
 
       - task: PublishTestResults@2
         inputs:
@@ -122,9 +123,8 @@ jobs:
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish Test Coverage Results [$(Agent.TempDirectory)]'
         inputs:
-          # codeCoverageTool: 'Cobertura'
-          codeCoverageTool: opencover
-          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
           reportDirectory: $(Agent.TempDirectory)/coverage
 
       - task: SonarCloudAnalyze@1
