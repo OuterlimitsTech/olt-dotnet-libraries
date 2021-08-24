@@ -106,7 +106,8 @@ jobs:
           BUILD_VERSION: $(GitVersion.NuGetVersionV2)
         inputs:
           command: test
-          projects: '$(solution)'
+          # projects: '$(solution)'
+          projects: 'OLT.Libraries.UnitTest.csproj'
           testRunTitle: 'OLT Library Nuget Unit Test - $(GitVersion.NuGetVersionV2)'
           arguments: '--configuration $(BuildConfiguration) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ /p:MergeWith=$(Agent.TempDirectory)/coverage/ --collect:"Code coverage"'
 
