@@ -28,8 +28,8 @@ jobs:
       buildConfiguration: Release
 
     pool:
-      # vmImage: 'windows-latest'
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
+      # vmImage: 'ubuntu-latest'
 
     steps:
       # https://medium.com/purplebricks-digital/getting-code-coverage-showing-in-sonar-cloud-99a2295407b3
@@ -123,6 +123,7 @@ jobs:
         inputs:
           codeCoverageTool: 'Cobertura'
           summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.opencover.xml'
+          reportDirectory: $(Agent.TempDirectory)/coverage
 
       - task: SonarCloudAnalyze@1
         displayName: 'Sonar Cloud Analyze'
@@ -149,3 +150,17 @@ jobs:
           packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
           nuGetFeedType: 'external'
           publishFeedCredentials: 'OLT Public Nuget'
+
+      - task: GitHubRelease@1
+        displayName: 'GitHub Release'
+        continueOnError: true
+        condition: eq( variables['Build.SourceBranchName'], 'master' )
+        inputs:
+          gitHubConnection: 'github.com_chrisstraw'
+          repositoryName: 'OuterlimitsTech/olt-dotnet-libraries'
+          action: 'create'
+          target: '$(GitVersion.NuGetVersionV2)'
+          tagSource: 'gitTag'
+          assets: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+          changeLogCompareToRelease: 'lastFullRelease'
+          changeLogType: 'commitBased'
