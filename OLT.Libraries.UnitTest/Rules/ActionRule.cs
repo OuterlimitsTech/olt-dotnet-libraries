@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
@@ -36,7 +37,7 @@ namespace OLT.Libraries.UnitTest.Rules
         public void GetRules()
         {
             var rules = _ruleManager.GetRules<IDoSomethingRule>();
-            Assert.True(rules.Count == 3);
+            Assert.True(rules.Count == 4);
         }
 
         [Fact]
@@ -47,33 +48,46 @@ namespace OLT.Libraries.UnitTest.Rules
         }
 
         [Fact]
-        public void Rule()
+        public void GetByInterface()
         {
             var rule = _ruleManager.GetRule<IDoSomethingRuleDb>();
             Assert.True(rule.Execute(new DoSomethingRuleContextRequest(_context)).Success);
         }
 
         [Fact]
-        public void RuleConcrete()
+        public void GetByConcreteClass()
         {
             var rule = _ruleManager.GetRule<DoSomethingRuleOne>();
             Assert.True(rule.Execute(new DoSomethingRuleRequest()).Success);
         }
 
         [Fact]
-        public void RuleNotFound()
+        public void NotFound()
         {
             Assert.Throws<OltRuleNotFoundException>(() => _ruleManager.GetRule<INotValidRule>());
         }
 
         [Fact]
-        public void RuleFailure()
+        public void Failure()
         {
             var result = UnitTestHelper.AddPerson(_personService, UnitTestHelper.CreateTestAutoMapperModel());
             var rule = _ruleManager.GetRule<DoSomethingRuleFailure>();
             Assert.Throws<OltRuleException>(() => rule.Execute(new DoSomethingPersonRuleRequest(result)));
         }
 
-        
+        [Fact]
+        public void ValidationInvalid()
+        {
+            var rule = _ruleManager.GetRule<DoSomethingRuleIntValue>();
+            Assert.True(rule.Validate(new DoSomethingRuleIntRequest(_context, 5)).Invalid);
+        }
+
+        [Fact]
+        public void ValidationInvalidMessages()
+        {
+            var rule = _ruleManager.GetRule<DoSomethingRuleIntValue>();
+            var result = rule.Validate(new DoSomethingRuleIntRequest(_context, 5));
+            Assert.True(result.Results.Any());
+        }
     }
 }
