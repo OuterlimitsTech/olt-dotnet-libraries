@@ -34,7 +34,7 @@ namespace OLT.Libraries.UnitTest
         public void ConfigureServices(IServiceCollection services)
         {
             var settings = _configuration.GetSection("AppSettings").Get<AppSettingsDto>();
-            var jwtSecret = "Lk4EtzXKDmX3bLDRsbWDTPmnPh7RXvTV";
+            var jwtSecret = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
             services
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)
