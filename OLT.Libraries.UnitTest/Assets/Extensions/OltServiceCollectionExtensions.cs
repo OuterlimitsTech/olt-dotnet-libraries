@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OLT.Core;
@@ -15,7 +16,6 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
         /// AddOltAutoMapper()
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="action"></param>
         /// <returns></returns>
         public static IServiceCollection AddOltUnitTesting(this IServiceCollection services)
         {
@@ -23,9 +23,31 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
                 .AddOltAddMemoryCache()
                 .AddOltInjection()
                 .AddOltInjectionAutoMapper()
+                .AddOltInjectionAutoMapper()
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());             
             
+            return services;
+        }
+
+        /// <summary>
+        /// Build Default AspNetCore Service and configures Dependency Injection
+        /// AddOltDefault()
+        /// AddOltAutoMapper()
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="includeAssemblyScan"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddOltUnitTesting(this IServiceCollection services, Assembly includeAssemblyScan)
+        {
+            services
+                .AddOltAddMemoryCache()
+                .AddOltInjection()
+                .AddOltInjectionAutoMapper()
+                .AddOltInjectionAutoMapper(includeAssemblyScan)
+                .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
+                .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
+
             return services;
         }
     }

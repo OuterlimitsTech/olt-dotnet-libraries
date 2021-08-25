@@ -1,21 +1,17 @@
 ﻿namespace OLT.Logging.Serilog
 {
-    public interface IOltOptionsSerilog
+    public interface IOltOptionsAspNetSerilog
     {
         /// <summary>
-        /// Disable auto registration of <seealso cref="OltMiddlewareSessionLogging"/> and <seealso cref="OltMiddlewareHttpRequestBody"/>
+        /// Disable auto registration of <seealso cref="OltMiddlewareSessionLogging"/> and <seealso cref="OltMiddlewareDefault"/>
         /// </summary>
         bool DisableMiddlewareRegistration { get; }
 
-    }
-
-    public interface IOltOptionsMessageTemplate : IOltOptionsSerilog
-    {
         /// <summary>
         /// OPTIONAL!!! Override configured message template
         /// </summary>
         string MessageTemplate { get; }
-
     }
+
 
 }

@@ -6,18 +6,17 @@ using System.Security.Permissions;
 namespace OLT.Core
 {
     [Serializable]
-    public class OltValidationException : OltException
+    public class OltRuleException : OltException
     {
-        public readonly IEnumerable<IOltValidationError> Results;
 
-        public OltValidationException(IEnumerable<IOltValidationError> results, string errorMessage = "Please correct the validation errors") : base(errorMessage)
+        public OltRuleException(string errorMessage) : base(errorMessage)
         {
-            this.Results = results;
+            
         }
 
         #region [ Serializable Methods ]
 
-        protected OltValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected OltRuleException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
         }

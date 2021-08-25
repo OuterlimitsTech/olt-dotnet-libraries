@@ -1,16 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
+using OLT.Libraries.UnitTest.Assets.LocalServices;
 
 namespace OLT.Libraries.UnitTest.Assets.Entity
 {
-    // ReSharper disable once InconsistentNaming
-    public class SqlDatabaseContext : OltSqlDbContext<SqlDatabaseContext>
+    public class SqlLiteDatabaseContext : OltSqlDbContext<SqlLiteDatabaseContext>
     {
-
-        public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options) : base(options)
+        public SqlLiteDatabaseContext(DbContextOptions<SqlLiteDatabaseContext> options) : base(options)
         {
+            DbAuditUser = new OltUnitTestAppIdentity();
         }
+
+
+        protected override IOltDbAuditUser DbAuditUser { get; set; }
 
         public override string DefaultSchema => "dbo";
         public override bool DisableCascadeDeleteConvention => true;
@@ -22,14 +25,5 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         public virtual DbSet<PersonEntity> People { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
         public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.SetSoftDeleteFilter<PersonEntity>();
-
-            modelBuilder.ApplyGlobalFilters<IOltEntityDeletable>(p => p.DeletedOn == null);
-
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }

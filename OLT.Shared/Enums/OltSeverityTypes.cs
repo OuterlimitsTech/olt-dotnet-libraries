@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public enum OltValidationSeverityTypes
+    public enum OltSeverityTypes
     {
         Ok,
         Error,

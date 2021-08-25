@@ -15,7 +15,7 @@ namespace OLT.Core
         public virtual TNameModel Name { get; set; } = new TNameModel();
 
         [JsonProperty("token_type")]
-        public virtual string AuthenticationType { get; set; } = OltDefaults.JwtAuthenticationScheme;
+        public virtual string AuthenticationType { get; set; } = OltDefaults.Authentication.Jwt.AuthenticationScheme;
         [JsonProperty("access_token")]
         public virtual string Token { get; set; }
         public virtual DateTimeOffset Issued { get; set; }

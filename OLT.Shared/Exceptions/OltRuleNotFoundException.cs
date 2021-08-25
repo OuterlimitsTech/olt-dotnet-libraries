@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
 namespace OLT.Core
 {
     [Serializable]
-    public class OltValidationException : OltException
+    public class OltRuleNotFoundException : OltException
     {
-        public readonly IEnumerable<IOltValidationError> Results;
 
-        public OltValidationException(IEnumerable<IOltValidationError> results, string errorMessage = "Please correct the validation errors") : base(errorMessage)
+        public OltRuleNotFoundException(string message) : base(message)
         {
-            this.Results = results;
+            
+        }
+
+        public OltRuleNotFoundException(Type ruleType) : base($"{ruleType.FullName} rule not found")
+        {
+
         }
 
         #region [ Serializable Methods ]
 
-        protected OltValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected OltRuleNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
         }

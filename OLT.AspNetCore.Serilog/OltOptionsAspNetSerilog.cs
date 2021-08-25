@@ -1,6 +1,6 @@
 ﻿namespace OLT.Logging.Serilog
 {
-    public class OltOptionsSerilog : IOltOptionsMessageTemplate
+    public class OltOptionsAspNetSerilog : IOltOptionsAspNetSerilog
     {
         /// <summary>
         /// OPTIONAL!!! Override configured message template

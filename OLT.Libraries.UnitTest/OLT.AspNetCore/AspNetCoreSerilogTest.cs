@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using OLT.Core;
+using Serilog;
 using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.AspNetCore
@@ -19,6 +20,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         {
             var webBuilder = new WebHostBuilder();
             webBuilder
+                .UseSerilog()
                 .ConfigureAppConfiguration(builder =>
                 {
                     builder
@@ -28,6 +30,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
                         .AddEnvironmentVariables();
                 })
                 .UseStartup<SerilogStartup>();
+                
             _testServer = new TestServer(webBuilder);
         }
 

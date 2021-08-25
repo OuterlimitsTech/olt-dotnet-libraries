@@ -66,9 +66,9 @@ namespace OLT.Libraries.UnitTest
             {
                 builder
                     .SetBasePath(AppContext.BaseDirectory)
-                    .AddUserSecrets<Startup>()
                     .AddJsonFile("appsettings.json", false, true)
-                    .AddEnvironmentVariables();
+                    .AddEnvironmentVariables()
+                    .AddUserSecrets<Startup>();
             });
         }
 
@@ -79,7 +79,7 @@ namespace OLT.Libraries.UnitTest
             services.Configure<AppSettingsDto>(appSettingsSection);
             var settings = appSettingsSection.Get<AppSettingsDto>();
             var sendGridSettings = settings.SendGrid;
-
+            
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -104,13 +104,13 @@ namespace OLT.Libraries.UnitTest
 
 
             services
-                .AddOltUnitTesting()
+                .AddOltUnitTesting(this.GetType().Assembly)
                 .AddScoped<IOltEmailService, OltSendGridEmailService>()
                 .AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>()
                 //.AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>(opt => new EmailApiConfiguration(sendGridSettings))
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
-                    optionsBuilder.UseInMemoryDatabase(databaseName: "Test");
+                    optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
                 })
                 .AddControllers();
         }

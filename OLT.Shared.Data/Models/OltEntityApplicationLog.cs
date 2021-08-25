@@ -44,16 +44,12 @@ namespace OLT.Core
         [StringLength(100)]
         public virtual string RemoteAddress { get; set; }
 
-        [Column(TypeName = "varchar(MAX)")]
         public virtual string Message { get; set; }
 
-        [Column(TypeName = "varchar(MAX)")]
         public virtual string Exception { get; set; }
 
-        [Column(TypeName = "varchar(MAX)")]
         public virtual string StackTrace { get; set; }
 
-        [Column(TypeName = "varchar(MAX)")]
         public virtual string Payload { get; set; }
     }
 }

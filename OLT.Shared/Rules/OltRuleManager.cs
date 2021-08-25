@@ -18,10 +18,11 @@ namespace OLT.Core
             where TRule : class, IOltRule
         {
             var ruleName = typeof(TRule).FullName;
-            var rule = _rules.FirstOrDefault(p => p.RuleName == ruleName);
+            var rule = _rules.FirstOrDefault(p => p.RuleName == ruleName) ??
+                       _rules.FirstOrDefault(p => p.GetType().Implements<TRule>());
             if (rule == null)
             {
-                throw new OltException($"Rule Not Found {typeof(TRule)}");
+                throw new OltRuleNotFoundException(typeof(TRule));
             }
             return rule as TRule;
         }
