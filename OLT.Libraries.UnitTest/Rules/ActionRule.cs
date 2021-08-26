@@ -9,7 +9,7 @@ using OLT.Libraries.UnitTest.Assets.Rules;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace OLT.Libraries.UnitTest.Rules
+namespace OLT.Libraries.UnitTest.OLT.Rules
 {
     public class ActionRule : BaseTest
     {

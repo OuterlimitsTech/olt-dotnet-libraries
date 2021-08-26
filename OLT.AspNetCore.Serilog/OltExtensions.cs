@@ -17,7 +17,7 @@ namespace OLT.Logging.Serilog
         /// <returns></returns>
         public static IServiceCollection AddOltSerilog(this IServiceCollection service)
         {
-            return service.AddScoped<OltMiddlewareSessionLogging>();
+            return service.AddScoped<OltMiddlewareSession>();
         }
 
         private static IApplicationBuilder UseMiddleware<TOptions>(this IApplicationBuilder app, TOptions options)
@@ -30,14 +30,14 @@ namespace OLT.Logging.Serilog
             }
 
             return app
-                .UseMiddleware<OltMiddlewareSessionLogging>()
-                .UseMiddleware<OltMiddlewareDefault>();
+                .UseMiddleware<OltMiddlewareSession>()
+                .UseMiddleware<OltMiddlewarePayload>();
         }
 
         /// <summary>
-        /// Registers middlewares <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSessionLogging"/> and <seealso cref="OltMiddlewareHttpRequestBody"/> using <seealso cref="IOltOptionsAspNetSerilog"/> 
+        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/> using <seealso cref="IOltOptionsAspNetSerilog"/> 
         /// </summary>
-        /// <typeparam name="TSettings"></typeparam>
+        /// <typeparam name="TOptions"></typeparam>
         /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
         /// <param name="options"><seealso cref="IOltOptionsAspNetSerilog"/></param>
         /// <returns><seealso cref="IApplicationBuilder"/></returns>
@@ -59,9 +59,9 @@ namespace OLT.Logging.Serilog
 
 
         /// <summary>
-        /// Registers middlewares <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSessionLogging"/> and <seealso cref="OltMiddlewareHttpRequestBody"/> using <seealso cref="IOltOptionsAspNetSerilog"/> 
+        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/> using <seealso cref="IOltOptionsAspNetSerilog"/> 
         /// </summary>
-        /// <typeparam name="TSettings"></typeparam>
+        /// <typeparam name="TOptions"></typeparam>
         /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
         /// <param name="options"><seealso cref="IOltOptionsAspNetSerilog"/></param>
         /// <param name="configureOptions"><seealso cref="RequestLoggingOptions"/></param>

@@ -3,12 +3,15 @@
     public class OltOptionsAspNetSerilog : IOltOptionsAspNetSerilog
     {
         /// <summary>
-        /// OPTIONAL!!! Override configured message template
+        /// Message template to use.
         /// </summary>
-        public string MessageTemplate { get; set; }
+        /// <remarks>
+        /// Default will use <seealso cref="OltDefaultsSerilog.Templates.DefaultOutput"/>
+        /// </remarks>
+        public string MessageTemplate { get; set; } = OltDefaultsSerilog.Templates.DefaultOutput;
 
         /// <summary>
-        /// Disable auto registration of <seealso cref="OltMiddlewareSessionLogging"/> and <seealso cref="OltMiddlewareHttpRequestBody"/>
+        /// Disable auto registration of <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/>
         /// </summary>
         public bool DisableMiddlewareRegistration { get; set; }
     }

@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj" />
+    <ProjectReference Include="..\OLT.Logging.Serilog\OLT.Logging.Serilog.csproj" />
   </ItemGroup>
 
 </Project>

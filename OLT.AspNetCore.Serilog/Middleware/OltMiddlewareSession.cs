@@ -6,11 +6,11 @@ using LogContext = Serilog.Context.LogContext;
 namespace OLT.Logging.Serilog
 {
 
-    public class OltMiddlewareSessionLogging : IMiddleware
+    public class OltMiddlewareSession : IMiddleware
     {
         private readonly IOltIdentity _identity;
 
-        public OltMiddlewareSessionLogging(IOltIdentity identity)
+        public OltMiddlewareSession(IOltIdentity identity)
         {
             _identity = identity;
         }
@@ -18,9 +18,9 @@ namespace OLT.Logging.Serilog
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
 
-            using (LogContext.PushProperty("UserPrincipalName", _identity.UserPrincipalName))
-            using (LogContext.PushProperty("Username", _identity.Username))
-            using (LogContext.PushProperty("DbUsername", _identity.GetDbUsername()))
+            using (LogContext.PushProperty(OltDefaultsSerilog.Properties.UserPrincipalName, _identity.UserPrincipalName))
+            using (LogContext.PushProperty(OltDefaultsSerilog.Properties.Username, _identity.Username))
+            using (LogContext.PushProperty(OltDefaultsSerilog.Properties.DbUsername, _identity.GetDbUsername()))
             {
                 await next(context);
             }
