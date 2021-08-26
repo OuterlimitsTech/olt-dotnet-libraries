@@ -6,50 +6,9 @@ using System.Data;
 // ReSharper disable once CheckNamespace
 namespace OLT.Logging.Serilog
 {
-    public class OltDbColumn
-    {
-        public string PropertyName { get; set; }
-        public string ColumnName { get; set; }
-        public int DefaultLength { get; set; }
-    }
-
 
     public static partial class OltDefaultsSerilog
     {
-
-        public static class Database
-        {
-            public static List<OltDbColumn> Columns()
-            {
-                return new List<OltDbColumn>
-                {
-                    new OltDbColumn
-                    {
-                        ColumnName = OltDefaultsSerilog.Properties.EventType,
-                        PropertyName = OltDefaultsSerilog.Properties.EventType,
-                        DefaultLength = 20
-                    },
-                    new OltDbColumn
-                    {
-                        ColumnName = OltDefaultsSerilog.Properties.UserPrincipalName,
-                        PropertyName = OltDefaultsSerilog.Properties.UserPrincipalName,
-                        DefaultLength = 100
-                    },
-                    new OltDbColumn
-                    {
-                        ColumnName = OltDefaultsSerilog.Properties.Username,
-                        PropertyName = OltDefaultsSerilog.Properties.Username,
-                        DefaultLength = 100
-                    },
-                    new OltDbColumn
-                    {
-                        ColumnName = OltDefaultsSerilog.Properties.DbUsername,
-                        PropertyName = OltDefaultsSerilog.Properties.DbUsername,
-                        DefaultLength = 100
-                    }
-                };
-            }
-        }
 
         public static class Properties
         {
