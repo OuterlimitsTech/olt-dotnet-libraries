@@ -8,11 +8,11 @@ using Serilog;
 
 namespace OLT.Logging.Serilog
 {
-    public class OltMiddlewareDefault
+    public class OltMiddlewarePayload
     {
         private readonly RequestDelegate _next;
 
-        public OltMiddlewareDefault(RequestDelegate next)
+        public OltMiddlewarePayload(RequestDelegate next)
         {
             this._next = next;
         }
@@ -73,7 +73,7 @@ namespace OLT.Logging.Serilog
             Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("RequestBody", requestBodyText)
                 .ForContext("Exception", exception, destructureObjects: true)
-                .Error(exception, exception.Message + ". {@errorId}", errorId);
+                .Error(exception, exception.Message + " -> {@errorId}", errorId);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             var msg = new OltErrorHttp
