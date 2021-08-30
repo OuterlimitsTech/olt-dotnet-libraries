@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid.Json;
+using OLT.Libraries.UnitTest.Assets.Entity;
+using OLT.Libraries.UnitTest.Assets.Entity.Models;
 using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 
 namespace OLT.Libraries.UnitTest
 {
-    public static partial class UnitTestHelper
+    public static class UnitTestHelper
     {
+
+        public static PersonEntity AddPerson(SqlDatabaseContext context)
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameMiddle = Faker.Name.Middle(),
+                NameLast = Faker.Name.Last()
+            };
+            context.People.Add(entity);
+            return entity;
+        }
 
         public static PersonAutoMapperModel AddPerson(IPersonService personService, PersonAutoMapperModel dto)
         {

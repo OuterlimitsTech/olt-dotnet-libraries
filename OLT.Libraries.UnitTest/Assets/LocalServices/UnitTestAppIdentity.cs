@@ -7,7 +7,8 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 {
     public class OltUnitTestAppIdentity : OltIdentity
     {
-        private const string StaticUser = "UnitTest";
+        public const string StaticUser = "UnitTest";
+        public const string StaticEmail = "developers@outerlimitstech.com";
 
         public override ClaimsPrincipal Identity
         {
@@ -30,7 +31,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
         public override string Username => StaticUser;
         public override string UserPrincipalName => Email;
-        public override string Email => "developers@outerlimitstech.com";
+        public override string Email => StaticEmail;
 
         public override bool HasRoleClaim(string claimName)
         {

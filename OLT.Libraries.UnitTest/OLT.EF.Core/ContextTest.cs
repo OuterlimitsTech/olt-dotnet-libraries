@@ -85,12 +85,14 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public void InitializeQueryable()
         {
+            UnitTestHelper.AddPerson(_context);
             Assert.True(_context.InitializeQueryable<PersonEntity>().Any());
         }
 
         [Fact]
         public void GetQueryable()
         {
+            UnitTestHelper.AddPerson(_context);
             Assert.True(_context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).Any());
         }
     }

@@ -162,7 +162,7 @@ jobs:
           gitHubConnection: 'github.com_chrisstraw'
           repositoryName: 'OuterlimitsTech/olt-dotnet-libraries'
           action: 'create'
-          target: 'V$(GitVersion.NuGetVersionV2)'
+          target: 'v$(GitVersion.NuGetVersionV2)'
           tagSource: 'gitTag'
           assets: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
           changeLogCompareToRelease: 'lastFullRelease'
