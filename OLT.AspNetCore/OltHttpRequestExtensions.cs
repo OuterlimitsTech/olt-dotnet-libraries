@@ -38,21 +38,21 @@ namespace OLT.Core
             return ms.ToArray();
         }
 
-        public static OltGenericParameters ToOltGenericParameters(this HttpRequest request)
+        public static OltGenericParameter ToOltGenericParameter(this HttpRequest request)
         {
-            var @params = request.RouteValues.ToOltGenericParameters().Values;
-            request.Query.ToOltGenericParameters().Values.ToList().ForEach(x => @params.Add(x.Key, x.Value));
-            return new OltGenericParameters(@params);
+            var @params = request.RouteValues.ToOltGenericParameter().Values;
+            request.Query.ToOltGenericParameter().Values.ToList().ForEach(x => @params.Add(x.Key, x.Value));
+            return new OltGenericParameter(@params);
         }
 
-        public static OltGenericParameters ToOltGenericParameters(this RouteValueDictionary value)
+        public static OltGenericParameter ToOltGenericParameter(this RouteValueDictionary value)
         {
-            return new OltGenericParameters(value.ToDictionary(k => k.Key, v => v.Value?.ToString()));
+            return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value?.ToString()));
         }
 
-        public static OltGenericParameters ToOltGenericParameters(this IQueryCollection value)
+        public static OltGenericParameter ToOltGenericParameter(this IQueryCollection value)
         {
-            return new OltGenericParameters(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
+            return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
         }
 
     }

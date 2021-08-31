@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace OLT.Core
 {
-    public class OltGenericParameters : IOltGenericParameter
+    public class OltGenericParameter : IOltGenericParameter
     {
 
-        public OltGenericParameters(Dictionary<string, string> values)
+        public OltGenericParameter(Dictionary<string, string> values)
         {
             Values = values;
         }
