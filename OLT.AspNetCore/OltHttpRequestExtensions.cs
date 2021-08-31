@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
 
 namespace OLT.Core
 {
@@ -38,22 +39,90 @@ namespace OLT.Core
             return ms.ToArray();
         }
 
-        public static OltGenericParameters ToOltGenericParameters(this HttpRequest request)
+        public static OltGenericParameter ToOltGenericParameter(this HttpRequest request)
         {
-            var @params = request.RouteValues.ToOltGenericParameters().Values;
-            request.Query.ToOltGenericParameters().Values.ToList().ForEach(x => @params.Add(x.Key, x.Value));
-            return new OltGenericParameters(@params);
+            var dictionaries = new List<Dictionary<string, StringValues>>();
+
+            try
+            {
+                dictionaries.Add(request.RouteValues?.ToDictionary(k => k.Key, v => new StringValues(v.Value?.ToString())));
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            try
+            {
+                dictionaries.Add(request.Query?.ToDictionary(k => k.Key, v => v.Value));
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            try
+            {
+                dictionaries.Add(request.Form?.ToDictionary(k => k.Key, v => v.Value));
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            var merged = Merge(dictionaries).ToDictionary(x => x.Key, y => y.Value.ToString());
+
+            return new OltGenericParameter(merged);
         }
 
-        public static OltGenericParameters ToOltGenericParameters(this RouteValueDictionary value)
+        public static OltGenericParameter ToOltGenericParameter(this RouteValueDictionary value)
         {
-            return new OltGenericParameters(value.ToDictionary(k => k.Key, v => v.Value?.ToString()));
+            return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value?.ToString()));
         }
 
-        public static OltGenericParameters ToOltGenericParameters(this IQueryCollection value)
+        public static OltGenericParameter ToOltGenericParameter(this IQueryCollection value)
         {
-            return new OltGenericParameters(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
+            return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
         }
 
+        public static OltGenericParameter ToOltGenericParameter(this IFormCollection value)
+        {
+            return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
+        }
+
+        private static Dictionary<string, StringValues> Merge(IEnumerable<Dictionary<string, StringValues>> dictionaries)
+        {
+            Dictionary<string, StringValues> result = new Dictionary<string, StringValues>();
+
+            foreach (Dictionary<string, StringValues> dict in dictionaries)
+            {
+                result
+                    .Union(dict)
+                    .GroupBy(g => g.Key)
+                    .ToList()
+                    .ForEach(item =>
+                    {
+                        if (!dict.ContainsKey(item.Key))
+                        {
+                            return;
+                        }
+
+                        var newValues = dict[item.Key];
+                        if (result.ContainsKey(item.Key))
+                        {
+                            var currentValues = result[item.Key];
+                            var concat = newValues.Concat(currentValues).ToArray();
+                            result[item.Key] = new StringValues(concat);
+                        }
+                        else
+                        {
+                            result.Add(item.Key, new StringValues(newValues.ToArray()));
+                        }
+
+                    });
+            }
+
+            return result;
+        }
     }
 }

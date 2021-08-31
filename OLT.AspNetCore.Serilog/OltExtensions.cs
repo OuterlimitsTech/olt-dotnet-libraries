@@ -44,17 +44,9 @@ namespace OLT.Logging.Serilog
         public static IApplicationBuilder UseSerilogRequestLogging<TOptions>(this IApplicationBuilder app, TOptions options)
                 where TOptions : IOltOptionsAspNetSerilog
         {
-            
-            if (options.MessageTemplate.IsNotEmpty())
-            {
-                app.UseSerilogRequestLogging(options.MessageTemplate);
-            }
-            else
-            {
-                app.UseSerilogRequestLogging();
-            }
-
-            return app.UseMiddleware(options);
+            return app
+                .UseSerilogRequestLogging()
+                .UseMiddleware(options);
         }
 
 
