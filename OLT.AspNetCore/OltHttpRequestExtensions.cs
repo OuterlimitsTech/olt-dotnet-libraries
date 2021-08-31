@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
 
 namespace OLT.Core
 {
@@ -40,9 +41,33 @@ namespace OLT.Core
 
         public static OltGenericParameter ToOltGenericParameter(this HttpRequest request)
         {
-            var @params = request.RouteValues.ToOltGenericParameter().Values;
-            request.Query.ToOltGenericParameter().Values.ToList().ForEach(x => @params.Add(x.Key, x.Value));
-            return new OltGenericParameter(@params);
+            var dictionaries = new List<Dictionary<string, StringValues>>();
+
+            if (request.RouteValues?.Any() == true)
+            {
+                dictionaries.Add(request.RouteValues?.ToDictionary(k => k.Key, v => new StringValues(v.Value?.ToString())));
+            }
+
+            if (request.Query?.Any() == true)
+            {
+                dictionaries.Add(request.Query?.ToDictionary(k => k.Key, v => v.Value));
+            }
+
+            try
+            {
+                if (request.Form?.Any() == true)
+                {
+                    dictionaries.Add(request.Form?.ToDictionary(k => k.Key, v => v.Value));
+                }
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            var merged = Merge(dictionaries).ToDictionary(x => x.Key, y => y.Value.ToString());
+
+            return new OltGenericParameter(merged);
         }
 
         public static OltGenericParameter ToOltGenericParameter(this RouteValueDictionary value)
@@ -55,5 +80,44 @@ namespace OLT.Core
             return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
         }
 
+        public static OltGenericParameter ToOltGenericParameter(this IFormCollection value)
+        {
+            return new OltGenericParameter(value.ToDictionary(k => k.Key, v => v.Value.ToString()));
+        }
+
+        private static Dictionary<string, StringValues> Merge(IEnumerable<Dictionary<string, StringValues>> dictionaries)
+        {
+            Dictionary<string, StringValues> result = new Dictionary<string, StringValues>();
+
+            foreach (Dictionary<string, StringValues> dict in dictionaries)
+            {
+                result
+                    .Union(dict)
+                    .GroupBy(g => g.Key)
+                    .ToList()
+                    .ForEach(item =>
+                    {
+                        if (!dict.ContainsKey(item.Key))
+                        {
+                            return;
+                        }
+
+                        var newValues = dict[item.Key];
+                        if (result.ContainsKey(item.Key))
+                        {
+                            var currentValues = result[item.Key];
+                            var concat = newValues.Concat(currentValues).ToArray();
+                            result[item.Key] = new StringValues(concat);
+                        }
+                        else
+                        {
+                            result.Add(item.Key, new StringValues(newValues.ToArray()));
+                        }
+
+                    });
+            }
+
+            return result;
+        }
     }
 }
