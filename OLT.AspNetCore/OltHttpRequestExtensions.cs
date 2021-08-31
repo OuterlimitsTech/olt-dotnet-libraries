@@ -43,22 +43,27 @@ namespace OLT.Core
         {
             var dictionaries = new List<Dictionary<string, StringValues>>();
 
-            if (request.RouteValues?.Any() == true)
+            try
             {
                 dictionaries.Add(request.RouteValues?.ToDictionary(k => k.Key, v => new StringValues(v.Value?.ToString())));
             }
-
-            if (request.Query?.Any() == true)
+            catch
             {
-                dictionaries.Add(request.Query?.ToDictionary(k => k.Key, v => v.Value));
+                // Ignore
             }
 
             try
             {
-                if (request.Form?.Any() == true)
-                {
-                    dictionaries.Add(request.Form?.ToDictionary(k => k.Key, v => v.Value));
-                }
+                dictionaries.Add(request.Query?.ToDictionary(k => k.Key, v => v.Value));
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            try
+            {
+                dictionaries.Add(request.Form?.ToDictionary(k => k.Key, v => v.Value));
             }
             catch
             {

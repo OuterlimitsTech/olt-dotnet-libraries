@@ -251,6 +251,50 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             Assert.Equal(results.GetValue<string>("email"), email);
         }
 
+        [Fact]
+        public void OltGenericParameterGetValueUsingGenericNull()
+        {
+            var username = Faker.Internet.UserName();
+            var email = Faker.Internet.Email();
+            var dictionary = new Dictionary<string, StringValues>
+            {
+                { "username", username },
+                { "email", email }
+            };
+            var queryCollection = new QueryCollection(dictionary);
+            var query = new QueryFeature(queryCollection);
+            var features = new FeatureCollection();
+            features.Set<IQueryFeature>(query);
+            var context = new DefaultHttpContext(features);
+            context.Response.Body = new MemoryStream();
+
+            var results = context.Request.ToOltGenericParameter();
+
+            Assert.True(results.GetValue<string>("foobar") == null);
+        }
+
+        [Fact]
+        public void OltGenericParameterGetValueUsingGenericDefault()
+        {
+            var username = Faker.Internet.UserName();
+            var email = Faker.Internet.Email();
+            var defaultEmail = Faker.Internet.Email();
+            var dictionary = new Dictionary<string, StringValues>
+            {
+                { "username", username },
+                { "email", email }
+            };
+            var queryCollection = new QueryCollection(dictionary);
+            var query = new QueryFeature(queryCollection);
+            var features = new FeatureCollection();
+            features.Set<IQueryFeature>(query);
+            var context = new DefaultHttpContext(features);
+            context.Response.Body = new MemoryStream();
+
+            var results = context.Request.ToOltGenericParameter();
+
+            Assert.Equal(results.GetValue<string>("foobar", defaultEmail), defaultEmail);
+        }
 
         [Fact]
         public void OltGenericParameterEmpty()
