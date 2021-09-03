@@ -61,7 +61,7 @@ namespace OLT.Core
                 : string.Join(" or ", words.Where(c => c != "or").Select(word => FormatWordWildCard(word, wildCardType)));
         }
 
-        private static string FormatWordWildCard(string word, OltFtsWildCardType wildCardType)
+        public static string FormatWordWildCard(string word, OltFtsWildCardType wildCardType)
         {
             switch (wildCardType)
             {

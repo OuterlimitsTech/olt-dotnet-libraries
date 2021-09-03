@@ -23,13 +23,13 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         public virtual DbSet<UserEntity> Users { get; set; }
         public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.SetSoftDeleteFilter<PersonEntity>();
+        ////protected override void OnModelCreating(ModelBuilder modelBuilder)
+        ////{
+        ////    modelBuilder.SetSoftDeleteFilter<PersonEntity>();
 
-            modelBuilder.ApplyGlobalFilters<IOltEntityDeletable>(p => p.DeletedOn == null);
+        ////    modelBuilder.ApplyGlobalFilters<IOltEntityDeletable>(p => p.DeletedOn == null);
 
-            base.OnModelCreating(modelBuilder);
-        }
+        ////    base.OnModelCreating(modelBuilder);
+        ////}
     }
 }
