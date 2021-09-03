@@ -32,18 +32,6 @@ jobs:
       # vmImage: 'ubuntu-latest'
 
     steps:
-      # https://medium.com/purplebricks-digital/getting-code-coverage-showing-in-sonar-cloud-99a2295407b3
-      - task: SonarCloudPrepare@1
-        inputs:
-          SonarCloud: 'SonarCloud Olt Libs'
-          organization: 'outerlimitstech'
-          scannerMode: 'MSBuild'
-          projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
-          extraProperties: |
-            sonar.exclusions=**/obj/**,**/*.dll
-            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
-            sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
-
       - task: gitversion/setup@0
         displayName: Confiure Git Version
         inputs:
@@ -51,6 +39,19 @@ jobs:
 
       - task: gitversion/execute@0
         displayName: Determine Version Number
+
+      # https://medium.com/purplebricks-digital/getting-code-coverage-showing-in-sonar-cloud-99a2295407b3
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud Olt Libs'
+          organization: 'outerlimitstech'
+          scannerMode: 'MSBuild'
+          projectKey: 'OuterlimitsTech_olt-dotnet-libraries'
+          projectVersion: '$(GitVersion.NuGetVersionV2)'
+          extraProperties: |
+            sonar.exclusions=**/obj/**,**/*.dll
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+            sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
 
       - task: Bash@3
         displayName: 'Echo of some stuff'

@@ -23,6 +23,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="EfCore.TestSupport" Version="5.0.0" />
+    <PackageReference Include="EPPlus" Version="5.7.2" />
     <PackageReference Include="Faker.Net" Version="1.5.138" />
     <PackageReference Include="FluentAssertions" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.8" />
@@ -64,6 +66,7 @@
     <ProjectReference Include="..\OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj" />
     <ProjectReference Include="..\OLT.Email.SendGrid\OLT.Email.SendGrid.csproj" />
     <ProjectReference Include="..\OLT.Email\OLT.Email.csproj" />
+    <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.AzureAppConfiguration\OLT.Extensions.AzureAppConfiguration.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.SqlServer\OLT.Extensions.DependencyInjection.SqlServer.csproj" />

@@ -10,9 +10,11 @@ namespace OLT.Libraries.UnitTest.Abstract
     public class BaseTest : OltDisposable
     {
         protected ILogger Logger { get; }
+        protected ITestOutputHelper TestOutputHelper { get; }
 
         public BaseTest(ITestOutputHelper output)
         {
+            TestOutputHelper = output;
 
             Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()

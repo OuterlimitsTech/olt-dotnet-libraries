@@ -14,6 +14,13 @@ using Microsoft.EntityFrameworkCore.Query;
 // ReSharper disable once CheckNamespace
 namespace OLT.Core
 {
+
+    public enum OltConnectionStringTypes
+    {
+        [Code("database.windows.net")]
+        AzureSql
+    }
+
     public static class ContextExtensions
     {
 
@@ -125,7 +132,7 @@ namespace OLT.Core
         /// modelBuilder.Entity<EF_POCO>().HasQueryFilter(p => p.DeletedOn == null)
         /// https://davecallan.com/entity-framework-core-query-filters-multiple-entities/
         /// </summary>
-        /// <typeparam name="TInterface"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
         public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, Expression<Func<T, bool>> expression)
@@ -149,5 +156,15 @@ namespace OLT.Core
         }
 
 
+
+        public static bool IsProductionDb(this DbContext context, string searchFor)
+        {
+            return context.Database.GetConnectionString().Contains(searchFor, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsProductionDb(this DbContext context, OltConnectionStringTypes searchFor)
+        {
+            return IsProductionDb(context, searchFor.GetCodeEnum());
+        }
     }
 }
