@@ -5,7 +5,7 @@ namespace OLT.Core
 {
     public interface IOltFileBuilder<in TRequest, in TParameter> : IOltFileBuilder, IOltInjectableSingleton
         where TRequest : IOltRequest
-        where TParameter : class, IOltGenericParameter
+        where TParameter : class
     {
         IOltFileBase64 Build(TRequest request, TParameter parameter);
 

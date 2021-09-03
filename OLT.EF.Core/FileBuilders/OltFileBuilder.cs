@@ -5,7 +5,7 @@ namespace OLT.Core
 {
     public abstract class OltFileBuilder<TRequest, TParameter> : OltDisposable, IOltFileBuilder<TRequest, TParameter>
         where TRequest : IOltRequest
-        where TParameter : class, IOltGenericParameter
+        where TParameter : class
     {
         public abstract string BuilderName { get; }
         public abstract IOltFileBase64 Build(TRequest request, TParameter parameter);

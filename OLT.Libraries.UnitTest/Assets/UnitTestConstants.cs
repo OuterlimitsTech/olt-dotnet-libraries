@@ -3,7 +3,7 @@
 namespace OLT.Libraries.UnitTest.Assets
 {
     // ReSharper disable once InconsistentNaming
-    public static partial class UnitTestConstants
+    public static class UnitTestConstants
     {
         public static class GuidValues
         {
@@ -16,6 +16,8 @@ namespace OLT.Libraries.UnitTest.Assets
             public const string String3 = "3b8c07927ec7445491d6a07ededd2e57";
             public static readonly Guid Value3 = new Guid(String2);
         }
+
+        #region [ String Values ]
 
         public static class StringValues
         {
@@ -37,7 +39,28 @@ namespace OLT.Libraries.UnitTest.Assets
                 public const string Formatted = "(317) 555-1234";
                 public const string Clean = "3175551234";
             }
+
+            public static class PersonNames
+            {
+                public static class Name1
+                {
+                    public const string First = "Ava";
+                    public const string Last = "Larson";
+                    public const string FullName = "Ava Larson";
+                }
+
+                public static class Name2
+                {
+                    public const string First = "Alban";
+                    public const string Last = "Trivett";
+                    public const string FullName = "Alban Trivett";
+                }
+            }
+
         }
+
+        #endregion
+
 
         public static class DateTimeValues
         {
