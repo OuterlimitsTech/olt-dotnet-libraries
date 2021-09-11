@@ -20,15 +20,21 @@ namespace OLT.Core
     {
         private IOltDbAuditUser _dbAuditUser;
         private ILogger<OltDbContext<TContext>> _logger;
+
+#pragma warning disable S2743 // Static fields should not be used in generic types
+#pragma warning disable IDE0044 // Add readonly modifier
         private static volatile object _entityMetatdataCacheSyncRoot;
         private static volatile Dictionary<RuntimeTypeHandle, List<NullableStringPropertyMetaData>> _entityMetatdataCache;
-        private static volatile string stringTypeName;
+        private static volatile string _stringTypeName;
+#pragma warning restore IDE0044 // Add readonly modifier
+#pragma warning restore S2743 // Static fields should not be used in generic types
+
 
 #pragma warning disable S3963 // "static" fields should be initialized inline
         static OltDbContext()
         {
             _entityMetatdataCacheSyncRoot = new object();
-            stringTypeName = nameof(String);
+            _stringTypeName = nameof(String);
             _entityMetatdataCache = new Dictionary<RuntimeTypeHandle, List<NullableStringPropertyMetaData>>();
         }
 #pragma warning restore S3963 // "static" fields should be initialized inline
@@ -96,7 +102,7 @@ namespace OLT.Core
                 WriteExceptionEntries(dbUpdateException.Entries);
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
                 throw;
@@ -117,7 +123,7 @@ namespace OLT.Core
                 WriteExceptionEntries(dbUpdateException.Entries);
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
                 throw;
@@ -329,7 +335,7 @@ namespace OLT.Core
             // Limit to public instance properties - that is the EF contract and we can't go around it without 
             // mucking up EF & EF Core internals....especially due to its internals on the contract for private backing fields.
             var stringProperties = entry.Entity.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                  .Where(p => p.PropertyType?.Name == stringTypeName)    // Not really a "safe" comparison, but we go by typename rather than typeof to avoid language version issues.....
+                  .Where(p => p.PropertyType?.Name == _stringTypeName)    // Not really a "safe" comparison, but we go by typename rather than typeof to avoid language version issues.....
                   .ToList();
 
             // None found?
