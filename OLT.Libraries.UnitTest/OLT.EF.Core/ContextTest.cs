@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
@@ -94,6 +95,40 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         {
             UnitTestHelper.AddPerson(_context);
             Assert.True(_context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).Any());
+        }
+
+        [Fact]
+        public async Task SaveChangesAsyncTest()
+        {
+            using (var factory = new SqlLiteDatabaseContextFactory())
+            {
+                // Get a context
+                using (var context = factory.CreateContext())
+                {
+                    var entity = new PersonEntity
+                    {
+                        NameFirst = Faker.Name.First(),
+                        NameMiddle = Faker.Name.Middle(),
+                        NameLast = Faker.Name.Last()
+                    };
+                    await context.People.AddAsync(entity);
+                    await context.SaveChangesAsync();
+
+                    entity.NameFirst = Faker.Name.First();
+                    entity.NameMiddle = string.Empty;
+                    await context.SaveChangesAsync();
+
+                    var updated = await context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefaultAsync(p => p.Id == entity.Id);
+                    Assert.True(updated.NameFirst.Equals(entity.NameFirst));
+                }
+            }
+
+            //var entity = UnitTestHelper.AddPerson(_context);
+            //entity.NameFirst = Faker.Name.First();
+            //entity.NameMiddle = string.Empty;
+            //await _context.SaveChangesAsync();
+            //var updated = _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.Id == entity.Id);
+            //Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
     }
 }

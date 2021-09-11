@@ -125,21 +125,35 @@ namespace OLT.Core
 
         }
 
+        public override Func<IQueryable<TSource>, IQueryable<TSource>> DefaultOrderBy<TSource, TDestination>()
+        {
+            return HasAutoMap<TSource, TDestination>() ? GetPagedAdapterMap<TSource, TDestination>(true).DefaultOrderBy : base.DefaultOrderBy<TSource, TDestination>();
+        }
+
         #endregion
 
         public override TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
-            try
+            if (HasAutoMap<TSource, TDestination>())
             {
-                if (HasAutoMap<TSource, TDestination>())
+                try
                 {
                     return Mapper.Map(source, destination);
                 }
+                catch (AutoMapperMappingException mappingException)
+                {
+                     _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}", nameof(IOltAdapterMap<TSource, TDestination>));
-            }
+
+
 
             return base.Map(source, destination);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.Core
@@ -62,6 +63,12 @@ namespace OLT.Core
             return adapter.Map(source, pagingParams, orderBy);
         }
 
+        public virtual Func<IQueryable<TSource>, IQueryable<TSource>> DefaultOrderBy<TSource, TDestination>()
+            where TSource : class, IOltEntity
+        {
+            return GetPagedAdapter<TSource, TDestination>(true).DefaultOrderBy;
+        }
+
         #endregion
 
         #region [ ProjectTo Maps ]
@@ -74,17 +81,14 @@ namespace OLT.Core
             {
                 return true;
             }
-
             return false;
         }
-
         public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source)
         {
             var name = GetAdapterName<TEntity, TDestination>();
             var adapter = GetAdapter(name, false);
             return ProjectTo<TEntity, TDestination>(source, adapter);
         }
-
 
         public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {
@@ -171,7 +175,7 @@ namespace OLT.Core
             return GetAdapter<TSource, TDestination>(throwException) as IOltAdapterQueryable<TSource, TDestination>;
         }
 
-        protected virtual IOltAdapterPaged<TSource, TDestination> GetPagedAdapter<TSource, TDestination>(bool throwException)
+        public virtual IOltAdapterPaged<TSource, TDestination> GetPagedAdapter<TSource, TDestination>(bool throwException)
             where TSource : class, IOltEntity
         {
             var adapterName = GetAdapterName<TSource, TDestination>();
@@ -186,46 +190,5 @@ namespace OLT.Core
 
         #endregion
 
-        #region [ Obsolete Methods ]
-
-
-        [Obsolete("Move to Map or ProjectTo")]
-        public virtual IOltAdapter<TSource, TModel> GetAdapter<TSource, TModel>()
-        {
-            var adapterName = base.BuildName<TSource, TModel>();
-            var adapter = this.Adapters.FirstOrDefault(p => p.Name == adapterName);
-            if (adapter == null)
-            {
-                throw new OltException($"Adapter Not Found {adapterName}");
-            }
-
-            return adapter as IOltAdapter<TSource, TModel>;
-        }
-
-        [Obsolete("Move to Map or ProjectTo")]
-        public virtual IOltAdapterQueryable<TSource, TModel> GetQueryableAdapter<TSource, TModel>()
-        {
-            var adapter = GetAdapter<TSource, TModel>();
-
-            var queryableAdapter = adapter as IOltAdapterQueryable<TSource, TModel>;
-
-            return queryableAdapter;
-        }
-
-        [Obsolete("Move to Map or ProjectTo")]
-        public virtual IOltAdapterPaged<TSource, TModel> GetPagedAdapter<TSource, TModel>()
-        {
-            var adapter = GetAdapter<TSource, TModel>();
-
-            var pagedAdapter = adapter as IOltAdapterPaged<TSource, TModel>;
-            if (pagedAdapter == null)
-            {
-                throw new OltException("Paged Adapter Not Found");
-            }
-
-            return pagedAdapter;
-        }
-
-        #endregion
     }
 }

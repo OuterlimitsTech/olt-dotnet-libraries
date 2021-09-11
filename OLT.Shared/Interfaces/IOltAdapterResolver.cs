@@ -22,5 +22,7 @@ namespace OLT.Core
 
         TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
 
+        Func<IQueryable<TSource>, IQueryable<TSource>> DefaultOrderBy<TSource, TDestination>()
+            where TSource : class, IOltEntity;
     }
 }
