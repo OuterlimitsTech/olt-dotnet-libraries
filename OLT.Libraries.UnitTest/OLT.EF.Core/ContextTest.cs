@@ -37,17 +37,18 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public void GetTableName()
         {
+            const string expected = "People";
             var tableName = _context.GetTableName<PersonEntity>();
-            var compareTo = nameof(PersonEntity);
-            Assert.Equal(tableName, compareTo);
+            Assert.Equal(tableName, expected);
         }
 
         [Fact]
         public void GetColumns()
         {
+            const string expected = "PeopleId";
             var columns = _context.GetColumns<PersonEntity>();
             Assert.Collection(columns,
-                item => Assert.Equal(item.Name, $"{nameof(PersonEntity)}{nameof(PersonEntity.Id)}"),
+                item => Assert.Equal(item.Name, expected),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateDate)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedBy)}"),
@@ -94,11 +95,12 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         public void GetQueryable()
         {
             UnitTestHelper.AddPerson(_context);
+            _context.SaveChanges();
             Assert.True(_context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).Any());
         }
 
         [Fact]
-        public async Task SaveChangesAsyncTest()
+        public async Task SaveChangesTestAsync()
         {
             using (var factory = new SqlLiteDatabaseContextFactory())
             {
@@ -123,12 +125,28 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
                 }
             }
 
-            //var entity = UnitTestHelper.AddPerson(_context);
-            //entity.NameFirst = Faker.Name.First();
-            //entity.NameMiddle = string.Empty;
-            //await _context.SaveChangesAsync();
-            //var updated = _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.Id == entity.Id);
-            //Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
+        }
+
+
+        [Fact]
+        public async Task ExceedMaxLength()
+        {
+            using (var factory = new SqlLiteDatabaseContextFactory())
+            {
+                // Get a context
+                using (var context = factory.CreateContext())
+                {
+                    var entity = new PersonEntity
+                    {
+                        NameFirst = Faker.Lorem.Sentence(500),
+                        NameLast = Faker.Name.Last()
+                    };
+                    await context.People.AddAsync(entity);
+                    await context.SaveChangesAsync();
+                    Assert.True(true);
+                }
+            }
+
         }
     }
 }

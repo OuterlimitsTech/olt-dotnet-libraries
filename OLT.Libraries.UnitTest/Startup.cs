@@ -109,7 +109,13 @@ namespace OLT.Libraries.UnitTest
                 //.AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>(opt => new EmailApiConfiguration(sendGridSettings))
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
-                    optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
+                    //optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
+                    optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db;Integrated Security=True;");
+                    var options = optionsBuilder.Options as DbContextOptions<SqlDatabaseContext>;
+                    using (var context = new SqlDatabaseContext(options))
+                    {
+                        context.Database.EnsureCreated();
+                    }
                 })
                 .AddControllers();
         }
@@ -117,7 +123,7 @@ namespace OLT.Libraries.UnitTest
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)
         {
-            
+
         }
     }
 
