@@ -90,7 +90,7 @@ namespace OLT.Core
             return ProjectTo<TEntity, TDestination>(source, adapter);
         }
 
-        public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
+        protected virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {
             source = Include(source, adapter);
             if (adapter is IOltAdapterQueryable<TEntity, TDestination> queryableAdapter)
@@ -103,7 +103,7 @@ namespace OLT.Core
 
         #endregion
 
-        #region [ IEnumerable Maps ]
+        #region [ Maps ]
 
         public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source)
         {
@@ -112,14 +112,14 @@ namespace OLT.Core
             return Map<TSource, TDestination>(source, adapter);
         }
 
-        public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
+        protected virtual IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
         {
             source = Include(source, adapter);
 
             switch (adapter)
             {
                 case IOltAdapterQueryable<TSource, TDestination> queryableAdapter:
-                    return ProjectTo<TSource, TDestination>(source);
+                    return ProjectTo<TSource, TDestination>(source, queryableAdapter);
                 case IOltAdapter<TSource, TDestination> mapAdapter:
                     return mapAdapter.Map(source.ToList());
                 default:
@@ -168,14 +168,7 @@ namespace OLT.Core
             return adapter;
         }
 
-        protected virtual IOltAdapterQueryable<TSource, TDestination> GetQueryableAdapter<TSource, TDestination>(bool throwException)
-            where TSource : class, IOltEntity
-            where TDestination : class
-        {
-            return GetAdapter<TSource, TDestination>(throwException) as IOltAdapterQueryable<TSource, TDestination>;
-        }
-
-        public virtual IOltAdapterPaged<TSource, TDestination> GetPagedAdapter<TSource, TDestination>(bool throwException)
+        protected virtual IOltAdapterPaged<TSource, TDestination> GetPagedAdapter<TSource, TDestination>(bool throwException)
             where TSource : class, IOltEntity
         {
             var adapterName = GetAdapterName<TSource, TDestination>();

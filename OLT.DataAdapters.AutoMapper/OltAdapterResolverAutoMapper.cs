@@ -57,7 +57,7 @@ namespace OLT.Core
             throw new OltAdapterNotFoundException<TEntity, TDestination>();
         }
 
-        public override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
+        protected override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {
             if (HasAutoMap<TEntity, TDestination>())
             {
@@ -98,7 +98,7 @@ namespace OLT.Core
             return base.Map<TSource, TDestination>(source);
         }
 
-        public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
+        protected override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
         {
             if (HasAutoMap<TSource, TDestination>())
             {
@@ -142,15 +142,9 @@ namespace OLT.Core
                     }
                     return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
                 }
-                catch (AutoMapperMappingException mappingException)
-                {
-                    _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
-                }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
+                    ThrowException<TSource, TDestination>(ex);
                 }
 
             }
@@ -166,15 +160,9 @@ namespace OLT.Core
                 {
                     return source.OrderBy(null, orderBy).ProjectTo<TDestination>(Mapper.ConfigurationProvider).ToPaged(pagingParams);
                 }
-                catch (AutoMapperMappingException mappingException)
-                {
-                    _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
-                }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
+                    ThrowException<TSource, TDestination>(ex);
                 }
             }
             return base.Paged<TSource, TDestination>(source, pagingParams, orderBy);

@@ -17,11 +17,14 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.SqlServer
     {
 
         private readonly string _connectionString;
+        private readonly SqlDatabaseContext _context;
 
         public SqlExtensionHelpers(
+            SqlDatabaseContext context,
             IConfiguration configuration,
             ITestOutputHelper output) : base(output)
         {
+            _context = context;
             _connectionString = configuration.GetConnectionString("UnitTestConnection");
         }
 
@@ -29,10 +32,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.SqlServer
         [InlineData(OltConnectionStringTypes.AzureSql)]
         public void IsProductionDb(OltConnectionStringTypes searchFor)
         {
-            using var factory = new SqlLiteDatabaseContextFactory();
-            // Get a context
-            using var context = factory.CreateContext();
-            Assert.False(context.IsProductionDb(searchFor));
+            Assert.False(_context.IsProductionDb(searchFor));
         }
 
 

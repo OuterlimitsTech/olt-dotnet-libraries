@@ -12,20 +12,32 @@ namespace OLT.Libraries.UnitTest
 {
     public static class UnitTestHelper
     {
-        public static PersonEntity CreatePerson()
-        {
-            return new PersonEntity
-            {
-                NameFirst = Faker.Name.First(),
-                NameMiddle = Faker.Name.Middle(),
-                NameLast = Faker.Name.Last()
-            };
-        }
 
         public static PersonEntity AddPerson(SqlDatabaseContext context)
         {
-            var entity = CreatePerson();
+            var entity = PersonEntity.FakerEntity();
             context.People.Add(entity);
+            return entity;
+        }
+
+        public static PersonEntity AddPersonWithAddress(SqlDatabaseContext context)
+        {
+            var entity = PersonEntity.FakerEntity();
+            entity.Addresses = new List<AddressEntity>
+            {
+                AddressEntity.FakerEntity(),
+                AddressEntity.FakerEntity(),
+                AddressEntity.FakerEntity()
+            };
+
+            context.People.Add(entity);
+            return entity;
+        }
+
+        public static UserEntity AddUser(SqlDatabaseContext context)
+        {
+            var entity = UserEntity.FakerEntity();
+            context.Users.Add(entity);
             return entity;
         }
 

@@ -51,18 +51,8 @@ namespace OLT.Core
             Varchar
         }
 
-        protected virtual IOltDbAuditUser DbAuditUser
-        {
-            get => _dbAuditUser ??= this.GetService<IOltDbAuditUser>();
-            set => _dbAuditUser = value;
-        }
-
-        protected virtual ILogger<OltDbContext<TContext>> Logger
-        {
-            get => _logger ??= this.GetService<ILogger<OltDbContext<TContext>>>();
-            set => _logger = value;
-        }
-
+        protected virtual IOltDbAuditUser DbAuditUser => _dbAuditUser ??= this.GetService<IOltDbAuditUser>();
+        protected virtual ILogger<OltDbContext<TContext>> Logger => _logger ??= this.GetService<ILogger<OltDbContext<TContext>>>();
 
         public abstract string DefaultSchema { get; }
         public abstract bool DisableCascadeDeleteConvention { get; }

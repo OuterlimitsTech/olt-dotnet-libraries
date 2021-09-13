@@ -11,5 +11,17 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
         public string City { get; set; }
         [StringLength(20)]
         public string State { get; set; }
+
+
+
+        public static AddressEntity FakerEntity()
+        {
+            return new AddressEntity
+            {
+                Street = Faker.Address.StreetAddress(),
+                City = Faker.Address.City(),
+                State = Faker.Address.UsState(),
+            };
+        }
     }
 }

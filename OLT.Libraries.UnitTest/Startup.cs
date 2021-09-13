@@ -111,6 +111,8 @@ namespace OLT.Libraries.UnitTest
                 {
                     //optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
                     optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db;Integrated Security=True;");
+                    optionsBuilder.UseLazyLoadingProxies(false);
+
                     var options = optionsBuilder.Options as DbContextOptions<SqlDatabaseContext>;
                     using (var context = new SqlDatabaseContext(options))
                     {

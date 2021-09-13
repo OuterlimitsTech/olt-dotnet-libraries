@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             var columns = _context.GetColumns<PersonEntity>();
             Assert.Collection(columns,
                 item => Assert.Equal(item.Name, expected),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ActionCode)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateDate)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedBy)}"),
@@ -59,7 +61,9 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ModifyUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameFirst)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameLast)}"),
-                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameMiddle)}")
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameMiddle)}"),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.PersonTypeId)}"), 
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.StatusTypeId)}")
             );
         }
 
@@ -161,7 +165,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
 
         [Fact]
-        public async Task ExceedMaxLength()
+        public async Task ExceedMaxLengthAsync()
         {
             var entity = new PersonEntity
             {
@@ -171,6 +175,91 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             await _context.People.AddAsync(entity);
             await Assert.ThrowsAsync<DbUpdateException>(() => _context.SaveChangesAsync());
 
+        }
+
+        [Fact]
+        public void ExceedMaxLength()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Lorem.Sentence(500),
+                NameLast = Faker.Name.Last()
+            };
+            _context.People.Add(entity);
+            Assert.Throws<DbUpdateException>(() => _context.SaveChanges());
+
+        }
+
+
+        [Fact]
+        public void Delete()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameLast = Faker.Name.Last()
+            };
+            _context.People.Add(entity);
+            _context.SaveChanges();
+
+            _context.People.Remove(entity);
+
+            Assert.True(_context.SaveChanges() > 0);
+        }
+
+
+        [Fact]
+        public void SortOrderSet()
+        {
+            const int defaultSort = 9999;
+            var entity = new CountryCodeEntity
+            {
+                UniqueId = Guid.NewGuid(),
+                Code = Faker.Country.TwoLetterCode(),
+                Abbreviation = Faker.Country.TwoLetterCode(),
+                Name = Faker.Country.Name(),
+                Description = Faker.Lorem.Sentence(10)
+            };
+            _context.Countries.Add(entity);
+            _context.SaveChanges();
+            Assert.Equal(entity.SortOrder, defaultSort);
+        }
+
+
+        [Fact]
+        public void UniqueIdSet()
+        {
+            
+            var entity = new CountryCodeEntity
+            {
+                Code = Faker.Country.TwoLetterCode(),
+                Abbreviation = Faker.Country.TwoLetterCode(),
+                Name = Faker.Country.Name(),
+                Description = Faker.Lorem.Sentence(10),
+                SortOrder = 500
+            };
+            _context.Countries.Add(entity);
+            _context.SaveChanges();
+            Assert.NotEqual(entity.UniqueId, Guid.Empty);
+        }
+
+        [Fact]
+        public void CreateDateSet()
+        {
+
+            var entity = new CountryCodeEntity
+            {
+                UniqueId = Guid.NewGuid(),
+                Code = Faker.Country.TwoLetterCode(),
+                Abbreviation = Faker.Country.TwoLetterCode(),
+                Name = Faker.Country.Name(),
+                Description = Faker.Lorem.Sentence(10),
+                SortOrder = 500,
+                CreateDate = DateTimeOffset.MinValue,
+            };
+            _context.Countries.Add(entity);
+            _context.SaveChanges();
+            Assert.NotEqual(entity.UniqueId, Guid.Empty);
         }
     }
 }

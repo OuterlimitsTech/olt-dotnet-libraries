@@ -7,7 +7,7 @@ using OLT.Libraries.UnitTest.Assets.Models;
 namespace OLT.Libraries.UnitTest.Assets.Adapters
 {
     // ReSharper disable once InconsistentNaming
-    public class PersonAutoMapperDtoAdapter : OltAdapterPagedMap<PersonEntity, PersonAutoMapperDto>
+    public class PersonAutoMapperPaged : OltAdapterPagedMap<PersonEntity, PersonAutoMapperDto>
     {
         public override void BuildMap(IMappingExpression<PersonEntity, PersonAutoMapperDto> mappingExpression)
         {

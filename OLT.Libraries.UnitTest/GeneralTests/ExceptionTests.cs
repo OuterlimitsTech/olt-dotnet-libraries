@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
@@ -35,6 +36,15 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         public void ExceptionTest()
         {
             var ex = new OltException(DefaultMessage);
+            var result = ToSerialize(ex);
+            Assert.Equal(ex.Message, result.Message);
+        }
+
+        [Fact]
+        public void InnerExceptionTest()
+        {
+            var innerException = new Exception($"Inner {DefaultMessage}");
+            var ex = new OltException(DefaultMessage, innerException);
             var result = ToSerialize(ex);
             Assert.Equal(ex.Message, result.Message);
         }
@@ -111,6 +121,26 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             var result = ToSerialize(ex);
             Assert.Equal(ex.Message, result.Message);
         }
-        
+
+        [Fact]
+        public void AutoMapperExceptionTest()
+        {
+            var innerException = new AutoMapperMappingException(DefaultMessage);
+            var ex = new OltAutoMapperException<PersonEntity, PersonDto>(innerException);
+            var expected =
+                $"AutoMapper Exception while using map {nameof(IOltAdapterMap<PersonEntity, PersonDto>)}: {typeof(PersonEntity).FullName} -> {typeof(PersonDto).FullName} {Environment.NewLine}{innerException.Message}";
+            Assert.Equal(expected, ex.Message);
+        }
+
+
+        [Fact]
+        public void AutoMapperInnerExceptionTest()
+        {
+            var innerException = new Exception(DefaultMessage);
+            var ex = new OltAutoMapperException<PersonEntity, PersonDto>(innerException);
+            var expected =
+                $"AutoMapper Exception while using map {nameof(IOltAdapterMap<PersonEntity, PersonDto>)}: {typeof(PersonEntity).FullName} -> {typeof(PersonDto).FullName}";
+            Assert.Equal(expected, ex.Message);
+        }
     }
 }
