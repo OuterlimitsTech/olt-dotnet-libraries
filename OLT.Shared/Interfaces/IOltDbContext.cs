@@ -10,7 +10,6 @@ namespace OLT.Core
         string AuditUser { get; }
         TDatabase Database { get; }
         int SaveChanges();
-        Task<int> SaveChangesAsync();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

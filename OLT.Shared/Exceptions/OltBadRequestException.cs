@@ -5,12 +5,8 @@ using System.Security.Permissions;
 namespace OLT.Core
 {
     [Serializable]
-    public class OltBadRequestException : SystemException
+    public class OltBadRequestException : OltException
     {
-        private OltBadRequestException()
-        {
-
-        }
 
         public OltBadRequestException(string message) : base(message)
         {

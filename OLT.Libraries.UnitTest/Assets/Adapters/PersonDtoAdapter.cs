@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
 using OLT.Libraries.UnitTest.Assets.Models;
@@ -6,7 +7,7 @@ using OLT.Libraries.UnitTest.Assets.Models;
 namespace OLT.Libraries.UnitTest.Assets.Adapters
 {
     // ReSharper disable once InconsistentNaming
-    public class PersonDtoAdapter : OltAdapterPaged<PersonEntity, PersonDto>
+    public class PersonDtoAdapter : OltAdapterPaged<PersonEntity, PersonDto>, IOltAdapterQueryableInclude<PersonEntity>
     {
         public override void Map(PersonEntity source, PersonDto destination)
         {
@@ -37,6 +38,11 @@ namespace OLT.Libraries.UnitTest.Assets.Adapters
         public override IQueryable<PersonEntity> DefaultOrderBy(IQueryable<PersonEntity> queryable)
         {
             return queryable.OrderBy(p => p.NameLast).ThenBy(p => p.NameFirst).ThenBy(p => p.Id);
+        }
+
+        public IQueryable<PersonEntity> Include(IQueryable<PersonEntity> queryable)
+        {
+            return queryable.Include(i => i.PersonType);
         }
     }
 }

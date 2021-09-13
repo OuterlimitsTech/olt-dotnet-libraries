@@ -5,6 +5,28 @@ using OLT.Core;
 
 namespace OLT.Libraries.UnitTest.Assets.LocalServices
 {
+    public class OltUnitTestNullIdentity : OltIdentity
+    {
+
+        public override ClaimsPrincipal Identity
+        {
+            get
+            {
+                var roles = new List<string>();
+                return new GenericPrincipal(new GenericIdentity("bogus"), roles.ToArray());
+            }
+        }
+
+        public override string Username => null;
+        public override string UserPrincipalName => null;
+        public override string Email => null;
+
+        public override bool HasRoleClaim(string claimName)
+        {
+            return true;
+        }
+
+    }
     public class OltUnitTestAppIdentity : OltIdentity
     {
         public const string StaticUser = "UnitTest";

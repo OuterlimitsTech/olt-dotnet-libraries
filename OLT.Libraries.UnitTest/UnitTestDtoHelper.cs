@@ -15,13 +15,29 @@ namespace OLT.Libraries.UnitTest
 
         public static PersonEntity AddPerson(SqlDatabaseContext context)
         {
-            var entity = new PersonEntity
-            {
-                NameFirst = Faker.Name.First(),
-                NameMiddle = Faker.Name.Middle(),
-                NameLast = Faker.Name.Last()
-            };
+            var entity = PersonEntity.FakerEntity();
             context.People.Add(entity);
+            return entity;
+        }
+
+        public static PersonEntity AddPersonWithAddress(SqlDatabaseContext context)
+        {
+            var entity = PersonEntity.FakerEntity();
+            entity.Addresses = new List<AddressEntity>
+            {
+                AddressEntity.FakerEntity(),
+                AddressEntity.FakerEntity(),
+                AddressEntity.FakerEntity()
+            };
+
+            context.People.Add(entity);
+            return entity;
+        }
+
+        public static UserEntity AddUser(SqlDatabaseContext context)
+        {
+            var entity = UserEntity.FakerEntity();
+            context.Users.Add(entity);
             return entity;
         }
 
@@ -35,6 +51,20 @@ namespace OLT.Libraries.UnitTest
             return new PersonAutoMapperModel
             {
                 Name = {
+                    First = Faker.Name.First(),
+                    Middle = Faker.Name.Middle(),
+                    Last = Faker.Name.Last()
+                }
+            };
+        }
+
+        public static UserModel CreateUserModel()
+        {
+            return new UserModel
+            {
+                UserGuid = Guid.NewGuid(),
+                Name = 
+                {
                     First = Faker.Name.First(),
                     Middle = Faker.Name.Middle(),
                     Last = Faker.Name.Last()

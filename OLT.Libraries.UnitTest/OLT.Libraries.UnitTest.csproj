@@ -5,9 +5,11 @@
     <IsPackable>false</IsPackable>
     <SonarQubeExclude>true</SonarQubeExclude>
     <UserSecretsId>a1ca46fa-4371-49cb-b686-334363ca01f1</UserSecretsId>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Entity\Configurations\SeedData\person_type.csv" />
     <None Remove="Properties\launchSettings.json" />
   </ItemGroup>
 
@@ -15,6 +17,10 @@
     <Content Include="Properties\launchSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Entity\Configurations\SeedData\person_type.csv" />
   </ItemGroup>
 
 
@@ -60,6 +66,7 @@
     <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters.AutoMapper\OLT.DataAdapters.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters\OLT.DataAdapters.csproj" />
+    <ProjectReference Include="..\OLT.EF.Core.SeedHelpers.Csv\OLT.EF.Core.SeedHelpers.Csv.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.SqlServer\OLT.EF.Core.SqlServer.csproj" />
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />

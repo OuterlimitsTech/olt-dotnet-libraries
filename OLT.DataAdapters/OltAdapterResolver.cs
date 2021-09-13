@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.Core
@@ -62,6 +63,12 @@ namespace OLT.Core
             return adapter.Map(source, pagingParams, orderBy);
         }
 
+        public virtual Func<IQueryable<TSource>, IQueryable<TSource>> DefaultOrderBy<TSource, TDestination>()
+            where TSource : class, IOltEntity
+        {
+            return GetPagedAdapter<TSource, TDestination>(true).DefaultOrderBy;
+        }
+
         #endregion
 
         #region [ ProjectTo Maps ]
@@ -74,10 +81,8 @@ namespace OLT.Core
             {
                 return true;
             }
-
             return false;
         }
-
         public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source)
         {
             var name = GetAdapterName<TEntity, TDestination>();
@@ -85,8 +90,7 @@ namespace OLT.Core
             return ProjectTo<TEntity, TDestination>(source, adapter);
         }
 
-
-        public virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
+        protected virtual IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
         {
             source = Include(source, adapter);
             if (adapter is IOltAdapterQueryable<TEntity, TDestination> queryableAdapter)
@@ -94,12 +98,12 @@ namespace OLT.Core
                 return queryableAdapter.Map(source);
             }
 
-            throw new OltException($"{GetAdapterName<TEntity, TDestination>()} Adapter is not of type ${nameof(IOltAdapterQueryable<TEntity, TDestination>)}");
+            throw new OltAdapterNotFoundException(GetAdapterName<TEntity, TDestination>());
         }
 
         #endregion
 
-        #region [ IEnumerable Maps ]
+        #region [ Maps ]
 
         public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source)
         {
@@ -108,19 +112,17 @@ namespace OLT.Core
             return Map<TSource, TDestination>(source, adapter);
         }
 
-        public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
+        protected virtual IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
         {
             source = Include(source, adapter);
 
-            switch (adapter)
+            if (adapter is IOltAdapterQueryable<TSource, TDestination> queryableAdapter)
             {
-                case IOltAdapterQueryable<TSource, TDestination> queryableAdapter:
-                    return ProjectTo<TSource, TDestination>(source);
-                case IOltAdapter<TSource, TDestination> mapAdapter:
-                    return mapAdapter.Map(source.ToList());
-                default:
-                    throw new OltException($"{GetAdapterName<TSource, TDestination>()} Adapter is not of type ${nameof(IOltAdapter<TSource, TDestination>)}");
+                return ProjectTo<TSource, TDestination>(source, queryableAdapter);
             }
+
+            // ReSharper disable once PossibleNullReferenceException
+            return (adapter as IOltAdapter<TSource, TDestination>).Map(source);
         }
 
         public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
@@ -159,16 +161,9 @@ namespace OLT.Core
             var adapter = Adapters.FirstOrDefault(p => p.Name == adapterName);
             if (adapter == null && throwException)
             {
-                throw new OltException($"Adapter Not Found {adapterName}");
+                throw new OltAdapterNotFoundException(adapterName);
             }
             return adapter;
-        }
-
-        protected virtual IOltAdapterQueryable<TSource, TDestination> GetQueryableAdapter<TSource, TDestination>(bool throwException)
-            where TSource : class, IOltEntity
-            where TDestination : class
-        {
-            return GetAdapter<TSource, TDestination>(throwException) as IOltAdapterQueryable<TSource, TDestination>;
         }
 
         protected virtual IOltAdapterPaged<TSource, TDestination> GetPagedAdapter<TSource, TDestination>(bool throwException)
@@ -179,53 +174,12 @@ namespace OLT.Core
             var pagedAdapter = adapter as IOltAdapterPaged<TSource, TDestination>;
             if (pagedAdapter == null && throwException)
             {
-                throw new OltException($"{adapterName} Paged Adapter Not Found");
+                throw new OltAdapterNotFoundException($"{adapterName} Paged");
             }
             return pagedAdapter;
         }
 
         #endregion
 
-        #region [ Obsolete Methods ]
-
-
-        [Obsolete("Move to Map or ProjectTo")]
-        public virtual IOltAdapter<TSource, TModel> GetAdapter<TSource, TModel>()
-        {
-            var adapterName = base.BuildName<TSource, TModel>();
-            var adapter = this.Adapters.FirstOrDefault(p => p.Name == adapterName);
-            if (adapter == null)
-            {
-                throw new OltException($"Adapter Not Found {adapterName}");
-            }
-
-            return adapter as IOltAdapter<TSource, TModel>;
-        }
-
-        [Obsolete("Move to Map or ProjectTo")]
-        public virtual IOltAdapterQueryable<TSource, TModel> GetQueryableAdapter<TSource, TModel>()
-        {
-            var adapter = GetAdapter<TSource, TModel>();
-
-            var queryableAdapter = adapter as IOltAdapterQueryable<TSource, TModel>;
-
-            return queryableAdapter;
-        }
-
-        [Obsolete("Move to Map or ProjectTo")]
-        public virtual IOltAdapterPaged<TSource, TModel> GetPagedAdapter<TSource, TModel>()
-        {
-            var adapter = GetAdapter<TSource, TModel>();
-
-            var pagedAdapter = adapter as IOltAdapterPaged<TSource, TModel>;
-            if (pagedAdapter == null)
-            {
-                throw new OltException("Paged Adapter Not Found");
-            }
-
-            return pagedAdapter;
-        }
-
-        #endregion
     }
 }

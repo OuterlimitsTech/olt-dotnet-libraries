@@ -1,9 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
+using OLT.Libraries.UnitTest.Assets.Models;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,17 +45,19 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public void GetTableName()
         {
+            var expected =  $"{_context.DefaultSchema}.People";
             var tableName = _context.GetTableName<PersonEntity>();
-            var compareTo = nameof(PersonEntity);
-            Assert.Equal(tableName, compareTo);
+            Assert.Equal(tableName, expected);
         }
 
         [Fact]
         public void GetColumns()
         {
+            const string expected = "PeopleId";
             var columns = _context.GetColumns<PersonEntity>();
             Assert.Collection(columns,
-                item => Assert.Equal(item.Name, $"{nameof(PersonEntity)}{nameof(PersonEntity.Id)}"),
+                item => Assert.Equal(item.Name, expected),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ActionCode)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateDate)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedBy)}"),
@@ -55,32 +66,34 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ModifyUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameFirst)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameLast)}"),
-                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameMiddle)}")
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameMiddle)}"),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.PersonTypeId)}"), 
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.StatusTypeId)}")
             );
         }
 
 
         // https://www.meziantou.net/testing-ef-core-in-memory-using-sqlite.htm
-        [Fact]
-        public void SqlLite()
-        {
-            using (var factory = new SqlLiteDatabaseContextFactory())
-            {
-                // Get a context
-                using (var context = factory.CreateContext())
-                {
-                    context.People.Add(new PersonEntity
-                    {
-                        NameFirst = "Tim",
-                        NameLast = "Jones"
-                    });
-                    context.SaveChanges();
-                }
-            }
+        //[Fact]
+        //public void SqlLite()
+        //{
+        //    using (var factory = new SqlLiteDatabaseContextFactory())
+        //    {
+        //        // Get a context
+        //        using (var context = factory.CreateContext())
+        //        {
+        //            context.People.Add(new PersonEntity
+        //            {
+        //                NameFirst = "Tim",
+        //                NameLast = "Jones"
+        //            });
+        //            context.SaveChanges();
+        //        }
+        //    }
 
-            Assert.True(true);
+        //    Assert.True(true);
             
-        }
+        //}
 
         [Fact]
         public void InitializeQueryable()
@@ -93,7 +106,226 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         public void GetQueryable()
         {
             UnitTestHelper.AddPerson(_context);
+            _context.SaveChanges();
             Assert.True(_context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).Any());
         }
+
+        [Fact]
+        public async Task SaveChangesTestAsync()
+        {
+            //Found an issue with the null string process and we need to mix multiple entity saves within the same test
+            SeedBogus(_context);
+            SeedUsers(_context);
+
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameMiddle = Faker.Name.Middle(),
+                NameLast = Faker.Name.Last()
+            };
+            await _context.People.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            entity.NameFirst = Faker.Name.First();
+            entity.NameMiddle = string.Empty;
+            await _context.SaveChangesAsync();
+
+            var updated = await _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefaultAsync(p => p.Id == entity.Id);
+            Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
+        }
+
+        [Fact]
+        public void SaveChangesTest()
+        {
+            //Found an issue with the null string process and we need to mix multiple entity saves within the same test
+            SeedBogus(_context);
+            SeedUsers(_context);
+            
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameMiddle = Faker.Name.Middle(),
+                NameLast = Faker.Name.Last()
+            };
+            _context.People.Add(entity);
+            _context.SaveChanges();
+
+            entity.NameFirst = Faker.Name.First();
+            entity.NameMiddle = string.Empty;
+            _context.SaveChanges();
+
+            var updated = _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.Id == entity.Id);
+            Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
+        }
+
+
+        [Fact]
+        public async Task ExceedMaxLengthAsync()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Lorem.Sentence(500),
+                NameLast = Faker.Name.Last()
+            };
+            await _context.People.AddAsync(entity);
+            await Assert.ThrowsAsync<DbUpdateException>(() => _context.SaveChangesAsync());
+
+        }
+
+        [Fact]
+        public void ExceedMaxLength()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Lorem.Sentence(500),
+                NameLast = Faker.Name.Last()
+            };
+            _context.People.Add(entity);
+            Assert.Throws<DbUpdateException>(() => _context.SaveChanges());
+        }
+
+        [Fact]
+        public async Task RegularExceptionAsync()
+        {
+            SeedBogus(_context);
+            var entity = await _context.BogusNoString.OrderBy(p => Guid.NewGuid()).FirstOrDefaultAsync();
+            entity.Value2 = Faker.RandomNumber.Next(1, 20000);
+            await Assert.ThrowsAsync<Exception>(() => _context.SaveChangesAsync());
+        }
+
+        [Fact]
+        public void RegularException()
+        {
+            SeedBogus(_context);
+            var entity = _context.BogusNoString.OrderBy(p => Guid.NewGuid()).FirstOrDefault();
+            entity.Value2 = Faker.RandomNumber.Next(1, 20000);
+            Assert.Throws<Exception>(() => _context.SaveChanges());
+        }
+
+        [Fact]
+        public async Task FkExceptionAsync()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameLast = Faker.Name.Last(),
+                PersonTypeId = Faker.RandomNumber.Next(10000)
+            };
+            await _context.People.AddAsync(entity);
+            await Assert.ThrowsAsync<DbUpdateException>(() => _context.SaveChangesAsync());
+        }
+
+        [Fact]
+        public void FkException()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameLast = Faker.Name.Last(),
+                PersonTypeId = Faker.RandomNumber.Next(10000)
+            };
+            _context.People.Add(entity);
+            Assert.Throws<DbUpdateException>(() => _context.SaveChanges());
+        }
+
+        [Fact]
+        public void Delete()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameLast = Faker.Name.Last()
+            };
+            _context.People.Add(entity);
+            _context.SaveChanges();
+
+            _context.People.Remove(entity);
+
+            Assert.True(_context.SaveChanges() > 0);
+        }
+
+
+        [Fact]
+        public void SortOrderSet()
+        {
+            const int defaultSort = 9999;
+            var entity = new CountryCodeEntity
+            {
+                UniqueId = Guid.NewGuid(),
+                Code = Faker.Country.TwoLetterCode(),
+                Abbreviation = Faker.Country.TwoLetterCode(),
+                Name = Faker.Country.Name(),
+                Description = Faker.Lorem.Sentence(10)
+            };
+            _context.Countries.Add(entity);
+            _context.SaveChanges();
+            Assert.Equal(entity.SortOrder, defaultSort);
+        }
+
+
+        [Fact]
+        public void UniqueIdSet()
+        {
+            
+            var entity = new CountryCodeEntity
+            {
+                Code = Faker.Country.TwoLetterCode(),
+                Abbreviation = Faker.Country.TwoLetterCode(),
+                Name = Faker.Country.Name(),
+                Description = Faker.Lorem.Sentence(10),
+                SortOrder = 500
+            };
+            _context.Countries.Add(entity);
+            _context.SaveChanges();
+            Assert.NotEqual(entity.UniqueId, Guid.Empty);
+        }
+
+        [Fact]
+        public void CreateDateSet()
+        {
+
+            var entity = new CountryCodeEntity
+            {
+                UniqueId = Guid.NewGuid(),
+                Code = Faker.Country.TwoLetterCode(),
+                Abbreviation = Faker.Country.TwoLetterCode(),
+                Name = Faker.Country.Name(),
+                Description = Faker.Lorem.Sentence(10),
+                SortOrder = 500,
+                CreateDate = DateTimeOffset.MinValue,
+            };
+            _context.Countries.Add(entity);
+            _context.SaveChanges();
+            Assert.NotEqual(entity.UniqueId, Guid.Empty);
+        }
+
+
+        [Fact]
+        public void AnonymousUser()
+        {
+
+            var webBuilder = new WebHostBuilder();
+            webBuilder
+                .UseSerilog()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder
+                        .SetBasePath(AppContext.BaseDirectory)
+                        .AddUserSecrets<Startup>()
+                        .AddJsonFile("appsettings.json", false, true)
+                        .AddEnvironmentVariables();
+                })
+                .UseStartup<SerilogStartup>();
+
+            var testServer = new TestServer(webBuilder);
+
+            var context = testServer.Services.GetRequiredService<SqlDatabaseContext>();
+            var entity = UnitTestHelper.AddPerson(context);
+            context.SaveChanges();
+            var person = context.People.FirstOrDefault(p => p.Id == entity.Id);
+            Assert.Equal(person?.CreateUser, context.DefaultAnonymousUser);
+        }
+
+      
     }
 }

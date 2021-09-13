@@ -40,7 +40,7 @@ namespace OLT.Libraries.UnitTest
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)
                 .AddOltInjectionAutoMapper()
                 .AddOltSerilog()
-                .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
+                .AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
                     optionsBuilder.UseInMemoryDatabase(databaseName: $"{nameof(SerilogStartup)}_{Guid.NewGuid()}");

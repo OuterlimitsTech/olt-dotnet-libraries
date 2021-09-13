@@ -64,6 +64,12 @@ jobs:
             echo Package Version = '$(packageVersion)'
             echo Package Version = '$(Build.SourcesDirectory)'
 
+      - task: PowerShell@2
+        displayName: 'start mssqllocaldb'
+        inputs:
+          targetType: 'inline'
+          script: 'sqllocaldb start mssqllocaldb'
+
       - task: DotNetCoreCLI@2
         displayName: 'Resore Nuget'
         inputs:
@@ -164,6 +170,7 @@ jobs:
           repositoryName: 'OuterlimitsTech/olt-dotnet-libraries'
           action: 'create'
           target: 'v$(GitVersion.NuGetVersionV2)'
+          tag: 'v$(GitVersion.NuGetVersionV2)'
           tagSource: 'gitTag'
           assets: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
           changeLogCompareToRelease: 'lastFullRelease'

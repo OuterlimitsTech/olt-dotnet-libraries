@@ -7,11 +7,11 @@ using OLT.Libraries.UnitTest.Assets.Models;
 namespace OLT.Libraries.UnitTest.Assets.Adapters
 {
     // ReSharper disable once InconsistentNaming
-    public class PersonAutoMapperDtoAdapter : OltAdapterPagedMap<PersonEntity, PersonAutoMapperDto>
+    public class PersonAutoMapperPagedMap : OltAdapterPagedMap<PersonEntity, PersonAutoMapperPagedDto>
     {
-        public override void BuildMap(IMappingExpression<PersonEntity, PersonAutoMapperDto> mappingExpression)
+        public override void BuildMap(IMappingExpression<PersonEntity, PersonAutoMapperPagedDto> mappingExpression)
         {
-            PersonAutoMapperDto.BuildMap(mappingExpression);
+            PersonAutoMapperPagedDto.BuildMap(mappingExpression);
         }
 
         public override IQueryable<PersonEntity> DefaultOrderBy(IQueryable<PersonEntity> queryable)

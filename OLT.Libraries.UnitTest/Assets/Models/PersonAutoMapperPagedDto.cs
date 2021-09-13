@@ -5,11 +5,11 @@ using OLT.Libraries.UnitTest.Assets.Entity.Models;
 namespace OLT.Libraries.UnitTest.Assets.Models
 {
     // ReSharper disable once InconsistentNaming
-    public class PersonAutoMapperDto : PersonDto
+    public class PersonAutoMapperPagedDto : PersonDto
     {
         public DateTimeOffset Created { get; set; }
 
-        public static void BuildMap(IMappingExpression<PersonEntity, PersonAutoMapperDto> mappingExpression)
+        public static void BuildMap(IMappingExpression<PersonEntity, PersonAutoMapperPagedDto> mappingExpression)
         {
             mappingExpression
                 .ForMember(f => f.PersonId, opt => opt.MapFrom(t => t.Id))
