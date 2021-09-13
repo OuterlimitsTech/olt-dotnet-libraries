@@ -23,13 +23,13 @@ namespace OLT.Core
             return Mapper.ConfigurationProvider.FindTypeMapFor<TSource, TDestination>() != null;
         }
 
-        protected virtual void ThrowException<TSource, TResult>(Exception exception)
+        protected virtual OltAutoMapperException<TSource, TResult> BuildException<TSource, TResult>(Exception exception)
         {
             if (exception is AutoMapperMappingException autoMapperException)
             {
-                throw new OltAutoMapperException<TSource, TResult>(autoMapperException);
+                return new OltAutoMapperException<TSource, TResult>(autoMapperException);
             }
-            throw new OltAutoMapperException<TSource, TResult>(exception);
+            return new OltAutoMapperException<TSource, TResult>(exception);
         }
 
         #region [ ProjectTo Maps ]
@@ -47,10 +47,8 @@ namespace OLT.Core
             }
             catch (Exception exception)
             {
-                ThrowException<TEntity, TDestination>(exception);
+                throw BuildException<TEntity, TDestination>(exception);
             }
-
-            throw new OltAdapterNotFoundException<TEntity, TDestination>();
         }
 
         protected override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
@@ -78,7 +76,7 @@ namespace OLT.Core
                 }
                 catch (Exception exception)
                 {
-                    ThrowException<TSource, TDestination>(exception);
+                    throw BuildException<TSource, TDestination>(exception);
                 }
             }
 
@@ -87,20 +85,12 @@ namespace OLT.Core
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source)
         {
-            if (HasAutoMap<TSource, TDestination>())
-            {
-                return ProjectFromQueryable<TSource, TDestination>(source);
-            }
-            return base.Map<TSource, TDestination>(source);
+            return HasAutoMap<TSource, TDestination>() ? ProjectFromQueryable<TSource, TDestination>(source) : base.Map<TSource, TDestination>(source);
         }
 
         protected override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
         {
-            if (HasAutoMap<TSource, TDestination>())
-            {
-                return ProjectFromQueryable<TSource, TDestination>(source);
-            }
-            return base.Map<TSource, TDestination>(source, adapter);
+            return HasAutoMap<TSource, TDestination>() ? ProjectFromQueryable<TSource, TDestination>(source) : base.Map<TSource, TDestination>(source, adapter);
         }
 
         public override TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
@@ -113,7 +103,7 @@ namespace OLT.Core
                 }
                 catch (Exception exception)
                 {
-                    ThrowException<TSource, TDestination>(exception);
+                    throw BuildException<TSource, TDestination>(exception);
                 }
             }
 
@@ -128,9 +118,10 @@ namespace OLT.Core
         {
             if (HasAutoMap<TSource, TDestination>())
             {
+                var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
+
                 try
                 {
-                    var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
                     Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
                     if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
                     {
@@ -140,7 +131,7 @@ namespace OLT.Core
                 }
                 catch (Exception ex)
                 {
-                    ThrowException<TSource, TDestination>(ex);
+                    throw BuildException<TSource, TDestination>(ex);
                 }
 
             }
@@ -158,7 +149,7 @@ namespace OLT.Core
                 }
                 catch (Exception ex)
                 {
-                    ThrowException<TSource, TDestination>(ex);
+                    throw BuildException<TSource, TDestination>(ex);
                 }
             }
             return base.Paged<TSource, TDestination>(source, pagingParams, orderBy);
@@ -171,7 +162,7 @@ namespace OLT.Core
             var mapAdapter = adapter as IOltAdapterPagedMap<TSource, TDestination>;
             if (mapAdapter == null && throwException)
             {
-                throw new InvalidCastException($"{adapterName} not of type {nameof(IOltAdapterPagedMap<TSource, TDestination>)}");
+                throw new OltAdapterNotFoundException($"{adapterName} Paged");
             }
             return mapAdapter;
 

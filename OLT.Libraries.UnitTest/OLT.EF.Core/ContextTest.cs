@@ -114,13 +114,8 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         public async Task SaveChangesTestAsync()
         {
             //Found an issue with the null string process and we need to mix multiple entity saves within the same test
-            var userList = new List<UserEntity>();
-            for (int i = 0; i < Faker.RandomNumber.Next(10, 35); i++)
-            {
-                userList.Add(UserEntity.FakerEntity());
-            }
-            await _context.Users.AddRangeAsync(userList);
-            await _context.SaveChangesAsync();
+            SeedBogus(_context);
+            SeedUsers(_context);
 
             var entity = new PersonEntity
             {
@@ -143,14 +138,9 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         public void SaveChangesTest()
         {
             //Found an issue with the null string process and we need to mix multiple entity saves within the same test
-            var userList = new List<UserEntity>();
-            for (int i = 0; i < Faker.RandomNumber.Next(10, 35); i++)
-            {
-                userList.Add(UserEntity.FakerEntity());
-            }
-            _context.Users.AddRange(userList);
-            _context.SaveChanges();
-
+            SeedBogus(_context);
+            SeedUsers(_context);
+            
             var entity = new PersonEntity
             {
                 NameFirst = Faker.Name.First(),
@@ -192,7 +182,24 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             };
             _context.People.Add(entity);
             Assert.Throws<DbUpdateException>(() => _context.SaveChanges());
+        }
 
+        [Fact]
+        public async Task RegularExceptionAsync()
+        {
+            SeedBogus(_context);
+            var entity = await _context.BogusNoString.OrderBy(p => Guid.NewGuid()).FirstOrDefaultAsync();
+            entity.Value2 = Faker.RandomNumber.Next(1, 20000);
+            await Assert.ThrowsAsync<Exception>(() => _context.SaveChangesAsync());
+        }
+
+        [Fact]
+        public void RegularException()
+        {
+            SeedBogus(_context);
+            var entity = _context.BogusNoString.OrderBy(p => Guid.NewGuid()).FirstOrDefault();
+            entity.Value2 = Faker.RandomNumber.Next(1, 20000);
+            Assert.Throws<Exception>(() => _context.SaveChanges());
         }
 
         [Fact]
@@ -219,7 +226,6 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             };
             _context.People.Add(entity);
             Assert.Throws<DbUpdateException>(() => _context.SaveChanges());
-
         }
 
         [Fact]

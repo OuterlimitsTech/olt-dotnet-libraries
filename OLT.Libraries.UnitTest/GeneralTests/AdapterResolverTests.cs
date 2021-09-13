@@ -225,8 +225,15 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         [Fact]
         public void PagedMapNotFoundException()
         {
-            var data = _context.Users.Where(new OltSearcherGetAll<UserEntity>());
-            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Paged<UserEntity, UserNoAdapterDto>(data, new OltPagingParams { Page = 1, Size = 10}));
+            var queryable = _context.Users.Where(new OltSearcherGetAll<UserEntity>());
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Paged<UserEntity, UserNoAdapterDto>(queryable, new OltPagingParams { Page = 1, Size = 10}));
+        }
+
+        [Fact]
+        public void PagedMapNotFoundException2()
+        {
+            var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Paged<PersonEntity, PersonAutoMapperModel>(queryable, new OltPagingParams { Page = 1, Size = 10 }));
         }
     }
 }

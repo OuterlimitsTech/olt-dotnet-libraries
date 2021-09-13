@@ -26,6 +26,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         public virtual DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
         public virtual DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
         public virtual DbSet<CountryCodeEntity> Countries { get; set; }
+        public virtual DbSet<NoStringPropertiesEntity> BogusNoString { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

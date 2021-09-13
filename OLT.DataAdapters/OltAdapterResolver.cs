@@ -116,15 +116,13 @@ namespace OLT.Core
         {
             source = Include(source, adapter);
 
-            switch (adapter)
+            if (adapter is IOltAdapterQueryable<TSource, TDestination> queryableAdapter)
             {
-                case IOltAdapterQueryable<TSource, TDestination> queryableAdapter:
-                    return ProjectTo<TSource, TDestination>(source, queryableAdapter);
-                case IOltAdapter<TSource, TDestination> mapAdapter:
-                    return mapAdapter.Map(source.ToList());
-                default:
-                    throw new OltAdapterNotFoundException(GetAdapterName<TSource, TDestination>());
+                return ProjectTo<TSource, TDestination>(source, queryableAdapter);
             }
+
+            // ReSharper disable once PossibleNullReferenceException
+            return (adapter as IOltAdapter<TSource, TDestination>).Map(source);
         }
 
         public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
