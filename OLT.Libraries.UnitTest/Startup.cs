@@ -106,7 +106,6 @@ namespace OLT.Libraries.UnitTest
                 .AddOltUnitTesting(this.GetType().Assembly)
                 .AddScoped<IOltEmailService, OltSendGridEmailService>()
                 .AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>()
-                //.AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>(opt => new EmailApiConfiguration(sendGridSettings))
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
                     //optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());

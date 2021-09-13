@@ -66,18 +66,7 @@ namespace OLT.Libraries.UnitTest.GeneralTests
            Assert.False(_adapterResolver.CanProjectTo<AddressEntity, PersonDto>());
         }
 
-        [Fact]
-        public void AdapterNotFoundException()
-        {
-            var item = UnitTestHelper.CreateTestAutoMapperModel();
-            var address = new PersonAddressModel
-            {
-                Name = item.Name,
-                Street1 = Faker.Address.StreetAddress()
-            };
 
-            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Map(address, new UserEntity()));
-        }
 
         [Fact]
         public void QueryablePagedAdapter()
@@ -143,6 +132,21 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.Equal(paged.Data.Count(), paged.Size);
         }
 
+        [Fact]
+        public void SortParams()
+        {
+            var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
+            var pagingParams = new OltPagingWithSortParams
+            {
+                Page = 1, 
+                Size = 10, 
+                IsAscending = false, 
+                PropertyName = nameof(PersonEntity.NameLast)
+            };
+
+            var paged = _adapterResolver.Paged<PersonEntity, PersonDto>(queryable, pagingParams);
+            Assert.Equal(paged.Data.Count(), paged.Size);
+        }
 
         [Fact]
         public void Include()
@@ -181,6 +185,48 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.True(user?.Status == null);
         }
 
+        [Fact]
+        public void PagedAdapterNotFoundException()
+        {
+            var queryable = _context.Users.Where(new OltSearcherGetAll<UserEntity>());
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Paged<UserEntity, UserTempDto>(queryable, new OltPagingParams { Page = 1, Size = 10 }));
+        }
 
+
+        [Fact]
+        public void ProjectNotFoundException()
+        {
+            var queryable = _context.Users.Where(new OltSearcherGetAll<UserEntity>());
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.ProjectTo<UserEntity, UserDto>(queryable));
+        }
+
+        [Fact]
+        public void DefaultOrderByException()
+        {
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.DefaultOrderBy<UserEntity, UserDto>());
+        }
+
+        [Fact]
+        public void EnumerableMapNotFoundException()
+        {
+            var data = _context.Users.Where(new OltSearcherGetAll<UserEntity>()).Take(15).ToList();
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Map<UserEntity, UserNoAdapterDto>(data));
+        }
+
+
+        [Fact]
+        public void QueryableMapNotFoundException()
+        {
+            var data = _context.Users.Where(new OltSearcherGetAll<UserEntity>()).Take(15);
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Map<UserEntity, UserNoAdapterDto>(data));
+        }
+
+
+        [Fact]
+        public void PagedMapNotFoundException()
+        {
+            var data = _context.Users.Where(new OltSearcherGetAll<UserEntity>());
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.Paged<UserEntity, UserNoAdapterDto>(data, new OltPagingParams { Page = 1, Size = 10}));
+        }
     }
 }

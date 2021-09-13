@@ -78,45 +78,44 @@ namespace OLT.Core
             }
         }
 
+        protected virtual void ProcessException(Exception exception)
+        {
+            Logger.LogCritical("{exception}", exception);
+            if (exception is DbUpdateException dbUpdateException)
+            {
+                WriteExceptionEntries(dbUpdateException.Entries);
+            }
+            else
+            {
+                WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
+            }
+        }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
 
             try
             {
                 PrepareToSave();
-                return base.SaveChangesAsync(cancellationToken);
+                return await base.SaveChangesAsync(cancellationToken);
             }
-            catch (DbUpdateException dbUpdateException)
+            catch (Exception exception)
             {
-                WriteExceptionEntries(dbUpdateException.Entries);
+                ProcessException(exception);
                 throw;
             }
-            catch (Exception ex)
-            {
-                Logger.LogCritical("{exception}", ex);
-                WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
-                throw;
-            }
-            
         }
 
         public override int SaveChanges()
         {
-
             try
             {
                 PrepareToSave();
                 return base.SaveChanges();
             }
-            catch (DbUpdateException dbUpdateException)
+            catch (Exception exception)
             {
-                WriteExceptionEntries(dbUpdateException.Entries);
-                throw;
-            }
-            catch (Exception)
-            {
-                WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
+                ProcessException(exception);
                 throw;
             }
         }
@@ -170,7 +169,7 @@ namespace OLT.Core
             }
 
 
-            if (string.IsNullOrWhiteSpace(DefaultSchema))
+            if (!string.IsNullOrWhiteSpace(DefaultSchema))
             {
                 modelBuilder.HasDefaultSchema(DefaultSchema);  //Sets Schema for all tables, unless overridden
             }

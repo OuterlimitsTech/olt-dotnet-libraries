@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
 using OLT.Libraries.UnitTest.Assets.Models;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -40,7 +45,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public void GetTableName()
         {
-            const string expected = "People";
+            var expected =  $"{_context.DefaultSchema}.People";
             var tableName = _context.GetTableName<PersonEntity>();
             Assert.Equal(tableName, expected);
         }
@@ -190,6 +195,32 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
         }
 
+        [Fact]
+        public async Task FkExceptionAsync()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameLast = Faker.Name.Last(),
+                PersonTypeId = Faker.RandomNumber.Next(10000)
+            };
+            await _context.People.AddAsync(entity);
+            await Assert.ThrowsAsync<DbUpdateException>(() => _context.SaveChangesAsync());
+        }
+
+        [Fact]
+        public void FkException()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameLast = Faker.Name.Last(),
+                PersonTypeId = Faker.RandomNumber.Next(10000)
+            };
+            _context.People.Add(entity);
+            Assert.Throws<DbUpdateException>(() => _context.SaveChanges());
+
+        }
 
         [Fact]
         public void Delete()
@@ -261,5 +292,34 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             _context.SaveChanges();
             Assert.NotEqual(entity.UniqueId, Guid.Empty);
         }
+
+
+        [Fact]
+        public void AnonymousUser()
+        {
+
+            var webBuilder = new WebHostBuilder();
+            webBuilder
+                .UseSerilog()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder
+                        .SetBasePath(AppContext.BaseDirectory)
+                        .AddUserSecrets<Startup>()
+                        .AddJsonFile("appsettings.json", false, true)
+                        .AddEnvironmentVariables();
+                })
+                .UseStartup<SerilogStartup>();
+
+            var testServer = new TestServer(webBuilder);
+
+            var context = testServer.Services.GetRequiredService<SqlDatabaseContext>();
+            var entity = UnitTestHelper.AddPerson(context);
+            context.SaveChanges();
+            var person = context.People.FirstOrDefault(p => p.Id == entity.Id);
+            Assert.Equal(person?.CreateUser, context.DefaultAnonymousUser);
+        }
+
+      
     }
 }

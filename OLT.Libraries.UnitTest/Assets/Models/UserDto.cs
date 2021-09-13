@@ -8,4 +8,10 @@ namespace OLT.Libraries.UnitTest.Assets.Models
         public int? UserId { get; set; }
         public Guid UserGuid { get; set; }
     }
+
+    public class UserNoAdapterDto : OltPersonName
+    {
+        public int? UserId { get; set; }
+        public Guid UserGuid { get; set; }
+    }
 }

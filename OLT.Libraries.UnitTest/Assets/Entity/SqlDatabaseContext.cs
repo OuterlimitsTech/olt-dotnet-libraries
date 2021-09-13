@@ -13,9 +13,9 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         {
         }
 
-        public override string DefaultSchema => "dbo";
+        public override string DefaultSchema => "Data";
         public override bool DisableCascadeDeleteConvention => true;
-        public override DefaultStringTypes DefaultStringType => DefaultStringTypes.NVarchar;
+        public override DefaultStringTypes DefaultStringType => DefaultStringTypes.Varchar;
         protected override int IdentitySeed => 3100;
         protected override int IdentityIncrement => 1;
 

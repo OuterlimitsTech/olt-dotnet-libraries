@@ -10,13 +10,9 @@ namespace OLT.Core
 {
     public class OltAdapterResolverAutoMapper : OltAdapterResolver, IOltAdapterResolverAutoMapper
     {
-        private readonly ILogger<OltAdapterResolverAutoMapper> _logger;
-
         public OltAdapterResolverAutoMapper(
-            ILogger<OltAdapterResolverAutoMapper> logger,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _logger = logger;
             Mapper = serviceProvider.GetService<IMapper>();
         }
 
