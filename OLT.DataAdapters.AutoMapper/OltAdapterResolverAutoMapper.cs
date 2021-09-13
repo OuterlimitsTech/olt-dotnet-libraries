@@ -27,6 +27,15 @@ namespace OLT.Core
             return Mapper.ConfigurationProvider.FindTypeMapFor<TSource, TDestination>() != null;
         }
 
+        protected virtual void ThrowException<TSource, TResult>(Exception exception)
+        {
+            if (exception is AutoMapperMappingException autoMapperException)
+            {
+                throw new OltAutoMapperException<TSource, TResult>(autoMapperException);
+            }
+            throw new OltAutoMapperException<TSource, TResult>(exception);
+        }
+
         #region [ ProjectTo Maps ]
 
         public override bool CanProjectTo<TEntity, TDestination>()
@@ -34,46 +43,47 @@ namespace OLT.Core
             return HasAutoMap<TEntity, TDestination>() || base.CanProjectTo<TEntity, TDestination>();
         }
 
-        public override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
+        protected virtual IQueryable<TDestination> ProjectFromQueryable<TEntity, TDestination>(IQueryable<TEntity> source)
         {
             try
             {
-                if (HasAutoMap<TEntity, TDestination>())
-                {
-                    return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
-                }
+                return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
             }
-            catch(Exception ex)
+            catch (Exception exception)
             {
-                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}", nameof(IOltAdapterMap<TEntity, TDestination>));
+                ThrowException<TEntity, TDestination>(exception);
+            }
+
+            throw new OltAdapterNotFoundException<TEntity, TDestination>();
+        }
+
+        public override IQueryable<TDestination> ProjectTo<TEntity, TDestination>(IQueryable<TEntity> source, IOltAdapter adapter)
+        {
+            if (HasAutoMap<TEntity, TDestination>())
+            {
+                return ProjectFromQueryable<TEntity, TDestination>(source);
             }
 
             return base.ProjectTo<TEntity, TDestination>(source, adapter);
         }
 
-       
+
         #endregion
 
         #region [ Maps ]
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
         {
-            try
+            if (HasAutoMap<TSource, TDestination>())
             {
-                if (HasAutoMap<TSource, TDestination>())
+                try
                 {
                     return Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
                 }
-            }
-            catch (AutoMapperMappingException mappingException)
-            {
-                _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                throw;
+                catch (Exception exception)
+                {
+                    ThrowException<TSource, TDestination>(exception);
+                }
             }
 
             return base.Map<TSource, TDestination>(source);
@@ -81,50 +91,21 @@ namespace OLT.Core
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source)
         {
-            try
+            if (HasAutoMap<TSource, TDestination>())
             {
-                if (HasAutoMap<TSource, TDestination>())
-                {
-                    return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
-                }
+                return ProjectFromQueryable<TSource, TDestination>(source);
             }
-            catch (AutoMapperMappingException mappingException)
-            {
-                _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                throw;
-            }
-
             return base.Map<TSource, TDestination>(source);
         }
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
         {
-            try
+            if (HasAutoMap<TSource, TDestination>())
             {
-                if (HasAutoMap<TSource, TDestination>())
-                {
-                    return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
-                }
+                return ProjectFromQueryable<TSource, TDestination>(source);
             }
-            catch (AutoMapperMappingException mappingException)
-            {
-                _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                throw;
-            }
-
             return base.Map<TSource, TDestination>(source, adapter);
         }
-
 
         public override TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
@@ -134,17 +115,10 @@ namespace OLT.Core
                 {
                     return Mapper.Map(source, destination);
                 }
-                catch (AutoMapperMappingException mappingException)
+                catch (Exception exception)
                 {
-                    _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
+                    ThrowException<TSource, TDestination>(exception);
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
-                }
-
             }
 
             return base.Map(source, destination);
@@ -226,6 +200,6 @@ namespace OLT.Core
 
         #endregion
 
-      
+
     }
 }

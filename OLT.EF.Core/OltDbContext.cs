@@ -199,9 +199,22 @@ namespace OLT.Core
             base.OnModelCreating(modelBuilder);
         }
 
-        
+
 
         #region [ Prep Save Methods ]
+
+        protected virtual void PrepareToSave()
+        {
+            var entries = this.ChangeTracker.Entries().ToList();
+            var changed = entries.Where(p => p.State == EntityState.Added || p.State == EntityState.Modified).ToList();
+
+            foreach (var entry in changed)
+            {
+                SetAbstractFields(entry);
+                CallTriggers(entry);
+                CheckNullableStringFields(entry);
+            }
+        }
 
         protected virtual void SetAbstractFields(EntityEntry entityEntry)
         {
@@ -249,41 +262,34 @@ namespace OLT.Core
             }
         }
 
-        protected virtual void PrepareToSave()
+        protected virtual void CheckNullableStringFields(EntityEntry entityEntry)
         {
-            var entries = this.ChangeTracker.Entries().ToList();
-            var changed = entries.Where(p => p.State == EntityState.Added || p.State == EntityState.Modified).ToList();
-
-            foreach (var entry in changed)
+            if (!DisableAutomaticStringNullification)
             {
-                SetAbstractFields(entry);
-                CallTriggers(entry);
+                var nullableStringFields = GetNullableStringPropertyMetaData(entityEntry);
 
-                if (!DisableAutomaticStringNullification)
+                foreach (var nullableStringField in nullableStringFields)
                 {
-                    var nullableStringFields = GetNullableStringPropertyMetaData(entry);
-                    
-                    foreach (var nullableStringField in nullableStringFields)
+                    try
                     {
-                        try
+                        var currentValue = nullableStringField.GetValue(entityEntry);
+                        if (currentValue == null) continue;
+                        if (string.IsNullOrWhiteSpace(currentValue))
                         {
-                            var currentValue = nullableStringField.GetValue(entry);
-                            if (currentValue == null) continue;
-                            if (string.IsNullOrWhiteSpace(currentValue))
-                            {
-                                nullableStringField.SetToNullValue(entry);
-                            }
+                            nullableStringField.SetToNullValue(entityEntry);
                         }
-                        catch (Exception ex)
-                        {
-                            var detail = $"Entity Type: {entry.Entity.GetType().FullName} -> {nullableStringField.PropertyName}{Environment.NewLine}{ex}";
-                            Logger.LogCritical(detail);
-                            throw new OltException(detail);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        var detail = $"Entity Type: {entityEntry.Entity.GetType().FullName} -> {nullableStringField.PropertyName}{Environment.NewLine}{ex}";
+                        Logger.LogCritical(detail);
+                        throw new OltException(detail);
                     }
                 }
             }
         }
+
+
 
         #endregion
 

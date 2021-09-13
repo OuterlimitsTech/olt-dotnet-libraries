@@ -28,4 +28,29 @@ namespace OLT.Core
 
         #endregion
     }
+
+    [Serializable]
+    public class OltAdapterNotFoundException<TSource, TDestination> : OltAdapterNotFoundException
+    {
+        public OltAdapterNotFoundException() : base($"Adapter Not Found {typeof(TSource).FullName} -> {typeof(TDestination).FullName}")
+        {
+
+        }
+
+
+        #region [ Serializable Methods ]
+
+        protected OltAdapterNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+
+        #endregion
+    }
 }

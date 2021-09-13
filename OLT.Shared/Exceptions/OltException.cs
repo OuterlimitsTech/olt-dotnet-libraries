@@ -7,7 +7,7 @@ namespace OLT.Core
     [Serializable]
     public class OltException : SystemException
     {
-        private OltException()
+        protected OltException()
         {
 
         }
