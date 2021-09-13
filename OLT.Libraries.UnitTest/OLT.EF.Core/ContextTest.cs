@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
+using OLT.Libraries.UnitTest.Assets.Models;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -102,6 +104,15 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public async Task SaveChangesTestAsync()
         {
+            //Found an issue with the null string process and we need to mix multiple entity saves within the same test
+            var userList = new List<UserEntity>();
+            for (int i = 0; i < Faker.RandomNumber.Next(10, 35); i++)
+            {
+                userList.Add(UserEntity.FakerEntity());
+            }
+            await _context.Users.AddRangeAsync(userList);
+            await _context.SaveChangesAsync();
+
             var entity = new PersonEntity
             {
                 NameFirst = Faker.Name.First(),
@@ -122,6 +133,15 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public void SaveChangesTest()
         {
+            //Found an issue with the null string process and we need to mix multiple entity saves within the same test
+            var userList = new List<UserEntity>();
+            for (int i = 0; i < Faker.RandomNumber.Next(10, 35); i++)
+            {
+                userList.Add(UserEntity.FakerEntity());
+            }
+            _context.Users.AddRange(userList);
+            _context.SaveChanges();
+
             var entity = new PersonEntity
             {
                 NameFirst = Faker.Name.First(),

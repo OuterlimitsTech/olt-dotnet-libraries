@@ -104,7 +104,7 @@ namespace OLT.Core
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("{exception}", ex);
+                Logger.LogCritical("{exception}", ex);
                 WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
                 throw;
             }
@@ -262,14 +262,23 @@ namespace OLT.Core
                 if (!DisableAutomaticStringNullification)
                 {
                     var nullableStringFields = GetNullableStringPropertyMetaData(entry);
-
+                    
                     foreach (var nullableStringField in nullableStringFields)
                     {
-                        var currentValue = nullableStringField.GetValue(entry);
-                        if (currentValue == null) continue;
-                        if (string.IsNullOrWhiteSpace(currentValue))
+                        try
                         {
-                            nullableStringField.SetToNullValue(entry);
+                            var currentValue = nullableStringField.GetValue(entry);
+                            if (currentValue == null) continue;
+                            if (string.IsNullOrWhiteSpace(currentValue))
+                            {
+                                nullableStringField.SetToNullValue(entry);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var detail = $"Entity Type: {entry.Entity.GetType().FullName} -> {nullableStringField.PropertyName}{Environment.NewLine}{ex}";
+                            Logger.LogCritical(detail);
+                            throw new OltException(detail);
                         }
                     }
                 }
@@ -282,10 +291,8 @@ namespace OLT.Core
 
         private class NullableStringPropertyMetaData
         {
-#if DEBUG
-            // We don't need this at runtime - it's only good for debugging
+            public EntityEntry EntityEntry { get; set; }
             public string PropertyName { get; set; }
-#endif
             public MethodInfo Getter { get; set; }
             public MethodInfo Setter { get; set; }
 
@@ -322,7 +329,7 @@ namespace OLT.Core
         // used in a VERY tight loop....
         private List<NullableStringPropertyMetaData> GetNullableStringPropertyMetaData(EntityEntry entry)
         {
-            var type = entry.GetType();
+            var type = entry.Entity.GetType();
             var typeHandle = type.TypeHandle;
 
             // Fast return if we did this already.....
@@ -383,12 +390,10 @@ namespace OLT.Core
 
                 var info = new NullableStringPropertyMetaData
                 {
+                    EntityEntry = entry,
+                    PropertyName = item.Name,
                     Getter = getter,
-                    Setter = setter,
-#if DEBUG
-                    // We don't need this at runtime - it's only good for debugging
-                    PropertyName = item.Name
-#endif
+                    Setter = setter
                 };
 
                 result.Add(info);

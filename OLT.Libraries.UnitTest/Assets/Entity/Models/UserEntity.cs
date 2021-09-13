@@ -17,6 +17,18 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
         public string LastName { get; set; }
         [StringLength(50)]
         public string NameSuffix { get; set; }
-        
+
+
+
+        public static UserEntity FakerEntity(bool emptyGuid = false)
+        {
+            return new UserEntity
+            {
+                UniqueId = emptyGuid ? Guid.Empty :Guid.NewGuid(),
+                FirstName = Faker.Name.First(),
+                MiddleName = Faker.Name.Middle(),
+                LastName = Faker.Name.Last()
+            };
+        }
     }
 }
