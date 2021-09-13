@@ -4,6 +4,11 @@ using System.Linq;
 
 namespace OLT.Core
 {
+    public interface IOltAdapterResolverAutoMapper : IOltAdapterResolver
+    {
+
+    }
+
     public interface IOltAdapterResolver : IOltInjectableSingleton
     {
         bool CanProjectTo<TEntity, TDestination>();

@@ -98,7 +98,7 @@ namespace OLT.Core
                 return queryableAdapter.Map(source);
             }
 
-            throw new OltException($"{GetAdapterName<TEntity, TDestination>()} Adapter is not of type ${nameof(IOltAdapterQueryable<TEntity, TDestination>)}");
+            throw new OltAdapterNotFoundException(GetAdapterName<TEntity, TDestination>());
         }
 
         #endregion
@@ -123,7 +123,7 @@ namespace OLT.Core
                 case IOltAdapter<TSource, TDestination> mapAdapter:
                     return mapAdapter.Map(source.ToList());
                 default:
-                    throw new OltException($"{GetAdapterName<TSource, TDestination>()} Adapter is not of type ${nameof(IOltAdapter<TSource, TDestination>)}");
+                    throw new OltAdapterNotFoundException(GetAdapterName<TSource, TDestination>());
             }
         }
 
@@ -163,7 +163,7 @@ namespace OLT.Core
             var adapter = Adapters.FirstOrDefault(p => p.Name == adapterName);
             if (adapter == null && throwException)
             {
-                throw new OltException($"Adapter Not Found {adapterName}");
+                throw new OltAdapterNotFoundException(adapterName);
             }
             return adapter;
         }
@@ -183,7 +183,7 @@ namespace OLT.Core
             var pagedAdapter = adapter as IOltAdapterPaged<TSource, TDestination>;
             if (pagedAdapter == null && throwException)
             {
-                throw new OltException($"{adapterName} Paged Adapter Not Found");
+                throw new OltAdapterNotFoundException($"{adapterName} Paged");
             }
             return pagedAdapter;
         }

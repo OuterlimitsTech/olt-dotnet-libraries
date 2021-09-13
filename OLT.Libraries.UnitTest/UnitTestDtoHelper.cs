@@ -12,15 +12,19 @@ namespace OLT.Libraries.UnitTest
 {
     public static class UnitTestHelper
     {
-
-        public static PersonEntity AddPerson(SqlDatabaseContext context)
+        public static PersonEntity CreatePerson()
         {
-            var entity = new PersonEntity
+            return new PersonEntity
             {
                 NameFirst = Faker.Name.First(),
                 NameMiddle = Faker.Name.Middle(),
                 NameLast = Faker.Name.Last()
             };
+        }
+
+        public static PersonEntity AddPerson(SqlDatabaseContext context)
+        {
+            var entity = CreatePerson();
             context.People.Add(entity);
             return entity;
         }
@@ -35,6 +39,20 @@ namespace OLT.Libraries.UnitTest
             return new PersonAutoMapperModel
             {
                 Name = {
+                    First = Faker.Name.First(),
+                    Middle = Faker.Name.Middle(),
+                    Last = Faker.Name.Last()
+                }
+            };
+        }
+
+        public static UserModel CreateUserModel()
+        {
+            return new UserModel
+            {
+                UserGuid = Guid.NewGuid(),
+                Name = 
+                {
                     First = Faker.Name.First(),
                     Middle = Faker.Name.Middle(),
                     Last = Faker.Name.Last()

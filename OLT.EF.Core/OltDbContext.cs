@@ -102,8 +102,9 @@ namespace OLT.Core
                 WriteExceptionEntries(dbUpdateException.Entries);
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogCritical("{exception}", ex);
                 WriteExceptionEntries(this.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged));
                 throw;
             }
@@ -291,25 +292,25 @@ namespace OLT.Core
 
             // Note - we use the GetGetter approach because EF may be a detached poco, dynamic proxy, or dynamic object.  
             // Simply using GetValue off PropertyInfo on a dynamic object will fail (same is true in EF Core).
-            public string GetValue(object source)
+            public string GetValue(EntityEntry source)
             {
                 // Guard
                 if (source == null) return null;
 
                 if (this.Getter == null) return null;
 
-                var sourceValue = (string)this.Getter.Invoke(source, null);
+                var sourceValue = this.Getter.Invoke(source.Entity, new object[] { }) as string;
                 return sourceValue;
             }
 
             // Note - we use the GetSetter approach because EF may be a detached poco, dynamic proxy, or dynamic object.
             // Simply using SetValue off PropertyInfo on a dynamic object will fail (same is true in EF Core).
-            public void SetToNullValue(object source)
+            public void SetToNullValue(EntityEntry source)
             {
                 // Guard
                 if (source == null) return;
 
-                this.Setter.Invoke(source, new object[] { null });
+                this.Setter.Invoke(source.Entity, new object[] { null });
             }
         }
 
@@ -389,6 +390,8 @@ namespace OLT.Core
                     PropertyName = item.Name
 #endif
                 };
+
+                result.Add(info);
             }
 
             // Critical section for thread-safe implementation....

@@ -63,26 +63,26 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
 
         // https://www.meziantou.net/testing-ef-core-in-memory-using-sqlite.htm
-        [Fact]
-        public void SqlLite()
-        {
-            using (var factory = new SqlLiteDatabaseContextFactory())
-            {
-                // Get a context
-                using (var context = factory.CreateContext())
-                {
-                    context.People.Add(new PersonEntity
-                    {
-                        NameFirst = "Tim",
-                        NameLast = "Jones"
-                    });
-                    context.SaveChanges();
-                }
-            }
+        //[Fact]
+        //public void SqlLite()
+        //{
+        //    using (var factory = new SqlLiteDatabaseContextFactory())
+        //    {
+        //        // Get a context
+        //        using (var context = factory.CreateContext())
+        //        {
+        //            context.People.Add(new PersonEntity
+        //            {
+        //                NameFirst = "Tim",
+        //                NameLast = "Jones"
+        //            });
+        //            context.SaveChanges();
+        //        }
+        //    }
 
-            Assert.True(true);
+        //    Assert.True(true);
             
-        }
+        //}
 
         [Fact]
         public void InitializeQueryable()
@@ -102,50 +102,54 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public async Task SaveChangesTestAsync()
         {
-            using (var factory = new SqlLiteDatabaseContextFactory())
+            var entity = new PersonEntity
             {
-                // Get a context
-                using (var context = factory.CreateContext())
-                {
-                    var entity = new PersonEntity
-                    {
-                        NameFirst = Faker.Name.First(),
-                        NameMiddle = Faker.Name.Middle(),
-                        NameLast = Faker.Name.Last()
-                    };
-                    await context.People.AddAsync(entity);
-                    await context.SaveChangesAsync();
+                NameFirst = Faker.Name.First(),
+                NameMiddle = Faker.Name.Middle(),
+                NameLast = Faker.Name.Last()
+            };
+            await _context.People.AddAsync(entity);
+            await _context.SaveChangesAsync();
 
-                    entity.NameFirst = Faker.Name.First();
-                    entity.NameMiddle = string.Empty;
-                    await context.SaveChangesAsync();
+            entity.NameFirst = Faker.Name.First();
+            entity.NameMiddle = string.Empty;
+            await _context.SaveChangesAsync();
 
-                    var updated = await context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefaultAsync(p => p.Id == entity.Id);
-                    Assert.True(updated.NameFirst.Equals(entity.NameFirst));
-                }
-            }
+            var updated = await _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefaultAsync(p => p.Id == entity.Id);
+            Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
+        }
 
+        [Fact]
+        public void SaveChangesTest()
+        {
+            var entity = new PersonEntity
+            {
+                NameFirst = Faker.Name.First(),
+                NameMiddle = Faker.Name.Middle(),
+                NameLast = Faker.Name.Last()
+            };
+            _context.People.Add(entity);
+            _context.SaveChanges();
+
+            entity.NameFirst = Faker.Name.First();
+            entity.NameMiddle = string.Empty;
+            _context.SaveChanges();
+
+            var updated = _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.Id == entity.Id);
+            Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
 
 
         [Fact]
         public async Task ExceedMaxLength()
         {
-            using (var factory = new SqlLiteDatabaseContextFactory())
+            var entity = new PersonEntity
             {
-                // Get a context
-                using (var context = factory.CreateContext())
-                {
-                    var entity = new PersonEntity
-                    {
-                        NameFirst = Faker.Lorem.Sentence(500),
-                        NameLast = Faker.Name.Last()
-                    };
-                    await context.People.AddAsync(entity);
-                    await context.SaveChangesAsync();
-                    Assert.True(true);
-                }
-            }
+                NameFirst = Faker.Lorem.Sentence(500),
+                NameLast = Faker.Name.Last()
+            };
+            await _context.People.AddAsync(entity);
+            await Assert.ThrowsAsync<DbUpdateException>(() => _context.SaveChangesAsync());
 
         }
     }

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
-    public class OltAdapterResolverAutoMapper : OltAdapterResolver
+    public class OltAdapterResolverAutoMapper : OltAdapterResolver, IOltAdapterResolverAutoMapper
     {
         private readonly ILogger<OltAdapterResolverAutoMapper> _logger;
 
@@ -51,13 +51,55 @@ namespace OLT.Core
             return base.ProjectTo<TEntity, TDestination>(source, adapter);
         }
 
+       
         #endregion
 
-        #region [ IEnumerable Maps ]
+        #region [ Maps ]
+
+        public override IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
+        {
+            try
+            {
+                if (HasAutoMap<TSource, TDestination>())
+                {
+                    return Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
+                }
+            }
+            catch (AutoMapperMappingException mappingException)
+            {
+                _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                throw;
+            }
+
+            return base.Map<TSource, TDestination>(source);
+        }
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source)
         {
-            return HasAutoMap<TSource, TDestination>() ? source.ProjectTo<TDestination>(Mapper.ConfigurationProvider) : base.Map<TSource, TDestination>(source);
+            try
+            {
+                if (HasAutoMap<TSource, TDestination>())
+                {
+                    return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
+                }
+            }
+            catch (AutoMapperMappingException mappingException)
+            {
+                _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                throw;
+            }
+
+            return base.Map<TSource, TDestination>(source);
         }
 
         public override IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source, IOltAdapter adapter)
@@ -69,35 +111,74 @@ namespace OLT.Core
                     return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
                 }
             }
+            catch (AutoMapperMappingException mappingException)
+            {
+                _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                throw;
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}", nameof(IOltAdapterMap<TSource, TDestination>));
+                _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                throw;
             }
-
 
             return base.Map<TSource, TDestination>(source, adapter);
         }
 
-        public override IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
+
+        public override TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
-            return HasAutoMap<TSource, TDestination>() ? Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source) : base.Map<TSource, TDestination>(source);
+            if (HasAutoMap<TSource, TDestination>())
+            {
+                try
+                {
+                    return Mapper.Map(source, destination);
+                }
+                catch (AutoMapperMappingException mappingException)
+                {
+                    _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+
+            }
+
+            return base.Map(source, destination);
         }
 
         #endregion
-        
+
         #region [ Paged ]
 
         public override IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams)
         {
             if (HasAutoMap<TSource, TDestination>())
             {
-                var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
-                Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
-                if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
+                try
                 {
-                    orderBy = orderByQueryable => orderByQueryable.OrderBy(pagingWithSortParams, mapAdapter.DefaultOrderBy);
+                    var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
+                    Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
+                    if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
+                    {
+                        orderBy = orderByQueryable => orderByQueryable.OrderBy(pagingWithSortParams, mapAdapter.DefaultOrderBy);
+                    }
+                    return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
                 }
-                return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
+                catch (AutoMapperMappingException mappingException)
+                {
+                    _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+
             }
 
             return base.Paged<TSource, TDestination>(source, pagingParams);
@@ -107,7 +188,20 @@ namespace OLT.Core
         {
             if (HasAutoMap<TSource, TDestination>())
             {
-                return source.OrderBy(null, orderBy).ProjectTo<TDestination>(Mapper.ConfigurationProvider).ToPaged(pagingParams);
+                try
+                {
+                    return source.OrderBy(null, orderBy).ProjectTo<TDestination>(Mapper.ConfigurationProvider).ToPaged(pagingParams);
+                }
+                catch (AutoMapperMappingException mappingException)
+                {
+                    _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
+                    throw;
+                }
             }
             return base.Paged<TSource, TDestination>(source, pagingParams, orderBy);
         }
@@ -132,30 +226,6 @@ namespace OLT.Core
 
         #endregion
 
-        public override TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
-        {
-            if (HasAutoMap<TSource, TDestination>())
-            {
-                try
-                {
-                    return Mapper.Map(source, destination);
-                }
-                catch (AutoMapperMappingException mappingException)
-                {
-                     _logger.LogError(mappingException, "AutoMapper Mapping Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "AutoMapper ProjectTo Exception while using map {mapName}: {source} -> {destination}", nameof(IOltAdapterMap<TSource, TDestination>), typeof(TSource).FullName, typeof(TDestination).FullName);
-                    throw;
-                }
-
-            }
-
-
-
-            return base.Map(source, destination);
-        }
+      
     }
 }
