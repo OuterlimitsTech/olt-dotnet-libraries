@@ -58,7 +58,7 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         [Fact]
         public void CanProjectTo()
         {
-            Assert.True(_adapterResolver.CanProjectTo<PersonEntity, PersonAutoMapperDto>());
+            Assert.True(_adapterResolver.CanProjectTo<PersonEntity, PersonAutoMapperPagedDto>());
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         public void PagedAdapter()
         {
             var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
-            var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperDto>(queryable, new OltPagingParams { Page = 1, Size = 25 });
+            var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperPagedDto>(queryable, new OltPagingParams { Page = 1, Size = 25 });
             Assert.Equal(paged.Data.Count(), paged.Size);
         }
 
@@ -80,14 +80,14 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         public void PagedAdapterOrderBy()
         {
             var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
-            var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperDto>(queryable, new OltPagingParams { Page = 1, Size = 25 }, query => query.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast).ThenBy(p => p.Id));
+            var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperPagedDto>(queryable, new OltPagingParams { Page = 1, Size = 25 }, query => query.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast).ThenBy(p => p.Id));
             Assert.Equal(paged.Data.Count(), paged.Size);
         }
 
         [Fact]
         public void DefaultOrderBy()
         {
-            var orderByFunc = _adapterResolver.DefaultOrderBy<PersonEntity, PersonAutoMapperDto>();
+            var orderByFunc = _adapterResolver.DefaultOrderBy<PersonEntity, PersonAutoMapperPagedDto>();
             var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
             var paged = orderByFunc(queryable).ToPaged(new OltPagingParams { Page = 1, Size = 25 });
             Assert.Equal(paged.Data.Count(), paged.Size);
@@ -114,14 +114,14 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         }
 
         [Fact]
-        public void QueryableMapMappingException()
+        public void QueryableException()
         {
             var query = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
             Assert.Throws<OltAutoMapperException<PersonEntity, PersonAddressModel>>(() => _adapterResolver.Map<PersonEntity, PersonAddressModel>(query));
         }
 
         [Fact]
-        public void EnumerableMapMappingException()
+        public void EnumerableException()
         {
             var list = new List<PersonAddressModel>
             {
@@ -141,7 +141,7 @@ namespace OLT.Libraries.UnitTest.GeneralTests
 
 
         [Fact]
-        public void MapMappingException()
+        public void MapException()
         {
             var item = new PersonAddressModel
             {
@@ -157,19 +157,32 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         }
 
         [Fact]
-        public void PagedAdapterNotFoundException()
+        public void PagedException()
         {
-            var item = new PersonAddressModel
+            var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
+            Assert.Throws<OltAutoMapperException<PersonEntity, PersonAddressInvalidPagedModel>>(() => _adapterResolver.Paged<PersonEntity, PersonAddressInvalidPagedModel>(queryable, new OltPagingParams { Page = 1, Size = 10 }));
+        }
+
+        [Fact]
+        public void SortParams()
+        {
+            var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
+            var pagingParams = new OltPagingWithSortParams
             {
-                Name = new NameAutoMapperModel
-                {
-                    First = Faker.Name.First(),
-                    Last = Faker.Name.Last()
-                },
-                Created = DateTime.Now,
-                Street1 = Faker.Address.StreetAddress()
+                Page = 1,
+                Size = 10,
+                IsAscending = false,
+                PropertyName = nameof(PersonEntity.NameLast)
             };
-            Assert.Throws<OltAutoMapperException<PersonAddressModel, PersonEntity>>(() => _adapterResolver.Map<PersonAddressModel, PersonEntity>(item, new PersonEntity()));
+
+            var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperPagedDto>(queryable, pagingParams);
+            Assert.Equal(paged.Data.Count(), paged.Size);
+        }
+
+        [Fact]
+        public void DefaultOrderByException()
+        {
+            Assert.Throws<OltAdapterNotFoundException>(() => _adapterResolver.DefaultOrderBy<PersonEntity, PersonAddressModel>());
         }
     }
 }

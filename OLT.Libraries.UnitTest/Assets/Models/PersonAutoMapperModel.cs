@@ -14,4 +14,9 @@ namespace OLT.Libraries.UnitTest.Assets.Models
         public DateTime Created { get; set; }
         public string Street1 { get; set; }
     }
+
+
+    public class PersonAddressInvalidPagedModel : PersonAddressModel
+    {
+    }
 }

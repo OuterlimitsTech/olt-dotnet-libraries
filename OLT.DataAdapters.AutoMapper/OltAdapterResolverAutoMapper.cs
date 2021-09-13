@@ -119,21 +119,12 @@ namespace OLT.Core
             if (HasAutoMap<TSource, TDestination>())
             {
                 var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
-
-                try
+                Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
+                if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
                 {
-                    Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
-                    if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
-                    {
-                        orderBy = orderByQueryable => orderByQueryable.OrderBy(pagingWithSortParams, mapAdapter.DefaultOrderBy);
-                    }
-                    return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
+                    orderBy = orderByQueryable => orderByQueryable.OrderBy(pagingWithSortParams, mapAdapter.DefaultOrderBy);
                 }
-                catch (Exception ex)
-                {
-                    throw BuildException<TSource, TDestination>(ex);
-                }
-
+                return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
             }
 
             return base.Paged<TSource, TDestination>(source, pagingParams);
@@ -158,7 +149,7 @@ namespace OLT.Core
         protected virtual IOltAdapterPagedMap<TSource, TDestination> GetPagedAdapterMap<TSource, TDestination>(bool throwException)
         {
             var adapterName = GetAdapterName<TSource, TDestination>();
-            var adapter = GetAdapter(adapterName, throwException);
+            var adapter = GetAdapter(adapterName, false);
             var mapAdapter = adapter as IOltAdapterPagedMap<TSource, TDestination>;
             if (mapAdapter == null && throwException)
             {

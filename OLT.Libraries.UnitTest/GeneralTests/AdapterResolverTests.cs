@@ -108,6 +108,14 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         }
 
         [Fact]
+        public void MapNoQueryableAdapter()
+        {
+            var queryable = _context.Users.Where(new OltSearcherGetAll<UserEntity>()).Take(1);
+            var data = _adapterResolver.Map<UserEntity, UserDto>(queryable).ToList();
+            Assert.Equal(queryable.Count(), data.Count);
+        }
+
+        [Fact]
         public void PagedAdapter()
         {
             var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());

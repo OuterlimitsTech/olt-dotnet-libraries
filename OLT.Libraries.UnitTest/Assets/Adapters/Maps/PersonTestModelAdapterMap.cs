@@ -34,9 +34,6 @@ namespace OLT.Libraries.UnitTest.Assets.Maps
                 .ReverseMap()
                 .ForMember(f => f.Addresses, opt => opt.MapFrom(t => t.Created))
                 ;
-
-
-            
         }
     }
 }

@@ -108,7 +108,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
                 _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
             }
             var pagedParams = new OltPagingParams { Page = 4, Size = 50 };
-            var paged = _personService.GetPaged<PersonAutoMapperDto>(new OltSearcherGetAll<PersonEntity>(), pagedParams);
+            var paged = _personService.GetPaged<PersonAutoMapperPagedDto>(new OltSearcherGetAll<PersonEntity>(), pagedParams);
             Assert.True(paged.Data.Count() == pagedParams.Size && paged.Page == pagedParams.Page && paged.Size == pagedParams.Size);
         }
     }
