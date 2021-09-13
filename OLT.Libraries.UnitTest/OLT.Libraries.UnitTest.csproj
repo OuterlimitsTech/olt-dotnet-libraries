@@ -5,6 +5,7 @@
     <IsPackable>false</IsPackable>
     <SonarQubeExclude>true</SonarQubeExclude>
     <UserSecretsId>a1ca46fa-4371-49cb-b686-334363ca01f1</UserSecretsId>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
   <ItemGroup>

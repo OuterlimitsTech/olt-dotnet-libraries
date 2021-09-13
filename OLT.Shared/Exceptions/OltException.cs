@@ -7,12 +7,13 @@ namespace OLT.Core
     [Serializable]
     public class OltException : SystemException
     {
-        protected OltException()
+
+        public OltException(string message) : base(message)
         {
 
         }
 
-        public OltException(string message) : base(message)
+        public OltException(string message, Exception innerException) : base(message, innerException)
         {
 
         }
