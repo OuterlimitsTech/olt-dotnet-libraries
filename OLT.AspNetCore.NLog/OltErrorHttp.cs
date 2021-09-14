@@ -1,5 +1,6 @@
 ﻿using OLT.Core;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace OLT.Logging.NLog
 {
@@ -11,7 +12,11 @@ namespace OLT.Logging.NLog
 
         public string ToJson()
         {
-            return System.Text.Json.JsonSerializer.Serialize(this);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            };
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
         }
 
         public override string ToString()
