@@ -59,6 +59,9 @@ namespace OLT.Core
         public virtual string DefaultAnonymousUser => "GUEST USER";
         public abstract DefaultStringTypes DefaultStringType { get; }
         public virtual bool DisableAutomaticStringNullification => false;
+        public abstract bool ApplyGlobalDeleteFilter { get; }
+
+        public virtual bool HasGlobalFilters { get; protected set; }
 
         public virtual string AuditUser
         {
@@ -184,6 +187,15 @@ namespace OLT.Core
                     builder.Property<int>(nameof(IOltEntityId.Id)).HasColumnName(columnName);
                 }
             });
+
+
+            if (ApplyGlobalDeleteFilter)
+            {
+                //To Bypass 
+                // https://docs.microsoft.com/en-us/ef/core/querying/filters#disabling-filters
+                modelBuilder.SetSoftDeleteGlobalFilter();
+            }
+
 
             base.OnModelCreating(modelBuilder);
         }

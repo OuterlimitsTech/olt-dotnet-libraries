@@ -18,7 +18,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         public override DefaultStringTypes DefaultStringType => DefaultStringTypes.Varchar;
         protected override int IdentitySeed => 3100;
         protected override int IdentityIncrement => 1;
-
+        public override bool ApplyGlobalDeleteFilter => true;
 
         public virtual DbSet<PersonEntity> People { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
@@ -33,8 +33,10 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
 
-            //modelBuilder.SetSoftDeleteFilter<PersonEntity>();
-            //modelBuilder.ApplyGlobalFilters<IOltEntityDeletable>(p => p.DeletedOn == null);
+            modelBuilder.SetSoftDeleteFilter<PersonEntity>();
+            modelBuilder.SetSoftDeleteGlobalFilter();
+
+            
             
             base.OnModelCreating(modelBuilder);
         }

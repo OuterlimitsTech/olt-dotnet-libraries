@@ -8,6 +8,7 @@ namespace OLT.Core
     {
         string DefaultAnonymousUser { get; }
         string AuditUser { get; }
+        bool ApplyGlobalDeleteFilter { get; }
         TDatabase Database { get; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
