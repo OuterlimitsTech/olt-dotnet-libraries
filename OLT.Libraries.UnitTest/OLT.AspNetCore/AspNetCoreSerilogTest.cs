@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using OLT.Core;
+using OLT.Logging.Serilog;
 using Serilog;
 using Xunit;
 
@@ -43,7 +47,23 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        
+        [Fact]
+        public void SerializeErrorHttp()
+        {
+            var obj = new OltErrorHttp
+            {
+                Message = Faker.Lorem.GetFirstWord(),
+                Errors = new List<string>
+                {
+                    Faker.Lorem.GetFirstWord(),
+                    Faker.Lorem.GetFirstWord()
+                }
+            };
+
+            var compareTo = JsonConvert.SerializeObject(obj, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+            Assert.Equal(obj.ToString(), compareTo);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
