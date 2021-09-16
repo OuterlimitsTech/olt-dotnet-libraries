@@ -25,8 +25,8 @@ namespace OLT.Libraries.UnitTest.GeneralTests
         {
             _adapterResolver = adapterResolver;
             _context = context;
-            SeedPeople(_context);
-            SeedUsers(_context);
+            SeedPeople(_context, 50, 75);
+            SeedUsers(_context, 50, 75);
         }
 
 

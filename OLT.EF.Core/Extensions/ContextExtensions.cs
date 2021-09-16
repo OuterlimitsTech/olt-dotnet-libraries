@@ -86,12 +86,17 @@ namespace OLT.Core
             where T : class, IOltEntity
         {
             var query = context.Set<T>().AsQueryable();
-
-            if (!includeDeleted)
+            if (context.ApplyGlobalDeleteFilter)
+            {
+                if (includeDeleted)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
+            }
+            else if (!includeDeleted)
             {
                 query = NonDeletedQueryable(context, query);
             }
-
             return query;
         }
 
@@ -127,6 +132,11 @@ namespace OLT.Core
             modelBuilder.Entity<TEntity>().HasQueryFilter(p => p.DeletedOn == null);
         }
 
+        public static void SetSoftDeleteGlobalFilter(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyGlobalFilters<IOltEntityDeletable>(p => p.DeletedOn == null);
+        }
+
 
         /// <summary>
         /// modelBuilder.Entity<EF_POCO>().HasQueryFilter(p => p.DeletedOn == null)
@@ -137,22 +147,27 @@ namespace OLT.Core
         /// <param name="expression"></param>
         public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, Expression<Func<T, bool>> expression)
         {
+#pragma warning disable S125
             modelBuilder.EntitiesOfType<T>(builder =>
             {
                 var clrType = builder.Metadata.ClrType;
-                if (!builder.Metadata.GetDefaultTableName().Equals(builder.Metadata.GetTableName(), StringComparison.OrdinalIgnoreCase))  //TPH class
+
+                //TPH class?
+                if (!builder.Metadata.GetDefaultTableName().Equals(builder.Metadata.GetTableName(), StringComparison.OrdinalIgnoreCase) &&
+                    builder.Metadata.GetDiscriminatorProperty()?.GetColumnName(StoreObjectIdentifier.Table(builder.Metadata.GetTableName(), builder.Metadata.GetSchema())) != null)
                 {
-#pragma warning disable S125
-                    //Console.WriteLine($"{builder.Metadata.GetTableName()} <> {builder.Metadata.GetDefaultTableName()} of type {builder.Metadata.ClrType.FullName}");
-#pragma warning restore S125
+
+                    //Console.WriteLine($"GetDiscriminatorProperty: {builder.Metadata.GetDiscriminatorProperty()} of type {builder.Metadata.ClrType.FullName}");
                     clrType = clrType.BaseType;
+                    //Console.WriteLine($"{builder.Metadata.GetTableName()} not equal to {builder.Metadata.GetDefaultTableName()} of type {builder.Metadata.ClrType.FullName}");
                 }
 
                 var newParam = Expression.Parameter(clrType);
                 var newBody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
                 modelBuilder.Entity(clrType).HasQueryFilter(Expression.Lambda(newBody, newParam));
-
             });
+
+#pragma warning restore S125
         }
 
 

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OLT.Core;
+using OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode;
 using OLT.Libraries.UnitTest.Assets.Enums;
 
 namespace OLT.Libraries.UnitTest.Assets.Entity.Models
@@ -27,6 +28,12 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
 
         public int? StatusTypeId { get; set; }
         public virtual StatusTypeCodeEntity StatusType { get; set; }
+
+        public int? GenderId { get; set; }
+        public virtual Gender Gender { get; set; }
+
+        public int? SexId { get; set; }
+        public virtual Sex Sex { get; set; }
 
         public virtual List<AddressEntity> Addresses { get; set; } = new List<AddressEntity>();
 

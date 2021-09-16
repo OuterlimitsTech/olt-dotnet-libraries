@@ -59,9 +59,6 @@ namespace OLT.Libraries.UnitTest.Helpers.Factory
         protected OltWebApplicationFactory Factory { get; }
         protected  HttpClient HttpClient { get; }
 
-        //protected abstract void ConfigureServices(IServiceCollection services, IConfiguration configuration);
-        //protected abstract void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration);
-
 
         protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {

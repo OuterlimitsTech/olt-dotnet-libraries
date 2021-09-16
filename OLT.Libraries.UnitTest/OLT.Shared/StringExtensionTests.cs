@@ -1,12 +1,21 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Cosmos;
 using OLT.Core;
+using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OLT.Libraries.UnitTest.OLT.Shared
 {
-    public class StringExtensionTests : OltDisposable
+    public class StringExtensionTests : BaseTest
     {
+
+        public StringExtensionTests(ITestOutputHelper output) : base(output)
+        {
+        }
 
         [Fact]
         public void CleanForSearch()
@@ -236,12 +245,25 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.Equal(value.DBNullIfEmpty().Equals(DBNull.Value), expectedResult);
         }
 
-        [Fact]
-        public void GeneratePassword()
+        [Theory]
+        [InlineData(16, true, true, true, true, 16)]
+        [InlineData(12, false, true, true, true, 12)]
+        [InlineData(13, true, false, true, true, 13)]
+        [InlineData(18, true, true, false, true, 18)]
+        [InlineData(24, true, true, true, false, 24)]
+        [InlineData(8, false, false, false, false, 0)]
+        public void GeneratePassword(int length, bool useNumbers, bool useLowerCaseLetters, bool useUpperCaseLetters, bool useSymbols, int expectedLength)
         {
-            var password = OltKeyGenerator.GeneratePassword(16);
-            Assert.True(password.Length == 16);
+            if (expectedLength > 0)
+            {
+                Assert.True(OltKeyGenerator.GeneratePassword(length, useNumbers, useLowerCaseLetters, useUpperCaseLetters, useSymbols).Length == expectedLength);
+            }
+            else
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => OltKeyGenerator.GeneratePassword(length, useNumbers, useLowerCaseLetters, useUpperCaseLetters, useSymbols));
+            }
         }
+
 
         [Theory]
         [InlineData(0)]
@@ -251,6 +273,55 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         {
             var password = OltKeyGenerator.GetUniqueKey(size);
             Assert.True(password.Length == size);
+        }
+        
+        [Theory]
+        [InlineData(1000000, 32, 2.0)]
+        [InlineData(1000000, 64, 2.0)]
+        public void GetUniqueKeyBiasedIteration(int repetitions, int keySize, double threshold)
+        {
+            Logger.Debug("Original BIASED implementation");
+            var result = OltKeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKeyOriginal_BIASED);
+            Assert.DoesNotContain(result, p => p.Value > threshold);
+        }
+
+        [Theory]
+        [InlineData(1000000, 32, 1.65)]
+        [InlineData(1000000, 64, 1.65)]
+        public void GetUniqueKeyIteration(int repetitions, int keySize, double threshold)
+        {
+            Logger.Debug("Original implementation");
+            var result = OltKeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKey);
+            Assert.DoesNotContain(result, p => p.Value > threshold);
+        }
+
+        private Dictionary<char, double> OltKeyGeneratorPerformTest(int repetitions, int keySize, Func<int, string> generator)
+        {
+            var result = new Dictionary<char, double>();
+            var chars = (new char[0])
+                .Concat(OltDefaults.UpperCase)
+                .Concat(OltDefaults.LowerCase)
+                .Concat(OltDefaults.Numerals)
+                .ToArray();
+
+            Dictionary<char, int> counts = new Dictionary<char, int>();
+            foreach (var ch in chars) counts.Add(ch, 0);
+
+            for (int i = 0; i < repetitions; i++)
+            {
+                var key = generator(keySize);
+                foreach (var ch in key) counts[ch]++;
+            }
+
+            int totalChars = counts.Values.Sum();
+            foreach (var ch in chars)
+            {
+                var val = 100.0 * counts[ch] / totalChars;
+                result.Add(ch, val);
+                Logger.Debug($"{ch}: {val:#.000}%");
+            }
+
+            return result;
         }
 
     }

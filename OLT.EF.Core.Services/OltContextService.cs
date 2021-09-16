@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
 {
@@ -92,14 +93,7 @@ namespace OLT.Core
         protected virtual IQueryable<T> Get<T>(IOltSearcher<T> searcher)
             where T : class, IOltEntity
         {
-            var query = Context.Set<T>().AsQueryable();
-
-            if (!searcher.IncludeDeleted)
-            {
-                query = NonDeletedQueryable(query);
-            }
-
-            return query;
+            return Context.InitializeQueryable<T>(searcher.IncludeDeleted);
         }
 
         protected virtual IQueryable<T> InitializeQueryable<T>()

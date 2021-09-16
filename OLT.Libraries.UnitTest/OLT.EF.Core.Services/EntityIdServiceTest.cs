@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
@@ -110,6 +111,42 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var pagedParams = new OltPagingParams { Page = 4, Size = 50 };
             var paged = _personService.GetPaged<PersonAutoMapperPagedDto>(new OltSearcherGetAll<PersonEntity>(), pagedParams);
             Assert.True(paged.Data.Count() == pagedParams.Size && paged.Page == pagedParams.Page && paged.Size == pagedParams.Size);
+        }
+
+        [Fact]
+        public void GetByIdSearcherDeleted()
+        {
+            var newDto = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
+            _personService.SoftDelete(newDto.PersonId.GetValueOrDefault());
+            var result = _personService.Get<PersonDto>(new OltSearcherGetById<PersonEntity>(newDto.PersonId.GetValueOrDefault()));
+            Assert.Equal(newDto.PersonId, result?.PersonId);
+        }
+
+        [Fact]
+        public void GetByIdSearcher()
+        {
+            var newDto = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
+            var result = _personService.Get<PersonDto>(new OltSearcherGetById<PersonEntity>(newDto.PersonId.GetValueOrDefault()));
+            Assert.Equal(newDto.PersonId, result?.PersonId);
+        }
+
+
+        [Fact]
+        public void GetByAllSearcherIncludeDeleted()
+        {
+            var newDto = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
+            _personService.SoftDelete(newDto.PersonId.GetValueOrDefault());
+            var result = _personService.GetAll<PersonDto>(new OltSearcherGetAll<PersonEntity>(true)).FirstOrDefault(p => p.PersonId == newDto.PersonId);
+            Assert.Equal(newDto.PersonId, result?.PersonId);
+        }
+
+        [Fact]
+        public void GetByAllSearcherExcludeDeleted()
+        {
+            var newDto = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
+            _personService.SoftDelete(newDto.PersonId.GetValueOrDefault());
+            var result = _personService.GetAll<PersonDto>(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.PersonId == newDto.PersonId);
+            Assert.True(result == null);
         }
     }
 }
