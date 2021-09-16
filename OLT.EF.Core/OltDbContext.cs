@@ -61,8 +61,6 @@ namespace OLT.Core
         public virtual bool DisableAutomaticStringNullification => false;
         public abstract bool ApplyGlobalDeleteFilter { get; }
 
-        public virtual bool HasGlobalFilters { get; protected set; }
-
         public virtual string AuditUser
         {
             get

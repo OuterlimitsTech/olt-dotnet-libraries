@@ -1,12 +1,21 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.Cosmos;
 using OLT.Core;
+using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OLT.Libraries.UnitTest.OLT.Shared
 {
-    public class StringExtensionTests : OltDisposable
+    public class StringExtensionTests : BaseTest
     {
+
+        public StringExtensionTests(ITestOutputHelper output) : base(output)
+        {
+        }
 
         [Fact]
         public void CleanForSearch()
@@ -251,6 +260,55 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         {
             var password = OltKeyGenerator.GetUniqueKey(size);
             Assert.True(password.Length == size);
+        }
+        
+        [Theory]
+        [InlineData(1000000, 32, 2.0)]
+        [InlineData(1000000, 64, 2.0)]
+        public void GetUniqueKeyBiasedIteration(int repetitions, int keySize, double threshold)
+        {
+            Logger.Debug("Original BIASED implementation");
+            var result = OltKeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKeyOriginal_BIASED);
+            Assert.DoesNotContain(result, p => p.Value > threshold);
+        }
+
+        [Theory]
+        [InlineData(1000000, 32, 1.65)]
+        [InlineData(1000000, 64, 1.65)]
+        public void GetUniqueKeyIteration(int repetitions, int keySize, double threshold)
+        {
+            Logger.Debug("Original implementation");
+            var result = OltKeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKey);
+            Assert.DoesNotContain(result, p => p.Value > threshold);
+        }
+
+        private Dictionary<char, double> OltKeyGeneratorPerformTest(int repetitions, int keySize, Func<int, string> generator)
+        {
+            var result = new Dictionary<char, double>();
+            var chars = (new char[0])
+                .Concat(OltDefaults.UpperCase)
+                .Concat(OltDefaults.LowerCase)
+                .Concat(OltDefaults.Numerals)
+                .ToArray();
+
+            Dictionary<char, int> counts = new Dictionary<char, int>();
+            foreach (var ch in chars) counts.Add(ch, 0);
+
+            for (int i = 0; i < repetitions; i++)
+            {
+                var key = generator(keySize);
+                foreach (var ch in key) counts[ch]++;
+            }
+
+            int totalChars = counts.Values.Sum();
+            foreach (var ch in chars)
+            {
+                var val = 100.0 * counts[ch] / totalChars;
+                result.Add(ch, val);
+                Logger.Debug($"{ch}: {val:#.000}%");
+            }
+
+            return result;
         }
 
     }
