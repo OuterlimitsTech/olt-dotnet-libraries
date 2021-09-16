@@ -245,12 +245,25 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.Equal(value.DBNullIfEmpty().Equals(DBNull.Value), expectedResult);
         }
 
-        [Fact]
-        public void GeneratePassword()
+        [Theory]
+        [InlineData(16, true, true, true, true, 16)]
+        [InlineData(12, false, true, true, true, 12)]
+        [InlineData(13, true, false, true, true, 13)]
+        [InlineData(18, true, true, false, true, 18)]
+        [InlineData(24, true, true, true, false, 24)]
+        [InlineData(8, false, false, false, false, 0)]
+        public void GeneratePassword(int length, bool useNumbers, bool useLowerCaseLetters, bool useUpperCaseLetters, bool useSymbols, int expectedLength)
         {
-            var password = OltKeyGenerator.GeneratePassword(16);
-            Assert.True(password.Length == 16);
+            if (expectedLength > 0)
+            {
+                Assert.True(OltKeyGenerator.GeneratePassword(length, useNumbers, useLowerCaseLetters, useUpperCaseLetters, useSymbols).Length == expectedLength);
+            }
+            else
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => OltKeyGenerator.GeneratePassword(length, useNumbers, useLowerCaseLetters, useUpperCaseLetters, useSymbols));
+            }
         }
+
 
         [Theory]
         [InlineData(0)]

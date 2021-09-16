@@ -8,7 +8,7 @@ namespace OLT.Core
 {
     public static class QueryableExtensions
     {
-        public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> queryable, IEnumerable<IOltSearcher<TSource>> searchers)
+        public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> queryable, params IOltSearcher<TSource>[] searchers)
             where TSource : class, IOltEntity
         {
             var list = searchers.ToList();

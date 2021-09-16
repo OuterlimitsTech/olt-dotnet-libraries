@@ -11,7 +11,9 @@ using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
+using OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode;
 using OLT.Libraries.UnitTest.Assets.Models;
+using OLT.Libraries.UnitTest.Assets.Searchers;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -22,17 +24,18 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
     {
         private readonly IOltIdentity _identity;
         private readonly SqlDatabaseContext _context;
+        private readonly SqlDatabaseContext2 _context2;
 
         public ContextTest(
             IOltIdentity identity,
             SqlDatabaseContext context,
+            SqlDatabaseContext2 context2,
             ITestOutputHelper output) : base(output)
         {
             _identity = identity;
             _context = context;
+            _context2 = context2;
         }
-
-
 
         [Fact]
         public void Get()
@@ -43,7 +46,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
 
         [Fact]
-        public void GetTableName()
+        public void GetTableName_PersonEntity()
         {
             var expected =  $"{_context.DefaultSchema}.People";
             var tableName = _context.GetTableName<PersonEntity>();
@@ -51,10 +54,38 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         }
 
         [Fact]
+        public void GetTableName_UserEntity()
+        {
+            var expected = $"{_context.DefaultSchema}.Users";
+            var tableName = _context.GetTableName<UserEntity>();
+            Assert.Equal(tableName, expected);
+        }
+
+        [Fact]
+        public void GetTableName_CodeTableType()
+        {
+            var expected = $"Code.{nameof(CodeTableType)}";
+            var tableName = _context.GetTableName<CodeTableType>();
+            Assert.Equal(tableName, expected);
+        }
+
+        [Fact]
+        public void GetTableName_PersonEntity_NoSchema()
+        {
+            var expected = "People";
+            var tableName = _context2.GetTableName<PersonEntity>();
+            Assert.Equal(tableName, expected);
+        }
+
+        [Fact]
         public void GetColumns()
         {
             const string expected = "PeopleId";
-            var columns = _context.GetColumns<PersonEntity>();
+            var columns = _context.GetColumns<PersonEntity>().ToList();
+            columns.ForEach(col =>
+            {
+                Logger.Debug(col.Name);
+            });
             Assert.Collection(columns,
                 item => Assert.Equal(item.Name, expected),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ActionCode)}"),
@@ -62,13 +93,43 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedBy)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedOn)}"),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.GenderId)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ModifyDate)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ModifyUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameFirst)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameLast)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameMiddle)}"),
-                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.PersonTypeId)}"), 
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.PersonTypeId)}"),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.SexId)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.StatusTypeId)}")
+
+            );
+        }
+
+        [Fact]
+        public void GetColumns_CodeTable()
+        {
+            const string expected = "CodeTableId";
+            const string discriminator = "Discriminator";
+            var columns = _context.GetColumns<Gender>().ToList();
+            columns.ForEach(col =>
+            {
+                Logger.Debug(col.Name);
+            });
+            Assert.Collection(columns,
+                item => Assert.Equal(item.Name, expected),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.Code)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.CodeTableTypeId)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.CreateDate)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.CreateUser)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.DeletedBy)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.DeletedOn)}"),
+                item => Assert.Equal(item.Name, discriminator),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.ModifyDate)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.ModifyUser)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.Name)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.ParentCodeId)}"),
+                item => Assert.Equal(item.Name, $"{nameof(Gender.SortOrder)}")
             );
         }
 
@@ -92,7 +153,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         //    }
 
         //    Assert.True(true);
-            
+
         //}
 
         [Fact]
@@ -102,20 +163,13 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             Assert.True(_context.InitializeQueryable<PersonEntity>().Any());
         }
 
-        [Fact]
-        public void GetQueryable()
-        {
-            UnitTestHelper.AddPerson(_context);
-            _context.SaveChanges();
-            Assert.True(_context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).Any());
-        }
 
         [Fact]
         public async Task SaveChangesTestAsync()
         {
             //Found an issue with the null string process and we need to mix multiple entity saves within the same test
-            SeedBogus(_context);
-            SeedUsers(_context);
+            SeedBogus(_context, 50, 75);
+            SeedUsers(_context, 50, 75);
 
             var entity = new PersonEntity
             {
@@ -138,8 +192,8 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         public void SaveChangesTest()
         {
             //Found an issue with the null string process and we need to mix multiple entity saves within the same test
-            SeedBogus(_context);
-            SeedUsers(_context);
+            SeedBogus(_context, 50, 75);
+            SeedUsers(_context, 50, 75);
             
             var entity = new PersonEntity
             {
@@ -187,7 +241,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public async Task RegularExceptionAsync()
         {
-            SeedBogus(_context);
+            SeedBogus(_context, 5, 20);
             var entity = await _context.BogusNoString.OrderBy(p => Guid.NewGuid()).FirstOrDefaultAsync();
             entity.Value2 = Faker.RandomNumber.Next(1, 20000);
             await Assert.ThrowsAsync<Exception>(() => _context.SaveChangesAsync());
@@ -196,7 +250,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         [Fact]
         public void RegularException()
         {
-            SeedBogus(_context);
+            SeedBogus(_context, 5, 20);
             var entity = _context.BogusNoString.OrderBy(p => Guid.NewGuid()).FirstOrDefault();
             entity.Value2 = Faker.RandomNumber.Next(1, 20000);
             Assert.Throws<Exception>(() => _context.SaveChanges());
@@ -243,6 +297,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
             Assert.True(_context.SaveChanges() > 0);
         }
+
 
 
         [Fact]

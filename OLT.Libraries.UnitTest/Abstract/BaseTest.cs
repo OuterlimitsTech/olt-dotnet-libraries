@@ -27,27 +27,27 @@ namespace OLT.Libraries.UnitTest.Abstract
         }
 
 
-        protected void SeedPeople(SqlDatabaseContext context)
+        protected void SeedPeople(ISqlDatabaseContext context, int minNum, int maxNum)
         {
-            for (int i = 0; i < Faker.RandomNumber.Next(50, 70); i++)
+            for (int i = 0; i < Faker.RandomNumber.Next(minNum, maxNum); i++)
             {
                 UnitTestHelper.AddPersonWithAddress(context);
             }
             context.SaveChanges();
         }
 
-        protected void SeedUsers(SqlDatabaseContext context)
+        protected void SeedUsers(ISqlDatabaseContext context, int minNum, int maxNum)
         {
-            for (int i = 0; i < Faker.RandomNumber.Next(50, 70); i++)
+            for (int i = 0; i < Faker.RandomNumber.Next(minNum, maxNum); i++)
             {
                 UnitTestHelper.AddUser(context);
             }
             context.SaveChanges();
         }
 
-        protected void SeedBogus(SqlDatabaseContext context)
+        protected void SeedBogus(ISqlDatabaseContext context, int minNum, int maxNum)
         {
-            for (int i = 0; i < Faker.RandomNumber.Next(5, 15); i++)
+            for (int i = 0; i < Faker.RandomNumber.Next(minNum, maxNum); i++)
             {
                 context.BogusNoString.Add(new NoStringPropertiesEntity
                 {

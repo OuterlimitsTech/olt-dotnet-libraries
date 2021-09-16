@@ -13,14 +13,14 @@ namespace OLT.Libraries.UnitTest
     public static class UnitTestHelper
     {
 
-        public static PersonEntity AddPerson(SqlDatabaseContext context)
+        public static PersonEntity AddPerson(ISqlDatabaseContext context)
         {
             var entity = PersonEntity.FakerEntity();
             context.People.Add(entity);
             return entity;
         }
 
-        public static PersonEntity AddPersonWithAddress(SqlDatabaseContext context)
+        public static PersonEntity AddPersonWithAddress(ISqlDatabaseContext context)
         {
             var entity = PersonEntity.FakerEntity();
             entity.Addresses = new List<AddressEntity>
@@ -34,7 +34,7 @@ namespace OLT.Libraries.UnitTest
             return entity;
         }
 
-        public static UserEntity AddUser(SqlDatabaseContext context)
+        public static UserEntity AddUser(ISqlDatabaseContext context)
         {
             var entity = UserEntity.FakerEntity();
             context.Users.Add(entity);

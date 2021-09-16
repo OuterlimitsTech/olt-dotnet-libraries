@@ -12,7 +12,15 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
             SqlDatabaseContext context) : base(serviceManager, context)
         {
         }
+    }
 
-        
+
+    public class PersonService2 : OltEntityIdService<SqlDatabaseContext2, PersonEntity>, IPersonService2
+    {
+        public PersonService2(
+            IOltServiceManager serviceManager,
+            SqlDatabaseContext2 context) : base(serviceManager, context)
+        {
+        }
     }
 }
