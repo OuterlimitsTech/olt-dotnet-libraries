@@ -14,7 +14,7 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
         [Fact]
         public void ConvertToCsvTest()
         {
-            var exportDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            var exportDirectory = Path.Combine(Path.GetTempPath(), $"_{Guid.NewGuid()}");
             var files = new List<string>();
 
             try
@@ -36,8 +36,6 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
                     files.Add(fileName);
                 });
 
-
-                
                 files.ForEach(file =>
                 {
                     Assert.True(File.Exists(file));

@@ -110,6 +110,12 @@ namespace OLT.EPPlus
         /// <returns></returns>
         private static string GetCellText(ExcelRangeBase cell)
         {
+#if DEBUG
+            if (cell.Value == null)
+            {
+                Console.WriteLine("Value Null");
+            }
+#endif
             return cell.Value == null ? string.Empty : cell.Value.ToString()?.Trim();
         }
 
