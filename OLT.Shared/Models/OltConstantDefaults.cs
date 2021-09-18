@@ -3,7 +3,7 @@ using System;
 
 namespace OLT.Core
 {
-    public static partial class OltDefaults
+    public static partial class OltDefaults 
     {
 
         public static class Authentication

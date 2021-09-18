@@ -22,4 +22,8 @@
     <None Include="docs\readme.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
+  </ItemGroup>
+
 </Project>

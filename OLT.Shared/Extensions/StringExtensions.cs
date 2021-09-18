@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 namespace System
 {
 
-
     /// <summary>
     /// Extends <see cref="string"/>.
     /// </summary>
@@ -29,77 +28,6 @@ namespace System
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
-        public static string RemoveSpecialCharacters(this string input)
-        {
-            Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            return r.Replace(input, string.Empty);
-        }
-
-        public static string CleanForSearch(this string param)
-        {
-            var result = param.RemoveSpecialCharacters().Trim();
-                //.Replace("\"", string.Empty)
-                //.Replace("*", string.Empty)
-                //.Replace(")", string.Empty)
-                //.Replace("&", string.Empty)
-                //.Replace("$", string.Empty)
-                //.Replace("(", string.Empty)
-                //.Replace("?", string.Empty)
-                //.Replace("#", string.Empty)
-                //.Replace(".", string.Empty)
-                //.Replace(",", " ");
-
-            return Regex.Replace(result, @"\s+", " ");  //Remove double spaces
-        }
-
-        public static List<string> ToWords(this string param)
-        {
-            return param.Split(' ', '　').ToList();
-        }
-
-        #region [ Left, Right, Mid ]
-
-        /// <summary>
-        /// Get substring of specified number of characters on the right.
-        /// </summary>
-        /// <param name="value">Extends <see cref="string"/>.</param>
-        /// <param name="length">Number of characters from the right to return</param>
-        /// <returns>string containing only <paramref name="length"/> characters.</returns>
-        public static string Right(this string value, int length)
-        {
-            if (value.IsEmpty()) return value;
-
-            if (value.Length < length)
-            {
-                return value;
-            }
-
-            return value.Substring(value.Length - length);
-        }
-
-
-        /// <summary>
-        /// Get substring of specified number of characters on the right.
-        /// </summary>
-        public static string Left(this string value, int length)
-        {
-            if (value.IsEmpty()) return value;
-            if (value.Length < length) return value;
-            return value.Substring(0, length);
-        }
-
-        #endregion
-
-        public static bool IsGuid(this string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
-
-            Guid temp;
-            return Guid.TryParse(value, out temp);
-        }
 
         public static bool IsDate(this string date)
         {
@@ -107,62 +35,8 @@ namespace System
             return DateTime.TryParse(date, out temp);
         }
 
-        public static bool IsNumeric(this string value)
-        {
-            long longVal;
-            double doubleVal;
-            return long.TryParse(value, out longVal) || double.TryParse(value, out doubleVal);
-        }
-
-        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
-        private static readonly Regex DecimalDigitsOnly = new Regex(@"[^\d\.]");
-
-        public static string StripNonNumeric(this string root)
-        {
-            if (string.IsNullOrEmpty(root))
-            {
-                return root;
-            }
-
-            return DigitsOnly.Replace(root, "");
-        }
-
-        public static string StripNonNumeric(this string root, bool allowDecimal)
-        {
-            if (string.IsNullOrEmpty(root))
-            {
-                return root;
-            }
-
-            if (allowDecimal)
-            {
-                return DecimalDigitsOnly.Replace(root, "");    
-            }
-
-            return root.StripNonNumeric();
-        }
 
 
-
-        /// <summary>
-        /// Will transform "some $ugly ###url wit[]h spaces" into "some-ugly-url-with-spaces"
-        /// </summary>
-        public static string Slugify(this string phrase, int maxLength = 50)
-        {
-            string str = phrase.ToLower();
-
-            // invalid chars, make into spaces
-            str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
-            // convert multiple spaces/hyphens into one space       
-            str = Regex.Replace(str, @"[\s-]+", " ").Trim();
-            // cut and trim it
-            str = str.Substring(0, str.Length <= maxLength ? str.Length : maxLength).Trim();
-            // hyphens
-            str = Regex.Replace(str, @"\s", "-");
-
-            return str;
-        }
- 
 
 
         public static DateTime? ToDate(this string self)
@@ -173,34 +47,7 @@ namespace System
             return value;
         }
 
-        #region [ ToGuid ]
-
-        /// <summary>
-        /// Converts <see cref="string"/> to <see cref="System.Guid"/>
-        /// </summary>
-        /// <param name="self">Extends <see cref="string"/>.</param>
-        /// <returns>Returns converted value to <see cref="System.Guid"/>, if cast fails, Empty Guid </returns>
-        public static Guid? ToGuid(this string self)
-        {
-            if (string.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out var value))
-                return null;
-            return value;
-        }
-
-        /// <summary>
-        /// Converts <see cref="string"/> to <see cref="System.Guid"/>
-        /// </summary>
-        /// <param name="self">Extends <see cref="string"/>.</param>
-        /// <param name="defaultValue">value returned if cast fails.</param>
-        /// <returns>Returns converted value to <see cref="System.Guid"/>. If cast fails, default value</returns>
-        public static Guid ToGuid(this string self, Guid defaultValue)
-        {
-            if (string.IsNullOrWhiteSpace(self) || !Guid.TryParse(self, out var value))
-                return defaultValue;
-            return value;
-        }
-
-        #endregion
+        
 
         #region [ ToInt ]
         
@@ -397,34 +244,6 @@ namespace System
         #endregion
 
 
-        /// <summary>
-        /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
-        /// </summary>
-        /// <param name="hexString"></param>
-        /// <returns></returns>
-        public static bool IsHex(this string value)
-        {
-            // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
-            return System.Text.RegularExpressions.Regex.IsMatch(value, @"\A\b[0-9a-fA-F]+\b\Z");
-        }
-
-        /// <summary>
-        /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
-        /// </summary>
-        /// <param name="hexString"></param>
-        /// <returns>byte array or empty if invalid</returns>
-        public static byte[] FromHexToByte(this string hexString)
-        {
-            if (IsHex(hexString))
-            {
-                var returnBytes = new byte[hexString.Length / 2];
-                for (int i = 0; i < returnBytes.Length; i++)
-                    returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
-                return returnBytes;
-            }
-
-            return Array.Empty<byte>();
-        }
 
         public static string Reverse(this string value)
         {
@@ -490,25 +309,6 @@ namespace System
             return self;
         }
 
-        /// <summary>
-        /// Executes <see cref="string.IsNullOrEmpty"/> on the current string.
-        /// </summary>
-        /// <param name="value">Extends <see cref="string"/>.</param>
-        /// <returns>True if the current instance is an empty string or is null.</returns>
-        public static bool IsEmpty(this string value)
-        {
-            return String.IsNullOrEmpty(value);
-        }
-
-        /// <summary>
-        /// Executes <see cref="string.IsNullOrEmpty"/> on the current string and reverses the result.
-        /// </summary>
-        /// <param name="value">Extends <see cref="string"/>.</param>
-        /// <returns>False if the current instance is an empty string or is null.</returns>
-        public static bool IsNotEmpty(this string value)
-        {
-            return !String.IsNullOrEmpty(value);
-        }
 
 
         /// <summary>
@@ -737,37 +537,6 @@ namespace System
         private static string DuplicateTicksForSql(this string value)
         {
             return value.Replace("'", "''");
-        }
-
-        /// <summary>
-        /// Takes a List collection of string and returns a delimited string.  Note that it's easy to create a huge list that won't turn into a huge string because
-        /// the string needs contiguous memory.
-        /// </summary>
-        /// <param name="list">The input List collection of string objects</param>
-        /// <param name="qualifier">
-        /// The default delimiter. Using a colon in case the List of string are file names,
-        /// since it is an illegal file name character on Windows machines and therefore should not be in the file name anywhere.
-        /// </param>
-        /// <param name="insertSpaces">Whether to insert a space after each separator</param>
-        /// <returns>A delimited string</returns>
-        /// <remarks>This was implemented pre-linq</remarks>
-        public static string ToDelimitedString(this List<string> list, string delimiter = ":", bool insertSpaces = false, string qualifier = "", bool duplicateTicksForSQL = false)
-        {
-            var result = new StringBuilder();
-            for (int i = 0; i < list.Count; i++)
-            {
-                string initialStr = duplicateTicksForSQL ? list[i].DuplicateTicksForSql() : list[i];
-                result.Append((qualifier == string.Empty) ? initialStr : string.Format("{1}{0}{1}", initialStr, qualifier));
-                if (i < list.Count - 1)
-                {
-                    result.Append(delimiter);
-                    if (insertSpaces)
-                    {
-                        result.Append(' ');
-                    }
-                }
-            }
-            return result.ToString();
         }
     }
 }

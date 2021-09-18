@@ -90,16 +90,7 @@ namespace OLT.EPPlus
         {
             for (int i = 1; i <= maxColumnNumber; i++)
             {
-                var cell = worksheet.Cells[currentRowNum, i];
-                if (cell == null)
-                {
-                    // add a cell value for empty cells to keep data aligned.
-                    AddCellValue(string.Empty, currentRow);
-                }
-                else
-                {
-                    AddCellValue(GetCellText(cell), currentRow);
-                }
+                AddCellValue(GetCellText(worksheet.Cells[currentRowNum, i]), currentRow);
             }
         }
 
@@ -108,15 +99,9 @@ namespace OLT.EPPlus
         /// </summary>
         /// <param name="cell"></param>
         /// <returns></returns>
-        private static string GetCellText(ExcelRangeBase cell)
+        public static string GetCellText(this ExcelRangeBase cell)
         {
-#if DEBUG
-            if (cell.Value == null)
-            {
-                Console.WriteLine("Value Null");
-            }
-#endif
-            return cell.Value == null ? string.Empty : cell.Value.ToString()?.Trim();
+            return cell?.Value?.ToString()?.Trim();
         }
 
         private static void AddCellValue(string value, List<string> record)
@@ -124,35 +109,6 @@ namespace OLT.EPPlus
             record.Add(string.Format("{0}{1}{0}", '"', value));
         }
 
-        /// <summary>
-        /// Takes a List collection of string and returns a delimited string.  Note that it's easy to create a huge list that won't turn into a huge string because
-        /// the string needs contiguous memory.
-        /// </summary>
-        /// <param name="list">The input List collection of string objects</param>
-        /// <param name="qualifier">
-        /// The default delimiter. Using a colon in case the List of string are file names,
-        /// since it is an illegal file name character on Windows machines and therefore should not be in the file name anywhere.
-        /// </param>
-        /// <param name="insertSpaces">Whether to insert a space after each separator</param>
-        /// <returns>A delimited string</returns>
-        /// <remarks>This was implemented pre-linq</remarks>
-        private static string ToDelimitedString(this List<string> list, string delimiter = ":", bool insertSpaces = false, string qualifier = "")
-        {
-            var result = new StringBuilder();
-            for (int i = 0; i < list.Count; i++)
-            {
-                string initialStr = list[i];
-                result.Append((qualifier == string.Empty) ? initialStr : string.Format("{1}{0}{1}", initialStr, qualifier));
-                if (i < list.Count - 1)
-                {
-                    result.Append(delimiter);
-                    if (insertSpaces)
-                    {
-                        result.Append(' ');
-                    }
-                }
-            }
-            return result.ToString();
-        }
+
     }
 }

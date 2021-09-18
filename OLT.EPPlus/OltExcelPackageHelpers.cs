@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OfficeOpenXml;
 
 namespace OLT.EPPlus
@@ -13,7 +14,7 @@ namespace OLT.EPPlus
         /// <param name="worksheet"></param>
         /// <param name="heading">string to find in the first row</param>
         /// <param name="row">row to search (Default 1)</param>
-        /// <returns>index or throws exception</returns>
+        /// <returns>index, null, or throws exception</returns>
         public static int? GetColIdx(this ExcelWorksheet worksheet, string heading, int? row = 1)
         {
             var rowIdx = row.GetValueOrDefault(1);
@@ -55,8 +56,27 @@ namespace OLT.EPPlus
             });
         }
 
+        /// <summary>
+        /// Calculates the Excel Column Index for a giving Letter
+        /// https://www.vishalon.net/blog/excel-column-letter-to-number-quick-reference
+        /// </summary>
+        /// <param name="columnLetter">
+        /// Must only be 1-2 alpha characters
+        /// </param>
+        /// <returns>index or throws <seealso cref="ArgumentOutOfRangeException"/> or <seealso cref="ArgumentNullException"/></returns>
         public static int ColumnLetterToColumnIndex(string columnLetter)
         {
+            if (columnLetter == null)
+            {
+                throw new ArgumentNullException(nameof(columnLetter));
+            }
+
+            var isValid = columnLetter.Length > 0 && columnLetter.Length <= 2 && columnLetter.All(char.IsLetter);
+            if (!isValid)
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnLetter), "Must only be 1-2 alpha characters");
+            }
+
             columnLetter = columnLetter.ToUpper();
             int sum = 0;
 
@@ -68,8 +88,22 @@ namespace OLT.EPPlus
             return sum;
         }
 
+        /// <summary>
+        /// Calculates the Excel Column Index for a giving Letter
+        /// https://www.vishalon.net/blog/excel-column-letter-to-number-quick-reference
+        /// </summary>
+        /// <param name="colIndex">
+        /// Must be between 1 and 702
+        /// </param>
+        /// <returns>string or throws <seealso cref="ArgumentOutOfRangeException"/></returns>
         public static string ColumnIndexToColumnLetter(int colIndex)
         {
+            var isValid = colIndex > 0 && colIndex <= 702;
+            if (!isValid)
+            {
+                throw new ArgumentOutOfRangeException(nameof(colIndex), "Must be between 1 and 702");
+            }
+
             int div = colIndex;
             string colLetter = string.Empty;
 

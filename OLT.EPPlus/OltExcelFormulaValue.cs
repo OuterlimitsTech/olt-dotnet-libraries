@@ -7,47 +7,28 @@ namespace OLT.EPPlus
     /// <summary>
     /// new ExcelFormulaValue("'Performance Worksheet'!AF2")
     /// </summary>
-    public class OltExcelFormulaValue : IOltExcelCellWriter
+    public class OltExcelFormulaValue : OltExcelCellWriter
     {
-        public OltExcelFormulaValue(string formula)
+        public OltExcelFormulaValue(string formula) 
         {
-            Formula = formula;
+            Formula = formula.StartsWith("=") ? formula.TrimStart('=') : formula;
         }
 
-        public string Formula { get; set; }
-        public IOltExcelCellStyle Style { get; set; }
-
-        /// <summary>
-        /// Writes a row to the worksheet at the given row index and returns the next row idx
-        /// </summary>
-        /// <param name="worksheet"></param>
-        /// <param name="row">Current Row</param>
-        /// <param name="col">Current Col</param>
-        /// <returns><param name="col"></param> + 1</returns>
-        public virtual int Write(ExcelWorksheet worksheet, int col, int row)
+        public OltExcelFormulaValue(string formula, IOltExcelCellStyle style) : this(formula)
         {
-            return Write(worksheet, col, row, null);
+            Style = style;
         }
 
+        public new object Value => Formula;
+        public string Formula { get; }
+
         /// <summary>
-        /// Writes a row to the worksheet at the given row index and returns the next row idx
+        /// Writes Formula to given Range
         /// </summary>
-        /// <param name="worksheet"></param>
-        /// <param name="row">Current Row</param>
-        /// <param name="col">Current Col</param>
-        /// <param name="rangeAction"></param>
-        /// <returns><param name="col"></param> + 1</returns>
-        public virtual int Write(ExcelWorksheet worksheet, int col, int row, Action<ExcelRange> rangeAction)
+        /// <param name="range"></param>
+        public override void Write(ExcelRange range)
         {
-            var colName = OltExcelPackageHelpers.ColumnIndexToColumnLetter(col);
-
-            using (var r = worksheet.Cells[$"{colName}{row}"])
-            {
-                r.Formula = Formula;
-                rangeAction?.Invoke(r);
-            }
-
-            return col + 1;
+            range.Formula = Formula;
         }
     }
 }
