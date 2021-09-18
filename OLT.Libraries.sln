@@ -55,7 +55,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Authenticati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Authentication.JwtBearer", "OLT.AspNetCore.Authentication.JwtBearer\OLT.AspNetCore.Authentication.JwtBearer.csproj", "{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Logging.Serilog", "OLT.Logging.Serilog\OLT.Logging.Serilog.csproj", "{AEE87B96-0460-4641-BA2E-B34BBD7DA8D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Logging.Serilog", "OLT.Logging.Serilog\OLT.Logging.Serilog.csproj", "{291140C2-C4E7-4E78-A7A7-53B466D1D84E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Extensions.General", "OLT.Extensions.General\OLT.Extensions.General.csproj", "{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,10 +169,14 @@ Global
 		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEE87B96-0460-4641-BA2E-B34BBD7DA8D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEE87B96-0460-4641-BA2E-B34BBD7DA8D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEE87B96-0460-4641-BA2E-B34BBD7DA8D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEE87B96-0460-4641-BA2E-B34BBD7DA8D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{291140C2-C4E7-4E78-A7A7-53B466D1D84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{291140C2-C4E7-4E78-A7A7-53B466D1D84E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{291140C2-C4E7-4E78-A7A7-53B466D1D84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{291140C2-C4E7-4E78-A7A7-53B466D1D84E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
