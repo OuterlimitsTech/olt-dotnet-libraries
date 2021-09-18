@@ -33,19 +33,29 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
                 item => Assert.Equal(UnitTestConstants.StringValues.World, item));
         }
 
-        [Fact]
-        public void Right()
+        [Theory]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, 5, UnitTestConstants.StringValues.World)]
+        [InlineData("", 10, "")]
+        [InlineData(null, 10, null)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, 20, UnitTestConstants.StringValues.HelloWorld)]
+        public void Right(string value, int length, string expectedResult)
         {
-            Assert.True(UnitTestConstants.StringValues.HelloWorld.Right(5).Equals(UnitTestConstants.StringValues.World));
-        }
-
-        [Fact]
-        public void Left()
-        {
-            Assert.True(UnitTestConstants.StringValues.HelloWorld.Left(5).Equals(UnitTestConstants.StringValues.Hello));
+            Assert.Equal(expectedResult, value.Right(length));
         }
 
         [Theory]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, 5, UnitTestConstants.StringValues.Hello)]
+        [InlineData("", 10, "")]
+        [InlineData(null, 10, null)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, 20, UnitTestConstants.StringValues.HelloWorld)]
+        public void Left(string value, int length, string expectedResult)
+        {
+            Assert.Equal(expectedResult, value.Left(length));
+        }
+
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(null, false)]
         [InlineData(UnitTestConstants.GuidValues.String, true)]
         [InlineData(UnitTestConstants.GuidValues.String2, true)]
         [InlineData(UnitTestConstants.GuidValues.String3, true)]
@@ -54,7 +64,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [InlineData(UnitTestConstants.IntValues.String, false)]
         public void IsGuid(string value, bool expectedResult)
         {
-            Assert.Equal(value.IsGuid(), expectedResult);
+            Assert.Equal(expectedResult, value.IsGuid());
         }
 
 
@@ -69,7 +79,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void ToGuid(string value, string expectedResult, string defaultValue = null)
         {
             var eval = defaultValue != null ? value.ToGuid(new Guid(defaultValue)).ToString() : value.ToGuid()?.ToString();
-            Assert.Equal(eval, expectedResult?.ToLower());
+            Assert.Equal(expectedResult?.ToLower(), eval);
         }
 
 
@@ -79,29 +89,45 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [InlineData(UnitTestConstants.StringValues.FooBar, false)]
         public void IsNumeric(string value, bool expectedResult)
         {
-            Assert.Equal(value.IsNumeric(), expectedResult);
+            Assert.Equal(expectedResult, value.IsNumeric());
         }
 
 
-        [Fact]
-        public void StripNonNumeric()
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(null, null)]
+        [InlineData(UnitTestConstants.StringValues.PhoneValues.Formatted, UnitTestConstants.StringValues.PhoneValues.Clean)]
+        public void StripNonNumeric(string value, string expectedResult)
         {
-            Assert.True(UnitTestConstants.StringValues.PhoneValues.Formatted.StripNonNumeric().Equals(UnitTestConstants.StringValues.PhoneValues.Clean), 
-                $"{UnitTestConstants.StringValues.PhoneValues.Formatted.StripNonNumeric()} <> {UnitTestConstants.StringValues.PhoneValues.Clean}");
+            Assert.Equal(expectedResult, value.StripNonNumeric());
         }
 
-        [Fact]
-        public void StripNonNumericDecimal()
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(null, null)]
+        [InlineData(UnitTestConstants.DecimalValues.String, UnitTestConstants.DecimalValues.String, UnitTestConstants.StringValues.HelloWorld)]
+        public void StripNonNumericDecimal(string value, string expectedResult, string value2 = null)
         {
-            var value = $"{UnitTestConstants.DecimalValues.String} {UnitTestConstants.StringValues.HelloWorld}";
-            Assert.True(value.StripNonNumeric(true).Equals(UnitTestConstants.DecimalValues.String));
+            if (value == null)
+            {
+                Assert.Equal(expectedResult, value.StripNonNumeric(true));
+                return;
+            }
+            Assert.Equal(expectedResult, $"{value}{value2}".StripNonNumeric(true));
         }
 
-        [Fact]
-        public void Slugify()
+        [Theory]
+        [InlineData("", "", 10, "")]
+        [InlineData(null, null, 20, null)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, UnitTestConstants.StringValues.Test, 7, "hello-world-test")]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, UnitTestConstants.StringValues.Test, 100, "hello-world-test")]
+        [InlineData("$%hello", UnitTestConstants.StringValues.Test, 100, "hello-test")]
+        [InlineData("$%hello-another", UnitTestConstants.StringValues.Test, 100, "hello-another-test")]
+        public void Slugify(string value, string value2, int maxLength, string expected)
         {
-            var value = $"{UnitTestConstants.StringValues.HelloWorld}   ${UnitTestConstants.StringValues.Test}";
-            Assert.True(value.Slugify().Equals($"{UnitTestConstants.StringValues.Hello.ToLower()}-{UnitTestConstants.StringValues.World.ToLower()}-{UnitTestConstants.StringValues.Test.ToLower()}"));
+            var testValue = value == null ? value : $"{value}   ${value2}";
+            Assert.Equal(expected.Left(maxLength), testValue.Slugify(maxLength));
         }
 
 

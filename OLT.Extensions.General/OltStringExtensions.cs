@@ -39,6 +39,11 @@ namespace System
 
         #endregion
 
+        public static string RemoveDoubleSpaces(this string self)
+        {
+            return OltRegExPatterns.Spaces.Replace(self.Trim(), " ");
+        }
+
         public static string RemoveSpecialCharacters(this string self)
         {
             Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
@@ -47,13 +52,12 @@ namespace System
 
         public static string CleanForSearch(this string self)
         {
-            var result = self.RemoveSpecialCharacters().Trim();
-            return Regex.Replace(result, @"\s+", " ");  //Remove double spaces
+            return self.RemoveSpecialCharacters().Trim().RemoveDoubleSpaces();
         }
 
         public static List<string> ToWords(this string self)
         {
-            return self.Split(' ', '　').ToList();
+            return self.RemoveDoubleSpaces().Split(' ').ToList();
         }
 
 
@@ -227,6 +231,10 @@ namespace System
         /// <param name="maxLength"></param>
         public static string Slugify(this string self, int maxLength = 50)
         {
+            if (self.IsEmpty())
+            {
+                return self;
+            }
             string str = self.ToLower();
 
             // invalid chars, make into spaces
