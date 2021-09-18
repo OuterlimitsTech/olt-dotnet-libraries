@@ -200,6 +200,10 @@ namespace System
         /// <returns></returns>
         public static bool IsHex(this string hexString)
         {
+            if (hexString == null)
+            {
+                return false;
+            }
             // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
             return System.Text.RegularExpressions.Regex.IsMatch(hexString, @"\A\b[0-9a-fA-F]+\b\Z");
         }
@@ -223,6 +227,272 @@ namespace System
         }
 
         #endregion
+
+        #region [ Boolean ]
+
+        public static readonly string[] BoolTrueStrings = { "1", "yes", "y" };
+        public static readonly string[] BoolFalseStrings = { "0", "no", "n" };
+
+        public static bool IsBool(this string self)
+        {
+            return ToBoolInternal(self, out var value);
+        }
+
+        public static bool? ToBool(this string self)
+        {
+            ToBoolInternal(self, out var value);
+            return value;
+        }
+
+        public static bool ToBool(this string self, bool defaultValue)
+        {
+            ToBoolInternal(self, out var value);
+            return value.GetValueOrDefault(defaultValue);
+        }
+
+        private static bool ToBoolInternal(string self, out bool? value)
+        {
+            if (string.IsNullOrWhiteSpace(self))
+            {
+                value = null;
+                return false;
+            }
+
+            var eval = self.ToLower();
+            if (BoolTrueStrings.Any(compareTo => string.Equals(eval, compareTo, StringComparison.OrdinalIgnoreCase)))
+            {
+                value = true;
+                return true;
+            }
+
+            if (BoolFalseStrings.Any(compareTo => string.Equals(eval, compareTo, StringComparison.OrdinalIgnoreCase)))
+            {
+                value = false;
+                return true;
+            }
+
+            if (bool.TryParse(eval, out var val))
+            {
+                value = val;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+
+        #endregion
+
+        #region [ ToDecimal ]
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="decimal"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <returns>Returns converted value to <see cref="decimal"/>, if cast fails, null <see cref="decimal"/></returns>
+        public static decimal? ToDecimal(this string self)
+        {
+            decimal value;
+            if (String.IsNullOrWhiteSpace(self) || !decimal.TryParse(self, out value))
+                return null;
+            return value;
+        }
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="int"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="defaultValue">value returned if cast fails.</param>
+        /// <returns>Returns converted value to <see cref="decimal"/>. if cast fails, return defaultValue</returns>
+        public static decimal ToDecimal(this string self, decimal defaultValue)
+        {
+            decimal value;
+            if (String.IsNullOrWhiteSpace(self) || !decimal.TryParse(self.StripNonNumeric(true), out value))
+                return defaultValue;
+            return value;
+        }
+
+        #endregion
+
+        #region [ ToDouble ]
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="double"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <returns>Returns converted value to <see cref="double"/>, if cast fails, null <see cref="double"/></returns>
+        public static double? ToDouble(this string self)
+        {
+            double value;
+            if (String.IsNullOrWhiteSpace(self) || !double.TryParse(self, out value))
+                return null;
+            return value;
+        }
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="int"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="defaultValue">value returned if cast fails.</param>
+        /// <returns>Returns converted value to <see cref="double"/>. if cast fails, return defaultValue</returns>
+        public static double ToDouble(this string self, double defaultValue)
+        {
+            double value;
+            if (String.IsNullOrWhiteSpace(self) || !double.TryParse(self.StripNonNumeric(true), out value))
+                return defaultValue;
+            return value;
+        }
+
+        #endregion
+        
+        #region [ ToInt ]
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="int"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <returns>Returns converted value to <see cref="int"/>, if cast fails, null int</returns>
+        public static int? ToInt(this string self)
+        {
+            if (string.IsNullOrWhiteSpace(self) || !int.TryParse(self, out var value))
+                return null;
+            return value;
+        }
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="int"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="defaultValue">value returned if cast fails.</param>
+        /// <returns>Returns converted value to <see cref="int"/>. if cast fails, null int</returns>
+        public static int ToInt(this string self, int defaultValue)
+        {
+            if (string.IsNullOrWhiteSpace(self) || !int.TryParse(self, out var value))
+                return defaultValue;
+            return value;
+        }
+
+        /// <summary>
+        /// Converts <see cref="long"/> to <see cref="int"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="long"/>.</param>
+        /// <param name="defaultValue">value returned if cast fails.</param>
+        /// <returns>Returns converted value to <see cref="int"/>. if cast fails, null int</returns>
+        public static int ToInt(this long self, int defaultValue)
+        {
+            if (!int.TryParse(self.ToString(), out var value))
+                return defaultValue;
+            return value;
+        }
+
+        #endregion
+
+        #region [ ToLong ]
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="long"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <returns>Returns converted value to <see cref="long"/>, if cast fails, null long</returns>
+        public static long? ToLong(this string self)
+        {
+            if (string.IsNullOrWhiteSpace(self) || !long.TryParse(self, out var value))
+                return null;
+            return value;
+        }
+
+        /// <summary>
+        /// Converts <see cref="string"/> to <see cref="long"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="defaultValue">value returned if cast fails.</param>
+        /// <returns>Returns converted value to <see cref="long"/>. if cast fails, defaultValue</returns>
+        public static long ToLong(this string self, long defaultValue)
+        {
+            if (string.IsNullOrWhiteSpace(self) || !long.TryParse(self, out var value))
+                return defaultValue;
+            return value;
+        }
+
+        #endregion
+
+        #region [ DateTime ]
+
+
+        public static bool IsDate(this string date)
+        {
+            return DateTime.TryParse(date, out var temp);
+        }
+
+        public static DateTime? ToDate(this string self)
+        {
+            if (string.IsNullOrWhiteSpace(self) || !DateTime.TryParse(self, out var value))
+                return null;
+            return value;
+        }
+
+        public static DateTime? ToDate(this string self, DateTime defaultValue)
+        {
+            return ToDate(self).GetValueOrDefault(defaultValue);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Reverses String
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        public static string Reverse(this string self)
+        {
+            if (string.IsNullOrEmpty(self))
+            {
+                return self;
+            }
+            var charArray = new char[self.Length];
+            int len = self.Length - 1;
+            for (int i = 0; i <= len; i++)
+                charArray[i] = self[len - i];
+            return new string(charArray);
+        }
+
+        public static bool StartsWithAny(this string self, params string[] comparisons)
+        {
+            if (self == null)
+            {
+                return false;
+            }
+            foreach (string x in comparisons)
+            {
+                if (self.StartsWith(x))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool EqualsAny(this string self, params string[] comparisons)
+        {
+            if (self == null)
+            {
+                return false;
+            }
+            foreach (string x in comparisons)
+            {
+                if (self.Equals(x))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static object DBNullIfEmpty(this string self)
+        {
+            if (string.IsNullOrEmpty(self))
+                return DBNull.Value;
+
+            return self;
+        }
 
         /// <summary>
         /// Will transform "some $ugly ###url wit[]h spaces" into "some-ugly-url-with-spaces"
@@ -249,6 +519,16 @@ namespace System
             return str;
         }
 
+        /// <summary>
+        /// Adds a double single quote for every single quote to allow for proper SQL Server
+        /// This is also used by extensions ToDelimitedString
+        /// </summary>
+        /// <param name="value">Extends <see cref="string"/>.</param>
+        /// <returns></returns>
+        public static string DuplicateTicksForSql(this string value)
+        {
+            return value?.Replace("'", "''");
+        }
 
     }
 }

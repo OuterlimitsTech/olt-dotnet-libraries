@@ -34,6 +34,17 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         }
 
         [Theory]
+        [InlineData("", "")]
+        [InlineData(null, null)]
+        [InlineData("John's", "John''s")]
+        [InlineData("Johns", "Johns")]
+        [InlineData("\"John's\"", "\"John''s\"")]
+        public void DuplicateTicksForSql(string value, string expectedResult)
+        {
+            Assert.Equal(expectedResult, value.DuplicateTicksForSql());
+        }
+
+        [Theory]
         [InlineData(UnitTestConstants.StringValues.HelloWorld, 5, UnitTestConstants.StringValues.World)]
         [InlineData("", 10, "")]
         [InlineData(null, 10, null)]
@@ -119,6 +130,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
 
         [Theory]
         [InlineData("", "", 10, "")]
+        [InlineData(" ", " ", 10, "")]
         [InlineData(null, null, 20, null)]
         [InlineData(UnitTestConstants.StringValues.HelloWorld, UnitTestConstants.StringValues.Test, 7, "hello-world-test")]
         [InlineData(UnitTestConstants.StringValues.HelloWorld, UnitTestConstants.StringValues.Test, 100, "hello-world-test")]
@@ -131,19 +143,57 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         }
 
 
-        [Fact]
-        public void ToDate()
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(" ", false)]
+        [InlineData(null, false)]
+        [InlineData("9/1/2021", true)]
+        [InlineData("2021-09-01", true)]
+        public void IsDate(string value, bool expectedResult)
         {
-            Assert.True(UnitTestConstants.DateTimeValues.String.ToDate().Equals(UnitTestConstants.DateTimeValues.Value));
+            Assert.Equal(expectedResult, value.IsDate());
+        }
+
+        public static IEnumerable<object[]> ToDateMemberData =>
+            new List<object[]>
+            {
+                new object[] { "", null, null },
+                new object[] { null, null, null },
+                new object[] { "", DateTime.Today, DateTime.Today },
+                new object[] { null, DateTime.Today, DateTime.Today },
+                new object[] { UnitTestConstants.DateTimeValues.String, UnitTestConstants.DateTimeValues.Value, null },
+            };
+
+
+        [Theory]
+        [MemberData(nameof(ToDateMemberData))]
+        public void ToDate(string value, DateTime? expectedResult, DateTime? defaultValue = null)
+        {
+            Assert.Equal(expectedResult, defaultValue.HasValue? value.ToDate(defaultValue.Value) : value.ToDate());
         }
 
 
 
-        [Fact]
-        public void ToInt()
+        [Theory]
+        [InlineData("", int.MaxValue, int.MaxValue)]
+        [InlineData("", null)]
+        [InlineData(null, null)]
+        [InlineData("", 0, 0)]
+        [InlineData("FooBar", 0, 0)]
+        [InlineData(null, 930248, 930248)]
+        [InlineData("45.234", null)]
+        [InlineData("-1", -1)]
+        public void ToInt(string value, int? expectedResult, int? defaultValue = null)
         {
-            int value = int.MaxValue - 100;
-            Assert.True(value.ToString().ToInt().Equals(value));
+            Assert.Equal(expectedResult, defaultValue.HasValue ? value.ToInt(defaultValue.Value) : value.ToInt());
+        }
+
+        [Fact]
+        public void ToIntOverflow()
+        {
+            long num = int.MaxValue;
+            var value = (num + 1).ToString();
+            Assert.Null(value.ToInt());
         }
 
         [Fact]
@@ -154,52 +204,56 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         }
 
 
-        [Fact]
-        public void ToLong()
-        {
-            long value = long.MaxValue - 500;
-            Assert.True(value.ToString().ToLong().Equals(value));
-        }
 
-        [Fact]
-        public void ToLongDefaultValue()
+        [Theory]
+        [InlineData("", long.MaxValue, long.MaxValue)]
+        [InlineData("", null)]
+        [InlineData(null, null)]
+        [InlineData("", 0, 0)]
+        [InlineData("FooBar", 0, 0)]
+        [InlineData(null, 930248, 930248)]
+        [InlineData("45.234", null)]
+        [InlineData("-1", -1)]
+        public void ToLong(string value, long? expectedResult, long? defaultValue = null)
         {
-            long value = long.MaxValue - 500;
-            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToLong(value).Equals(value));
-        }
-
-
-        [Fact]
-        public void ToDecimal()
-        {
-            decimal value = decimal.MaxValue - 500;
-            Assert.True(value.ToString().ToDecimal().Equals(value));
-        }
-
-        [Fact]
-        public void ToDecimalDefaultValue()
-        {
-            decimal value = decimal.MaxValue - 500;
-            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToDecimal(value).Equals(value));
+            Assert.Equal(expectedResult, defaultValue.HasValue ? value.ToLong(defaultValue.Value) : value.ToLong());
         }
 
 
-        [Fact]
-        public void ToDouble()
+
+
+        [Theory]
+        [InlineData("", double.MaxValue, double.MaxValue)]
+        [InlineData("", null)]
+        [InlineData(null, null)]
+        [InlineData("", 0, 0)]
+        [InlineData("FooBar", 0, 0)]
+        [InlineData(null, 1.01, 1.01)]
+        [InlineData("45.234", 45.234)]
+        [InlineData("-1", -1)]
+        public void ToDecimal(string value, decimal? expectedResult, decimal? defaultValue = null)
         {
-            double value = double.MaxValue - 500;
-            Assert.True(value.ToString().ToDouble().Equals(value));
+            Assert.Equal(expectedResult, defaultValue.HasValue ? value.ToDecimal(defaultValue.Value) : value.ToDecimal());
         }
 
-        [Fact]
-        public void ToDoubleDefaultValue()
+        [Theory]
+        [InlineData("", double.MaxValue, double.MaxValue)]
+        [InlineData("", null)]
+        [InlineData(null, null)]
+        [InlineData("", 0, 0)]
+        [InlineData(null, 1.01, 1.01)]
+        [InlineData("FooBar", 0, 0)]
+        [InlineData("45.234", 45.234)]
+        [InlineData("-1", -1)]
+        public void ToDouble(string value, double? expectedResult, double? defaultValue = null)
         {
-            double value = double.MaxValue - 500;
-            Assert.True(UnitTestConstants.StringValues.HelloWorld.ToDouble(value).Equals(value));
+            Assert.Equal(expectedResult, defaultValue.HasValue ? value.ToDouble(defaultValue.Value) : value.ToDouble());
         }
 
 
         [Theory]
+        [InlineData("", false)]
+        [InlineData(null, false)]
         [InlineData(UnitTestConstants.BoolValues.TrueValues.String, true)]
         [InlineData(UnitTestConstants.BoolValues.TrueValues.Int, true)]
         [InlineData(UnitTestConstants.StringValues.AlphaNumeric, false)]
@@ -207,10 +261,17 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [InlineData(UnitTestConstants.BoolValues.FalseValues.Int, true)]
         public void IsBool(string value, bool expectedResult)
         {
-            Assert.Equal(value.IsBool(), expectedResult);
+            Assert.Equal(expectedResult, value.IsBool());
         }
 
         [Theory]
+        [InlineData("", null)]
+        [InlineData("", true, true)]
+        [InlineData("", false, false)]
+        [InlineData(" ", false, false)]
+        [InlineData(null, null)]
+        [InlineData(null, true, true)]
+        [InlineData(null, false, false)]
         [InlineData(UnitTestConstants.BoolValues.TrueValues.String, true)]
         [InlineData(UnitTestConstants.BoolValues.TrueValues.String, true, false)]
         [InlineData(UnitTestConstants.BoolValues.TrueValues.Int, true)]
@@ -222,30 +283,49 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [InlineData(UnitTestConstants.BoolValues.FalseValues.Int, false)]
         public void ToBool(string value, bool? expectedResult, bool? defaultValue = null)
         {
-            if (defaultValue.HasValue)
-            {
-                Assert.Equal(value.ToBool(defaultValue.Value), expectedResult);
-                return;
-            }
-            Assert.Equal(value.ToBool(), expectedResult);
+            Assert.Equal(expectedResult, defaultValue.HasValue ? value.ToBool(defaultValue.Value) : value.ToBool());
         }
 
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(" ", false)]
+        [InlineData(null, false)]
+        [InlineData("d7980689965b", true)]
+        [InlineData("123987", true)]
+        [InlineData(UnitTestConstants.StringValues.Hex, true)]
+        [InlineData(UnitTestConstants.StringValues.HelloWorld, false)]
+        public void IsHex(string value, bool expectedResult)
+        {
+            Assert.Equal(expectedResult, value.IsHex());
+        }
 
         [Theory]
+        [InlineData("", false)]
+        [InlineData(null, false)]
         [InlineData(UnitTestConstants.StringValues.Hex, true)]
         [InlineData(UnitTestConstants.StringValues.HelloWorld, false)]
         public void FromHexToByte(string value, bool expectedResult)
         {
-            Assert.Equal(value.FromHexToByte().Length > 0, expectedResult);
-        }
-
-        [Fact]
-        public void Reverse()
-        {
-            Assert.True(UnitTestConstants.StringValues.Hello.Reverse().Equals(UnitTestConstants.StringValues.HelloReverse));
+            Assert.Equal(expectedResult, value.FromHexToByte().Length > 0);
         }
 
         [Theory]
+        [InlineData("", "")]
+        [InlineData(" ", " ")]
+        [InlineData(null, null)]
+        [InlineData(UnitTestConstants.StringValues.Hello, UnitTestConstants.StringValues.HelloReverse)]
+        [InlineData("1234ABC", "CBA4321")]
+        [InlineData(" 1234ABC ", " CBA4321 ")]
+        [InlineData(" 1234ABC Testing", "gnitseT CBA4321 ")]
+        public void Reverse(string value, string expectedResult)
+        {
+            Assert.Equal(expectedResult, value.Reverse());
+        }
+
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(" ", false)]
+        [InlineData(null, false)]
         [InlineData(UnitTestConstants.StringValues.HelloReverse, false)]
         [InlineData(UnitTestConstants.StringValues.ThisIsATest, true)]
         [InlineData(UnitTestConstants.StringValues.HelloWorld, true)]
@@ -256,6 +336,9 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
 
 
         [Theory]
+        [InlineData("", false)]
+        [InlineData(" ", false)]
+        [InlineData(null, false)]
         [InlineData(UnitTestConstants.StringValues.HelloReverse, false)]
         [InlineData(UnitTestConstants.StringValues.ThisIsATest, true)]
         public void EqualsAny(string value, bool expectedResult)
