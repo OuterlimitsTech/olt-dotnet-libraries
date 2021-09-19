@@ -273,7 +273,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
                 new object[] { null, null },
                 new object[] { "", 0.0m, 0.0m },
                 new object[] { "FooBar", 2.133m, 2.133m },
-                new object[] { "45.234", 45.234m },
+                new object[] { "45.234", 45.234m, 0.0m },
                 new object[] { "35", 35m },
                 new object[] { null, 45.234m, 45.234m },
                 new object[] { "-1", -1m },
@@ -294,7 +294,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [InlineData("", 0, 0)]
         [InlineData(null, 1.01, 1.01)]
         [InlineData("FooBar", 0, 0)]
-        [InlineData("45.234", 45.234)]
+        [InlineData("45.234", 45.234, 0.0)]
         [InlineData("-1", -1)]
         public void ToDouble(string value, double? expectedResult, double? defaultValue = null)
         {

@@ -14,6 +14,12 @@ namespace System
     /// </summary>
     public static class OltStringExtensions
     {
+        public static byte[] ToASCIIBytes(this string value)
+        {
+            var encoding = new System.Text.ASCIIEncoding();
+            return encoding.GetBytes(value);
+        }
+
         #region [ Empty/Null Checks ]
 
         /// <summary>
@@ -318,8 +324,7 @@ namespace System
         /// <returns>Returns converted value to <see cref="decimal"/>, if cast fails, null <see cref="decimal"/></returns>
         public static decimal? ToDecimal(this string self)
         {
-            decimal value;
-            if (String.IsNullOrWhiteSpace(self) || !decimal.TryParse(self, out value))
+            if (string.IsNullOrWhiteSpace(self) || !decimal.TryParse(self, out var value))
                 return null;
             return value;
         }
@@ -332,8 +337,7 @@ namespace System
         /// <returns>Returns converted value to <see cref="decimal"/>. if cast fails, return defaultValue</returns>
         public static decimal ToDecimal(this string self, decimal defaultValue)
         {
-            decimal value;
-            if (String.IsNullOrWhiteSpace(self) || !decimal.TryParse(self.StripNonNumeric(true), out value))
+            if (string.IsNullOrWhiteSpace(self) || !decimal.TryParse(self.StripNonNumeric(true), out var value))
                 return defaultValue;
             return value;
         }
@@ -398,18 +402,6 @@ namespace System
             return value;
         }
 
-        /// <summary>
-        /// Converts <see cref="long"/> to <see cref="int"/>
-        /// </summary>
-        /// <param name="self">Extends <see cref="long"/>.</param>
-        /// <param name="defaultValue">value returned if cast fails.</param>
-        /// <returns>Returns converted value to <see cref="int"/>. if cast fails, null int</returns>
-        public static int ToInt(this long self, int defaultValue)
-        {
-            if (!int.TryParse(self.ToString(), out var value))
-                return defaultValue;
-            return value;
-        }
 
         #endregion
 
