@@ -65,21 +65,49 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
 
         }
 
-        
 
         [Fact]
         public void GetCellText()
         {
             using var package = GetPackage();
             using var worksheet = package.Workbook.Worksheets.First();
-            worksheet.Cells[2, 1].Value = null;
-            worksheet.Cells[2, 1].GetCellText();
+            worksheet.Cells[2, 1].Value = "Hello";
+            Assert.Equal("Hello", worksheet.Cells[2, 1].GetCellText());
         }
+
+        [Fact]
+        public void GetCellTextValueNull()
+        {
+            using var package = GetPackage();
+            using var worksheet = package.Workbook.Worksheets.First();
+            worksheet.Cells[2, 1].Value = null;
+            Assert.Null(worksheet.Cells[2, 1].GetCellText());
+        }
+
+        [Fact]
+        public void GetCellTextWhitespace()
+        {
+            using var package = GetPackage();
+            using var worksheet = package.Workbook.Worksheets.First();
+            worksheet.Cells[2, 1].Value = " Test ";
+            worksheet.Cells[2, 1].GetCellText();
+            Assert.Equal(" Test ", worksheet.Cells[2, 1].GetCellText());
+        }
+
+        [Fact]
+        public void GetCellTextNumber()
+        {
+            using var package = GetPackage();
+            using var worksheet = package.Workbook.Worksheets.First();
+            worksheet.Cells[2, 1].Value = 1039;
+            Assert.Equal("1039", worksheet.Cells[2, 1].GetCellText());
+        }
+
 
         [Fact]
         public void GetCellTextNull()
         {
-            OltExcelCsvConverter.GetCellText(null);
+            Assert.Null(OltExcelCsvConverter.GetCellText(null));
         }
 
         [Theory]

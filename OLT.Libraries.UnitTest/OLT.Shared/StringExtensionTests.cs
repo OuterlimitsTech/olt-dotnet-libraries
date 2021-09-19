@@ -17,6 +17,19 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         {
         }
 
+
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData(" ", " ", " ")]
+        [InlineData(null, null, null)]
+        [InlineData(null, "", "")]
+        [InlineData(null, "Hello", "Hello")]
+        [InlineData("Test", "Hello", "Test")]
+        public void GetValueOrDefault(string value, string defaultValue, string expected)
+        {
+            Assert.Equal(expected, value.GetValueOrDefault(defaultValue));
+        }
+
         [Fact]
         public void CleanForSearch()
         {
@@ -52,6 +65,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void Right(string value, int length, string expectedResult)
         {
             Assert.Equal(expectedResult, value.Right(length));
+            Assert.Equal(expectedResult, value.Tail(length));
         }
 
         [Theory]
@@ -62,6 +76,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void Left(string value, int length, string expectedResult)
         {
             Assert.Equal(expectedResult, value.Left(length));
+            Assert.Equal(expectedResult, value.Head(length));
         }
 
         [Theory]
@@ -115,17 +130,20 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
 
 
         [Theory]
-        [InlineData("", "")]
-        [InlineData(null, null)]
-        [InlineData(UnitTestConstants.DecimalValues.String, UnitTestConstants.DecimalValues.String, UnitTestConstants.StringValues.HelloWorld)]
-        public void StripNonNumericDecimal(string value, string expectedResult, string value2 = null)
+        [InlineData("", "", true)]
+        [InlineData("", "", false)]
+        [InlineData(null, null, true)]
+        [InlineData(null, null, false)]
+        [InlineData(UnitTestConstants.DecimalValues.String, UnitTestConstants.DecimalValues.String, true, UnitTestConstants.StringValues.HelloWorld)]
+        [InlineData(UnitTestConstants.DecimalValues.String, "31415", false, UnitTestConstants.StringValues.HelloWorld)]
+        public void StripNonNumericDecimal(string value, string expectedResult, bool allowDecimal, string value2 = null)
         {
             if (value == null)
             {
-                Assert.Equal(expectedResult, value.StripNonNumeric(true));
+                Assert.Equal(expectedResult, value.StripNonNumeric(allowDecimal));
                 return;
             }
-            Assert.Equal(expectedResult, $"{value}{value2}".StripNonNumeric(true));
+            Assert.Equal(expectedResult, $"{value}{value2}".StripNonNumeric(allowDecimal));
         }
 
         [Theory]
@@ -142,6 +160,32 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.Equal(expected.Left(maxLength), testValue.Slugify(maxLength));
         }
 
+        [Theory]
+        [InlineData("", "", ", ", "")]
+        [InlineData(" ", " ", ", ", " ,  ")]
+        [InlineData(null, null, ", ", "")]
+        [InlineData(null, "Hello", ", ", "Hello")]
+        [InlineData("Hello", "There", " ", "Hello There")]
+        [InlineData("Hello", "There", ",", "Hello,There")]
+        public void Append(string value, string value2, string separator, string expected)
+        {
+            Assert.Equal(expected, value.Append(value2, separator));
+        }
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(" ", " ")]
+        [InlineData(null, null)]
+        [InlineData("Hello There", "Hello there")]
+        [InlineData("hello there", "Hello there")]
+        [InlineData("hello There", "Hello there")]
+        [InlineData("HELLO THERE CHARLIE Brown", "Hello there charlie brown")]
+        public void ToProperCase(string value, string expected)
+        {
+            Assert.Equal(expected, value.ToProperCase());
+        }
+
+
 
         [Theory]
         [InlineData("", false)]
@@ -153,6 +197,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         {
             Assert.Equal(expectedResult, value.IsDate());
         }
+
 
         public static IEnumerable<object[]> ToDateMemberData =>
             new List<object[]>
@@ -220,17 +265,23 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         }
 
 
+        public static IEnumerable<object[]> ToDecimalMemberData =>
+            new List<object[]>
+            {
+                new object[] { null, decimal.MaxValue, decimal.MaxValue },
+                new object[] { "", null },
+                new object[] { null, null },
+                new object[] { "", 0.0m, 0.0m },
+                new object[] { "FooBar", 2.133m, 2.133m },
+                new object[] { "45.234", 45.234m },
+                new object[] { "35", 35m },
+                new object[] { null, 45.234m, 45.234m },
+                new object[] { "-1", -1m },
+            };
 
 
         [Theory]
-        [InlineData("", double.MaxValue, double.MaxValue)]
-        [InlineData("", null)]
-        [InlineData(null, null)]
-        [InlineData("", 0, 0)]
-        [InlineData("FooBar", 0, 0)]
-        [InlineData(null, 1.01, 1.01)]
-        [InlineData("45.234", 45.234)]
-        [InlineData("-1", -1)]
+        [MemberData(nameof(ToDecimalMemberData))]
         public void ToDecimal(string value, decimal? expectedResult, decimal? defaultValue = null)
         {
             Assert.Equal(expectedResult, defaultValue.HasValue ? value.ToDecimal(defaultValue.Value) : value.ToDecimal());
@@ -343,7 +394,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         [InlineData(UnitTestConstants.StringValues.ThisIsATest, true)]
         public void EqualsAny(string value, bool expectedResult)
         {
-            Assert.Equal(value.EqualsAny(UnitTestConstants.StringValues.ThisIsATest, UnitTestConstants.StringValues.Hex), expectedResult);
+            Assert.Equal(expectedResult, value.EqualsAny(UnitTestConstants.StringValues.ThisIsATest, UnitTestConstants.StringValues.Hex));
         }
 
         [Theory]
@@ -352,6 +403,18 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void DBNullIfEmpty(string value, bool expectedResult)
         {
             Assert.Equal(value.DBNullIfEmpty().Equals(DBNull.Value), expectedResult);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        [InlineData("Hello There")]
+        [InlineData("HelloThere")]
+        public void Base64EncodeDecode(string value)
+        {
+            var encoded = value.Base64Encode();
+            Assert.Equal(value, encoded.Base64Decode());
         }
 
         [Theory]
@@ -390,7 +453,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void GetUniqueKeyBiasedIteration(int repetitions, int keySize, double threshold)
         {
             Logger.Debug("Original BIASED implementation");
-            var result = OltKeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKeyOriginal_BIASED);
+            var result = KeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKeyOriginal_BIASED);
             Assert.DoesNotContain(result, p => p.Value > threshold);
         }
 
@@ -400,11 +463,11 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
         public void GetUniqueKeyIteration(int repetitions, int keySize, double threshold)
         {
             Logger.Debug("Original implementation");
-            var result = OltKeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKey);
+            var result = KeyGeneratorPerformTest(repetitions, keySize, OltKeyGenerator.GetUniqueKey);
             Assert.DoesNotContain(result, p => p.Value > threshold);
         }
 
-        private Dictionary<char, double> OltKeyGeneratorPerformTest(int repetitions, int keySize, Func<int, string> generator)
+        private Dictionary<char, double> KeyGeneratorPerformTest(int repetitions, int keySize, Func<int, string> generator)
         {
             var result = new Dictionary<char, double>();
             var chars = (new char[0])
@@ -432,6 +495,8 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
 
             return result;
         }
+
+
 
     }
 }

@@ -35,6 +35,16 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
         [Fact]
         public void ExcelFormulaValue()
         {
+            using var package = CreatePackage();
+            using var worksheet = package.Workbook.Worksheets.Add(WorksheetName);
+            var compare = new OltExcelFormulaValue("=SUM(A1:A3)");
+            Assert.Equal("SUM(A1:A3)", compare.Value);
+            Assert.Equal("SUM(A1:A3)", compare.Formula);
+        }
+
+        [Fact]
+        public void ExcelCellWriters()
+        {
             var style1 = new OltExcelCellStyle
             {
                 Background = Color.Beige,

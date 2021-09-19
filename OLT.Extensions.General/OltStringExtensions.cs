@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using OLT.Core;
@@ -12,10 +14,18 @@ namespace System
     /// </summary>
     public static class OltStringExtensions
     {
-
-
-
         #region [ Empty/Null Checks ]
+
+        /// <summary>
+        /// checks string. If null returns default
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="defaultValue">Default value return if null</param>
+        /// <returns>return string or default value if null</returns>
+        public static string GetValueOrDefault(this string self, string defaultValue)
+        {
+            return self ?? defaultValue;
+        }
 
         /// <summary>
         /// Executes <see cref="string.IsNullOrEmpty"/> on the current string.
@@ -61,7 +71,7 @@ namespace System
         }
 
 
-        #region [ Left, Right ]
+        #region [ Left, Head, Right, Tail ]
 
         /// <summary>
         /// Get substring of specified number of characters on the right.
@@ -71,16 +81,33 @@ namespace System
         /// <returns>string containing only <paramref name="length"/> characters.</returns>
         public static string Right(this string self, int length)
         {
-            if (self.IsEmpty()) return self;
-
-            if (self.Length < length)
-            {
-                return self;
-            }
-
-            return self.Substring(self.Length - length);
+            return Tail(self, length);
         }
 
+        /// <summary>
+        /// Returns the last part of the supplied string by the requested length
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="length">The length of the number of characters to return</param>
+        /// <returns>
+        ///   <see cref="string"/>
+        /// </returns>
+        public static string Tail(this string self, int length)
+        {
+            return length > self?.Length ? self : self?.Substring(self.Length - length);
+        }
+
+
+        /// <summary>
+        /// returns the first part specified input based on the requested length
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="length">The length.</param>
+        /// <returns></returns>
+        public static string Head(this string self, int length)
+        {
+            return length > self?.Length ? self : self?.Substring(0, length);
+        }
 
         /// <summary>
         /// Get substring of specified number of characters on the right.
@@ -89,9 +116,7 @@ namespace System
         /// <param name="length">the number of characters to take</param>
         public static string Left(this string self, int length)
         {
-            if (self.IsEmpty()) return self;
-            if (self.Length < length) return self;
-            return self.Substring(0, length);
+            return Head(self, length);
         }
 
         #endregion
@@ -529,6 +554,68 @@ namespace System
         {
             return value?.Replace("'", "''");
         }
+
+
+        /// <summary>
+        /// Inserts a space where the Pascal Case cap letters occur
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns>
+        ///   <see cref="string"/>
+        /// </returns>
+        public static string ToSentenceCase(this string self)
+        {
+            return string.IsNullOrWhiteSpace(self) ? self : Regex.Replace(self, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1]));
+        }
+
+
+        /// <summary>
+        /// Appends text to string using separator.
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
+        /// <param name="text">Text to append</param>
+        /// <param name="separator"></param>
+        /// <returns>A <see cref="string"/> containing the joined strings.</returns>
+        public static string Append(this string self, string text, string separator)
+        {
+            if (self.IsNotEmpty())
+                self += separator;
+            self += text;
+            return self;
+        }
+
+
+        /// <summary>
+        /// Converts the input string into a proper case format where the first letter is caps and the rest is lower
+        /// </summary>
+        /// <param name="input">The <see cref="String" /> to perform the action on</param>
+        /// <returns>A Proper cased <see cref="String" /></returns>
+        public static string ToProperCase(this string input)
+        {
+            if (input == null) return null;
+            if (input.IsEmpty()) return string.Empty;
+            if (input.Length == 1) return input.ToUpper();
+            return input.Substring(0, 1).ToUpper() + input.Substring(1).ToLower();
+        }
+
+
+        #region [ Base64 Encode/Decode ]
+
+        public static string Base64Encode(this string plainText)
+        {
+            if (plainText == null) return null;
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static string Base64Decode(this string base64EncodedData)
+        {
+            if (base64EncodedData == null) return null;
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        #endregion
 
     }
 }

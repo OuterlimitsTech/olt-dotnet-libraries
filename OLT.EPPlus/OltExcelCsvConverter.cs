@@ -101,7 +101,7 @@ namespace OLT.EPPlus
         /// <returns></returns>
         public static string GetCellText(this ExcelRangeBase cell)
         {
-            return cell?.Value?.ToString()?.Trim();
+            return cell?.Value?.ToString();
         }
 
         private static void AddCellValue(string value, List<string> record)
