@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.Cosmos;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace OLT.Libraries.UnitTest.OLT.Shared
+namespace OLT.Libraries.UnitTest.OLT.Extensions.General
 {
     public class StringExtensionTests : BaseTest
     {

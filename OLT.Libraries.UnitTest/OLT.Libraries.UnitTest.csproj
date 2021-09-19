@@ -11,6 +11,8 @@
   <ItemGroup>
     <None Remove="Assets\Entity\Configurations\SeedData\person_type.csv" />
     <None Remove="Assets\Resources\ImportTest.xlsx" />
+    <None Remove="Assets\Resources\ImportTest_Sheet1.csv" />
+    <None Remove="Assets\Resources\ImportTest_Sheet2.csv" />
     <None Remove="Properties\launchSettings.json" />
   </ItemGroup>
 
@@ -23,6 +25,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\Entity\Configurations\SeedData\person_type.csv" />
     <EmbeddedResource Include="Assets\Resources\ImportTest.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Resources\ImportTest_Sheet1.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Resources\ImportTest_Sheet2.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

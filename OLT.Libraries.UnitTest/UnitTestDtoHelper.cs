@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid.Json;
@@ -140,6 +141,16 @@ namespace OLT.Libraries.UnitTest
                     }
                 }
             };
+        }
+
+        public static string BuildTempPath()
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), $"OLT_UnitTest_{Guid.NewGuid()}");
+            if (!Directory.Exists(tempDir))
+            {
+                Directory.CreateDirectory(tempDir);
+            }
+            return tempDir;
         }
     }
 }

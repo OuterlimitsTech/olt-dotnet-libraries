@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,83 +12,67 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
     public class SystemIOTests
     {
 
-
-        private string BuildTempPath()
-        {
-            var tempDir = Path.Combine(Path.GetTempPath(), $"OLT_UnitTest_{Guid.NewGuid()}");
-            //var tempDir = Path.Combine(@"D:\FTP", "Created");
-            if (!Directory.Exists(tempDir))
-            {
-                Directory.CreateDirectory(tempDir);
-            }
-            return tempDir;
-        }
-
+        private const string EmbeddedFile = "ImportTest.xlsx";
 
         [Fact]
         public void ToFile()
         {
-            var fileStream = this.GetType().Assembly.GetEmbeddedResourceStream("ImportTest.xlsx");
-            var ms = new MemoryStream();
-            fileStream.CopyTo(ms);
-            var dir = BuildTempPath();
-            var fileName = Path.Combine(dir, "ToFile_Import.xlsx");
-            Assert.True(ms.ToFile(fileName));
-            Assert.True(File.Exists(fileName));
-            Directory.Delete(dir, true);
-        }
+            var dir = UnitTestHelper.BuildTempPath();
+            var fileName = Path.Combine(dir, "ToBytes_Import.xlsx");
 
 
-        [Fact]
-        public void ToBytesAndToMemoryStream()
-        {
             var ms = this.GetType().Assembly
-                .GetEmbeddedResourceStream("ImportTest.xlsx")
+                .GetEmbeddedResourceStream(EmbeddedFile)
                 .ToBytes()
                 .ToMemoryStream();
 
-            var dir = BuildTempPath();
-            var fileName = Path.Combine(dir, "ToBytesAndToMemoryStream_Import.xlsx");
 
-            Assert.True(ms.ToFile(fileName));
+            ms.ToFile(fileName);
             Assert.True(File.Exists(fileName));
+
+            ms.ToFile(fileName); //Checking File Exists
+            Assert.True(File.Exists(fileName));
+
             Directory.Delete(dir, true);
         }
 
         [Fact]
         public void FileToBytes()
         {
-            var dir = BuildTempPath();
+            var dir = UnitTestHelper.BuildTempPath();
             var fileName = Path.Combine(dir, "FileToBytes_Import.xlsx");
 
-
             var ms = this.GetType().Assembly
-                .GetEmbeddedResourceStream("ImportTest.xlsx")
+                .GetEmbeddedResourceStream(EmbeddedFile)
                 .ToBytes()
                 .ToMemoryStream();
 
             ms.ToFile(fileName);
 
-            var bytes = fileName.FileToBytes();
+            var bytes = File.ReadAllBytes(fileName);
             Assert.Equal(ms.Length, bytes.Length);
             Assert.True(File.Exists(fileName));
+
+            ms.ToFile(fileName); //Checking File Exists
+            Assert.True(File.Exists(fileName));
+
             Directory.Delete(dir, true);
         }
 
         [Fact]
         public void FileToMemoryStream()
         {
-            var dir = BuildTempPath();
+            var dir = UnitTestHelper.BuildTempPath();
             var fileName = Path.Combine(dir, "FileToMemoryStream_Import.xlsx");
 
 
             var ms = this.GetType().Assembly
-                .GetEmbeddedResourceStream("ImportTest.xlsx")
+                .GetEmbeddedResourceStream(EmbeddedFile)
                 .ToBytes()
                 .ToMemoryStream();
 
             ms.ToFile(fileName);
-            var msCopy = fileName.FileToMemoryStream();
+            var msCopy = File.ReadAllBytes(fileName).ToMemoryStream();
             
             Assert.Equal(ms.Length, msCopy.Length);
             Assert.True(File.Exists(fileName));
@@ -97,16 +82,16 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         [Fact]
         public void BytesToFile()
         {
-            var dir = BuildTempPath();
+            var dir = UnitTestHelper.BuildTempPath();
             var fileName = Path.Combine(dir, "BytesToFile_Import.xlsx");
 
 
             var bytes = this.GetType().Assembly
-                .GetEmbeddedResourceStream("ImportTest.xlsx")
+                .GetEmbeddedResourceStream(EmbeddedFile)
                 .ToBytes();
 
             bytes.ToFile(fileName);
-            var copyBytes = fileName.FileToBytes();
+            var copyBytes = File.ReadAllBytes(fileName);
 
             Assert.Equal(bytes.Length, copyBytes.Length);
             Assert.True(File.Exists(fileName));
