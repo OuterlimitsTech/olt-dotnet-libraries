@@ -87,12 +87,29 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         }
 
         [Fact]
-        public void EmbeddedResourceToFileException1()
+        public void Exception()
         {
+            Assert.Throws<ArgumentNullException>(() => this.GetType().Assembly.GetEmbeddedResourceStream(null));
             Assert.Throws<ArgumentNullException>(() => this.GetType().Assembly.EmbeddedResourceToFile(null, "blah.txt"));
             Assert.Throws<ArgumentNullException>(() => this.GetType().Assembly.EmbeddedResourceToFile(EmbeddedFile, null));
+            Assert.Throws<ArgumentNullException>(() => this.GetType().Assembly.GetEmbeddedResourceString(null));
+
+            Assert.Throws<ArgumentException>(() => this.GetType().Assembly.GetEmbeddedResourceStream(" "));
+            Assert.Throws<ArgumentException>(() => this.GetType().Assembly.EmbeddedResourceToFile(" ", "blah.txt"));
+            Assert.Throws<ArgumentException>(() => this.GetType().Assembly.EmbeddedResourceToFile(EmbeddedFile, " "));
+            Assert.Throws<ArgumentException>(() => this.GetType().Assembly.GetEmbeddedResourceString(" "));
+
+
+            Assert.Throws<ArgumentException>(() => this.GetType().Assembly.GetEmbeddedResourceStream(""));
             Assert.Throws<ArgumentException>(() => this.GetType().Assembly.EmbeddedResourceToFile("", "blah.txt"));
             Assert.Throws<ArgumentException>(() => this.GetType().Assembly.EmbeddedResourceToFile(EmbeddedFile, ""));
+            Assert.Throws<ArgumentException>(() => this.GetType().Assembly.GetEmbeddedResourceString(""));
+
+
+            Assert.Throws<FileNotFoundException>(() => this.GetType().Assembly.GetEmbeddedResourceStream("foobar.txt"));
+            Assert.Throws<FileNotFoundException>(() => this.GetType().Assembly.EmbeddedResourceToFile("foobar.txt", "blah.txt"));
+            Assert.Throws<FileNotFoundException>(() => this.GetType().Assembly.GetEmbeddedResourceString("foobar.txt"));
+
         }
     }
 }

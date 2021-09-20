@@ -25,7 +25,7 @@ namespace System.Reflection
                 throw new ArgumentNullException(nameof(resourceName));
             }
 
-            if (resourceName.IsEmpty())
+            if (string.IsNullOrWhiteSpace(resourceName))
             {
                 throw new ArgumentException($"{resourceName} cannot be null or whitespace");
             }
@@ -64,7 +64,7 @@ namespace System.Reflection
                 throw new ArgumentNullException(nameof(resourceName));
             }
 
-            if (resourceName.IsEmpty())
+            if (string.IsNullOrWhiteSpace(resourceName))
             {
                 throw new ArgumentException($"{resourceName} cannot be null or whitespace");
             }
@@ -74,7 +74,7 @@ namespace System.Reflection
                 throw new ArgumentNullException(nameof(fileName));
             }
 
-            if (fileName.IsEmpty())
+            if (string.IsNullOrWhiteSpace(fileName))
             {
                 throw new ArgumentException($"{fileName} cannot be null or whitespace");
             }
@@ -114,7 +114,7 @@ namespace System.Reflection
                 throw new ArgumentNullException(nameof(resourceName));
             }
 
-            if (resourceName.IsEmpty())
+            if (string.IsNullOrWhiteSpace(resourceName))
             {
                 throw new ArgumentException($"{resourceName} cannot be null or whitespace");
             }

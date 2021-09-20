@@ -93,6 +93,31 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
             bytes.ToFile(fileName);
             var copyBytes = File.ReadAllBytes(fileName);
 
+            Assert.True(File.Exists(fileName));
+            Assert.Equal(bytes.Length, copyBytes.Length);
+
+            copyBytes.ToFile(fileName); //Checking File Exists
+            Assert.True(File.Exists(fileName));
+
+            Directory.Delete(dir, true);
+        }
+
+        [Fact]
+        public void FileInfoToBytes()
+        {
+            var dir = UnitTestHelper.BuildTempPath();
+            var fileName = Path.Combine(dir, "BytesToFile_Import.xlsx");
+
+            this.GetType().Assembly
+                .GetEmbeddedResourceStream(EmbeddedFile)
+                .ToBytes()
+                .ToFile(fileName);
+
+            var fileInfo = new FileInfo(fileName);
+            var bytes = fileInfo.ToBytes();
+
+            var copyBytes = File.ReadAllBytes(fileName);
+
             Assert.Equal(bytes.Length, copyBytes.Length);
             Assert.True(File.Exists(fileName));
             Directory.Delete(dir, true);
