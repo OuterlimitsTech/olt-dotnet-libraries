@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OLT.Libraries.UnitTest.Assets;
+﻿using System.Collections.Generic;
+using OLT.Libraries.UnitTest.OLT.Shared;
 using Xunit;
 
-namespace OLT.Libraries.UnitTest.OLT.Shared
+namespace OLT.Libraries.UnitTest.OLT.Extensions.General
 {
     public class CollectionExtensionsTests
     {
