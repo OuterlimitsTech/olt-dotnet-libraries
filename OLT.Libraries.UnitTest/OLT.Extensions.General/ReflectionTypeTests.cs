@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Xunit;
@@ -110,6 +111,22 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
             Assert.Throws<FileNotFoundException>(() => this.GetType().Assembly.EmbeddedResourceToFile("foobar.txt", "blah.txt"));
             Assert.Throws<FileNotFoundException>(() => this.GetType().Assembly.GetEmbeddedResourceString("foobar.txt"));
 
+        }
+
+
+        [Fact]
+        public void GetReferencedAssemblies()
+        {
+            var self = this.GetType().Assembly;
+            var list = new List<Assembly>
+            {
+                self,
+                self,
+            };
+
+            Assert.True(self.GetAllReferencedAssemblies().Count > 0);
+            Assert.True(list.ToArray().GetAllReferencedAssemblies().Count > 0);
+            Assert.True(list.GetAllReferencedAssemblies().Count > 0);
         }
     }
 }

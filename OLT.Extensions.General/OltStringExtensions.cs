@@ -140,8 +140,7 @@ namespace System
                 return false;
             }
 
-            Guid temp;
-            return Guid.TryParse(self, out temp);
+            return Guid.TryParse(self, out var temp);
         }
 
 
@@ -180,9 +179,7 @@ namespace System
         /// <param name="self">Extends <see cref="string"/>.</param>
         public static bool IsNumeric(this string self)
         {
-            long longVal;
-            double doubleVal;
-            return long.TryParse(self, out longVal) || double.TryParse(self, out doubleVal);
+            return long.TryParse(self, out var longVal) || double.TryParse(self, out var doubleVal);
         }
 
 
@@ -353,8 +350,7 @@ namespace System
         /// <returns>Returns converted value to <see cref="double"/>, if cast fails, null <see cref="double"/></returns>
         public static double? ToDouble(this string self)
         {
-            double value;
-            if (String.IsNullOrWhiteSpace(self) || !double.TryParse(self, out value))
+            if (string.IsNullOrWhiteSpace(self) || !double.TryParse(self, out var value))
                 return null;
             return value;
         }
@@ -367,8 +363,7 @@ namespace System
         /// <returns>Returns converted value to <see cref="double"/>. if cast fails, return defaultValue</returns>
         public static double ToDouble(this string self, double defaultValue)
         {
-            double value;
-            if (String.IsNullOrWhiteSpace(self) || !double.TryParse(self.StripNonNumeric(true), out value))
+            if (string.IsNullOrWhiteSpace(self) || !double.TryParse(self.StripNonNumeric(true), out var value))
                 return defaultValue;
             return value;
         }

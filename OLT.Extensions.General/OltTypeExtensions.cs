@@ -1,10 +1,86 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
     public static class OltReflectionTypeExtensions
     {
+
+        #region [ Get Referenced Assemblies ]
+
+
+        /// <summary>
+        /// Gets all referenced assemblies
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static List<Assembly> GetAllReferencedAssemblies(this Assembly assembly)
+        {
+            return GetAllReferencedAssemblies(new List<Assembly> { assembly });
+        }
+
+        /// <summary>
+        /// Gets all referenced assemblies for list of assemblies
+        /// </summary>
+        /// <param name="assembliesToScan"></param>
+        /// <returns></returns>
+        public static List<Assembly> GetAllReferencedAssemblies(this Assembly[] assembliesToScan)
+        {
+            return GetAllReferencedAssemblies(assembliesToScan.ToList());
+        }
+
+        /// <summary>
+        /// Gets all referenced assemblies for provided list of assemblies
+        /// </summary>
+        /// <param name="assembliesToScan"></param>
+        /// <returns></returns>
+        public static List<Assembly> GetAllReferencedAssemblies(this List<Assembly> assembliesToScan)
+        {
+            var results = new List<Assembly>();
+            var referencedAssemblies = new List<Assembly>();
+
+            referencedAssemblies.AddRange(assembliesToScan);
+
+            if (assembliesToScan.Any(p => p.FullName != Assembly.GetCallingAssembly().FullName))
+            {
+                referencedAssemblies.Add(Assembly.GetCallingAssembly());
+            }
+
+            assembliesToScan.ForEach(assembly =>
+            {
+                referencedAssemblies.AddRange(assembly.GetReferencedAssemblies().Select(Assembly.Load));
+            });
+
+            AppDomain.CurrentDomain
+                .GetAssemblies()
+                .ToList()
+                .ForEach(assembly =>
+                {
+                    referencedAssemblies.Add(assembly);
+                });
+
+
+            referencedAssemblies
+                .GroupBy(g => g.FullName)
+                .Select(s => s.Key)
+                .OrderBy(o => o)
+                .ToList()
+                .ForEach(name =>
+                {
+                    var assembly = results.FirstOrDefault(p => string.Equals(p.FullName, name, StringComparison.OrdinalIgnoreCase));
+                    if (assembly == null)
+                    {
+                        results.Add(referencedAssemblies.FirstOrDefault(p => p.FullName == name));
+                    }
+                });
+
+
+            return results;
+        }
+
+        #endregion
 
         /// <summary>
         /// Searches Assembly for embedded resource. This method does not require the Fully Qualified Name
