@@ -44,8 +44,15 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         [InlineData(2, "2nd")]
         [InlineData(3, "3rd")]
         [InlineData(5, "5th")]
+        [InlineData(11, "11th")]
+        [InlineData(12, "12th")]
+        [InlineData(13, "13th")]
         [InlineData(34, "34th")]
+        [InlineData(100, "100th")]
         [InlineData(101, "101st")]
+        [InlineData(111, "111th")]
+        [InlineData(112, "112th")]
+        [InlineData(113, "113th")]
         public void AddOrdinal(int value, string expectedResult)
         {
             Assert.Equal(expectedResult, value.AddOrdinal());

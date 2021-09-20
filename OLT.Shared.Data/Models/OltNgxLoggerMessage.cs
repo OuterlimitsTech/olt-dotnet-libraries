@@ -28,7 +28,7 @@ namespace OLT.Core
             ex.Data.Add("Level", Level?.ToString());
             ex.Data.Add("LineNumber", LineNumber);
             ex.Data.Add("FileName", FileName);
-            ex.Data.Add("Timestamp", Timestamp?.ToIso8601DateTimeString());
+            ex.Data.Add("Timestamp", Timestamp?.ToISO8601());
             return ex;
         }
     }
