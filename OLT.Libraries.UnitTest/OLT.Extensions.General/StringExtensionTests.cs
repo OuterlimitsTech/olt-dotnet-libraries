@@ -417,6 +417,17 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
             var encoded = value.Base64Encode();
             Assert.Equal(value, encoded.Base64Decode());
         }
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(" ", " ")]
+        [InlineData(null, null)]
+        [InlineData("Hello There", "Hello There")]
+        [InlineData("HelloThere", "Hello there")]
+        [InlineData("HelloThereSally", "Hello there sally")]
+        public void ToSentenceCase(string value, string expectedResult)
+        {
+            Assert.Equal(expectedResult, value.ToSentenceCase());
+        }
 
         [Theory]
         [InlineData(16, true, true, true, true, 16)]
