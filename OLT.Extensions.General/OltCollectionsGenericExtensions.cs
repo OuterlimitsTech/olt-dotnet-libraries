@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 
 
 // ReSharper disable once CheckNamespace
@@ -6,7 +7,6 @@ namespace System.Collections.Generic
 {
     public static class OltCollectionsGenericExtensions
     {
-
 
         /// <summary>
         /// Executes <see cref="string.Join(string,string[])"/> on the current <see cref="IEnumerable{T}"/> of strings.

@@ -123,5 +123,39 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
             Directory.Delete(dir, true);
         }
 
+
+
+
+        //[Fact]
+        //public void DeleteFiles()
+        //{
+            
+           
+            
+
+
+        //    var dirInfo2 = new DirectoryInfo(dir2);
+        //    Assert.Equal(files, dirInfo2.GetFiles("*.*", SearchOption.AllDirectories).Length);
+        //    Assert.Equal(directories, dirInfo2.GetDirectories("*.*", SearchOption.AllDirectories).Length);
+        //    dirInfo2.DeleteFiles("*.*", DateTime.Now, false);
+        //    Assert.True(dirInfo2.GetFiles("*.*", SearchOption.AllDirectories).Length == 0);
+        //    Assert.Equal(directories, dirInfo2.GetDirectories("*.*", SearchOption.AllDirectories).Length);
+
+
+        //    var dirInfo3 = new DirectoryInfo(dir3);
+        //    Assert.Equal(files, dirInfo3.GetFiles("*.*", SearchOption.AllDirectories).Length);
+        //    Assert.Equal(directories, dirInfo3.GetDirectories("*.*", SearchOption.AllDirectories).Length);
+        //    dirInfo3.DeleteFiles("*.*", DateTime.Now.AddHours(-1), false);
+        //    Assert.Equal(files, dirInfo3.GetFiles("*.*", SearchOption.AllDirectories).Length);
+        //    Assert.Equal(directories, dirInfo3.GetDirectories("*.*", SearchOption.AllDirectories).Length);
+
+
+        //    dirInfo3.DeleteFiles("*.*", false);
+        //    Assert.True(dirInfo2.GetFiles("*.*", SearchOption.TopDirectoryOnly).Length == 0);
+        //    Assert.True(dirInfo2.GetFiles("*.*", SearchOption.AllDirectories).Length > 0);
+        //    Assert.Equal(directories, dirInfo3.GetDirectories("*.*", SearchOption.AllDirectories).Length);
+
+        //    Directory.Delete(masterDir, true);
+        //}
     }
 }

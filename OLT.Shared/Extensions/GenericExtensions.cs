@@ -12,17 +12,11 @@ namespace System
 {
     public static class GenericExtensions
     {
-        public static async Task ForEachAsync<T>(this List<T> list, Func<T, Task> func)
-        {
-            foreach (var value in list)
-            {
-                await func(value);
-            }
-        }
+
 
 
         /// <summary>
-        /// Copies matching properies from one object to another
+        /// Copies matching properties from one object to another
         /// </summary>
         public static T CopyFrom<T>(this T toObject, object fromObject) where T : class
         {
@@ -50,31 +44,7 @@ namespace System
 
 
 
-        public static void Cleanup(this System.IO.DirectoryInfo obj, DateTime olderThan, bool deleteSubDirectories)
-        {
-            foreach (var fileInfo in obj.GetFiles().Where(p => p.CreationTime <= olderThan).ToList())
-            {
-                if (fileInfo.CreationTime <= olderThan)
-                {
-                    fileInfo.Delete();
-                }
-            }
-
-            foreach (var dir in obj.GetDirectories())
-            {
-                if (deleteSubDirectories)
-                {
-                    if (dir.CreationTime <= olderThan)
-                    {
-                        dir.Delete(true);
-                    }
-                }
-                else
-                {
-                    dir.Cleanup(olderThan, false);
-                }
-            }
-        }
+     
 
         public static void Remove<T>(this ICollection<T> @this, Func<T, bool> func)
         {

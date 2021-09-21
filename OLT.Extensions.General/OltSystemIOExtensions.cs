@@ -1,10 +1,14 @@
 ﻿
 
 // ReSharper disable once CheckNamespace
+
+using System.Linq;
+
 namespace System.IO
 {
     public static class OltSystemIOExtensions
     {
+
         /// <summary>
         /// Converts <see cref="long"/> to <see cref="int"/>
         /// </summary>
@@ -96,5 +100,63 @@ namespace System.IO
             fileOutput.Close();
         }
 
+        /// <summary>
+        /// Permanently deletes all files older than specified date
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="searchPattern"></param>
+        public static void DeleteFiles(this DirectoryInfo self, string searchPattern)
+        {
+            self.DeleteFiles(searchPattern, false);
+        }
+
+        /// <summary>
+        /// Permanently deletes all files older than specified date
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="recursive"></param>
+        public static void DeleteFiles(this DirectoryInfo self, string searchPattern, bool recursive)
+        {
+            foreach (var fileInfo in self.GetFiles(searchPattern).ToList())
+            {
+                fileInfo.Delete();
+            }
+
+            if (recursive)
+            {
+                foreach (var dir in self.GetDirectories())
+                {
+                    dir.DeleteFiles(searchPattern, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Permanently deletes all files older than specified date
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="olderThan"></param>
+        /// <param name="recursive"></param>
+        public static void DeleteFiles(this DirectoryInfo self, string searchPattern, DateTime olderThan, bool recursive)
+        {
+            foreach (var fileInfo in self.GetFiles().Where(p => p.CreationTime <= olderThan).ToList())
+            {
+                if (fileInfo.CreationTime <= olderThan)
+                {
+                    fileInfo.Delete();
+                }
+            }
+
+            if (recursive)
+            {
+                foreach (var dir in self.GetDirectories())
+                {
+                    dir.DeleteFiles(searchPattern, olderThan, true);
+                }
+            }
+
+        }
     }
 }
