@@ -20,13 +20,17 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
         public static IEnumerable<object[]> NgxLoggerMessageData =>
             new List<object[]>
             {
-                new object[] { new HelperNgxExceptionTest(), OltNgxLoggerLevel.Error, true },
-                new object[] { new HelperNgxExceptionTest(), OltNgxLoggerLevel.Fatal, true },
-                new object[] { new HelperNgxExceptionTest(), OltNgxLoggerLevel.Info, true },
+                new object[] { OltNgxLoggerLevel.Error, true, new HelperNgxExceptionTest() },
+                new object[] { OltNgxLoggerLevel.Fatal, true, new HelperNgxExceptionTest() },
+                new object[] { OltNgxLoggerLevel.Info, true, new HelperNgxExceptionTest() },
+                new object[] { null, true, new HelperNgxExceptionTest() },
 
-                new object[] { new HelperNgxExceptionTest(), OltNgxLoggerLevel.Error, false },
-                new object[] { new HelperNgxExceptionTest(), OltNgxLoggerLevel.Fatal, false },
-                new object[] { new HelperNgxExceptionTest(), OltNgxLoggerLevel.Info, false },
+                new object[] { OltNgxLoggerLevel.Error, false, new HelperNgxExceptionTest() },
+                new object[] { OltNgxLoggerLevel.Fatal, false, new HelperNgxExceptionTest() },
+                new object[] { OltNgxLoggerLevel.Info, false, new HelperNgxExceptionTest() },
+                new object[] { null, false, new HelperNgxExceptionTest() },
+
+
             };
 
         private Dictionary<string, string> ToDictionary(IDictionary data)
@@ -43,7 +47,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
 
         [Theory]
         [MemberData(nameof(NgxLoggerMessageData))]
-        public void NgxLoggerMessage(HelperNgxExceptionTest data, OltNgxLoggerLevel level, bool loadDetail)
+        public void NgxLoggerMessage(OltNgxLoggerLevel? level, bool loadDetail, HelperNgxExceptionTest data)
         { 
             var dt = DateTimeOffset.Now;
             
@@ -57,6 +61,11 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
             var exception = msg.ToException();
             var exceptionMessage = msg.Additional.FirstOrDefault()?.FirstOrDefault()?.Message ?? msg.Message;
             Assert.Equal(exceptionMessage, exception.Message);
+
+            if (level.HasValue)
+            {
+                Assert.Equal(level == OltNgxLoggerLevel.Error || level == OltNgxLoggerLevel.Fatal, msg.IsError);
+            }
 
             var dict = ToDictionary(exception.Data);
             if (loadDetail)

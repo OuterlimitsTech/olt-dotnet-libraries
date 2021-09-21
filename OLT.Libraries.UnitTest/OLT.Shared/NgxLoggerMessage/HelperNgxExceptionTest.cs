@@ -57,16 +57,17 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
         public OltNgxLoggerDetail Detail { get; }
 
 
-        public OltNgxLoggerMessage BuildMessage(DateTimeOffset dt, OltNgxLoggerLevel level, OltNgxLoggerDetail detail)
+        public OltNgxLoggerMessage BuildMessage(DateTimeOffset dt, OltNgxLoggerLevel? level, OltNgxLoggerDetail detail)
         {
             var msg = new OltNgxLoggerMessage
             {
                 Message = Faker.Lorem.Sentence(),
                 Timestamp = dt,
-                Level = level,
                 FileName = Faker.Lorem.GetFirstWord(),
                 LineNumber = Faker.RandomNumber.Next(1000, 4000).ToString(),
             };
+
+            msg.Level = level ?? msg.Level;
 
             if (detail != null)
             {
