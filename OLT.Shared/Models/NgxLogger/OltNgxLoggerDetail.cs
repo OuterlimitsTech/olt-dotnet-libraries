@@ -32,6 +32,10 @@ namespace OLT.Core
                 var dt = DateTimeOffset.FromUnixTimeMilliseconds(Time.Value);
                 ex.Data.Add("Time", dt.ToISO8601());
             }
+            else
+            {
+                ex.Data.Add("Time", null);
+            }
             ex.Data.Add("Url", Url);
             ex.Data.Add("Status", Status);
             var stack = Stack?.Select(s => $"{s}{Environment.NewLine}{Environment.NewLine}").ToList();

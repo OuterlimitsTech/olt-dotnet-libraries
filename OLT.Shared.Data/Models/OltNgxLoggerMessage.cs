@@ -9,7 +9,7 @@ namespace OLT.Core
     {
         public virtual string Message { get; set; }
         public virtual List<List<OltNgxLoggerDetail>> Additional { get; set; } = new List<List<OltNgxLoggerDetail>>();
-        public virtual OltNgxLoggerLevel? Level { get; set; } = OltNgxLoggerLevel.Off;
+        public virtual OltNgxLoggerLevel? Level { get; set; } 
         public virtual DateTimeOffset? Timestamp { get; set; }
         public virtual string FileName { get; set; }
         public virtual string LineNumber { get; set; }

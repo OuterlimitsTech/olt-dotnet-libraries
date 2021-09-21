@@ -8,9 +8,14 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
 {
     public class HelperNgxExceptionTest
     {
-        public HelperNgxExceptionTest()
+        public HelperNgxExceptionTest(DateTimeOffset? dt)
         {
-            UnixTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if (dt.HasValue)
+            {
+                Timestamp = dt.Value;
+                UnixTime = dt.Value.ToUnixTimeMilliseconds();
+            }
+            
 
             Stack = new List<OltNgxLoggerStack>
             {
@@ -30,7 +35,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
                 { "Name", Faker.Name.FullName(NameFormats.WithSuffix) },
                 { "AppId", Faker.Lorem.GetFirstWord() },
                 { "User", Faker.Internet.UserName() },
-                { "Time", DateTimeOffset.FromUnixTimeMilliseconds(UnixTime).ToISO8601() },
+                { "Time", UnixTime.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(UnixTime.Value).ToISO8601() : null },
                 { "Url", Faker.Internet.Url() },
                 { "Status", Faker.RandomNumber.Next(200, 600).ToString() },
                 { "Stack", string.Join(Environment.NewLine,  Stack.Select(s => $"{s}{Environment.NewLine}{Environment.NewLine}").ToList()) }
@@ -51,18 +56,19 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
         }
 
 
-        public long UnixTime { get; }
+        public long? UnixTime { get; }
+        public DateTimeOffset? Timestamp { get; }
         public Dictionary<string, string> Result { get; }
         public List<OltNgxLoggerStack> Stack { get; }
         public OltNgxLoggerDetail Detail { get; }
 
 
-        public OltNgxLoggerMessage BuildMessage(DateTimeOffset dt, OltNgxLoggerLevel? level, OltNgxLoggerDetail detail)
+        public OltNgxLoggerMessage BuildMessage(OltNgxLoggerLevel? level, OltNgxLoggerDetail detail)
         {
             var msg = new OltNgxLoggerMessage
             {
                 Message = Faker.Lorem.Sentence(),
-                Timestamp = dt,
+                Timestamp = Timestamp,
                 FileName = Faker.Lorem.GetFirstWord(),
                 LineNumber = Faker.RandomNumber.Next(1000, 4000).ToString(),
             };
@@ -81,7 +87,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
             }
 
             Result.Add("Username", msg.Username);
-            Result.Add("Level", msg.Level.ToString());
+            Result.Add("Level", msg.Level?.ToString());
             Result.Add("LineNumber", msg.LineNumber);
             Result.Add("FileName", msg.FileName);
             Result.Add("Timestamp", msg.Timestamp?.ToISO8601());

@@ -20,15 +20,20 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
         public static IEnumerable<object[]> NgxLoggerMessageData =>
             new List<object[]>
             {
-                new object[] { OltNgxLoggerLevel.Error, true, new HelperNgxExceptionTest() },
-                new object[] { OltNgxLoggerLevel.Fatal, true, new HelperNgxExceptionTest() },
-                new object[] { OltNgxLoggerLevel.Info, true, new HelperNgxExceptionTest() },
-                new object[] { null, true, new HelperNgxExceptionTest() },
+                new object[] { OltNgxLoggerLevel.Error, true, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { OltNgxLoggerLevel.Fatal, true, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { OltNgxLoggerLevel.Info, true, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { null, true, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { OltNgxLoggerLevel.Trace, true, new HelperNgxExceptionTest(null) },
+                new object[] { OltNgxLoggerLevel.Warn, true, new HelperNgxExceptionTest(null) },
 
-                new object[] { OltNgxLoggerLevel.Error, false, new HelperNgxExceptionTest() },
-                new object[] { OltNgxLoggerLevel.Fatal, false, new HelperNgxExceptionTest() },
-                new object[] { OltNgxLoggerLevel.Info, false, new HelperNgxExceptionTest() },
-                new object[] { null, false, new HelperNgxExceptionTest() },
+                new object[] { OltNgxLoggerLevel.Error, false, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { OltNgxLoggerLevel.Fatal, false, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { OltNgxLoggerLevel.Warn, false, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { null, false, new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { null, false, new HelperNgxExceptionTest(null) },
+                new object[] { OltNgxLoggerLevel.Debug, false, new HelperNgxExceptionTest(null) },
+                new object[] { OltNgxLoggerLevel.Log, false, new HelperNgxExceptionTest(null) },
 
 
             };
@@ -49,9 +54,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
         [MemberData(nameof(NgxLoggerMessageData))]
         public void NgxLoggerMessage(OltNgxLoggerLevel? level, bool loadDetail, HelperNgxExceptionTest data)
         { 
-            var dt = DateTimeOffset.Now;
-            
-            var msg = data.BuildMessage(dt, level, loadDetail ? data.Detail : null);
+            var msg = data.BuildMessage(level, loadDetail ? data.Detail : null);
 
             if (!loadDetail && level == OltNgxLoggerLevel.Fatal)
             {
@@ -66,6 +69,8 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
             {
                 Assert.Equal(level == OltNgxLoggerLevel.Error || level == OltNgxLoggerLevel.Fatal, msg.IsError);
             }
+
+            Assert.Throws<Exception>(() => ThrowException(data));
 
             var dict = ToDictionary(exception.Data);
             if (loadDetail)
@@ -100,12 +105,12 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
         }
 
 
+
         public static IEnumerable<object[]> NgxLoggerDetailData =>
             new List<object[]>
             {
-                new object[] { new HelperNgxExceptionTest() },
-                new object[] { new HelperNgxExceptionTest() },
-                new object[] { new HelperNgxExceptionTest() },
+                new object[] { new HelperNgxExceptionTest(DateTimeOffset.Now) },
+                new object[] { new HelperNgxExceptionTest(null) },
             };
 
         [Theory]
@@ -117,6 +122,8 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
             Assert.Equal(data.Detail.Id, exception.Source);
             var dict = ToDictionary(exception.Data);
 
+            Assert.Throws<Exception>(() => ThrowException(data));
+
             Assert.Collection(dict,
                 item => Assert.Equal(data.Result["Name"], item.Value),
                 item => Assert.Equal(data.Result["AppId"], item.Value),
@@ -126,8 +133,23 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
                 item => Assert.Equal(data.Result["Status"], item.Value),
                 item => Assert.Equal(data.Result["Stack"], item.Value)
             );
+
         }
 
+
+        private void ThrowException(HelperNgxExceptionTest data)
+        {
+            try
+            {
+                throw data.Detail.ToException();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Test");
+                throw;
+            }
+            
+        }
 
     }
 }
