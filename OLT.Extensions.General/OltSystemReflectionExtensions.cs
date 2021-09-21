@@ -2,10 +2,9 @@
 using System.IO;
 using System.Linq;
 
-// ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
-    public static class OltReflectionTypeExtensions
+    public static class OltSystemReflectionExtensions
     {
 
         #region [ Get Referenced Assemblies ]

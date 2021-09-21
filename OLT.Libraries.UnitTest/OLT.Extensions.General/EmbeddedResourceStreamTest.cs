@@ -6,12 +6,11 @@ using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.Extensions.General
 {
-    public class ReflectionTypeTests
+    public class EmbeddedResourceStreamTest
     {
 
         private const string EmbeddedFile = "ImportTest.xlsx";
         private const string EmbeddedCsvFile1 = "ImportTest_Sheet1.csv";
-        private const string EmbeddedCsvFile2 = "ImportTest_Sheet2.csv";
 
         [Theory]
         [InlineData(EmbeddedFile, true)]
