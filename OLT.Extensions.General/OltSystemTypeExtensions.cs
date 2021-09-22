@@ -5,9 +5,6 @@ namespace System
 {
     public static class OltSystemTypeExtensions
     {
-
-
-
         /// <summary>
         /// Determines if a type implements the <typeparamref name="TInterface"/> interface.
         /// this.GetType().Implements<IMyInterface>()

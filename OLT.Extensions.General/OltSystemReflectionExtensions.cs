@@ -200,7 +200,53 @@ namespace System.Reflection
                 sr.Close();
                 return data;
             }
+        }
 
+        /// <summary>
+        /// Scans provided assemblies for all objects that implement <seealso cref="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="assemblies"></param>
+        /// <returns>Returns an instance for all objects that implement <seealso cref="T"/></returns>
+        public static IEnumerable<T> GetAllImplements<T>(this Assembly[] assemblies)
+        {
+            return GetAllImplements<T>(assemblies.ToList());
+        }
+
+
+        /// <summary>
+        /// Scans provided assemblies for all objects that implement <seealso cref="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="assemblies"></param>
+        /// <returns>Returns an instance for all objects that implement <seealso cref="T"/></returns>
+        public static IEnumerable<T> GetAllImplements<T>(this List<Assembly> assemblies)
+        {
+
+            foreach (var assembly in assemblies)
+            {
+                Assembly loaded = null;
+
+                try
+                {
+                    loaded = Assembly.Load(assembly.GetName());
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                if (loaded != null)
+                {
+                    foreach (var ti in loaded.DefinedTypes)
+                    {
+                        if (ti.ImplementedInterfaces.Contains(typeof(T)) && !ti.IsAbstract && !ti.IsInterface && !ti.IsGenericType)
+                        {
+                            yield return (T)assembly.CreateInstance(ti.FullName);
+                        }
+                    }
+                }
+            }
         }
     }
 }
