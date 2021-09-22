@@ -53,6 +53,7 @@ namespace OLT.EPPlus
 
             if (Background.HasValue)
             {
+                range.Style.Fill.PatternType = ExcelFillStyle.Solid;
                 range.Style.Fill.BackgroundColor.SetColor(Background.Value);
             }
 

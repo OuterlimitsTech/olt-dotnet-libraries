@@ -9,13 +9,13 @@ namespace OLT.Core
     {
         public virtual string Message { get; set; }
         public virtual List<List<OltNgxLoggerDetail>> Additional { get; set; } = new List<List<OltNgxLoggerDetail>>();
-        public virtual OltNgxLoggerLevel? Level { get; set; }
+        public virtual OltNgxLoggerLevel? Level { get; set; } 
         public virtual DateTimeOffset? Timestamp { get; set; }
         public virtual string FileName { get; set; }
         public virtual string LineNumber { get; set; }
 
         [JsonIgnore]
-        public virtual string Username => Additional.FirstOrDefault()?.FirstOrDefault()?.User;
+        public virtual string Username => Additional.FirstOrDefault()?.FirstOrDefault()?.User ?? "Unknown";
 
         [JsonIgnore]
         public virtual bool IsError => Level == OltNgxLoggerLevel.Error || Level == OltNgxLoggerLevel.Fatal;
@@ -28,7 +28,7 @@ namespace OLT.Core
             ex.Data.Add("Level", Level?.ToString());
             ex.Data.Add("LineNumber", LineNumber);
             ex.Data.Add("FileName", FileName);
-            ex.Data.Add("Timestamp", Timestamp?.ToIso8601DateTimeString());
+            ex.Data.Add("Timestamp", Timestamp?.ToISO8601());
             return ex;
         }
     }

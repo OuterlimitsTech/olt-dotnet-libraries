@@ -11,5 +11,9 @@
     <PackageReference Include="EPPlus" Version="5.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
+  </ItemGroup>
+
 
 </Project>

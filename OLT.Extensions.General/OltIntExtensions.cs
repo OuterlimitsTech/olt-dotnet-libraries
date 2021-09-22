@@ -1,43 +1,50 @@
+﻿
 // ReSharper disable once CheckNamespace
 namespace System
 {
-
     /// <summary>
     /// Extends <see cref="int"/>.
     /// </summary>
-    public static class IntExtensions
+    public static class OltIntExtensions
     {
-        public static string AddOrdinal(this int num)
-        {
-            if (num <= 0) return num.ToString();
 
-            switch (num % 100)
+        /// <summary>
+        /// Adds Ordinal 1 = 1st, 2 = 2nd, 3 = 3rd
+        /// </summary>
+        /// <param name="self">Extends <see cref="int"/>.</param>
+        /// <returns></returns>
+        public static string AddOrdinal(this int self)
+        {
+            if (self <= 0) return self.ToString();
+
+            switch (self % 100)
             {
                 case 11:
                 case 12:
                 case 13:
-                    return num + "th";
+                    return $"{self}th";
             }
 
-            switch (num % 10)
+            switch (self % 10)
             {
                 case 1:
-                    return num + "st";
+                    return $"{self}st";
                 case 2:
-                    return num + "nd";
+                    return $"{self}nd";
                 case 3:
-                    return num + "rd";
+                    return $"{self}rd";
                 default:
-                    return num + "th";
+                    return $"{self}th";
             }
         }
+
 
         #region [ ToDollars ]
 
         /// <summary>
         /// Ensures Proper Rounding for Dollar Currency
         /// </summary>
-        /// <param name="self">Extends <see cref="double"/>.</param>
+        /// <param name="self">Extends <see cref="int"/>.</param>
         /// <returns>Returns <see cref="double"/> with proper rounded for dollars</returns>
         public static double ToDollars(this int self)
         {
@@ -47,17 +54,12 @@ namespace System
         /// <summary>
         /// Ensures Proper Rounding for Dollar Currency
         /// </summary>
-        /// <param name="self">Extends <see cref="double"/>.</param>
+        /// <param name="self">Extends <see cref="int"/>.</param>
         /// <returns>Returns <see cref="double"/> with proper rounded for dollars</returns>
         public static double? ToDollars(this int? self)
         {
-            if (self.HasValue)
-            {
-                return self.GetValueOrDefault(0).ToString("N2").ToDouble();
-            }
-            return null;
+            return self?.ToString("N2").ToDouble();
         }
-
 
         #endregion
 
@@ -80,16 +82,10 @@ namespace System
         /// <returns>Returns <see cref="double"/> with proper rounded for dollars</returns>
         public static double? ToDouble(this int? self)
         {
-            if (self.HasValue)
-            {
-                return self.GetValueOrDefault(0).ToDouble();
-            }
-            return null;
+            return self?.ToDouble();
         }
 
 
         #endregion
-
     }
-
 }

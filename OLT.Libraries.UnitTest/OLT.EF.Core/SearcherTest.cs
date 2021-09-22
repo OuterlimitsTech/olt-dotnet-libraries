@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
@@ -96,6 +97,39 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             var nonDeleted = _personService2.Get<PersonDto>(new OltSearcherGetById<PersonEntity>(entity.Id));
             var deleted = _personService2.Get<PersonDto>(new OltSearcherGetById<PersonEntity>(deletedEntity.Id));
             Assert.True(deleted.PersonId > 0 && nonDeleted.PersonId > 0);
+        }
+
+        [Fact]
+        public void OrderByPropertyName()
+        {
+            var list = new List<PersonEntity>()
+            {
+                new PersonEntity
+                {
+                    NameFirst = "Todd",
+                    NameLast = "Gabriel"
+                },
+                new PersonEntity
+                {
+                    NameFirst = "Charlie",
+                    NameLast = "Apple"
+                },
+                new PersonEntity
+                {
+                    NameFirst = "Jamie",
+                    NameLast = "Beatriz"
+                },
+
+            };
+
+            var compareToAsc = list.OrderBy(p => p.NameLast).ToList();
+            var actualAsc = list.AsQueryable().OrderByPropertyName(nameof(PersonEntity.NameLast), true).ToList();
+
+            actualAsc.Should().BeEquivalentTo(compareToAsc, options => options.WithStrictOrdering());
+
+            var compareToDesc = list.OrderByDescending(p => p.NameLast).ToList();
+            var actualDesc = list.AsQueryable().OrderByPropertyName(nameof(PersonEntity.NameLast), false).ToList();
+            actualDesc.Should().BeEquivalentTo(compareToDesc, options => options.WithStrictOrdering());
         }
     }
 }

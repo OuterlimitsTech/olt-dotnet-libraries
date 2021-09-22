@@ -201,7 +201,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
             var result = await httpContext.Request.GetRawBodyBytesAsync();
             
-            Assert.True(result.Length.Equals(json.ToBytes().Length));
+            Assert.True(result.Length.Equals(json.ToASCIIBytes().Length));
         }
 
 

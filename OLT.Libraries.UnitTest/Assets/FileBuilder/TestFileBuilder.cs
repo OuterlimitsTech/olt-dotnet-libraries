@@ -18,7 +18,7 @@ namespace OLT.Libraries.UnitTest.Assets.FileBuilder
             var worksheet = excelPackage.Workbook.Worksheets.Add($"Count {request.Data.Count():N0}");
 
             worksheet.Write(ExcelColumns, 1);
-            var rows = new List<OltExcelRowWriter>();
+            var rows = new List<IOltExcelRowWriter>();
 
             request.Data.ForEach(service =>
             {
@@ -31,11 +31,10 @@ namespace OLT.Libraries.UnitTest.Assets.FileBuilder
                 };
 
 
-                rows.Add(new OltExcelRowWriter
-                {
-                    Cells = cells
-                });
+                rows.Add(new OltExcelRowWriter {Cells = cells });
+                rows.Add(new OltExcelRowEmpty());
             });
+            
 
             var rowIdx = 2;
             rows.ForEach(row =>

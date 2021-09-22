@@ -30,7 +30,11 @@ namespace OLT.Core
             if (Time.HasValue)
             {
                 var dt = DateTimeOffset.FromUnixTimeMilliseconds(Time.Value);
-                ex.Data.Add("Time", dt.ToIso8601DateTimeString());
+                ex.Data.Add("Time", dt.ToISO8601());
+            }
+            else
+            {
+                ex.Data.Add("Time", null);
             }
             ex.Data.Add("Url", Url);
             ex.Data.Add("Status", Status);

@@ -34,23 +34,34 @@ namespace OLT.EPPlus
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns>Next Col Index</returns>
-        public int Write(ExcelWorksheet worksheet, int col, int row)
-        {
-            return Write(worksheet, col, row, null);
-        }
-
-        public int Write(ExcelWorksheet worksheet, int col, int row, Action<ExcelRange> rangeAction)
+        public virtual int Write(ExcelWorksheet worksheet, int col, int row)
         {
             var colName = OltExcelPackageHelpers.ColumnIndexToColumnLetter(col);
 
             using (var range = worksheet.Cells[$"{colName}{row}"])
             {
-                range.Value = Value;
-                Style?.ApplyStyle(range);
-                rangeAction?.Invoke(range);
+                Write(range);
+                ApplyStyle(range);
             }
-
             return col + 1;
+        }
+
+        /// <summary>
+        /// Writes Formula to given Range
+        /// </summary>
+        /// <param name="range"></param>
+        public virtual void Write(ExcelRange range)
+        {
+            range.Value = Value;
+        }
+
+        /// <summary>
+        /// Writes Formula to given Range
+        /// </summary>
+        /// <param name="range"></param>
+        public virtual void ApplyStyle(ExcelRange range)
+        {
+            Style?.ApplyStyle(range);
         }
     }
 
