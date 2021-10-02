@@ -8,6 +8,5 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Configurations
     {
         protected override string ResourceName => "person_type.csv";
         protected override Assembly ResourceAssembly => this.GetType().Assembly;
-
     }
 }

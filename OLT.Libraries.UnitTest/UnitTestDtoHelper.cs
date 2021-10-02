@@ -143,6 +143,16 @@ namespace OLT.Libraries.UnitTest
             };
         }
 
+        public static string BuildTempPath(string rootDir)
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), rootDir, $"OLT_UnitTest_{Guid.NewGuid()}");
+            if (!Directory.Exists(tempDir))
+            {
+                Directory.CreateDirectory(tempDir);
+            }
+            return tempDir;
+        }
+
         public static string BuildTempPath()
         {
             var tempDir = Path.Combine(Path.GetTempPath(), $"OLT_UnitTest_{Guid.NewGuid()}");
