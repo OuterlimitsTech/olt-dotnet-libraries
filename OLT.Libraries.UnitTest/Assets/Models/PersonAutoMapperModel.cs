@@ -6,6 +6,7 @@ namespace OLT.Libraries.UnitTest.Assets.Models
     public class PersonAutoMapperModel 
     {
         public int? PersonId { get; set; }
+        public Guid? UniqueId { get; set; }
         public NameAutoMapperModel Name { get; set; } = new NameAutoMapperModel();
     }
 

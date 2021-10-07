@@ -16,25 +16,11 @@ namespace OLT.Core
         {
         }
 
-
-        protected virtual TEntity FindBy(int id) => GetQueryable(id).FirstOrDefault();
         
         public virtual TModel Get<TModel>(int id) where TModel : class, new() => base.Get<TModel>(GetQueryable(id));
-        public TModel Get<TModel>(Guid uid) where TModel : class, new() => Get<TModel>(GetQueryable(uid));
-        public IEnumerable<TModel> GetAll<TModel>(Guid uid) where TModel : class, new() => GetAll<TModel>(GetQueryable(uid));
 
         protected virtual IQueryable<TEntity> GetQueryable(int id) => GetQueryable().Where(p => p.Id == id);
 
-        protected IQueryable<TEntity> GetQueryable(Guid uid)
-        {
-            if (typeof(IOltEntityUniqueId).IsAssignableFrom(typeof(TEntity)))
-            {
-                Expression<Func<TEntity, bool>> getByUid = x => ((IOltEntityUniqueId)x).UniqueId == uid;
-                getByUid = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(getByUid);
-                return this.Repository.Where(getByUid);
-            }
-            throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityUniqueId)}");
-        }
 
         public override TModel Add<TModel>(TModel model)
         {
@@ -94,31 +80,6 @@ namespace OLT.Core
             ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TResponseModel>(id);
-        }
-
-        public virtual TModel Update<TModel>(Guid uid, TModel model)
-            where TModel : class, new()
-        {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
-            ServiceManager.AdapterResolver.Map(model, entity);
-            SaveChanges();
-            return Get<TModel>(uid);
-        }
-
-        public virtual TResponseModel Update<TResponseModel, TModel>(Guid uid, TModel model)
-            where TModel : class, new()
-            where TResponseModel : class, new()
-        {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
-            ServiceManager.AdapterResolver.Map(model, entity);
-            SaveChanges();
-            return Get<TResponseModel>(uid);
-        }
-
-        public virtual bool SoftDelete(Guid uid)
-        {
-            var entity = GetQueryable(uid).FirstOrDefault();
-            return entity != null && MarkDeleted(entity);
         }
 
         public virtual bool SoftDelete(int id)

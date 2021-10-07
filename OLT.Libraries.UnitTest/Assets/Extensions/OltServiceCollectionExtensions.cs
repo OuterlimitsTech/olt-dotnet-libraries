@@ -23,7 +23,6 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
                 .AddOltAddMemoryCache()
                 .AddOltInjection()
                 .AddOltInjectionAutoMapper()
-                .AddOltInjectionAutoMapper()
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());             
             
@@ -43,7 +42,6 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
             services
                 .AddOltAddMemoryCache()
                 .AddOltInjection()
-                .AddOltInjectionAutoMapper()
                 .AddOltInjectionAutoMapper(includeAssemblyScan)
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
