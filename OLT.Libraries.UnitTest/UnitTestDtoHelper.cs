@@ -51,6 +51,7 @@ namespace OLT.Libraries.UnitTest
         {
             return new PersonAutoMapperModel
             {
+                UniqueId = Guid.NewGuid(),
                 Name = {
                     First = Faker.Name.First(),
                     Middle = Faker.Name.Middle(),

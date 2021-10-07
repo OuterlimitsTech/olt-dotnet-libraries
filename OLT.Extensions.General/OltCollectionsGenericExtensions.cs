@@ -9,6 +9,21 @@ namespace System.Collections.Generic
     {
 
         /// <summary>
+        /// Extends List to include ForEachAsync
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="func"></param>
+        /// <returns><see cref="Task"/></returns>
+        public static async Task ForEachAsync<T>(this List<T> list, Func<T, Task> func)
+        {
+            foreach (var value in list)
+            {
+                await func(value);
+            }
+        }
+
+        /// <summary>
         /// Executes <see cref="string.Join(string,string[])"/> on the current <see cref="IEnumerable{T}"/> of strings.
         /// </summary>
         /// <param name="list">The current <see cref="IEnumerable{T}"/> of strings.</param>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace OLT.Core
 {
@@ -9,12 +10,27 @@ namespace OLT.Core
         where TEntity : class, IOltEntity
     {
         IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
+        Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
+
         TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
+        Task<TModel> GetAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
+
         IEnumerable<TModel> Find<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new();
-        IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> queryBuilder, IOltPagingParams pagingParams) where TModel : class, new();
-        IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> queryBuilder, IOltPagingParams pagingParams,
+        Task<IEnumerable<TModel>> FindAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new();
+
+        IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams) where TModel : class, new();
+        IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams,
             Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy) where TModel : class, new();
 
+        Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams)
+            where TModel : class, new();
+
+        Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
+            where TModel : class, new();
+
+        Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> source, IOltPagingParams pagingParams,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+            where TModel : class, new();
 
         TModel Add<TModel>(TModel model) where TModel : class, new();
 
@@ -26,9 +42,27 @@ namespace OLT.Core
             where TSaveModel : class, new()
             where TResponseModel : class, new();
 
-        TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
-        TModel Update<TModel>(IOltSearcher<TEntity> queryBuilder, TModel model) where TModel : class, new();
-        bool SoftDelete(IOltSearcher<TEntity> queryBuilder);
+        Task<TModel> AddAsync<TModel>(TModel model) where TModel : class, new();
 
+        Task<TResponseModel> AddAsync<TResponseModel, TSaveModel>(TSaveModel model)
+            where TResponseModel : class, new()
+            where TSaveModel : class, new();
+
+        Task<IEnumerable<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list)
+            where TSaveModel : class, new()
+            where TResponseModel : class, new();
+
+        TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
+        Task<TModel> UpsertAsync<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
+
+        TModel Update<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
+        Task<TModel> UpdateAsync<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
+
+
+        bool SoftDelete(IOltSearcher<TEntity> searcher);
+        Task<bool> SoftDeleteAsync(IOltSearcher<TEntity> searcher);
+        
+        int Count(IOltSearcher<TEntity> searcher);
+        Task<int> CountAsync(IOltSearcher<TEntity> searcher);
     }
 }
