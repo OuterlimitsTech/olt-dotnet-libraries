@@ -165,7 +165,5 @@ namespace OLT.Core
         }
 
         #endregion
-
-
     }
 }

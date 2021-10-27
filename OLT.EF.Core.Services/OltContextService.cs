@@ -20,8 +20,15 @@ namespace OLT.Core
         }
 
         protected virtual TContext Context { get; private set; }
+
+        #region [ Save Changes ]
+
         protected virtual int SaveChanges() => Context.SaveChanges();
         protected virtual async Task<int> SaveChangesAsync() => await Context.SaveChangesAsync(CancellationToken.None);
+
+        #endregion
+
+        #region [ Queryable Methods ]
 
         protected virtual IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
@@ -44,9 +51,33 @@ namespace OLT.Core
             return Context.GetQueryable(queryBuilder);
         }
 
+
+        protected virtual IQueryable<T> InitializeQueryable<T>()
+            where T : class, IOltEntity
+        {
+            return Context.InitializeQueryable<T>();
+        }
+
+        protected virtual IQueryable<T> InitializeQueryable<T>(bool includeDeleted)
+            where T : class, IOltEntity
+        {
+            return Context.InitializeQueryable<T>(includeDeleted);
+        }
+
+        protected virtual IQueryable<T> NonDeletedQueryable<T>(IQueryable<T> queryable)
+            where T : class, IOltEntity
+        {
+            return Context.NonDeletedQueryable(queryable);
+        }
+
+
+        #endregion
+
+        #region [ Get All ]
+
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher)
-            where TEntity : class, IOltEntity
-            where TModel : class, new()
+           where TEntity : class, IOltEntity
+           where TModel : class, new()
         {
             var queryable = this.GetQueryable(searcher);
             return this.GetAll<TEntity, TModel>(queryable);
@@ -88,6 +119,11 @@ namespace OLT.Core
             return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
+
+        #endregion
+
+        #region [ Get ]
+
         protected virtual TModel Get<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
@@ -124,23 +160,10 @@ namespace OLT.Core
             return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
-        protected virtual IQueryable<T> InitializeQueryable<T>()
-            where T : class, IOltEntity
-        {
-            return Context.InitializeQueryable<T>();
-        }
 
-        protected virtual IQueryable<T> InitializeQueryable<T>(bool includeDeleted)
-            where T : class, IOltEntity
-        {
-            return Context.InitializeQueryable<T>(includeDeleted);
-        }
+        #endregion
 
-        protected virtual IQueryable<T> NonDeletedQueryable<T>(IQueryable<T> queryable)
-            where T : class, IOltEntity
-        {
-            return Context.NonDeletedQueryable(queryable);
-        }
+        #region [ Mark Deleted ]
 
         protected virtual bool MarkDeleted<T>(T entity)
             where T : class, IOltEntity
@@ -171,6 +194,9 @@ namespace OLT.Core
             throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityDeletable)}");
 
         }
+
+
+        #endregion
 
     }
 }

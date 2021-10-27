@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -17,12 +18,35 @@ namespace OLT.Core
         {
         }
 
+        #region [ Get Queryable ]
+
+        protected virtual IQueryable<TEntity> GetQueryable(int id) => GetQueryable().Where(p => p.Id == id);
+
+        #endregion
+
+        #region [ Get ]
         
         public virtual TModel Get<TModel>(int id) where TModel : class, new() => base.Get<TModel>(GetQueryable(id));
 
         public virtual async Task<TModel> GetAsync<TModel>(int id) where TModel : class, new() => await base.GetAsync<TModel>(GetQueryable(id));
 
-        protected virtual IQueryable<TEntity> GetQueryable(int id) => GetQueryable().Where(p => p.Id == id);
+        #endregion
+
+        #region [ Build Result List ]
+
+        protected override List<TModel> BuildResultList<TModel>(List<TEntity> entities)
+        {
+            var returnList = new List<TModel>();
+            entities.ForEach(entity =>
+            {
+                returnList.Add(Get<TModel>(entity.Id));
+            });
+            return returnList;
+        }
+
+        #endregion
+
+        #region [ Add  ]
 
         public override TModel Add<TModel>(TModel model)
         {
@@ -42,26 +66,6 @@ namespace OLT.Core
             return Get<TResponseModel>(entity.Id);
         }
 
-        public override IEnumerable<TResponseModel> Add<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list)
-        {
-            var entities = new List<TEntity>();
-            list.ToList().ForEach(model =>
-            {
-                var entity = new TEntity();
-                ServiceManager.AdapterResolver.Map(model, entity);
-                Repository.Add(entity);
-                entities.Add(entity);
-            });
-
-            SaveChanges();
-
-            var returnList = new List<TResponseModel>();
-            entities.ForEach(entity =>
-            {
-                returnList.Add(Get<TResponseModel>(entity.Id));
-            });
-            return returnList;
-        }
 
         public override async Task<TResponseModel> AddAsync<TResponseModel, TSaveModel>(TSaveModel model)
         {
@@ -81,27 +85,11 @@ namespace OLT.Core
             return await GetAsync<TModel>(entity.Id);
         }
 
-        public override async Task<IEnumerable<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list)
-        {
-            var entities = new List<TEntity>();
-            await list.ToList().ForEachAsync(async model =>
-            {
-                var entity = new TEntity();
-                ServiceManager.AdapterResolver.Map(model, entity);
-                await Repository.AddAsync(entity);
-                entities.Add(entity);
-            });
+        #endregion
 
-            await SaveChangesAsync();
+        #region [ Update ]
 
-            var returnList = new List<TResponseModel>();
-            await entities.ForEachAsync(async entity =>
-            {
-                returnList.Add(await GetAsync<TResponseModel>(entity.Id));
-            });
-            return returnList;
-        }
-
+        
         public virtual TModel Update<TModel>(int id, TModel model)
             where TModel : class, new()
         {
@@ -141,6 +129,10 @@ namespace OLT.Core
             return await GetAsync<TResponseModel>(id);
         }
 
+        #endregion
+
+        #region [ Soft Delete ]
+
         public virtual bool SoftDelete(int id)
         {
             var entity = GetQueryable(id).FirstOrDefault();
@@ -152,6 +144,8 @@ namespace OLT.Core
             var entity = await GetQueryable(id).FirstOrDefaultAsync();
             return entity != null && await MarkDeletedAsync(entity);
         }
+
+        #endregion
 
     }
 }

@@ -27,11 +27,15 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         }
 
         [Fact]
-        public void Add1()
+        public void Add()
         {
             var model = UnitTestHelper.CreateTestAutoMapperModel();
             var dto = UnitTestHelper.AddPerson(_personService, model);
             dto.Should().BeEquivalentTo(model, opt => opt.Excluding(t => t.PersonId));
+
+            var model2 = UnitTestHelper.CreateTestAutoMapperModel();
+            var dto2 = _personService.Add<PersonDto, PersonAutoMapperModel>(model2);
+            Assert.Equal(model2.Name.First, dto2.First);
         }
 
         [Fact]
@@ -40,22 +44,38 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var model = UnitTestHelper.CreateTestAutoMapperModel();
             var dto = await _personService.AddAsync(model);
             dto.Should().BeEquivalentTo(model, opt => opt.Excluding(t => t.PersonId));
+
+            var model2 = UnitTestHelper.CreateTestAutoMapperModel();
+            var dto2 = await _personService.AddAsync<PersonDto, PersonAutoMapperModel>(model2);
+            Assert.Equal(model2.Name.First, dto2.First);
         }
 
         [Fact]
-        public void Add2()
+        public void AddList()
         {
-            var model = UnitTestHelper.CreateTestAutoMapperModel();
-            var dto = _personService.Add<PersonDto, PersonAutoMapperModel>(model);
-            Assert.True(dto.First.Equals(model.Name.First));
+            var list = new List<PersonAutoMapperModel>
+            {
+                UnitTestHelper.CreateTestAutoMapperModel(),
+                UnitTestHelper.CreateTestAutoMapperModel(),
+                UnitTestHelper.CreateTestAutoMapperModel()
+            };
+            _personService.Add(list).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
+            _personService.Add(list.ToArray()).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
+            _personService.Add(list.AsEnumerable()).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
         }
 
         [Fact]
-        public async Task Add2Async()
+        public async Task AddListAsync()
         {
-            var model = UnitTestHelper.CreateTestAutoMapperModel();
-            var dto = await _personService.AddAsync<PersonDto, PersonAutoMapperModel>(model);
-            Assert.True(dto.First.Equals(model.Name.First));
+            var list = new List<PersonAutoMapperModel>
+            {
+                UnitTestHelper.CreateTestAutoMapperModel(),
+                UnitTestHelper.CreateTestAutoMapperModel(),
+                UnitTestHelper.CreateTestAutoMapperModel()
+            };
+            (await _personService.AddAsync(list)).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
+            (await _personService.AddAsync(list.ToArray())).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
+            (await _personService.AddAsync(list.AsEnumerable())).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
         }
 
         [Fact]

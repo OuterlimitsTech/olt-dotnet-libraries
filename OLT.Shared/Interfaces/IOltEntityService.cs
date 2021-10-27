@@ -33,6 +33,8 @@ namespace OLT.Core
             where TModel : class, new();
 
         TModel Add<TModel>(TModel model) where TModel : class, new();
+        List<TModel> Add<TModel>(List<TModel> list) where TModel : class, new();
+        IEnumerable<TModel> Add<TModel>(IEnumerable<TModel> collection) where TModel : class, new();
 
         TResponseModel Add<TResponseModel, TSaveModel>(TSaveModel model)
             where TResponseModel : class, new()
@@ -43,12 +45,18 @@ namespace OLT.Core
             where TResponseModel : class, new();
 
         Task<TModel> AddAsync<TModel>(TModel model) where TModel : class, new();
+        Task<List<TModel>> AddAsync<TModel>(List<TModel> list) where TModel : class, new();
+        Task<IEnumerable<TModel>> AddAsync<TModel>(IEnumerable<TModel> collection) where TModel : class, new();
 
         Task<TResponseModel> AddAsync<TResponseModel, TSaveModel>(TSaveModel model)
             where TResponseModel : class, new()
             where TSaveModel : class, new();
 
-        Task<IEnumerable<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list)
+        Task<List<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(List<TSaveModel> list)
+            where TResponseModel : class, new()
+            where TSaveModel : class, new();
+
+        Task<IEnumerable<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> collection)
             where TSaveModel : class, new()
             where TResponseModel : class, new();
 

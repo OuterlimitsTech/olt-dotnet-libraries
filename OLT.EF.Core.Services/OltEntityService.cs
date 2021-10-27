@@ -19,12 +19,45 @@ namespace OLT.Core
         }
 
         protected virtual DbSet<TEntity> Repository => Context.Set<TEntity>();
+
+        #region [ Get Queryable ]
+
         protected virtual IQueryable<TEntity> GetQueryable() => Repository;
 
         protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher)
         {
             return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
         }
+
+        #endregion
+
+        #region [ Get ]
+
+        protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
+        {
+            return base.Get<TEntity, TModel>(queryable);
+        }
+
+        protected virtual async Task<TModel> GetAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
+        {
+            return await base.GetAsync<TEntity, TModel>(queryable);
+        }
+
+        public virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
+            => this.Get<TModel>(GetQueryable(searcher));
+
+        public virtual TModel Get<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => this.Get<TModel>(GetQueryable(searchers));
+
+        public virtual async Task<TModel> GetAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
+            => await this.GetAsync<TModel>(GetQueryable(searcher));
+
+        public virtual async Task<TModel> GetAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => await this.GetAsync<TModel>(GetQueryable(searchers));
+
+        #endregion
+
+        #region [ Get All ]
 
         protected virtual IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
@@ -36,15 +69,22 @@ namespace OLT.Core
             return await base.GetAllAsync<TEntity, TModel>(queryable);
         }
 
-        protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
-        {
-            return base.Get<TEntity, TModel>(queryable);
-        }
+        public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
+            => this.GetAll<TModel>(GetQueryable(searcher));
 
-        protected virtual async Task<TModel> GetAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
-        {
-            return await base.GetAsync<TEntity, TModel>(queryable);
-        }
+        public virtual IEnumerable<TModel> GetAll<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => this.GetAll<TModel>(GetQueryable(searchers));
+
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(searcher));
+
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(searchers));
+
+
+        #endregion
+        
+        #region [ Find ] 
 
         public virtual IEnumerable<TModel> Find<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
@@ -59,6 +99,10 @@ namespace OLT.Core
             var queryable = this.Repository.Where(query);
             return await GetAllAsync<TModel>(queryable);
         }
+
+        #endregion
+
+        #region [ Get Paged ]
 
         public virtual IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams)
             where TModel : class, new()
@@ -103,6 +147,58 @@ namespace OLT.Core
             return await mapped.ToPagedAsync(pagingParams);
         }
 
+        #endregion
+
+        #region [ Add List ]
+
+        protected virtual List<TEntity> AddFromList<TModel>(List<TModel> list) where TModel : class, new()
+        {
+            var entities = new List<TEntity>();
+            list.ForEach(item =>
+            {
+                var entity = new TEntity();
+                ServiceManager.AdapterResolver.Map(item, entity);
+                entities.Add(entity);
+                Repository.Add(entity);
+            });
+            SaveChanges();
+            return entities;
+        }
+
+        protected virtual async Task<List<TEntity>> AddFromListAsync<TModel>(List<TModel> list) where TModel : class, new()
+        {
+            var entities = new List<TEntity>();
+            await list.ForEachAsync(async item =>
+            {
+                var entity = new TEntity();
+                ServiceManager.AdapterResolver.Map(item, entity);
+                entities.Add(entity);
+                await Repository.AddAsync(entity);
+            });
+            await SaveChangesAsync();
+            return entities;
+        }
+
+        #endregion
+
+        #region [ Build Result List ]
+
+        protected virtual List<TModel> BuildResultList<TModel>(List<TEntity> entities) where TModel : class, new()
+        {
+            var returnList = new List<TModel>();
+            entities.ForEach(entity =>
+            {
+                var response = new TModel();
+                ServiceManager.AdapterResolver.Map(entity, response);
+                returnList.Add(response);
+            });
+            return returnList;
+        }
+
+        #endregion
+
+        #region [ Add  ]
+
         public virtual TModel Add<TModel>(TModel model)
                    where TModel : class, new()
         {
@@ -113,6 +209,17 @@ namespace OLT.Core
             var response = new TModel();
             ServiceManager.AdapterResolver.Map(entity, response);
             return response;
+        }
+
+
+        public virtual List<TModel> Add<TModel>(List<TModel> list) where TModel : class, new()
+        {
+            return BuildResultList<TModel>(AddFromList(list));
+        }
+
+        public virtual IEnumerable<TModel> Add<TModel>(IEnumerable<TModel> collection) where TModel : class, new()
+        {
+            return Add(collection.ToList());
         }
 
         public virtual TResponseModel Add<TResponseModel, TSaveModel>(TSaveModel model)
@@ -132,24 +239,7 @@ namespace OLT.Core
             where TSaveModel : class, new()
             where TResponseModel : class, new()
         {
-            var entities = new List<TEntity>();
-            list.ToList().ForEach(model =>
-            {
-                var entity = new TEntity();
-                ServiceManager.AdapterResolver.Map(model, entity);
-                Repository.Add(entity);
-                entities.Add(entity);
-            });
-
-            SaveChanges();
-            var returnList = new List<TResponseModel>();
-            entities.ForEach(entity =>
-            {
-                var response = new TResponseModel();
-                ServiceManager.AdapterResolver.Map(entity, response);
-                returnList.Add(response);
-            });
-            return returnList;
+            return BuildResultList<TResponseModel>(AddFromList(list.ToList()));
         }
 
 
@@ -162,6 +252,16 @@ namespace OLT.Core
             var response = new TModel();
             ServiceManager.AdapterResolver.Map(entity, response);
             return response;
+        }
+
+        public async Task<List<TModel>> AddAsync<TModel>(List<TModel> list) where TModel : class, new()
+        {
+            return BuildResultList<TModel>(await AddFromListAsync(list));
+        }
+
+        public async Task<IEnumerable<TModel>> AddAsync<TModel>(IEnumerable<TModel> collection) where TModel : class, new()
+        {
+            return await AddAsync(collection.ToList());
         }
 
         public virtual async Task<TResponseModel> AddAsync<TResponseModel, TSaveModel>(TSaveModel model)
@@ -177,28 +277,23 @@ namespace OLT.Core
             return response;
         }
 
-        public virtual async Task<IEnumerable<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list) where TResponseModel : class, new() where TSaveModel : class, new()
+        public virtual async Task<List<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(List<TSaveModel> list) 
+            where TResponseModel : class, new()
+            where TSaveModel : class, new()
         {
-            var entities = new List<TEntity>();
-            await list.ToList().ForEachAsync(async model =>
-            {
-                var entity = new TEntity();
-                ServiceManager.AdapterResolver.Map(model, entity);
-                await Repository.AddAsync(entity);
-                entities.Add(entity);
-            });
-
-            await SaveChangesAsync();
-            var returnList = new List<TResponseModel>();
-            entities.ForEach(entity =>
-            {
-                var response = new TResponseModel();
-                ServiceManager.AdapterResolver.Map(entity, response);
-                returnList.Add(response);
-            });
-            return returnList;
+            return BuildResultList<TResponseModel>(await AddFromListAsync(list.ToList()));
         }
 
+        public virtual async Task<IEnumerable<TResponseModel>> AddAsync<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> collection) where TResponseModel : class, new() where TSaveModel : class, new()
+        {
+            return await this.AddAsync<TResponseModel, TSaveModel>(collection.ToList());
+        }
+
+        #endregion
+        
+        #region [ Upsert ]
+        
+        
         public virtual TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
         {
             var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefault();
@@ -241,29 +336,9 @@ namespace OLT.Core
             return await GetAsync<TModel>(searcher);
         }
 
-        public virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
-            => this.Get<TModel>(GetQueryable(searcher));
+        #endregion
 
-        public virtual TModel Get<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => this.Get<TModel>(GetQueryable(searchers));
-
-        public virtual async Task<TModel> GetAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
-            => await this.GetAsync<TModel>(GetQueryable(searcher));
-
-        public virtual async Task<TModel> GetAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => await this.GetAsync<TModel>(GetQueryable(searchers));
-
-        public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
-            => this.GetAll<TModel>(GetQueryable(searcher));
-
-        public virtual IEnumerable<TModel> GetAll<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => this.GetAll<TModel>(GetQueryable(searchers));
-
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
-            => await this.GetAllAsync<TModel>(GetQueryable(searcher));
-
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => await this.GetAllAsync<TModel>(GetQueryable(searchers));
+        #region [ Soft Delete ]
 
         public virtual bool SoftDelete(IOltSearcher<TEntity> searcher)
         {
@@ -277,6 +352,10 @@ namespace OLT.Core
             return entity != null && await MarkDeletedAsync(entity);
         }
 
+        #endregion
+
+        #region [ Count ]
+
         public virtual int Count(IOltSearcher<TEntity> searcher)
         {
             return GetQueryable(searcher).Count();
@@ -286,6 +365,9 @@ namespace OLT.Core
         {
             return await GetQueryable(searcher).CountAsync();
         }
+
+        #endregion
+
 
     }
 }
