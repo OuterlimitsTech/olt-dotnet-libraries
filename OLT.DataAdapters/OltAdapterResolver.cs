@@ -125,10 +125,15 @@ namespace OLT.Core
             return (adapter as IOltAdapter<TSource, TDestination>).Map(source);
         }
 
-        public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
+        public virtual List<TDestination> Map<TSource, TDestination>(List<TSource> source)
         {
             var adapter = GetAdapter<TSource, TDestination>(false);
-            return adapter == null ? GetAdapter<TDestination, TSource>(true).Map(source) : adapter.Map(source);
+            return adapter == null ? GetAdapter<TDestination, TSource>(true).Map(source.AsEnumerable()).ToList() : adapter.Map(source.AsEnumerable()).ToList();
+        }
+
+        public virtual IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
+        {
+            return Map<TSource, TDestination>(source.ToList());
         }
 
         #endregion

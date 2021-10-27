@@ -26,6 +26,14 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         Task<List<UserModel>> GetAllUsersAsync();
         Task<List<UserModel>> GetAllUsersSearcherAsync();
 
+        UserDto GetDtoUser(int id);
+        Task<UserDto> GetDtoUserAsync(int id);
+
+        List<UserDto> GetAllDtoUsers();
+        List<UserDto> GetAllDtoUsersSearcher();
+        Task<List<UserDto>> GetAllDtoUsersAsync();
+        Task<List<UserDto>> GetAllDtoUsersSearcherAsync();
+
 
         bool Delete<TEntity>(int id) where TEntity: class, IOltEntityId;
         Task<bool> DeleteAsync<TEntity>(int id) where TEntity : class, IOltEntityId;

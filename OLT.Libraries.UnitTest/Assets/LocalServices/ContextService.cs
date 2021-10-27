@@ -35,10 +35,8 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         public PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers) => GetQueryable(searchers).FirstOrDefault();
         public PersonEntity Get(IOltSearcher<PersonEntity> searcher) => GetQueryable(searcher).FirstOrDefault();
         public List<PersonEntity> Get(bool includeDeleted) => GetQueryable<PersonEntity>(includeDeleted).ToList();
-        public List<PersonEntity> GetNonDeleted() => base.NonDeletedQueryable(Context.People).ToList();
+        public List<PersonEntity> GetNonDeleted() => Context.NonDeletedQueryable(Context.People).ToList();
 
-
-        
         public List<PersonAutoMapperModel> GetAllPeople() => base.GetAll<PersonEntity, PersonAutoMapperModel>(Context.People).ToList();
         public List<PersonAutoMapperModel> GetAllPeopleSearcher() => base.GetAll<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>()).ToList();
         public async Task<List<PersonAutoMapperModel>> GetAllPeopleAsync() => (await base.GetAllAsync<PersonEntity, PersonAutoMapperModel>(Context.People)).ToList();
@@ -48,8 +46,14 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         public List<UserModel> GetAllUsersSearcher() => base.GetAll<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>()).ToList();
         public async Task<List<UserModel>> GetAllUsersAsync() => (await base.GetAllAsync<UserEntity, UserModel>(Context.Users)).ToList();
         public async Task<List<UserModel>> GetAllUsersSearcherAsync() => (await base.GetAllAsync<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>())).ToList();
+        public UserDto GetDtoUser(int id) => base.Get<UserEntity, UserDto>(Context.Users.Where(p => p.Id == id));
+        public async Task<UserDto> GetDtoUserAsync(int id) => await base.GetAsync<UserEntity, UserDto>(Context.Users.Where(p => p.Id == id));
 
-
+        public List<UserDto> GetAllDtoUsers() => base.GetAll<UserEntity, UserDto>(new OltSearcherGetAll<UserEntity>()).ToList();
+        public List<UserDto> GetAllDtoUsersSearcher() => base.GetAll<UserEntity, UserDto>(new OltSearcherGetAll<UserEntity>()).ToList();
+        public async Task<List<UserDto>> GetAllDtoUsersAsync() => (await base.GetAllAsync<UserEntity, UserDto>(Context.Users)).ToList();
+        public async Task<List<UserDto>> GetAllDtoUsersSearcherAsync() => (await base.GetAllAsync<UserEntity, UserDto>(new OltSearcherGetAll<UserEntity>())).ToList();
+        
         public bool Delete<TEntity>(int id) where TEntity : class, IOltEntityId
         {
             var entity = GetQueryable(new OltSearcherGetById<TEntity>(id)).FirstOrDefault();

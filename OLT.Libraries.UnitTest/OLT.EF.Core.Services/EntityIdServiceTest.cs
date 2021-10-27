@@ -97,7 +97,16 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var model = _personService.Add(addModel);
             model.First = Faker.Name.First();
             var updated = _personService.Update<PersonAutoMapperModel, PersonDto>(model.PersonId.GetValueOrDefault(), model);
-            Assert.True(updated.Name.First.Equals(model.First) && !addModel.First.Equals(updated.Name.First));
+            Assert.Equal(model.First, updated.Name.First);
+            Assert.NotEqual(addModel.First, updated.Name.First);
+
+            model.First = Faker.Name.First();
+            var dto = _personService.Update(model.PersonId.GetValueOrDefault(), model);
+            Assert.Equal(model.First, dto.First);
+
+            model.First = Faker.Name.First();
+            dto = _personService.Update(new OltSearcherGetById<PersonEntity>(model.PersonId.GetValueOrDefault()), model);
+            Assert.Equal(model.First, dto.First);
         }
         
         [Fact]
@@ -107,7 +116,17 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var model = await _personService.AddAsync(addModel);
             model.First = Faker.Name.First();
             var updated = await _personService.UpdateAsync<PersonAutoMapperModel, PersonDto>(model.PersonId.GetValueOrDefault(), model);
-            Assert.True(updated.Name.First.Equals(model.First) && !addModel.First.Equals(updated.Name.First));
+            Assert.Equal(model.First, updated.Name.First);
+            Assert.NotEqual(addModel.First, updated.Name.First);
+
+            model.First = Faker.Name.First();
+            var dto = await _personService.UpdateAsync(model.PersonId.GetValueOrDefault(), model);
+            Assert.Equal(model.First, dto.First);
+
+
+            model.First = Faker.Name.First();
+            dto = await _personService.UpdateAsync(new OltSearcherGetById<PersonEntity>(model.PersonId.GetValueOrDefault()), model);
+            Assert.Equal(model.First, dto.First);
         }
 
         [Fact]
@@ -115,6 +134,10 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             var model = _personService.Add(UnitTestHelper.CreatePersonDto());
             Assert.True(_personService.SoftDelete(model.PersonId.Value));
+            Assert.False(_personService.SoftDelete(-1000));
+            model = _personService.Add(UnitTestHelper.CreatePersonDto());
+            Assert.True(_personService.SoftDelete(new OltSearcherGetById<PersonEntity>(model.PersonId.Value)));
+            Assert.False(_personService.SoftDelete(new OltSearcherGetByUid<PersonEntity>(Guid.NewGuid())));
         }
 
 
@@ -123,6 +146,10 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             var model = await _personService.AddAsync(UnitTestHelper.CreatePersonDto());
             Assert.True(await _personService.SoftDeleteAsync(model.PersonId.Value));
+            Assert.False(await _personService.SoftDeleteAsync(-1000));
+            model = _personService.Add(UnitTestHelper.CreatePersonDto());
+            Assert.True(await _personService.SoftDeleteAsync(new OltSearcherGetById<PersonEntity>(model.PersonId.Value)));
+            Assert.False(await _personService.SoftDeleteAsync(new OltSearcherGetByUid<PersonEntity>(Guid.NewGuid())));
         }
 
         [Fact]
@@ -296,6 +323,20 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var results = await _personService.GetAllAsync<PersonDto>(new OltSearcherGetAll<PersonEntity>());
             var result = results.FirstOrDefault(p => p.PersonId == newDto.PersonId);
             Assert.Null(result);
+        }
+
+        [Fact]
+        public void Count()
+        {
+            var person = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
+            Assert.Equal(1, _personService.Count(new OltSearcherGetById<PersonEntity>(person.PersonId.Value)));
+        }
+
+        [Fact]
+        public async Task CountAsync()
+        {
+            var person = await _personService.AddAsync(UnitTestHelper.CreateTestAutoMapperModel());
+            Assert.Equal(1, await _personService.CountAsync(new OltSearcherGetById<PersonEntity>(person.PersonId.Value)));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace OLT.Core
 
         protected virtual IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
-            var queryable = InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
+            var queryable = Context.InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
             searchers.ToList().ForEach(builder =>
             {
                 queryable = builder.BuildQueryable(queryable);
@@ -50,26 +50,6 @@ namespace OLT.Core
         {
             return Context.GetQueryable(queryBuilder);
         }
-
-
-        protected virtual IQueryable<T> InitializeQueryable<T>()
-            where T : class, IOltEntity
-        {
-            return Context.InitializeQueryable<T>();
-        }
-
-        protected virtual IQueryable<T> InitializeQueryable<T>(bool includeDeleted)
-            where T : class, IOltEntity
-        {
-            return Context.InitializeQueryable<T>(includeDeleted);
-        }
-
-        protected virtual IQueryable<T> NonDeletedQueryable<T>(IQueryable<T> queryable)
-            where T : class, IOltEntity
-        {
-            return Context.NonDeletedQueryable(queryable);
-        }
-
 
         #endregion
 
@@ -92,9 +72,8 @@ namespace OLT.Core
                 return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
             }
 
-            var model = new List<TModel>();
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
-            return ServiceManager.AdapterResolver.Map(entity, model);
+            var entities = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
+            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
         }
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher)
@@ -114,9 +93,8 @@ namespace OLT.Core
                 return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToListAsync();
             }
 
-            var model = new List<TModel>();
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToListAsync();
-            return ServiceManager.AdapterResolver.Map(entity, model);
+            var entities = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToListAsync();
+            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
         }
 
 
