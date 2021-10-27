@@ -18,18 +18,11 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         {
         }
 
-        public PersonAutoMapperModel CreatePerson()
+        public PersonEntity CreatePerson()
         {
-            var entity = new PersonEntity
-            {
-                NameFirst = Faker.Name.First(),
-                NameLast = Faker.Name.Last()
-            };
-
-            Context.People.Add(entity);
+            var entity = UnitTestHelper.AddPerson(Context);
             SaveChanges();
-
-            return Get<PersonEntity, PersonAutoMapperModel>(GetQueryable(new OltSearcherGetAll<PersonEntity>()));
+            return entity;
         }
 
         public UserEntity CreateUser()
@@ -39,42 +32,23 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
             return entity;
         }
 
-        public PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers)
-        {
-            return GetQueryable(searchers).FirstOrDefault();
-        }
+        public PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers) => GetQueryable(searchers).FirstOrDefault();
+        public PersonEntity Get(IOltSearcher<PersonEntity> searcher) => GetQueryable(searcher).FirstOrDefault();
+        public List<PersonEntity> Get(bool includeDeleted) => GetQueryable<PersonEntity>(includeDeleted).ToList();
+        public List<PersonEntity> GetNonDeleted() => base.NonDeletedQueryable(Context.People).ToList();
 
-        public PersonEntity Get(IOltSearcher<PersonEntity> searcher)
-        {
-            return GetQueryable(searcher).FirstOrDefault();
-        }
 
-        public List<PersonAutoMapperModel> GetAllPeople()
-        {
-            return base.GetAll<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>()).ToList();
-        }
+        
+        public List<PersonAutoMapperModel> GetAllPeople() => base.GetAll<PersonEntity, PersonAutoMapperModel>(Context.People).ToList();
+        public List<PersonAutoMapperModel> GetAllPeopleSearcher() => base.GetAll<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>()).ToList();
+        public async Task<List<PersonAutoMapperModel>> GetAllPeopleAsync() => (await base.GetAllAsync<PersonEntity, PersonAutoMapperModel>(Context.People)).ToList();
+        public async Task<List<PersonAutoMapperModel>> GetAllPeopleSearcherAsync() => (await base.GetAllAsync<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>())).ToList();
 
-        public List<UserModel> GetAllUsers()
-        {
-            return base.GetAll<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>()).ToList();
-        }
+        public List<UserModel> GetAllUsers() => base.GetAll<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>()).ToList();
+        public List<UserModel> GetAllUsersSearcher() => base.GetAll<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>()).ToList();
+        public async Task<List<UserModel>> GetAllUsersAsync() => (await base.GetAllAsync<UserEntity, UserModel>(Context.Users)).ToList();
+        public async Task<List<UserModel>> GetAllUsersSearcherAsync() => (await base.GetAllAsync<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>())).ToList();
 
-        public async Task<List<PersonAutoMapperModel>> GetAllPeopleAsync()
-        {
-            var data = await base.GetAllAsync<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>());
-            return data.ToList();
-        }
-
-        public async Task<List<UserModel>> GetAllUsersAsync()
-        {
-            var data = await base.GetAllAsync<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>());
-            return data.ToList();
-        }
-
-        public List<PersonEntity> Get(bool includeDeleted)
-        {
-            return GetQueryable<PersonEntity>(includeDeleted).ToList();
-        }
 
         public bool Delete<TEntity>(int id) where TEntity : class, IOltEntityId
         {
