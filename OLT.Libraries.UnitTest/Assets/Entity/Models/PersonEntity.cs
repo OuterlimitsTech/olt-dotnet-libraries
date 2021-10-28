@@ -11,8 +11,10 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
 {
     // ReSharper disable once InconsistentNaming
     [Table("People")]
-    public class PersonEntity : OltEntityIdDeletable, IOltInsertingRecord, IOltUpdatingRecord, IOltDeletingRecord
+    public class PersonEntity : OltEntityIdDeletable, IOltInsertingRecord, IOltUpdatingRecord, IOltDeletingRecord, IOltEntityUniqueId
     {
+        public Guid UniqueId { get; set; }
+
         [StringLength(100)]
         public string NameFirst { get; set; }
         [StringLength(100)]
@@ -66,5 +68,6 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
             };
         }
 
+        
     }
 }

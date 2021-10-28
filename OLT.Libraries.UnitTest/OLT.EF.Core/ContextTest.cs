@@ -101,8 +101,8 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.NameMiddle)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.PersonTypeId)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.SexId)}"),
-                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.StatusTypeId)}")
-
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.StatusTypeId)}"), 
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.UniqueId)}")
             );
         }
 

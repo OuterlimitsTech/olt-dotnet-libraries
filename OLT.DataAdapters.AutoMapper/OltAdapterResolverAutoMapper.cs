@@ -66,13 +66,13 @@ namespace OLT.Core
 
         #region [ Maps ]
 
-        public override IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source)
+        public override List<TDestination> Map<TSource, TDestination>(List<TSource> source)
         {
             if (HasAutoMap<TSource, TDestination>())
             {
                 try
                 {
-                    return Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
+                    return Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source.AsEnumerable()).ToList();
                 }
                 catch (Exception exception)
                 {
@@ -165,7 +165,5 @@ namespace OLT.Core
         }
 
         #endregion
-
-
     }
 }

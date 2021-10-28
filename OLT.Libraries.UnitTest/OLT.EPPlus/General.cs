@@ -71,10 +71,13 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
                 WrapText = false
             };
 
+            const string generalFormat= "General";
+            const string format = "000";
             const double expected = 25;
             const double expectedRange2 = 50;
             using var package = CreatePackage();
             var worksheet = package.Workbook.Worksheets.Add(WorksheetName);
+            
             var rows = new List<IOltExcelRowWriter>
             {
                 new OltExcelRowWriter
@@ -87,15 +90,22 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
                 },
                 new OltExcelRowWriter
                 {
-                    Cells = new List<IOltExcelCellWriter> { new OltExcelFormulaValue("SUM(A1:A2)") }
+                    Cells = new List<IOltExcelCellWriter> { new OltExcelFormulaValue("SUM(A2:A3)") }
                 },
                 new OltExcelRowWriter
                 {
-                    Cells = new List<IOltExcelCellWriter> { new OltExcelFormulaValue("=SUM(A1:A3)", style2) }
+                    Cells = new List<IOltExcelCellWriter> { new OltExcelFormulaValue("=SUM(A2:A4)", style2) }
                 }
             };
 
-            var rowIdx = 1;
+            var rowIdx = 2;
+            var cols = new List<IOltExcelColumn>
+            {
+                new OltExcelColumn { Heading ="Heading1", Format = format },
+                new OltExcelColumn { Heading ="Heading2" }
+            };
+            worksheet.Write(cols, 1);
+
             rows.ForEach(row =>
             {
                 rowIdx = row.Write(worksheet, rowIdx);
@@ -104,12 +114,14 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
             
             //package.SaveAs(new FileInfo(@$"D:\test_{Guid.NewGuid()}.xlsx"));
 
-            var rng1 = worksheet.Cells[3, 1];
-            var rng2 = worksheet.Cells[4, 1];
+            var rng1 = worksheet.Cells[4, 1];
+            var rng2 = worksheet.Cells[5, 1];
             rng1.Calculate();
             rng2.Calculate();
             Assert.Equal(expected, rng1.Value);
             Assert.Equal(expectedRange2, rng2.Value);
+            Assert.Equal(worksheet.Column(1).Style.Numberformat.Format, format);
+            Assert.Equal(worksheet.Column(2).Style.Numberformat.Format, generalFormat);
         }
     }
 }

@@ -24,19 +24,63 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
             return new ExcelPackage(fileStream);
         }
 
+
+        ////[Fact]
+        ////public void ConvertToCsvNewTest()
+        ////{
+        ////    var exportDirectory = UnitTestHelper.BuildTempPath();
+        ////    var files = new List<string>();
+
+        ////    try
+        ////    {
+
+        ////        var format = new ExcelOutputTextFormat
+        ////        {
+        ////            TextQualifier = '"',
+        ////        };
+
+        ////        using (var package = GetPackage())
+        ////        {
+        ////            package.Workbook.Worksheets
+        ////                .ToList()
+        ////                .ForEach(worksheet =>
+        ////                {
+        ////                    var fileName = Path.Combine(exportDirectory, $"{Guid.NewGuid()}_{worksheet.Name}.csv");
+        ////                    files.Add(fileName);
+        ////                    using var rng = worksheet.Cells[worksheet.Dimension.FullAddress];
+        ////                    byte[] buffer = System.Text.Encoding.UTF8.GetBytes(rng.ToText(format));
+        ////                    buffer.ToFile(fileName);
+
+        ////                });
+        ////        }
+
+        ////        files.ForEach(file =>
+        ////        {
+        ////            Assert.True(File.Exists(file));
+        ////        });
+        ////    }
+        ////    catch (Exception)
+        ////    {
+        ////        throw;
+        ////    }
+        ////    finally
+        ////    {
+        ////        if (Directory.Exists(exportDirectory))
+        ////        {
+        ////            Directory.Delete(exportDirectory, true);
+        ////        }
+        ////    }
+
+        ////}
+
         [Fact]
         public void ConvertToCsvTest()
         {
-            var exportDirectory = Path.Combine(Path.GetTempPath(), $"_{Guid.NewGuid()}");
+            var exportDirectory = UnitTestHelper.BuildTempPath();
             var files = new List<string>();
 
             try
             {
-                if (!Directory.Exists(exportDirectory))
-                {
-                    Directory.CreateDirectory(exportDirectory);
-                }
-
                 using var package = GetPackage();
                 var worksheets = package.ConvertToCsv();
 

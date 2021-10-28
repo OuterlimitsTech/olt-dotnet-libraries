@@ -6,14 +6,26 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
 {
     public class TestFile
     {
+        private string _masterPath;
         private const string EmbeddedFile = "ImportTest.xlsx";
 
         public TestFile()
         {
-            MasterPath = UnitTestHelper.BuildTempPath();
+            
         }
 
-        public string MasterPath { get; }
+        public string MasterPath
+        {
+            get
+            {
+                if (_masterPath.IsEmpty())
+                {
+                    _masterPath = UnitTestHelper.BuildTempPath();
+                }
+
+                return _masterPath;
+            }
+        }
 
         public void CreateFiles(int number)
         {

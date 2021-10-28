@@ -18,21 +18,31 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         public void GetEmbeddedResourceStream(string resourceName, bool expectedResult)
         {
             var dir = UnitTestHelper.BuildTempPath();
-            var fileName = Path.Combine(dir, "ToBytes_Import.xlsx");
+
             try
             {
-                var stream = this.GetType().Assembly.GetEmbeddedResourceStream(resourceName);
-                stream?.ToBytes().ToFile(fileName);
+                var fileName = Path.Combine(dir, "ToBytes_Import.xlsx");
+                try
+                {
+                    var stream = this.GetType().Assembly.GetEmbeddedResourceStream(resourceName);
+                    stream?.ToBytes().ToFile(fileName);
+                }
+                catch
+                {
+                    // ignored
+                }
+                var result = File.Exists(fileName);
+                Assert.Equal(expectedResult, result);
             }
-            catch
+            catch(Exception)
             {
-                // ignored
+                throw;
+            }
+            finally
+            {
+                Directory.Delete(dir, true);
             }
             
-            
-            var result = File.Exists(fileName);
-            Assert.Equal(expectedResult, result);
-            Directory.Delete(dir, true);
         }
 
         [Theory]
@@ -41,33 +51,44 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         public void EmbeddedResourceToFile(string resourceName, bool expectedResult)
         {
             var dir = UnitTestHelper.BuildTempPath();
-            var fileName = Path.Combine(dir, "EmbeddedResourceToFile_Test.xlsx");
 
             try
             {
-                this.GetType().Assembly.EmbeddedResourceToFile(resourceName, fileName);
+                var fileName = Path.Combine(dir, "EmbeddedResourceToFile_Test.xlsx");
+
+                try
+                {
+                    this.GetType().Assembly.EmbeddedResourceToFile(resourceName, fileName);
+                }
+                catch (Exception exception)
+                {
+                    Assert.Equal(typeof(FileNotFoundException), exception.GetType());
+                }
+
+                var result = File.Exists(fileName);
+                Assert.Equal(expectedResult, result);
+
+                try
+                {
+                    this.GetType().Assembly.EmbeddedResourceToFile(resourceName, fileName); //Second attempt to delete & recreate
+                }
+                catch (Exception exception)
+                {
+                    Assert.Equal(typeof(FileNotFoundException), exception.GetType());
+                }
+
+                result = File.Exists(fileName);
+                Assert.Equal(expectedResult, result);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Assert.Equal(typeof(FileNotFoundException), exception.GetType());
+                throw;
+            }
+            finally
+            {
+                Directory.Delete(dir, true);
             }
 
-            var result = File.Exists(fileName);
-            Assert.Equal(expectedResult, result);
-
-            try
-            {
-                this.GetType().Assembly.EmbeddedResourceToFile(resourceName, fileName); //Second attempt to delete & recreate
-            }
-            catch(Exception exception)
-            {
-                Assert.Equal(typeof(FileNotFoundException), exception.GetType());
-            }
-            
-            result = File.Exists(fileName);
-            Assert.Equal(expectedResult, result);
-
-            Directory.Delete(dir, true);
         }
 
         [Theory]

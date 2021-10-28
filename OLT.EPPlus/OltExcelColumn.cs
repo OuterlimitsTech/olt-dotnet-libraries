@@ -34,11 +34,5 @@ namespace OLT.EPPlus
         }
     }
 
-    /// <summary>
-    /// new OltExcelColumn<MyOtherData> { Heading = "Secondary Parent Email", Width = 23.43m }
-    /// </summary>
-    public class OltExcelColumn<T> : OltExcelCellWriter<T>
-    {
-        
-    }
+   
 }

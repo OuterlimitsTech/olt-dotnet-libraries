@@ -22,6 +22,7 @@ namespace OLT.Core
         IOltPaged<TDestination> Paged<TSource, TDestination>(IQueryable<TSource> source, IOltPagingParams pagingParams, Func<IQueryable<TSource>, IQueryable<TSource>> orderBy) where TSource : class, IOltEntity;
 
         IEnumerable<TDestination> Map<TSource, TDestination>(IQueryable<TSource> source);
+        List<TDestination> Map<TSource, TDestination>(List<TSource> source);
         IEnumerable<TDestination> Map<TSource, TDestination>(IEnumerable<TSource> source);
         TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
 

@@ -1,9 +1,13 @@
-﻿namespace OLT.Core
+﻿using System.Threading.Tasks;
+
+namespace OLT.Core
 {
     public interface IOltEntityIdService<TEntity> : IOltEntityService<TEntity>
         where TEntity : class, IOltEntityId, IOltEntity
     {
         TModel Get<TModel>(int id) where TModel : class, new();
+
+        Task<TModel> GetAsync<TModel>(int id) where TModel : class, new();
 
         TModel Update<TModel>(int id, TModel model) where TModel : class, new();
 
@@ -11,8 +15,14 @@
             where TResponseModel : class, new()
             where TSaveModel : class, new();
 
-        bool SoftDelete(int id);
+        Task<TModel> UpdateAsync<TModel>(int id, TModel model) where TModel : class, new();
 
-        int Count(IOltSearcher<TEntity> searcher);
+        Task<TResponseModel> UpdateAsync<TResponseModel, TSaveModel>(int id, TSaveModel model)
+            where TResponseModel : class, new()
+            where TSaveModel : class, new();
+
+        bool SoftDelete(int id);
+        Task<bool> SoftDeleteAsync(int id);
+
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
@@ -17,12 +19,20 @@ namespace OLT.Core
             Context = context;
         }
 
-        protected TContext Context { get; private set; }
-        protected int SaveChanges() => Context.SaveChanges();
-        
-        protected IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
+        protected virtual TContext Context { get; private set; }
+
+        #region [ Save Changes ]
+
+        protected virtual int SaveChanges() => Context.SaveChanges();
+        protected virtual async Task<int> SaveChangesAsync() => await Context.SaveChangesAsync(CancellationToken.None);
+
+        #endregion
+
+        #region [ Queryable Methods ]
+
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
-            var queryable = InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
+            var queryable = Context.InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
             searchers.ToList().ForEach(builder =>
             {
                 queryable = builder.BuildQueryable(queryable);
@@ -30,7 +40,7 @@ namespace OLT.Core
             return queryable;
         }
 
-        protected IQueryable<TEntity> GetQueryable<TEntity>(bool includeDeleted) where TEntity : class, IOltEntity
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(bool includeDeleted) where TEntity : class, IOltEntity
         {
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
@@ -41,9 +51,13 @@ namespace OLT.Core
             return Context.GetQueryable(queryBuilder);
         }
 
+        #endregion
+
+        #region [ Get All ]
+
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher)
-            where TEntity : class, IOltEntity
-            where TModel : class, new()
+           where TEntity : class, IOltEntity
+           where TModel : class, new()
         {
             var queryable = this.GetQueryable(searcher);
             return this.GetAll<TEntity, TModel>(queryable);
@@ -58,22 +72,35 @@ namespace OLT.Core
                 return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
             }
 
-            var model = new List<TModel>();
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
-            return ServiceManager.AdapterResolver.Map(entity, model);
+            var entities = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
+            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
         }
 
-        [Obsolete]
-        protected virtual IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> queryable, IOltAdapter adapter)
-                where TEntity : class, IOltEntity
+        protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher)
+            where TEntity : class, IOltEntity
+            where TModel : class, new()
         {
-            if (adapter is IOltAdapterQueryableInclude<TEntity> includeAdapter)
+            var queryable = this.GetQueryable(searcher);
+            return await this.GetAllAsync<TEntity, TModel>(queryable);
+        }
+
+        protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
+            where TEntity : class, IOltEntity
+            where TModel : class, new()
+        {
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
             {
-                return includeAdapter.Include(queryable);
+                return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToListAsync();
             }
 
-            return queryable;
+            var entities = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToListAsync();
+            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
         }
+
+
+        #endregion
+
+        #region [ Get ]
 
         protected virtual TModel Get<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
@@ -96,23 +123,25 @@ namespace OLT.Core
             return Context.InitializeQueryable<T>(searcher.IncludeDeleted);
         }
 
-        protected virtual IQueryable<T> InitializeQueryable<T>()
-            where T : class, IOltEntity
+        protected virtual async Task<TModel> GetAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
+            where TModel : class, new()
+            where TEntity : class, IOltEntity
         {
-            return Context.InitializeQueryable<T>();
+
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
+            {
+                return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefaultAsync();
+            }
+
+            var model = new TModel();
+            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefaultAsync();
+            return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
-        protected virtual IQueryable<T> InitializeQueryable<T>(bool includeDeleted)
-            where T : class, IOltEntity
-        {
-            return Context.InitializeQueryable<T>(includeDeleted);
-        }
 
-        protected virtual IQueryable<T> NonDeletedQueryable<T>(IQueryable<T> queryable)
-            where T : class, IOltEntity
-        {
-            return Context.NonDeletedQueryable(queryable);
-        }
+        #endregion
+
+        #region [ Mark Deleted ]
 
         protected virtual bool MarkDeleted<T>(T entity)
             where T : class, IOltEntity
@@ -128,6 +157,24 @@ namespace OLT.Core
             throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityDeletable)}");
 
         }
+
+        protected virtual async Task<bool> MarkDeletedAsync<T>(T entity)
+            where T : class, IOltEntity
+        {
+            if (entity is IOltEntityDeletable deletableEntity)
+            {
+                deletableEntity.DeletedOn = DateTimeOffset.Now;
+                deletableEntity.DeletedBy = Context.AuditUser;
+                await SaveChangesAsync();
+                return true;
+            }
+
+            throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityDeletable)}");
+
+        }
+
+
+        #endregion
 
     }
 }

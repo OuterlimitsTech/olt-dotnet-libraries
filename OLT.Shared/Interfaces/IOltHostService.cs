@@ -4,7 +4,6 @@
     {
         string ResolveRelativePath(string filePath);
         string EnvironmentName { get; }
-        IOltConfigManager ConfigManager { get; }
         IOltEnvironment Environment { get; }
     }
 }

@@ -14,10 +14,14 @@
     <None Remove="Assets\Resources\ImportTest_Sheet1.csv" />
     <None Remove="Assets\Resources\ImportTest_Sheet2.csv" />
     <None Remove="Properties\launchSettings.json" />
+    <None Remove="wwwroot\holder-file.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Properties\launchSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wwwroot\holder-file.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

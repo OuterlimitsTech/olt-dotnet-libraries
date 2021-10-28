@@ -37,8 +37,10 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             {
                 list.Add(UnitTestHelper.CreatePersonDto());
             }
-            var mapped = _adapterResolver.Map<PersonDto, PersonEntity>(list).OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast);
-            mapped.Should().Equal(list.OrderBy(p => p.First).ThenBy(p => p.Last), (c1, c2) => c1.NameFirst == c2.First && c1.NameLast == c2.Last);
+            var result1 = _adapterResolver.Map<PersonDto, PersonEntity>(list).OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast);
+            result1.Should().Equal(list.OrderBy(p => p.First).ThenBy(p => p.Last), (c1, c2) => c1.NameFirst == c2.First && c1.NameLast == c2.Last);
+            var result2 = _adapterResolver.Map<PersonDto, PersonEntity>(list.ToArray()).OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast);
+            result2.Should().Equal(list.OrderBy(p => p.First).ThenBy(p => p.Last), (c1, c2) => c1.NameFirst == c2.First && c1.NameLast == c2.Last);
         }
 
 
@@ -50,8 +52,10 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             {
                 list.Add(PersonEntity.FakerEntity());
             }
-            var mapped = _adapterResolver.Map<PersonEntity, PersonDto>(list).OrderBy(p => p.First).ThenBy(p => p.Last);
-            mapped.Should().Equal(list.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast), (c1, c2) => c1.First == c2.NameFirst && c1.Last == c2.NameLast);
+            var result1 = _adapterResolver.Map<PersonEntity, PersonDto>(list).OrderBy(p => p.First).ThenBy(p => p.Last);
+            result1.Should().Equal(list.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast), (c1, c2) => c1.First == c2.NameFirst && c1.Last == c2.NameLast);
+            var result2 = _adapterResolver.Map<PersonEntity, PersonDto>(list.ToArray()).OrderBy(p => p.First).ThenBy(p => p.Last);
+            result2.Should().Equal(list.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast), (c1, c2) => c1.First == c2.NameFirst && c1.Last == c2.NameLast);
         }
 
         [Fact]

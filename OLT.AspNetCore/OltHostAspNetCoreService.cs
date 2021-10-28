@@ -9,8 +9,7 @@ namespace OLT.Core
 
         public OltHostAspNetCoreService(
             IWebHostEnvironment environment,
-            IOltConfigManager configManager,
-            IOltLogService loggingService) : base(configManager, loggingService)
+            IOltLogService loggingService) : base(loggingService)
         {
             _hostEnvironment = environment;
         }

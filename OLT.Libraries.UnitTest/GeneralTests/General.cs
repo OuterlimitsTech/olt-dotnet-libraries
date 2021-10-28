@@ -10,14 +10,14 @@ namespace OLT.Libraries.UnitTest.GeneralTests
     public class General : BaseTest
     {
         private AppSettingsDto _appSettings;
-        private readonly IOltConfigManager _configManager;
+        //private readonly IOltConfigManager _configManager;
 
         public General(
             IOptions<AppSettingsDto> appOptions,
-            IOltConfigManager configManager,
+            //IOltConfigManager configManager,
             ITestOutputHelper output) : base(output)
         {
-            _configManager = configManager;
+            //_configManager = configManager;
             _appSettings = appOptions.Value;
         }
 
@@ -28,11 +28,5 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.True(_appSettings?.JwtSecret?.Equals("JwtSecret-Test"));
         }
 
-        [Fact]
-        public void JwtSecretConfigManager()
-        {
-            var value = _configManager.GetValue<string>("AppSettings:JwtSecret");
-            Assert.True(value?.Equals(_appSettings.JwtSecret));
-        }
     }
 }

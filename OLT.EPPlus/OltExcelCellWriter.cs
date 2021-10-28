@@ -66,31 +66,4 @@ namespace OLT.EPPlus
     }
 
 
-    /// <summary>
-    /// new OltExcelCellWriter(value)
-    /// </summary>
-    public class OltExcelCellWriter<T> : OltExcelCellWriter
-    {
-        public OltExcelCellWriter() : base()
-        {
-        }
-
-        public OltExcelCellWriter(T metaData, string value) : base(value)
-        {
-            MetaData = metaData;
-        }
-
-        public OltExcelCellWriter(T metaData, string value, IOltExcelCellStyle style) : base(value, style)
-        {
-            MetaData = metaData;
-        }
-
-
-        /// <summary>
-        /// Used to store data related to the cell.  This is not written to excel and is for internal processing
-        /// </summary>
-        public T MetaData { get; set; }
-
-    }
-
 }

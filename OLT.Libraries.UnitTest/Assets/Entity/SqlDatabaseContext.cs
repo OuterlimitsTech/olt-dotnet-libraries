@@ -12,6 +12,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         DbSet<UserEntity> Users { get; set; }
         DbSet<ApplicationLogEntity> Logs { get; set; }
         DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
+        DbSet<SecondaryTypeCodeEntity> SecondaryTypes { get; set; }
         DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
         DbSet<CountryCodeEntity> Countries { get; set; }
         DbSet<NoStringPropertiesEntity> BogusNoString { get; set; }
@@ -39,6 +40,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         public virtual DbSet<UserEntity> Users { get; set; }
         public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
         public virtual DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
+        public virtual DbSet<SecondaryTypeCodeEntity> SecondaryTypes { get; set; }
         public virtual DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
         public virtual DbSet<CountryCodeEntity> Countries { get; set; }
         public virtual DbSet<NoStringPropertiesEntity> BogusNoString { get; set; }
@@ -50,6 +52,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         {
             modelBuilder.ApplyConfiguration(new OltEntityTypeConfigurationFromEnum<CodeTableType, CodeTableTypes>());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SecondaryTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SexConfiguration());
             modelBuilder.ApplyConfiguration(new GenderConfiguration());
@@ -76,6 +79,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         public virtual DbSet<UserEntity> Users { get; set; }
         public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
         public virtual DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
+        public virtual DbSet<SecondaryTypeCodeEntity> SecondaryTypes { get; set; }
         public virtual DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
         public virtual DbSet<CountryCodeEntity> Countries { get; set; }
         public virtual DbSet<NoStringPropertiesEntity> BogusNoString { get; set; }
@@ -87,6 +91,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
         {
             modelBuilder.ApplyConfiguration(new OltEntityTypeConfigurationFromEnum<CodeTableType, CodeTableTypes>());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SecondaryTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SexConfiguration());
             modelBuilder.ApplyConfiguration(new GenderConfiguration());

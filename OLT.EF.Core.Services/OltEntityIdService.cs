@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
@@ -16,25 +18,35 @@ namespace OLT.Core
         {
         }
 
-
-        protected virtual TEntity FindBy(int id) => GetQueryable(id).FirstOrDefault();
-        
-        public virtual TModel Get<TModel>(int id) where TModel : class, new() => base.Get<TModel>(GetQueryable(id));
-        public TModel Get<TModel>(Guid uid) where TModel : class, new() => Get<TModel>(GetQueryable(uid));
-        public IEnumerable<TModel> GetAll<TModel>(Guid uid) where TModel : class, new() => GetAll<TModel>(GetQueryable(uid));
+        #region [ Get Queryable ]
 
         protected virtual IQueryable<TEntity> GetQueryable(int id) => GetQueryable().Where(p => p.Id == id);
 
-        protected IQueryable<TEntity> GetQueryable(Guid uid)
+        #endregion
+
+        #region [ Get ]
+        
+        public virtual TModel Get<TModel>(int id) where TModel : class, new() => base.Get<TModel>(GetQueryable(id));
+
+        public virtual async Task<TModel> GetAsync<TModel>(int id) where TModel : class, new() => await base.GetAsync<TModel>(GetQueryable(id));
+
+        #endregion
+
+        #region [ Build Result List ]
+
+        protected override List<TModel> BuildResultList<TModel>(List<TEntity> entities)
         {
-            if (typeof(IOltEntityUniqueId).IsAssignableFrom(typeof(TEntity)))
+            var returnList = new List<TModel>();
+            entities.ForEach(entity =>
             {
-                Expression<Func<TEntity, bool>> getByUid = x => ((IOltEntityUniqueId)x).UniqueId == uid;
-                getByUid = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(getByUid);
-                return this.Repository.Where(getByUid);
-            }
-            throw new InvalidCastException($"Unable to cast to {nameof(IOltEntityUniqueId)}");
+                returnList.Add(Get<TModel>(entity.Id));
+            });
+            return returnList;
         }
+
+        #endregion
+
+        #region [ Add  ]
 
         public override TModel Add<TModel>(TModel model)
         {
@@ -54,28 +66,30 @@ namespace OLT.Core
             return Get<TResponseModel>(entity.Id);
         }
 
-        public override IEnumerable<TResponseModel> Add<TResponseModel, TSaveModel>(IEnumerable<TSaveModel> list)
+
+        public override async Task<TResponseModel> AddAsync<TResponseModel, TSaveModel>(TSaveModel model)
         {
-            var entities = new List<TEntity>();
-            list.ToList().ForEach(model =>
-            {
-                var entity = new TEntity();
-                ServiceManager.AdapterResolver.Map(model, entity);
-                Repository.Add(entity);
-                entities.Add(entity);
-            });
-
-            SaveChanges();
-
-            var returnList = new List<TResponseModel>();
-            entities.ForEach(entity =>
-            {
-                returnList.Add(Get<TResponseModel>(entity.Id));
-            });
-            return returnList;
+            var entity = new TEntity();
+            ServiceManager.AdapterResolver.Map(model, entity);
+            await Repository.AddAsync(entity);
+            await SaveChangesAsync();
+            return await GetAsync<TResponseModel>(entity.Id);
         }
 
+        public override async Task<TModel> AddAsync<TModel>(TModel model)
+        {
+            var entity = new TEntity();
+            ServiceManager.AdapterResolver.Map(model, entity);
+            await Repository.AddAsync(entity);
+            await SaveChangesAsync();
+            return await GetAsync<TModel>(entity.Id);
+        }
 
+        #endregion
+
+        #region [ Update ]
+
+        
         public virtual TModel Update<TModel>(int id, TModel model)
             where TModel : class, new()
         {
@@ -96,30 +110,28 @@ namespace OLT.Core
             return Get<TResponseModel>(id);
         }
 
-        public virtual TModel Update<TModel>(Guid uid, TModel model)
+        public virtual async Task<TModel> UpdateAsync<TModel>(int id, TModel model)
             where TModel : class, new()
         {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
+            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(id)).FirstOrDefaultAsync();
             ServiceManager.AdapterResolver.Map(model, entity);
-            SaveChanges();
-            return Get<TModel>(uid);
+            await SaveChangesAsync();
+            return await GetAsync<TModel>(id);
         }
 
-        public virtual TResponseModel Update<TResponseModel, TModel>(Guid uid, TModel model)
+        public virtual async Task<TResponseModel> UpdateAsync<TResponseModel, TModel>(int id, TModel model)
             where TModel : class, new()
             where TResponseModel : class, new()
         {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
+            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(id)).FirstOrDefaultAsync();
             ServiceManager.AdapterResolver.Map(model, entity);
-            SaveChanges();
-            return Get<TResponseModel>(uid);
+            await SaveChangesAsync();
+            return await GetAsync<TResponseModel>(id);
         }
 
-        public virtual bool SoftDelete(Guid uid)
-        {
-            var entity = GetQueryable(uid).FirstOrDefault();
-            return entity != null && MarkDeleted(entity);
-        }
+        #endregion
+
+        #region [ Soft Delete ]
 
         public virtual bool SoftDelete(int id)
         {
@@ -127,9 +139,13 @@ namespace OLT.Core
             return entity != null && MarkDeleted(entity);
         }
 
-        public int Count(IOltSearcher<TEntity> searcher)
+        public virtual async Task<bool> SoftDeleteAsync(int id)
         {
-            return GetQueryable(searcher).Count();
+            var entity = await GetQueryable(id).FirstOrDefaultAsync();
+            return entity != null && await MarkDeletedAsync(entity);
         }
+
+        #endregion
+
     }
 }

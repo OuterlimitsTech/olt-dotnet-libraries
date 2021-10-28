@@ -75,7 +75,6 @@ namespace OLT.Core
                         .AddClasses(classes => classes.AssignableTo<IOltInjectableSingleton>())
                         .AsImplementedInterfaces()
                         .WithSingletonLifetime())
-                .AddSingleton<IOltConfigManager, OltConfigManager>()
                 .AddSingleton<IOltLogService, OltLogService>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
         }

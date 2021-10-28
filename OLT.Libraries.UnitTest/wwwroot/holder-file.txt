@@ -1,0 +1,2 @@
+﻿
+This file is to force the IWebHostEnvironment to have as Directory.  AspNetCore host looks for the wwwroot folder 

@@ -12,6 +12,7 @@ namespace OLT.Libraries.UnitTest.Assets.Adapters
         {
             mappingExpression
                 .ForMember(f => f.PersonId, opt => opt.MapFrom(t => t.Id))
+                .ForMember(f => f.UniqueId, opt => opt.MapFrom(t => t.UniqueId))
                 .ForMember(f => f.Name, opt => opt.MapFrom(t => t))
                 .ForMember(f => f.Street1, opt => opt.MapFrom(t => t.Addresses.SelectMany(s => s.Street).ToList()))  //This is invalid
                 .ReverseMap()
