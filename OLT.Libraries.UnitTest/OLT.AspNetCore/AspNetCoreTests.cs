@@ -40,6 +40,17 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             Assert.Equal(environment?.WebRootPath, host?.ResolveRelativePath("~/"));
         }
 
+        [Fact]
+        public void Environment()
+        {
+            var environment = _testServer.Services.GetService<IWebHostEnvironment>();
+            var host = _testServer.Services.GetService<IOltHostService>();
+            Assert.Equal(environment?.EnvironmentName, host?.EnvironmentName);
+            Assert.True(host?.Environment.IsProduction);
+            Assert.False(host?.Environment.IsDevelopment);
+            Assert.False(host?.Environment.IsStaging);
+            Assert.False(host?.Environment.IsTest);
+        }
 
         protected override void Dispose(bool disposing)
         {

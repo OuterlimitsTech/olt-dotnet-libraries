@@ -16,7 +16,7 @@ namespace OLT.Core
 
         public override string ResolveRelativePath(string filePath)
         {
-            return Path.Combine(_hostEnvironment.WebRootPath ?? _hostEnvironment.ContentRootPath, filePath.Replace("~/", string.Empty));
+            return Path.Combine(_hostEnvironment.WebRootPath, filePath.Replace("~/", string.Empty));
         }
 
         public override string EnvironmentName => _hostEnvironment.EnvironmentName;
