@@ -291,34 +291,8 @@ namespace OLT.Core
 
         #endregion
         
-        #region [ Upsert ]
+        #region [ Update ]
         
-        
-        public virtual TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
-        {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefault();
-            if (entity == null)
-            {
-                entity = new TEntity();
-                Repository.Add(entity);
-            }
-            ServiceManager.AdapterResolver.Map(model, entity);
-            SaveChanges();
-            return Get<TModel>(searcher);
-        }
-
-        public virtual async Task<TModel> UpsertAsync<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
-        {
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefaultAsync();
-            if (entity == null)
-            {
-                entity = new TEntity();
-                await Repository.AddAsync(entity);
-            }
-            ServiceManager.AdapterResolver.Map(model, entity);
-            await SaveChangesAsync();
-            return await GetAsync<TModel>(searcher);
-        }
 
         public virtual TModel Update<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
         {

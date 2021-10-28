@@ -60,9 +60,6 @@ namespace OLT.Core
             where TSaveModel : class, new()
             where TResponseModel : class, new();
 
-        TModel Upsert<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
-        Task<TModel> UpsertAsync<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
-
         TModel Update<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
         Task<TModel> UpdateAsync<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new();
 

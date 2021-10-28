@@ -62,6 +62,17 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             _personService.Add(list).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
             _personService.Add(list.ToArray()).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
             _personService.Add(list.AsEnumerable()).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
+
+            var dtoList = list.Select(s => new PersonDto
+            {
+                First = s.Name.First,
+                Middle = s.Name.Middle,
+                Last = s.Name.Last,
+                Suffix = s.Name.Suffix,
+            });
+
+            _personService.Add<PersonDto, PersonAutoMapperModel>(list).Should().BeEquivalentTo(dtoList, opt => opt.Excluding(t => t.PersonId));
+            _personService.Add<PersonDto, PersonAutoMapperModel>(list.ToArray()).Should().BeEquivalentTo(dtoList, opt => opt.Excluding(t => t.PersonId));
         }
 
         [Fact]
@@ -76,6 +87,17 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             (await _personService.AddAsync(list)).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
             (await _personService.AddAsync(list.ToArray())).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
             (await _personService.AddAsync(list.AsEnumerable())).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
+
+            var dtoList = list.Select(s => new PersonDto
+            {
+                First = s.Name.First,
+                Middle = s.Name.Middle,
+                Last = s.Name.Last,
+                Suffix = s.Name.Suffix,
+            });
+
+            (await _personService.AddAsync<PersonDto, PersonAutoMapperModel>(list)).Should().BeEquivalentTo(dtoList, opt => opt.Excluding(t => t.PersonId));
+            (await _personService.AddAsync<PersonDto, PersonAutoMapperModel>(list.ToArray())).Should().BeEquivalentTo(dtoList, opt => opt.Excluding(t => t.PersonId));
         }
 
         [Fact]
@@ -128,6 +150,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             dto = await _personService.UpdateAsync(new OltSearcherGetById<PersonEntity>(model.PersonId.GetValueOrDefault()), model);
             Assert.Equal(model.First, dto.First);
         }
+
 
         [Fact]
         public void SoftDelete()
