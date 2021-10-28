@@ -4,7 +4,7 @@ using OLT.Libraries.UnitTest.Assets.Entity.Models;
 
 namespace OLT.Libraries.UnitTest.Assets.LocalServices
 {
-    public class UserService : BaseDbEntityIdService<UserEntity>, IUserService
+    public class UserService : BaseEntityService<UserEntity>, IUserService
     {
         public UserService(
             IOltServiceManager serviceManager,

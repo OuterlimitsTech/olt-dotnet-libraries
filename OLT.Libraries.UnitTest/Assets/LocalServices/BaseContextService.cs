@@ -4,11 +4,10 @@ using OLT.Libraries.UnitTest.Assets.Entity;
 namespace OLT.Libraries.UnitTest.Assets.LocalServices
 {
     // ReSharper disable once InconsistentNaming
-    public abstract class BaseEntityService<TEntity> : OltEntityService<SqlDatabaseContext, TEntity>
-        where TEntity : class, IOltEntity, new()
+    public abstract class BaseContextService : OltContextService<SqlDatabaseContext>
     {
-        protected BaseEntityService(
-            IOltServiceManager serviceManager, 
+        protected BaseContextService(
+            IOltServiceManager serviceManager,
             SqlDatabaseContext context) : base(serviceManager, context)
         {
         }

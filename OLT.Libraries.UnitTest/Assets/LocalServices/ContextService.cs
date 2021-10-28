@@ -12,7 +12,7 @@ using OLT.Libraries.UnitTest.Assets.Searchers;
 
 namespace OLT.Libraries.UnitTest.Assets.LocalServices
 {
-    public class ContextService : BaseEntityService, IContextService
+    public class ContextService : BaseContextService, IContextService
     {
         public ContextService(IOltServiceManager serviceManager, SqlDatabaseContext context) : base(serviceManager, context)
         {

@@ -10,6 +10,7 @@ namespace OLT.Libraries.UnitTest.Assets.Adapters
     {
         public override void Map(UserEntity source, UserModel destination)
         {
+            destination.UserId = source.Id;
             destination.UserGuid = source.UniqueId;
             destination.Name.First = source.FirstName;
             destination.Name.Middle = source.MiddleName;

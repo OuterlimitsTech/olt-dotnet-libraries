@@ -75,25 +75,20 @@ namespace OLT.Core
         public virtual IEnumerable<TModel> GetAll<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
             => this.GetAll<TModel>(GetQueryable(searchers));
 
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
-            => await this.GetAllAsync<TModel>(GetQueryable(searcher));
-
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => await this.GetAllAsync<TModel>(GetQueryable(searchers));
-
-
-        #endregion
-        
-        #region [ Find ] 
-
-        public virtual IEnumerable<TModel> Find<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
+        public virtual IEnumerable<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
             var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
             var queryable = this.Repository.Where(query);
             return GetAll<TModel>(queryable);
         }
 
-        public virtual async Task<IEnumerable<TModel>> FindAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(searcher));
+
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(searchers));
+
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
             var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
             var queryable = this.Repository.Where(query);
