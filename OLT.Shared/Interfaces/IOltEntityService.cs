@@ -31,13 +31,6 @@ namespace OLT.Core
         Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams)
             where TModel : class, new();
 
-        //Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
-        //    where TModel : class, new();
-
-        //Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> source, IOltPagingParams pagingParams,
-        //    Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
-        //    where TModel : class, new();
-
         TModel Add<TModel>(TModel model) where TModel : class, new();
         List<TModel> Add<TModel>(List<TModel> list) where TModel : class, new();
         IEnumerable<TModel> Add<TModel>(IEnumerable<TModel> collection) where TModel : class, new();
