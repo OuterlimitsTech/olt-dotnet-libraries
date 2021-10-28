@@ -38,22 +38,34 @@ namespace OLT.Core
             return base.Get<TEntity, TModel>(queryable);
         }
 
-        protected virtual async Task<TModel> GetAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
-        {
-            return await base.GetAsync<TEntity, TModel>(queryable);
-        }
-
         public virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => this.Get<TModel>(GetQueryable(searcher));
 
         public virtual TModel Get<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
             => this.Get<TModel>(GetQueryable(searchers));
 
+        public TModel Get<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
+        {
+            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.Repository.Where(query);
+            return Get<TModel>(queryable);
+        }
+
         public virtual async Task<TModel> GetAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => await this.GetAsync<TModel>(GetQueryable(searcher));
 
         public virtual async Task<TModel> GetAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
             => await this.GetAsync<TModel>(GetQueryable(searchers));
+
+        protected virtual async Task<TModel> GetAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
+            => await base.GetAsync<TEntity, TModel>(queryable);
+
+        public async Task<TModel> GetAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
+        {
+            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.Repository.Where(query);
+            return await GetAsync<TModel>(queryable);
+        }
 
         #endregion
 
@@ -117,7 +129,7 @@ namespace OLT.Core
             return this.GetPaged<TModel>(GetQueryable(searcher), pagingParams, orderBy);
         }
 
-        public virtual IOltPaged<TModel> GetPaged<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+        protected virtual IOltPaged<TModel> GetPaged<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TModel : class, new()
         {
             return ServiceManager.AdapterResolver.Paged<TEntity, TModel>(queryable, pagingParams, orderBy);
@@ -126,16 +138,16 @@ namespace OLT.Core
         public virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams)
             where TModel : class, new()
         {
-            return await GetPagedAsync<TModel>(GetQueryable(searcher), pagingParams, ServiceManager.AdapterResolver.DefaultOrderBy<TEntity, TModel>());
+            return await GetPagedAsync<TModel>(GetQueryable(searcher), pagingParams);
         }
 
-        public virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
+        protected virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
             where TModel : class, new()
         {
             return await GetPagedAsync<TModel>(queryable, pagingParams, ServiceManager.AdapterResolver.DefaultOrderBy<TEntity, TModel>());
         }
 
-        public virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> source, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+        protected virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> source, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TModel : class, new()
         {
             var mapped = ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(orderBy(source));

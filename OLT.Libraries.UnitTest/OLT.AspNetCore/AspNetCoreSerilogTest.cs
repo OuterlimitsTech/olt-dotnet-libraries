@@ -165,7 +165,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
 
         [Fact]
-        public async Task UseSerilogRequestLogging1()
+        public async Task UseSerilogRequestLogging()
         {
 
             var webBuilder = new WebHostBuilder();
