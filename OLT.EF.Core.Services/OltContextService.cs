@@ -117,12 +117,6 @@ namespace OLT.Core
             return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
-        protected virtual IQueryable<T> Get<T>(IOltSearcher<T> searcher)
-            where T : class, IOltEntity
-        {
-            return Context.InitializeQueryable<T>(searcher.IncludeDeleted);
-        }
-
         protected virtual async Task<TModel> GetAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
