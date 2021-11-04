@@ -12,6 +12,7 @@ using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
 using OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode;
+using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 using OLT.Libraries.UnitTest.Assets.Searchers;
 using Serilog;
@@ -25,13 +26,16 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         private readonly IOltIdentity _identity;
         private readonly SqlDatabaseContext _context;
         private readonly SqlDatabaseContext2 _context2;
+        private readonly IContextService _contextService;
 
         public ContextTest(
+            IContextService contextService,
             IOltIdentity identity,
             SqlDatabaseContext context,
             SqlDatabaseContext2 context2,
             ITestOutputHelper output) : base(output)
         {
+            _contextService = contextService;
             _identity = identity;
             _context = context;
             _context2 = context2;
@@ -184,7 +188,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             entity.NameMiddle = string.Empty;
             await _context.SaveChangesAsync();
 
-            var updated = await _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefaultAsync(p => p.Id == entity.Id);
+            var updated = await _contextService.GetAsync(new OltSearcherGetById<PersonEntity>(entity.Id));
             Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
 
@@ -208,7 +212,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             entity.NameMiddle = string.Empty;
             _context.SaveChanges();
 
-            var updated = _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.Id == entity.Id);
+            var updated = _contextService.Get(new OltSearcherGetById<PersonEntity>(entity.Id));
             Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
 

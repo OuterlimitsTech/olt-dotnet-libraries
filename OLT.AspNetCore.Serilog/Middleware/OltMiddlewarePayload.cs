@@ -42,9 +42,16 @@ namespace OLT.Logging.Serilog
                 {
                     var msg = new OltErrorHttp
                     {
-                        Message = "An error has occurred.",
+                        Message = "A validation error has occurred.",
                         Errors = validationException.Results.Select(s => s.Message)
                     };
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    await context.Response.WriteAsync(msg.ToJson());
+                }
+                catch (OltRecordNotFoundException recordNotFoundException)
+                {
+                    var msg = new OltErrorHttp { Message = recordNotFoundException.Message };
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
                     await context.Response.WriteAsync(msg.ToJson());

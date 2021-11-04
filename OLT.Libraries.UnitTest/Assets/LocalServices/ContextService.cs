@@ -34,8 +34,10 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
         public PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers) => GetQueryable(searchers).FirstOrDefault();
         public PersonEntity Get(IOltSearcher<PersonEntity> searcher) => GetQueryable(searcher).FirstOrDefault();
+        public async Task<PersonEntity> GetAsync(IOltSearcher<PersonEntity> searcher) => await GetQueryable(searcher).FirstOrDefaultAsync();
+
         public List<PersonEntity> Get(bool includeDeleted) => GetQueryable<PersonEntity>(includeDeleted).ToList();
-        public List<PersonEntity> GetNonDeleted() => Context.NonDeletedQueryable(Context.People).ToList();
+        public List<PersonEntity> GetNonDeleted() => base.InitializeQueryable<PersonEntity>().ToList();
 
         public List<PersonAutoMapperModel> GetAllPeople() => base.GetAll<PersonEntity, PersonAutoMapperModel>(Context.People).ToList();
         public List<PersonAutoMapperModel> GetAllPeopleSearcher() => base.GetAll<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>()).ToList();

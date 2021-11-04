@@ -30,9 +30,19 @@ namespace OLT.Core
 
         #region [ Queryable Methods ]
 
+        protected virtual IQueryable<TEntity> InitializeQueryable<TEntity>() where TEntity : class, IOltEntity
+        {
+            return InitializeQueryable<TEntity>(false);
+        }
+
+        protected virtual IQueryable<TEntity> InitializeQueryable<TEntity>(bool includeDeleted) where TEntity : class, IOltEntity
+        {
+            return Context.InitializeQueryable<TEntity>(includeDeleted);
+        }
+
         protected virtual IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
-            var queryable = Context.InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
+            var queryable = InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
             searchers.ToList().ForEach(builder =>
             {
                 queryable = builder.BuildQueryable(queryable);
@@ -45,10 +55,10 @@ namespace OLT.Core
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
 
-        protected virtual IQueryable<T> GetQueryable<T>(IOltSearcher<T> queryBuilder)
-            where T : class, IOltEntity
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(IOltSearcher<TEntity> queryBuilder)
+            where TEntity : class, IOltEntity
         {
-            return Context.GetQueryable(queryBuilder);
+            return queryBuilder.BuildQueryable(InitializeQueryable<TEntity>(queryBuilder.IncludeDeleted));
         }
 
         #endregion
@@ -137,8 +147,8 @@ namespace OLT.Core
 
         #region [ Mark Deleted ]
 
-        protected virtual bool MarkDeleted<T>(T entity)
-            where T : class, IOltEntity
+        protected virtual bool MarkDeleted<TEntity>(TEntity entity)
+            where TEntity : class, IOltEntity
         {
             if (entity is IOltEntityDeletable deletableEntity)
             {
@@ -152,8 +162,8 @@ namespace OLT.Core
 
         }
 
-        protected virtual async Task<bool> MarkDeletedAsync<T>(T entity)
-            where T : class, IOltEntity
+        protected virtual async Task<bool> MarkDeletedAsync<TEntity>(TEntity entity)
+            where TEntity : class, IOltEntity
         {
             if (entity is IOltEntityDeletable deletableEntity)
             {

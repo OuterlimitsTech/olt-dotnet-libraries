@@ -13,6 +13,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
         PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers);
         PersonEntity Get(IOltSearcher<PersonEntity> searcher);
+        Task<PersonEntity> GetAsync(IOltSearcher<PersonEntity> searcher);
         List<PersonEntity> Get(bool includeDeleted);
         List<PersonEntity> GetNonDeleted();
 

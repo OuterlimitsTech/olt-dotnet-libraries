@@ -28,9 +28,9 @@ namespace OLT.Core
         // EFCore.BulkExtensions
 
 
-        public static string GetTableName<T>(this DbContext context) where T : class
+        public static string GetTableName<TEntity>(this DbContext context) where TEntity : class
         {
-            var entityType = context.Model.FindEntityType(typeof(T));
+            var entityType = context.Model.FindEntityType(typeof(TEntity));
 
             var schema = entityType.GetSchema();
             var tableName = entityType.GetTableName();
@@ -38,11 +38,11 @@ namespace OLT.Core
             return string.IsNullOrEmpty(schema) ? $"{tableName}" : $"{schema}.{tableName}";
         }
 
-        public static IEnumerable<OltDbColumnInfo> GetColumns<T>(this DbContext dbContext)
-            where T : class
+        public static IEnumerable<OltDbColumnInfo> GetColumns<TEntity>(this DbContext dbContext)
+            where TEntity : class
         {
             var cols = new List<OltDbColumnInfo>();
-            var entityType = dbContext.Model.FindEntityType(typeof(T));
+            var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
 
             // Table info 
             var tableName = entityType.GetTableName();
@@ -64,28 +64,22 @@ namespace OLT.Core
                 {
                     column.Type = property.GetTypeMapping().ClrType.Name;
                 }
-                
-
-
                 cols.Add(column);
             }
 
             return cols;
         }
 
-
-
-
-        public static IQueryable<T> InitializeQueryable<T>(this IOltDbContext context)
-            where T : class, IOltEntity
+        public static IQueryable<TEntity> InitializeQueryable<TEntity>(this IOltDbContext context)
+            where TEntity : class, IOltEntity
         {
-            return InitializeQueryable<T>(context, true);
+            return InitializeQueryable<TEntity>(context, true);
         }
 
-        public static IQueryable<T> InitializeQueryable<T>(this IOltDbContext context, bool includeDeleted)
-            where T : class, IOltEntity
+        public static IQueryable<TEntity> InitializeQueryable<TEntity>(this IOltDbContext context, bool includeDeleted)
+            where TEntity : class, IOltEntity
         {
-            var query = context.Set<T>().AsQueryable();
+            var query = context.Set<TEntity>().AsQueryable();
             if (context.ApplyGlobalDeleteFilter)
             {
                 if (includeDeleted)
@@ -100,30 +94,13 @@ namespace OLT.Core
             return query;
         }
 
-        public static IQueryable<T> NonDeletedQueryable<T>(this IOltDbContext context, IQueryable<T> queryable)
-            where T : class, IOltEntity
+        public static IQueryable<TEntity> NonDeletedQueryable<TEntity>(this IOltDbContext context, IQueryable<TEntity> queryable)
+            where TEntity : class, IOltEntity
         {
-            if (!typeof(IOltEntityDeletable).IsAssignableFrom(typeof(T))) return queryable;
-            Expression<Func<T, bool>> getNonDeleted = deletableQuery => ((IOltEntityDeletable)deletableQuery).DeletedOn == null;
-            getNonDeleted = (Expression<Func<T, bool>>)OltRemoveCastsVisitor.Visit(getNonDeleted);
+            if (!typeof(IOltEntityDeletable).IsAssignableFrom(typeof(TEntity))) return queryable;
+            Expression<Func<TEntity, bool>> getNonDeleted = deletableQuery => ((IOltEntityDeletable)deletableQuery).DeletedOn == null;
+            getNonDeleted = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(getNonDeleted);
             return queryable.Where(getNonDeleted);
-        }
-
-
-        public static IQueryable<T> GetQueryable<T>(this IOltDbContext context, IOltSearcher<T> queryBuilder)
-            where T : class, IOltEntity
-        {
-            return queryBuilder.BuildQueryable(InitializeQueryable<T>(context, queryBuilder.IncludeDeleted));
-        }
-
-        public static IQueryable<TEntity> GetQueryable<TEntity>(this IOltDbContext context, params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
-        {
-            var queryable = InitializeQueryable<TEntity>(context, searchers.Any(p => p.IncludeDeleted));
-            searchers.ToList().ForEach(builder =>
-            {
-                queryable = builder.BuildQueryable(queryable);
-            });
-            return queryable;
         }
 
         public static void SetSoftDeleteFilter<TEntity>(this ModelBuilder modelBuilder)
@@ -142,13 +119,13 @@ namespace OLT.Core
         /// modelBuilder.Entity<EF_POCO>().HasQueryFilter(p => p.DeletedOn == null)
         /// https://davecallan.com/entity-framework-core-query-filters-multiple-entities/
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>
-        public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, Expression<Func<T, bool>> expression)
+        public static void ApplyGlobalFilters<TEntity>(this ModelBuilder modelBuilder, Expression<Func<TEntity, bool>> expression)
         {
 #pragma warning disable S125
-            modelBuilder.EntitiesOfType<T>(builder =>
+            modelBuilder.EntitiesOfType<TEntity>(builder =>
             {
                 var clrType = builder.Metadata.ClrType;
 
