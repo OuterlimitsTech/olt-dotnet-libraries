@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
@@ -34,8 +35,7 @@ namespace OLT.Core
 
             var schema = entityType.GetSchema();
             var tableName = entityType.GetTableName();
-
-            return $"{schema}.{tableName}";
+            return schema.IsNullOrEmpty() ? tableName : $"{schema}.{tableName}";
         }
 
         public static IEnumerable<OltDbColumnInfo> GetColumns<TEntity>(this DbContext dbContext)
