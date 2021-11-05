@@ -3,29 +3,27 @@ using OfficeOpenXml;
 
 namespace OLT.EPPlus
 {
-    /// <summary>
-    /// new OltExcelCellWriter(value)
-    /// </summary>
-    public class OltExcelCellWriter : IOltExcelCellWriter
+    public abstract class OltExcelCellWriter<T> : IOltExcelCellWriter
     {
-        public OltExcelCellWriter()
+        protected OltExcelCellWriter()
         {
         }
 
-        public OltExcelCellWriter(object value)
+        protected OltExcelCellWriter(T value)
         {
             Value = value;
         }
 
-        public OltExcelCellWriter(object value, IOltExcelCellStyle style)
+        protected OltExcelCellWriter(T value, IOltExcelCellStyle style)
         {
             Value = value;
             Style = style;
         }
 
-        public object Value { get; set; }
+        public virtual IOltExcelCellStyle Style { get; set; }
 
-        public IOltExcelCellStyle Style { get; set; }
+        public virtual T Value { get; set; }
+
 
         /// <summary>
         /// writes row at given index and increments 
@@ -62,6 +60,25 @@ namespace OLT.EPPlus
         public virtual void ApplyStyle(ExcelRange range)
         {
             Style?.ApplyStyle(range);
+        }
+    }
+
+    /// <summary>
+    /// new OltExcelCellWriter(value)
+    /// </summary>
+    public class OltExcelCellWriter : OltExcelCellWriter<object>
+    {
+
+        public OltExcelCellWriter() : base()
+        {
+        }
+
+        public OltExcelCellWriter(object value) : base(value)
+        {
+        }
+
+        public OltExcelCellWriter(object value, IOltExcelCellStyle style) : base(value, style)
+        {
         }
     }
 

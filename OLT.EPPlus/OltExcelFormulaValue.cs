@@ -7,20 +7,23 @@ namespace OLT.EPPlus
     /// <summary>
     /// new ExcelFormulaValue("'Performance Worksheet'!AF2")
     /// </summary>
-    public class OltExcelFormulaValue : OltExcelCellWriter
+    public class OltExcelFormulaValue : OltExcelCellWriter<string>
     {
-        public OltExcelFormulaValue(string formula) 
+        public OltExcelFormulaValue(string formula) : base(FormatValue(formula))
         {
-            Formula = formula.StartsWith("=") ? formula.TrimStart('=') : formula;
         }
 
-        public OltExcelFormulaValue(string formula, IOltExcelCellStyle style) : this(formula)
+        public OltExcelFormulaValue(string formula, IOltExcelCellStyle style) : base(FormatValue(formula), style)
         {
-            Style = style;
+
         }
 
-        public new object Value => Formula;
-        public string Formula { get; }
+        private static string FormatValue(string formula)
+        {
+            return formula.StartsWith("=") ? formula.TrimStart('=') : formula;
+        }
+
+        public string Formula => Value;
 
         /// <summary>
         /// Writes Formula to given Range
