@@ -111,8 +111,10 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
                 rowIdx = row.Write(worksheet, rowIdx);
             });
 
+
             
-            //package.SaveAs(new FileInfo(@$"D:\test_{Guid.NewGuid()}.xlsx"));
+            Assert.Equal(worksheet.Cells["A1"].Value, cols[0].Heading);
+            Assert.Equal(worksheet.Cells["B1"].Value, cols[1].Heading);
 
             var rng1 = worksheet.Cells[4, 1];
             var rng2 = worksheet.Cells[5, 1];

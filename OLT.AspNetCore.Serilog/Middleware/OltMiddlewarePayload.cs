@@ -73,7 +73,7 @@ namespace OLT.Logging.Serilog
             await responseBodyStream.CopyToAsync(originalResponseBodyReference);
         }
 
-        private ILogger BuildLogger(HttpContext context, string requestUri, string requestBodyText, string responseBodyText)
+        private static ILogger BuildLogger(HttpContext context, string requestUri, string requestBodyText, string responseBodyText)
         {
             return Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("ResponseHeaders", context.Response.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
