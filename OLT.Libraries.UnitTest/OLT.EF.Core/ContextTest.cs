@@ -93,6 +93,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             Assert.Collection(columns,
                 item => Assert.Equal(item.Name, expected),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ActionCode)}"),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.BtyeFlag)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateDate)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedBy)}"),

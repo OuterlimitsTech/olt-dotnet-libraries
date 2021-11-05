@@ -35,7 +35,7 @@ namespace OLT.Core
             var schema = entityType.GetSchema();
             var tableName = entityType.GetTableName();
 
-            return string.IsNullOrEmpty(schema) ? $"{tableName}" : $"{schema}.{tableName}";
+            return $"{schema}.{tableName}";
         }
 
         public static IEnumerable<OltDbColumnInfo> GetColumns<TEntity>(this DbContext dbContext)
@@ -101,12 +101,6 @@ namespace OLT.Core
             Expression<Func<TEntity, bool>> getNonDeleted = deletableQuery => ((IOltEntityDeletable)deletableQuery).DeletedOn == null;
             getNonDeleted = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(getNonDeleted);
             return queryable.Where(getNonDeleted);
-        }
-
-        public static void SetSoftDeleteFilter<TEntity>(this ModelBuilder modelBuilder)
-            where TEntity : class, IOltEntityDeletable
-        {
-            modelBuilder.Entity<TEntity>().HasQueryFilter(p => p.DeletedOn == null);
         }
 
         public static void SetSoftDeleteGlobalFilter(this ModelBuilder modelBuilder)

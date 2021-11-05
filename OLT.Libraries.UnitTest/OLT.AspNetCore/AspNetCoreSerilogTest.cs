@@ -111,7 +111,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             }
 
             var httpContext = new DefaultHttpContext();
-
+            
             var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
 
             //act
@@ -133,7 +133,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             }
 
             var httpContext = new DefaultHttpContext();
-
+            
             var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
 
             //act
@@ -142,6 +142,29 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
         }
+
+        [Fact]
+        public async Task OltMiddlewarePayload_OltRecordNotFoundException()
+        {
+            //arrange
+            var expectedException = new OltRecordNotFoundException("Person");
+
+            Task MockNextMiddleware(HttpContext context)
+            {
+                return Task.FromException(expectedException);
+            }
+
+            var httpContext = new DefaultHttpContext();
+            
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
+
+            //act
+            await exceptionHandlingMiddleware.Invoke(httpContext);
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
+        }
+        
 
         [Fact]
         public async Task OltMiddlewarePayload_Completed()

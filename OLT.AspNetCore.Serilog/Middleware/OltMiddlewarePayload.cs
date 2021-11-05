@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using OLT.Core;
 using Serilog;
+using Serilog.Events;
 
 namespace OLT.Logging.Serilog
 {
@@ -21,57 +22,64 @@ namespace OLT.Logging.Serilog
         {
             var requestUri = $"{context.Request.Scheme}//{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
             var requestBodyText = await FormatRequest(context.Request);
+            var logLevel = LogEventLevel.Debug;
 
-
-            using (MemoryStream responseBodyStream = new MemoryStream())
+            await using MemoryStream responseBodyStream = new MemoryStream();
+            var originalResponseBodyReference = context.Response.Body;
+            context.Response.Body = responseBodyStream;
+                
+            try
             {
-                var originalResponseBodyReference = context.Response.Body;
-                context.Response.Body = responseBodyStream;
-                try
-                {
-                    await _next(context);
-                }
-                catch (OltBadRequestException badRequestException)
-                {
-                    var msg = new OltErrorHttp { Message = badRequestException.Message };
-                    context.Response.ContentType = "application/json";
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync(msg.ToJson());
-                }
-                catch (OltValidationException validationException)
-                {
-                    var msg = new OltErrorHttp
-                    {
-                        Message = "A validation error has occurred.",
-                        Errors = validationException.Results.Select(s => s.Message)
-                    };
-                    context.Response.ContentType = "application/json";
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync(msg.ToJson());
-                }
-                catch (OltRecordNotFoundException recordNotFoundException)
-                {
-                    var msg = new OltErrorHttp { Message = recordNotFoundException.Message };
-                    context.Response.ContentType = "application/json";
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync(msg.ToJson());
-                }
-                catch (Exception exception)
-                {
-                    await context.Response.WriteAsync(FormatServerError(context, exception, requestBodyText));
-                }
-
-                var responseBodyText = await FormatResponse(context.Response);
-
-                Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
-                    .ForContext("ResponseHeaders", context.Response.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
-                    .ForContext("RequestBody", requestBodyText)
-                    .ForContext("ResponseBody", responseBodyText)
-                    .ForContext("RequestUri", requestUri)
-                    .Debug("OLT PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", context.Request.Method, context.Request.Path, context.Response.StatusCode);
-
-                await responseBodyStream.CopyToAsync(originalResponseBodyReference);
+                await _next(context);
             }
+            catch (OltBadRequestException badRequestException)
+            {
+                var msg = new OltErrorHttp { Message = badRequestException.Message };
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                logLevel = LogEventLevel.Warning;
+                await context.Response.WriteAsync(msg.ToJson());
+            }
+            catch (OltValidationException validationException)
+            {
+                var msg = new OltErrorHttp
+                {
+                    Message = "A validation error has occurred.",
+                    Errors = validationException.Results.Select(s => s.Message)
+                };
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                logLevel = LogEventLevel.Warning;
+                await context.Response.WriteAsync(msg.ToJson());
+            }
+            catch (OltRecordNotFoundException recordNotFoundException)
+            {
+                var msg = new OltErrorHttp { Message = recordNotFoundException.Message };
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                logLevel = LogEventLevel.Warning;
+                await context.Response.WriteAsync(msg.ToJson());
+            }
+            catch (Exception exception)
+            {
+                logLevel = LogEventLevel.Error;
+                await context.Response.WriteAsync(FormatServerError(context, exception, requestBodyText));
+            }
+
+            var responseBodyText = await FormatResponse(context.Response);
+            var logger = BuildLogger(context, requestUri, responseBodyText, responseBodyText);
+            logger.Write(logLevel, "OLT PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", context.Request.Method, context.Request.Path, context.Response.StatusCode);
+
+            await responseBodyStream.CopyToAsync(originalResponseBodyReference);
+        }
+
+        private ILogger BuildLogger(HttpContext context, string requestUri, string requestBodyText, string responseBodyText)
+        {
+            return Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
+                .ForContext("ResponseHeaders", context.Response.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
+                .ForContext("RequestBody", requestBodyText)
+                .ForContext("ResponseBody", responseBodyText)
+                .ForContext("RequestUri", requestUri);
         }
 
         private static string FormatServerError(HttpContext context, Exception exception, string requestBodyText)
