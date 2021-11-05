@@ -25,6 +25,14 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
         [StringLength(20)]
         public string ActionCode { get; set; }
 
+        [StringLength(20)]
+        [NotMapped]
+        public string NoMapColumn { get; set; }
+
+
+        public byte BtyeFlag { get; set; }
+
+
         public int? PersonTypeId { get; set; }
         public virtual PersonTypeCodeEntity PersonType { get; set; }
 

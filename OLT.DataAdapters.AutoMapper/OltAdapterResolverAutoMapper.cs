@@ -32,6 +32,12 @@ namespace OLT.Core
             return new OltAutoMapperException<TSource, TResult>(exception);
         }
 
+        public override IQueryable<TSource> Include<TSource, TDestination>(IQueryable<TSource> queryable)
+        {
+            var adapter = GetAdapter(this.GetAdapterName<TSource, TDestination>(), false);
+            return adapter == null ? queryable : this.Include(queryable, adapter);
+        }
+
         #region [ ProjectTo Maps ]
 
         public override bool CanProjectTo<TEntity, TDestination>()

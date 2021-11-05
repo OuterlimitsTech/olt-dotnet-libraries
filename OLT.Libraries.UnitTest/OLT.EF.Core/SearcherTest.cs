@@ -35,22 +35,6 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
 
 
-        [Fact]
-        public void GetQueryable()
-        {
-            UnitTestHelper.AddPerson(_context);
-            _context.SaveChanges();
-            Assert.True(_context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).Any());
-        }
-
-        [Fact]
-        public void GetQueryableParams()
-        {
-            var entity = PersonEntity.FakerEntity();
-            _context.People.Add(entity);
-            _context.SaveChanges();
-            Assert.True(_context.GetQueryable(new PersonLastNameStartsWithSearcher(entity.NameLast.Left(1)), new PersonFirstNameStartsWithSearcher(entity.NameFirst.Left(1))).Any());
-        }
 
         [Fact]
         public void WhereSearcher()

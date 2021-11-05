@@ -7,14 +7,14 @@ namespace OLT.EPPlus
     /// <summary>
     /// new ExcelPackageColumn { Heading = "Secondary Parent Email", Width = 23.43m }
     /// </summary>
-    public class OltExcelColumn : OltExcelCellWriter, IOltExcelColumn
+    public class OltExcelColumn : OltExcelCellWriter<string>, IOltExcelColumn
     {
-        public OltExcelColumn()
+        public string Heading
         {
-
+            get => Value;
+            set => Value = value;
         }
 
-        public string Heading { get; set; }
         public decimal? Width { get; set; }
         public string Format { get; set; }
 
@@ -32,6 +32,7 @@ namespace OLT.EPPlus
 
             return base.Write(worksheet, col, row);
         }
+
     }
 
    

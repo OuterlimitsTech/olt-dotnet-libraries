@@ -12,6 +12,7 @@ using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
 using OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode;
+using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 using OLT.Libraries.UnitTest.Assets.Searchers;
 using Serilog;
@@ -25,13 +26,16 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
         private readonly IOltIdentity _identity;
         private readonly SqlDatabaseContext _context;
         private readonly SqlDatabaseContext2 _context2;
+        private readonly IContextService _contextService;
 
         public ContextTest(
+            IContextService contextService,
             IOltIdentity identity,
             SqlDatabaseContext context,
             SqlDatabaseContext2 context2,
             ITestOutputHelper output) : base(output)
         {
+            _contextService = contextService;
             _identity = identity;
             _context = context;
             _context2 = context2;
@@ -89,6 +93,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             Assert.Collection(columns,
                 item => Assert.Equal(item.Name, expected),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.ActionCode)}"),
+                item => Assert.Equal(item.Name, $"{nameof(PersonEntity.BtyeFlag)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateDate)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.CreateUser)}"),
                 item => Assert.Equal(item.Name, $"{nameof(PersonEntity.DeletedBy)}"),
@@ -184,7 +189,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             entity.NameMiddle = string.Empty;
             await _context.SaveChangesAsync();
 
-            var updated = await _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefaultAsync(p => p.Id == entity.Id);
+            var updated = await _contextService.GetAsync(new OltSearcherGetById<PersonEntity>(entity.Id));
             Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
 
@@ -208,10 +213,21 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             entity.NameMiddle = string.Empty;
             _context.SaveChanges();
 
-            var updated = _context.GetQueryable(new OltSearcherGetAll<PersonEntity>()).FirstOrDefault(p => p.Id == entity.Id);
+            var updated = _contextService.Get(new OltSearcherGetById<PersonEntity>(entity.Id));
             Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
 
+        [Fact]
+        public void NonDeletedQueryable()
+        {
+            var expectedUsers = _context.Users.Where(p => p.Id > 0);
+            var queryUsers = _context.NonDeletedQueryable(expectedUsers);
+            Assert.Equal(expectedUsers.ToQueryString(), queryUsers.ToQueryString());
+
+            var expectedPeople = _context.People.Where(p => p.Id > 0);
+            var queryPeople = _context.NonDeletedQueryable(expectedPeople);
+            Assert.NotEqual(expectedPeople.ToQueryString(), queryPeople.ToQueryString());
+        }
 
         [Fact]
         public async Task ExceedMaxLengthAsync()
