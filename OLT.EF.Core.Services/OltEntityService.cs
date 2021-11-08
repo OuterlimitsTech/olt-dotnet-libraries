@@ -26,7 +26,7 @@ namespace OLT.Core
 
         protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher)
         {
-            return searcher.BuildQueryable(base.InitializeQueryable<TEntity>(searcher.IncludeDeleted));
+            return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
         }
 
         #endregion
