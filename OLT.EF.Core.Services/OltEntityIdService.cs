@@ -26,9 +26,9 @@ namespace OLT.Core
 
         #region [ Get ]
         
-        public virtual TModel Get<TModel>(int id) where TModel : class, new() => base.Get<TModel>(GetQueryable(id));
+        public virtual TModel Get<TModel>(int id) where TModel : class, new() => Get<TModel>(GetQueryable(id));
 
-        public virtual async Task<TModel> GetAsync<TModel>(int id) where TModel : class, new() => await base.GetAsync<TModel>(GetQueryable(id));
+        public virtual async Task<TModel> GetAsync<TModel>(int id) where TModel : class, new() => await GetAsync<TModel>(GetQueryable(id));
 
         #endregion
 
