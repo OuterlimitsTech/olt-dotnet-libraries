@@ -26,7 +26,7 @@ namespace OLT.Core
 
         protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher)
         {
-            return searcher.BuildQueryable(base.InitializeQueryable<TEntity>(searcher.IncludeDeleted));
+            return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace OLT.Core
 
         protected virtual TModel Get<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            return base.Get<TEntity, TModel>(queryable);
+            return Get<TEntity, TModel>(queryable);
         }
 
         public virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
@@ -58,7 +58,7 @@ namespace OLT.Core
             => await this.GetAsync<TModel>(GetQueryable(searchers));
 
         protected virtual async Task<TModel> GetAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
-            => await base.GetAsync<TEntity, TModel>(queryable);
+            => await GetAsync<TEntity, TModel>(queryable);
 
         public async Task<TModel> GetAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
@@ -73,12 +73,12 @@ namespace OLT.Core
 
         protected virtual IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            return base.GetAll<TEntity, TModel>(queryable);
+            return GetAll<TEntity, TModel>(queryable);
         }
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
         {
-            return await base.GetAllAsync<TEntity, TModel>(queryable);
+            return await GetAllAsync<TEntity, TModel>(queryable);
         }
 
         public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
