@@ -6,13 +6,14 @@ namespace OLT.Core
         where TEntity : class, IOltEntityId
     {
 
-        public OltSearcherGetById(int id)
+        public OltSearcherGetById(int id, bool includeDeleted = true)
         {
             Id = id;
+            IncludeDeleted = includeDeleted;
         }
 
         public int Id { get; }
-        public override bool IncludeDeleted => true;
+        public override bool IncludeDeleted { get; }
 
         public override IQueryable<TEntity> BuildQueryable(IQueryable<TEntity> queryable)
         {

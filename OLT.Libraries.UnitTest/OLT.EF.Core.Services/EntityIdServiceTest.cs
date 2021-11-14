@@ -65,7 +65,8 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             _personService.Add(list.AsEnumerable()).Should().BeEquivalentTo(list, opt => opt.Excluding(t => t.PersonId));
 
             var dtoList = list.Select(s => new PersonDto
-            {
+            {   
+                UniqueId = s.UniqueId,
                 First = s.Name.First,
                 Middle = s.Name.Middle,
                 Last = s.Name.Last,
@@ -91,6 +92,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
 
             var dtoList = list.Select(s => new PersonDto
             {
+                UniqueId = s.UniqueId,
                 First = s.Name.First,
                 Middle = s.Name.Middle,
                 Last = s.Name.Last,
@@ -162,6 +164,9 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             model = _personService.Add(UnitTestHelper.CreatePersonDto());
             Assert.True(_personService.SoftDelete(new OltSearcherGetById<PersonEntity>(model.PersonId.Value)));
             Assert.False(_personService.SoftDelete(new OltSearcherGetByUid<PersonEntity>(Guid.NewGuid())));
+
+            Assert.NotNull(_personService.Get<PersonDto>(new OltSearcherGetById<PersonEntity>(model.PersonId.Value)));
+            Assert.Null(_personService.Get<PersonDto>(new OltSearcherGetById<PersonEntity>(model.PersonId.Value, false)));
         }
 
 
@@ -174,6 +179,10 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             model = _personService.Add(UnitTestHelper.CreatePersonDto());
             Assert.True(await _personService.SoftDeleteAsync(new OltSearcherGetById<PersonEntity>(model.PersonId.Value)));
             Assert.False(await _personService.SoftDeleteAsync(new OltSearcherGetByUid<PersonEntity>(Guid.NewGuid())));
+
+            Assert.NotNull(await _personService.GetAsync<PersonDto>(new OltSearcherGetById<PersonEntity>(model.PersonId.Value)));
+            Assert.Null(await _personService.GetAsync<PersonDto>(new OltSearcherGetById<PersonEntity>(model.PersonId.Value, false)));
+
         }
 
         [Fact]

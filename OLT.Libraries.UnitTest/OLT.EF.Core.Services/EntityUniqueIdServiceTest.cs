@@ -64,6 +64,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
 
             var dtoList = list.Select(s => new PersonDto
             {
+                UniqueId = s.UniqueId,
                 First = s.Name.First,
                 Middle = s.Name.Middle,
                 Last = s.Name.Last,
@@ -89,6 +90,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
 
             var dtoList = list.Select(s => new PersonDto
             {
+                UniqueId = s.UniqueId,
                 First = s.Name.First,
                 Middle = s.Name.Middle,
                 Last = s.Name.Last,
@@ -116,20 +118,28 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         [Fact]
         public void Update()
         {
-            var addModel = UnitTestHelper.CreatePersonDto();
-            var model = _personService.Add(addModel);
-            model.First = Faker.Name.First();
-            var updated = _personService.Update<PersonAutoMapperModel, PersonDto>(model.UniqueId.GetValueOrDefault(), model);
-            Assert.Equal(model.First, updated.Name.First);
-            Assert.NotEqual(addModel.First, updated.Name.First);
+            var newDto = UnitTestHelper.CreatePersonDto();
+            newDto.UniqueId= Guid.NewGuid();
+            var added = _personService.Add(newDto);
 
-            model.First = Faker.Name.First();
-            var dto = _personService.Update(model.UniqueId.GetValueOrDefault(), model);
-            Assert.Equal(model.First, dto.First);
+            added.First = Faker.Name.First();
+            var updated = _personService.Update<PersonAutoMapperModel, PersonDto>(added.UniqueId.GetValueOrDefault(), added);
+            Assert.Equal(added.First, updated.Name.First);
+            Assert.Equal(added.Last, updated.Name.Last);
+            Assert.Equal(newDto.UniqueId, updated.UniqueId);
+            Assert.NotEqual(newDto.First, updated.Name.First);
 
-            model.First = Faker.Name.First();
-            dto = _personService.Update(new OltSearcherGetByUid<PersonEntity>(model.UniqueId.GetValueOrDefault()), model);
-            Assert.Equal(model.First, dto.First);
+
+            added.First = Faker.Name.First();
+            var dto = _personService.Update(added.UniqueId.GetValueOrDefault(), added);
+            Assert.Equal(added.First, dto.First);
+            Assert.Equal(newDto.UniqueId, dto.UniqueId);
+
+            added.First = Faker.Name.First();
+            dto = _personService.Update(new OltSearcherGetByUid<PersonEntity>(added.UniqueId.GetValueOrDefault()), added);
+            Assert.Equal(added.First, dto.First);
+
+            Assert.Equal(newDto.UniqueId, dto.UniqueId);
         }
 
         [Fact]
@@ -143,9 +153,10 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             Assert.Equal(newDto.UniqueId, added.UniqueId);
 
             var updated = await _personService.UpdateAsync<PersonAutoMapperModel, PersonDto>(added.UniqueId.GetValueOrDefault(), added);
-            updated.Should().BeEquivalentTo(added);
-
+            Assert.Equal(added.First, updated.Name.First);
+            Assert.Equal(added.Last, updated.Name.Last);
             Assert.Equal(newDto.UniqueId, updated.UniqueId);
+            Assert.NotEqual(newDto.First, updated.Name.First);
 
             added.First = Faker.Name.First();
             var dto = await _personService.UpdateAsync(added.UniqueId.GetValueOrDefault(), added);
@@ -290,8 +301,11 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             var newDto = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
             _personService.SoftDelete(newDto.UniqueId.GetValueOrDefault());
-            var result = _personService.Get<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault()));
+            var result = _personService.Get<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault(), true));
             Assert.Equal(newDto.PersonId, result?.PersonId);
+
+            result = _personService.Get<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault(), false));
+            Assert.Null(result);
         }
 
         [Fact]
@@ -299,8 +313,11 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             var newDto = await _personService.AddAsync(UnitTestHelper.CreateTestAutoMapperModel());
             await _personService.SoftDeleteAsync(newDto.UniqueId.GetValueOrDefault());
-            var result = await _personService.GetAsync<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault()));
+            var result = await _personService.GetAsync<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault(), true));
             Assert.Equal(newDto.PersonId, result?.PersonId);
+
+            result = _personService.Get<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault(), false));
+            Assert.Null(result);
         }
 
         [Fact]

@@ -12,11 +12,6 @@ namespace OLT.Libraries.UnitTest.Assets.FileBuilder
     {
         public override string BuilderName => nameof(TestFileBuilder);
 
-        public override IOltFileBase64 Build<TRequest>(TRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override IOltFileBase64 Build(TestFileBuilderRequest request)
         {
             using var excelPackage = new ExcelPackage();
