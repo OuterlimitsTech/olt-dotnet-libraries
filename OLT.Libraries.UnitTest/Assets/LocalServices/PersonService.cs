@@ -14,6 +14,14 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         }
     }
 
+    public class PersonUniqueIdService : BaseDbEntityUniqueIdService<PersonEntity>, IPersonUniqueIdService
+    {
+        public PersonUniqueIdService(
+            IOltServiceManager serviceManager,
+            SqlDatabaseContext context) : base(serviceManager, context)
+        {
+        }
+    }
 
     public class PersonService2 : OltEntityIdService<SqlDatabaseContext2, PersonEntity>, IPersonService2
     {
