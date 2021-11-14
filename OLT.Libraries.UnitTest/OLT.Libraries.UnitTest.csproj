@@ -76,7 +76,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OLT.AspNetCore.Authentication.ApiKey\OLT.AspNetCore.Authentication.ApiKey.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore.Authentication.JwtBearer\OLT.AspNetCore.Authentication.JwtBearer.csproj" />
-    <ProjectReference Include="..\OLT.AspNetCore.NLog\OLT.AspNetCore.NLog.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore.Serilog\OLT.AspNetCore.Serilog.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
@@ -93,7 +92,6 @@
     <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.AzureAppConfiguration\OLT.Extensions.AzureAppConfiguration.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj" />
-    <ProjectReference Include="..\OLT.Extensions.DependencyInjection.SqlServer\OLT.Extensions.DependencyInjection.SqlServer.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
     <ProjectReference Include="..\OLT.Logging.Serilog\OLT.Logging.Serilog.csproj" />

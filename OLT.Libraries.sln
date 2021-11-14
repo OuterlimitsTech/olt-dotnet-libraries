@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.EPPlus", "OLT.EPPlus\OL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.DependencyInjection", "OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj", "{D98AFC07-7D80-47CD-9567-074D017C2C59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.DependencyInjection.SqlServer", "OLT.Extensions.DependencyInjection.SqlServer\OLT.Extensions.DependencyInjection.SqlServer.csproj", "{DD25AE05-BE23-45E6-9003-B1708D414F18}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.AzureAppConfiguration", "OLT.Extensions.AzureAppConfiguration\OLT.Extensions.AzureAppConfiguration.csproj", "{BCC320B4-3E58-4C33-B22F-EFEAA620F546}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.CloudFlare.API.V4", "OLT.CloudFlare.API.V4\OLT.CloudFlare.API.V4.csproj", "{63BDD3C2-33B5-4C77-89C1-96FA0164D888}"
@@ -38,8 +36,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.DependencyInjection.AutoMapper", "OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj", "{C956C04F-4523-4F68-961C-8174803AA073}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Libraries.UnitTest", "OLT.Libraries.UnitTest\OLT.Libraries.UnitTest.csproj", "{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.NLog", "OLT.AspNetCore.NLog\OLT.AspNetCore.NLog.csproj", "{BA4A8658-6E0B-46DD-B456-7186B7B0EB14}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Shared", "OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj", "{5C22588F-CF15-44C5-830B-5D63819A6DF1}"
 EndProject
@@ -59,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Logging.Serilog", "OLT.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.General", "OLT.Extensions.General\OLT.Extensions.General.csproj", "{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Builder.File", "OLT.Builder.File\OLT.Builder.File.csproj", "{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Builder.File", "OLT.Builder.File\OLT.Builder.File.csproj", "{533864B1-5309-4CBF-8E7F-0133E99529FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,10 +107,6 @@ Global
 		{D98AFC07-7D80-47CD-9567-074D017C2C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D98AFC07-7D80-47CD-9567-074D017C2C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D98AFC07-7D80-47CD-9567-074D017C2C59}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD25AE05-BE23-45E6-9003-B1708D414F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD25AE05-BE23-45E6-9003-B1708D414F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD25AE05-BE23-45E6-9003-B1708D414F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD25AE05-BE23-45E6-9003-B1708D414F18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BCC320B4-3E58-4C33-B22F-EFEAA620F546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BCC320B4-3E58-4C33-B22F-EFEAA620F546}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCC320B4-3E58-4C33-B22F-EFEAA620F546}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -139,10 +131,6 @@ Global
 		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA4A8658-6E0B-46DD-B456-7186B7B0EB14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA4A8658-6E0B-46DD-B456-7186B7B0EB14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA4A8658-6E0B-46DD-B456-7186B7B0EB14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA4A8658-6E0B-46DD-B456-7186B7B0EB14}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -179,10 +167,10 @@ Global
 		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
