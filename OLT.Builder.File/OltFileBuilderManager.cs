@@ -7,64 +7,31 @@ namespace OLT.Core
 {
     public class OltFileBuilderManager : OltDisposable, IOltFileBuilderManager
     {
-        private readonly List<IOltFileBuilder> _builders;
-
+        private readonly Dictionary<string, IOltFileBuilder> _builders;
         public OltFileBuilderManager(IServiceProvider serviceProvider)
         {
-            _builders = serviceProvider.GetServices<IOltFileBuilder>().ToList();
+            _builders = serviceProvider.GetServices<IOltFileBuilder>().ToList().ToDictionary(builder => builder.BuilderName, builder => builder);
         }
 
-        public IOltFileBase64 Generate<TRequest>(TRequest request, string name)
+        public List<IOltFileBuilder> Builders => _builders.Values.ToList();
+
+        /// <summary>
+        /// Locates builder <paramref name="name"/> by using <see cref="IOltFileBuilder.BuilderName"/> and calls <see cref="IOltFileBuilder.Build{TRequest}(TRequest)"/>
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <param name="request"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="OltFileBuilderNotFoundException"></exception>
+        public virtual IOltFileBase64 Generate<TRequest>(TRequest request, string name)
             where TRequest : IOltRequest
         {
-            var genericExporter = _builders.FirstOrDefault(p => p.BuilderName == name);
-
-            if (genericExporter == null)
+            if (_builders.ContainsKey(name))
             {
-                throw new OltException($"FileBuilder with name of {name} not found");
+                return _builders[name].Build(request);
             }
-
-            if (!(genericExporter is IOltFileBuilder<TRequest> exporter))
-            {
-                throw new OltException($"FileBuilder typeof({nameof(IOltFileBuilder<TRequest>)}) not found");
-            }
-
-            return exporter.Build(request);
-        }
-
-        public IOltFileBase64 Generate<TRequest, TEnum>(TRequest request, Enum name) 
-            where TRequest : IOltRequest 
-            where TEnum : Enum
-        {
-            return this.Generate(request, name.GetCodeEnum());
-        }
-
-        public IOltFileBase64 Generate<TRequest, TParameterModel, TEnum>(TRequest request, TParameterModel parameters, TEnum name)
-            where TRequest : IOltRequest
-            where TParameterModel : class, IOltGenericParameter
-            where TEnum : Enum
-        {
-            return this.Generate(request, parameters, name.GetCodeEnum());
-        }
-
-        public IOltFileBase64 Generate<TRequest, TParameterModel>(TRequest request, TParameterModel parameters, string name)
-            where TRequest : IOltRequest
-            where TParameterModel : class, IOltGenericParameter
-        {
-            var genericExporter = _builders.FirstOrDefault(p => p.BuilderName == name);
-
-            if (genericExporter == null)
-            {
-                throw new OltException($"FileBuilder with name of {name} not found");
-            }
-
-            if (!(genericExporter is IOltFileBuilder<TRequest, TParameterModel> exporter))
-            {
-                throw new OltException($"FileBuilder typeof({nameof(IOltFileBuilder<TRequest, TParameterModel>)}) not found");
-            }
-
-            return exporter.Build(request, parameters);
-        }
+            throw new OltFileBuilderNotFoundException(name);            
+        }        
 
     }
 }
