@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>netstandard2.0</TargetFramework>
+	  <RootNamespace>OLT.Core</RootNamespace>
+	  <Description>Abstract process to allow for DI of a File Builders like PDF, Excel, etc.</Description>
+	  <ProjectGuid>533864b1-5309-4cbf-8e7f-0133e99529fc</ProjectGuid>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
+

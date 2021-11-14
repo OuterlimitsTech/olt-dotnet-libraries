@@ -80,6 +80,7 @@
     <ProjectReference Include="..\OLT.AspNetCore.Serilog\OLT.AspNetCore.Serilog.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
+    <ProjectReference Include="..\OLT.Builder.File\OLT.Builder.File.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters.AutoMapper\OLT.DataAdapters.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters\OLT.DataAdapters.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.SeedHelpers.Csv\OLT.EF.Core.SeedHelpers.Csv.csproj" />

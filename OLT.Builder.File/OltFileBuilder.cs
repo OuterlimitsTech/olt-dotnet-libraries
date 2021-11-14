@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-
-namespace OLT.Core
+﻿namespace OLT.Core
 {
     public abstract class OltFileBuilder<TRequest, TParameter> : OltDisposable, IOltFileBuilder<TRequest, TParameter>
         where TRequest : IOltRequest

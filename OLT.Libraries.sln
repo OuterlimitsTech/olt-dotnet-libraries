@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Shared", "OLT.Shared\OLT.Shared.csproj", "{51C74595-D676-464C-BECD-395627521A65}"
 EndProject
@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Authenticati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Logging.Serilog", "OLT.Logging.Serilog\OLT.Logging.Serilog.csproj", "{291140C2-C4E7-4E78-A7A7-53B466D1D84E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Extensions.General", "OLT.Extensions.General\OLT.Extensions.General.csproj", "{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.General", "OLT.Extensions.General\OLT.Extensions.General.csproj", "{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLT.Builder.File", "OLT.Builder.File\OLT.Builder.File.csproj", "{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -177,6 +179,10 @@ Global
 		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{053DC8A4-7472-45DB-9E44-68B5A2CAB5DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC64BAAD-B153-4EE0-A229-FD47A6DFAF58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
