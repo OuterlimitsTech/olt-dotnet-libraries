@@ -1,8 +1,8 @@
+next-version: 5.4.0
 mode: Mainline
-# next-version: 5.3.0
 branches:
   master:
-    tag: ''
+    tag: ""
   develop:
     tag: beta
   feature:

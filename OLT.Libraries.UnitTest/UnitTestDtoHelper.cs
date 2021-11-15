@@ -47,6 +47,11 @@ namespace OLT.Libraries.UnitTest
             return personService.Add(dto);
         }
 
+        public static PersonAutoMapperModel AddPerson(IPersonUniqueIdService personService, PersonAutoMapperModel dto)
+        {
+            return personService.Add(dto);
+        }
+
         public static PersonAutoMapperModel CreateTestAutoMapperModel()
         {
             return new PersonAutoMapperModel

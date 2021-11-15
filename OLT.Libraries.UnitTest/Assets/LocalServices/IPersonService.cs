@@ -7,6 +7,10 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
     {
     }
 
+    public interface IPersonUniqueIdService : IOltEntityUniqueIdService<PersonEntity>
+    {
+    }
+
     public interface IPersonService2 : IOltEntityIdService<PersonEntity>
     {
     }

@@ -16,7 +16,7 @@ namespace OLT.Libraries.UnitTest.OLT.EPPlus
     {
         private const string WorksheetName = "Test";
 
-        private ExcelPackage CreatePackage()
+        private static ExcelPackage CreatePackage()
         {
             return new ExcelPackage();
         }

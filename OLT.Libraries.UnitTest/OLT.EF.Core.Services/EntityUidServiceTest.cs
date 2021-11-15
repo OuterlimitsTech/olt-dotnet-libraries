@@ -34,7 +34,11 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var newDto = _personService.Add(UnitTestHelper.CreateTestAutoMapperModel());
             _personService.SoftDelete(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault()));
             var result = _personService.Get<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault()));
+            Assert.NotNull(result);
+
+            result = _personService.Get<PersonDto>(new OltSearcherGetByUid<PersonEntity>(newDto.UniqueId.GetValueOrDefault(), false));
             Assert.Null(result);
+
         }
     }
 }
