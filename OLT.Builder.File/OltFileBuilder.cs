@@ -1,16 +1,5 @@
 ﻿namespace OLT.Core
 {
-    //public abstract class OltFileBuilder<TParameter> : OltFileBuilder, IOltFileBuilder<TParameter>
-    //    where TParameter : class
-    //{
-    //    public abstract IOltFileBase64 Build<TRequest>(TRequest request, TParameter parameter) where TRequest : IOltRequest;
-
-    //    public override IOltFileBase64 Build<TRequest>(TRequest request)
-    //    {
-    //        return this.Build(request, null);
-    //    }
-    //}
-
     public abstract class OltFileBuilder : OltDisposable, IOltFileBuilder, IOltInjectableSingleton
     {
         public abstract string BuilderName { get; }
