@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -33,11 +35,9 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
     public class AspNetCoreSerilogTest : OltDisposable
     {
         private readonly TestServer _testServer;
-        private readonly IOptions<AppSettingsDto> _options;
 
-        public AspNetCoreSerilogTest(IOptions<AppSettingsDto> options)
+        public AspNetCoreSerilogTest()
         {
-            _options = options;
 
             var webBuilder = new WebHostBuilder();
             webBuilder
@@ -53,6 +53,47 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
                 .UseStartup<SerilogStartup>();
                 
             _testServer = new TestServer(webBuilder);
+        }
+
+        private IOptions<AppSettingsDto> GetOptions(bool showExceptionDetails = false)
+        {
+            var settings = new AppSettingsDto
+            {
+                Hosting = new OltAspNetHostingOptions
+                {
+                    ShowExceptionDetails = showExceptionDetails
+                }
+            };
+            return Options.Create(settings);
+        }
+
+        
+        private async Task<OltErrorHttp> InvokeMiddlewareAsync(IOptions<AppSettingsDto> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
+        {
+            return await InvokeMiddlewareAsync<OltErrorHttp>(options, next, expectedStatusCode);
+        }
+
+        private async Task<T> InvokeMiddlewareAsync<T>(IOptions<AppSettingsDto> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
+        {
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(options);
+            var bodyStream = new MemoryStream();
+            var httpContext = new DefaultHttpContext();
+            httpContext.Response.Body = bodyStream;
+            httpContext.Request.Path = "/testing";
+
+            //act
+            await exceptionHandlingMiddleware.InvokeAsync(httpContext, next);
+
+            T response;
+            bodyStream.Seek(0, SeekOrigin.Begin);
+            using (var sr = new StreamReader(bodyStream))
+            {
+                response = JsonConvert.DeserializeObject<T>(await sr.ReadToEndAsync());
+            }
+
+            Assert.Equal(expectedStatusCode, (HttpStatusCode)httpContext.Response.StatusCode);
+
+            return response;
         }
 
         [Fact]
@@ -81,114 +122,80 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             Assert.Equal(obj.ToString(), compareTo);
         }
 
+
+
         [Fact]
         public async Task OltMiddlewarePayload_Returns500StatusCode()
         {
-            //arrange
+       
             var expectedException = new ArgumentNullException();
+            RequestDelegate next = (HttpContext hc) => Task.FromException(expectedException);       
 
-            Task MockNextMiddleware(HttpContext context)
-            {
-                return Task.FromException(expectedException);
-            }
+            var response = await this.InvokeMiddlewareAsync(GetOptions(true), next, HttpStatusCode.InternalServerError);
+            Assert.NotEqual("An error has occurred.", response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.Empty(response.Errors);
 
-            var httpContext = new DefaultHttpContext();
+            response = await this.InvokeMiddlewareAsync(GetOptions(), next, HttpStatusCode.InternalServerError);
+            Assert.Equal("An error has occurred.", response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.Empty(response.Errors);
 
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
 
-            //act
-            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
-
-            //assert
-            Assert.Equal(HttpStatusCode.InternalServerError, (HttpStatusCode)httpContext.Response.StatusCode);
         }
+
 
         [Fact]
         public async Task OltMiddlewarePayload_OltBadRequestException()
         {
             //arrange
             var expectedException = new OltBadRequestException("Test Bad Request");
-            
+            RequestDelegate next = (HttpContext hc) => Task.FromException(expectedException);
+            var response = await this.InvokeMiddlewareAsync(GetOptions(true), next, HttpStatusCode.BadRequest);
 
-            Task MockNextMiddleware(HttpContext context)
-            {
-                return Task.FromException(expectedException);
-            }
-
-            var httpContext = new DefaultHttpContext();
-            
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
-
-            //act
-            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
-
-            //assert
-            Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
+            Assert.Equal(expectedException.Message, response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.Empty(response.Errors);
         }
 
         [Fact]
         public async Task OltMiddlewarePayload_OltValidationException()
         {
-            //arrange
             var expectedException = new OltValidationException(new List<IOltValidationError> { new OltValidationError { Message = "Test Validation" } });
+            RequestDelegate next = (HttpContext hc) => Task.FromException(expectedException);
+            var response = await this.InvokeMiddlewareAsync(GetOptions(true), next, HttpStatusCode.BadRequest);
 
-            Task MockNextMiddleware(HttpContext context)
-            {
-                return Task.FromException(expectedException);
-            }
-
-            var httpContext = new DefaultHttpContext();
-            
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
-
-            //act
-            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
-
-            //assert
-            Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
+            Assert.Equal("A validation error has occurred.", response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.NotEmpty(response.Errors);
+            Assert.Collection(response.Errors, item => Assert.Equal("Test Validation", item));
         }
 
         [Fact]
         public async Task OltMiddlewarePayload_OltRecordNotFoundException()
         {
-            //arrange
-            var expectedException = new OltRecordNotFoundException("Person");            
-
-            Task MockNextMiddleware(HttpContext context)
-            {
-                return Task.FromException(expectedException);
-            }
-
-            var httpContext = new DefaultHttpContext();
-            
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
-
-            //act
-            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
-
-            //assert
-            Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
+            var expectedException = new OltRecordNotFoundException("Person");
+            RequestDelegate next = (HttpContext hc) => Task.FromException(expectedException);
+            var response = await this.InvokeMiddlewareAsync(GetOptions(true), next, HttpStatusCode.BadRequest);
+            Assert.Equal(expectedException.Message, response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.Empty(response.Errors);
         }
         
 
         [Fact]
         public async Task OltMiddlewarePayload_Completed()
         {
-            Task MockNextMiddleware(HttpContext context)
+            var dto = UnitTestHelper.CreatePersonDto();
+            var json = JsonConvert.SerializeObject(dto);
+
+            RequestDelegate next = (HttpContext hc) =>
             {
-                return Task.CompletedTask;
-            }
+                return hc.Response.WriteAsync(json);
+            };
 
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers.Add("HelloWorld", "true");
-
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
-
-            //act
-            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
-
-            //assert
-            Assert.Equal(HttpStatusCode.OK, (HttpStatusCode)httpContext.Response.StatusCode);
+            var response = await this.InvokeMiddlewareAsync<PersonDto>(GetOptions(true), next, HttpStatusCode.OK);
+            response.Should().Equals(dto);
         }
 
 

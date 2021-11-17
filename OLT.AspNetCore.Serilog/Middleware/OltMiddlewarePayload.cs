@@ -17,18 +17,13 @@ namespace OLT.Logging.Serilog
         public OltMiddlewarePayload(IOptions<OltAspNetAppSettings> options)
         {
             _showExceptionDetails = options.Value.Hosting.ShowExceptionDetails;
-
-#if DEBUG
-            _showExceptionDetails = true;
-#endif
-
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             Guid uid = Guid.NewGuid();            
             var requestUri = $"{context.Request.Scheme}//{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
-            var requestBodyText = await FormatRequest(context.Request);
+            var requestBodyText = await FormatRequestAsync(context.Request);
             var logLevel = LogEventLevel.Debug;
 
             await using MemoryStream responseBodyStream = new MemoryStream();
@@ -75,8 +70,8 @@ namespace OLT.Logging.Serilog
                 await context.Response.WriteAsync(msg.ToJson());
             }
 
-            var responseBodyText = await FormatResponse(context.Response);
-            var logger = BuildLogger(context, uid, requestUri, responseBodyText, responseBodyText);
+            var responseBodyText = await FormatResponseAsync(context.Response);
+            var logger = BuildLogger(context, uid, requestUri, requestBodyText, responseBodyText);
             logger.Write(logLevel, "{OltRequestUid}:OLT PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", uid, context.Request.Method, context.Request.Path, context.Response.StatusCode);
 
             await responseBodyStream.CopyToAsync(originalResponseBodyReference);
@@ -103,7 +98,7 @@ namespace OLT.Logging.Serilog
         }
 
 
-        private static async Task<string> FormatRequest(HttpRequest request)
+        private static async Task<string> FormatRequestAsync(HttpRequest request)
         {
             //This line allows us to set the reader for the request back at the beginning of its stream.
             request.EnableBuffering();
@@ -113,7 +108,7 @@ namespace OLT.Logging.Serilog
             return string.IsNullOrWhiteSpace(body) ? null : body;
         }
 
-        private static async Task<string> FormatResponse(HttpResponse response)
+        private static async Task<string> FormatResponseAsync(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
             var body = await new StreamReader(response.Body).ReadToEndAsync();

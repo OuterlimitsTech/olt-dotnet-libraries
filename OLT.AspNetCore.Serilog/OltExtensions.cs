@@ -22,19 +22,6 @@ namespace OLT.Logging.Serilog
                 .AddScoped<OltMiddlewareSession>();
         }
 
-        /// <summary>
-        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/>
-        /// </summary>
-        /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
-        /// <returns><seealso cref="IApplicationBuilder"/></returns>
-        public static IApplicationBuilder UseOltSerilogRequestLogging(this IApplicationBuilder app)
-        {
-            return app
-                .UseSerilogRequestLogging()
-                .UseMiddleware<OltMiddlewareSession>()
-                .UseMiddleware<OltMiddlewarePayload>();
-        }
-
 
         /// <summary>
         /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/>
@@ -42,7 +29,7 @@ namespace OLT.Logging.Serilog
         /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
         /// <param name="configureOptions"><seealso cref="RequestLoggingOptions"/></param>
         /// <returns><seealso cref="IApplicationBuilder"/></returns>
-        public static IApplicationBuilder UseOltSerilogRequestLogging(this IApplicationBuilder app, Action<RequestLoggingOptions> configureOptions)
+        public static IApplicationBuilder UseOltSerilogRequestLogging(this IApplicationBuilder app, Action<RequestLoggingOptions> configureOptions = null)
         {
 
             return app
