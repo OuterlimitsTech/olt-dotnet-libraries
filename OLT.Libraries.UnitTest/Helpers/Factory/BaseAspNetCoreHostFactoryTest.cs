@@ -97,7 +97,7 @@ namespace OLT.Libraries.UnitTest.Helpers.Factory
             app.UseCors(appSettings.Hosting);
             app.UseHttpsRedirection(appSettings.Hosting);
             app.UseAuthentication();
-            app.UseSerilogRequestLogging(new OltOptionsAspNetSerilog { DisableMiddlewareRegistration = false });
+            app.UseOltSerilogRequestLogging();
             app.UseSwaggerWithUI(appSettings.Swagger);
             app.UseRouting();
             app.UseAuthorization();

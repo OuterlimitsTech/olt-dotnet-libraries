@@ -1,11 +1,11 @@
 ﻿namespace OLT.Core
 {
-    public abstract class OltAspNetAppSettings : OltAppSettings, IOltOptionsAspNet
+    public class OltAspNetAppSettings : OltAppSettings, IOltOptionsAspNet
     {
         /// <summary>
         /// Hosting Settings
         /// </summary>
-        public IOltOptionsAspNetHosting Hosting { get; set; } = new OltAspNetHostingOptions();
+        public virtual IOltOptionsAspNetHosting Hosting { get; set; } = new OltAspNetHostingOptions();
 
         /// <summary>
         /// Swagger Options

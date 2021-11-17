@@ -3,25 +3,27 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using OLT.Core;
 using Serilog;
 using Serilog.Events;
 
 namespace OLT.Logging.Serilog
 {
-    public class OltMiddlewarePayload
+    public class OltMiddlewarePayload : IMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly bool _showExceptionDetails;
 
-        public OltMiddlewarePayload(RequestDelegate next)
+        public OltMiddlewarePayload(IOptions<OltAspNetAppSettings> options)
         {
-            this._next = next;
+            _showExceptionDetails = options.Value.Hosting.ShowExceptionDetails;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            Guid uid = Guid.NewGuid();            
             var requestUri = $"{context.Request.Scheme}//{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
-            var requestBodyText = await FormatRequest(context.Request);
+            var requestBodyText = await FormatRequestAsync(context.Request);
             var logLevel = LogEventLevel.Debug;
 
             await using MemoryStream responseBodyStream = new MemoryStream();
@@ -30,11 +32,11 @@ namespace OLT.Logging.Serilog
                 
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (OltBadRequestException badRequestException)
             {
-                var msg = new OltErrorHttp { Message = badRequestException.Message };
+                var msg = new OltErrorHttp { ErrorUid = uid, Message = badRequestException.Message };
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 logLevel = LogEventLevel.Warning;
@@ -44,6 +46,7 @@ namespace OLT.Logging.Serilog
             {
                 var msg = new OltErrorHttp
                 {
+                    ErrorUid = uid,
                     Message = "A validation error has occurred.",
                     Errors = validationException.Results.Select(s => s.Message)
                 };
@@ -54,7 +57,7 @@ namespace OLT.Logging.Serilog
             }
             catch (OltRecordNotFoundException recordNotFoundException)
             {
-                var msg = new OltErrorHttp { Message = recordNotFoundException.Message };
+                var msg = new OltErrorHttp { ErrorUid = uid, Message = recordNotFoundException.Message };
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 logLevel = LogEventLevel.Warning;
@@ -63,47 +66,39 @@ namespace OLT.Logging.Serilog
             catch (Exception exception)
             {
                 logLevel = LogEventLevel.Error;
-                await context.Response.WriteAsync(FormatServerError(context, exception, requestBodyText));
+                var msg = FormatServerError(context, exception, uid);
+                await context.Response.WriteAsync(msg.ToJson());
             }
 
-            var responseBodyText = await FormatResponse(context.Response);
-            var logger = BuildLogger(context, requestUri, responseBodyText, responseBodyText);
-            logger.Write(logLevel, "OLT PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", context.Request.Method, context.Request.Path, context.Response.StatusCode);
+            var responseBodyText = await FormatResponseAsync(context.Response);
+            var logger = BuildLogger(context, uid, requestUri, requestBodyText, responseBodyText);
+            logger.Write(logLevel, "{OltRequestUid}:OLT PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", uid, context.Request.Method, context.Request.Path, context.Response.StatusCode);
 
             await responseBodyStream.CopyToAsync(originalResponseBodyReference);
         }
 
-        private static ILogger BuildLogger(HttpContext context, string requestUri, string requestBodyText, string responseBodyText)
+        private static ILogger BuildLogger(HttpContext context, Guid uid, string requestUri, string requestBodyText, string responseBodyText)
         {
-            return Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
+            return Log
+                .ForContext("OltRequestUid", uid)
+                .ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("ResponseHeaders", context.Response.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("RequestBody", requestBodyText)
                 .ForContext("ResponseBody", responseBodyText)
                 .ForContext("RequestUri", requestUri);
         }
 
-        private static string FormatServerError(HttpContext context, Exception exception, string requestBodyText)
+        private OltErrorHttp FormatServerError(HttpContext context, Exception exception, Guid uid)
         {
-            Guid errorId = Guid.NewGuid();
-            Log.ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
-                .ForContext("RequestBody", requestBodyText)
-                .ForContext("Exception", exception, destructureObjects: true)
-                .Error(exception, exception.Message + " -> {@errorId}", errorId);
+            Log.ForContext("OltRequestUid", uid).Error(exception, "{OltRequestUid}:{Message}", exception.Message, uid);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            var msg = new OltErrorHttp
-            {
-                Message = $"An error has occurred. {errorId}"
-            };
-
-#if DEBUG
-            msg.Message = $"An error has occurred. {errorId}{Environment.NewLine}{exception}";
-#endif
-            return msg.ToJson();
+            var responseMessage = _showExceptionDetails ? exception.ToString() : "An error has occurred.";
+            return new OltErrorHttp { ErrorUid = uid, Message = responseMessage };
         }
 
 
-        private static async Task<string> FormatRequest(HttpRequest request)
+        private static async Task<string> FormatRequestAsync(HttpRequest request)
         {
             //This line allows us to set the reader for the request back at the beginning of its stream.
             request.EnableBuffering();
@@ -113,7 +108,7 @@ namespace OLT.Logging.Serilog
             return string.IsNullOrWhiteSpace(body) ? null : body;
         }
 
-        private static async Task<string> FormatResponse(HttpResponse response)
+        private static async Task<string> FormatResponseAsync(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
             var body = await new StreamReader(response.Body).ReadToEndAsync();

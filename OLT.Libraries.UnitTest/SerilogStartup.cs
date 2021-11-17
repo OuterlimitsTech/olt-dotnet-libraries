@@ -106,7 +106,7 @@ namespace OLT.Libraries.UnitTest
             app.UseCors(settings.Hosting);
             app.UseHttpsRedirection(settings.Hosting);
             //app.UseAuthentication();
-            app.UseSerilogRequestLogging(new OltOptionsAspNetSerilog());
+            app.UseOltSerilogRequestLogging();
             app.UseSwaggerWithUI(settings.Swagger);
             app.UseRouting();
             //app.UseAuthorization();
