@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -32,9 +33,12 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
     public class AspNetCoreSerilogTest : OltDisposable
     {
         private readonly TestServer _testServer;
+        private readonly IOptions<AppSettingsDto> _options;
 
-        public AspNetCoreSerilogTest()
+        public AspNetCoreSerilogTest(IOptions<AppSettingsDto> options)
         {
+            _options = options;
+
             var webBuilder = new WebHostBuilder();
             webBuilder
                 .UseSerilog()
@@ -90,10 +94,10 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
             var httpContext = new DefaultHttpContext();
 
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
 
             //act
-            await exceptionHandlingMiddleware.Invoke(httpContext);
+            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
 
             //assert
             Assert.Equal(HttpStatusCode.InternalServerError, (HttpStatusCode)httpContext.Response.StatusCode);
@@ -104,6 +108,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         {
             //arrange
             var expectedException = new OltBadRequestException("Test Bad Request");
+            
 
             Task MockNextMiddleware(HttpContext context)
             {
@@ -112,10 +117,10 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
             var httpContext = new DefaultHttpContext();
             
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
 
             //act
-            await exceptionHandlingMiddleware.Invoke(httpContext);
+            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
 
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
@@ -134,10 +139,10 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
             var httpContext = new DefaultHttpContext();
             
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
 
             //act
-            await exceptionHandlingMiddleware.Invoke(httpContext);
+            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
 
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
@@ -147,7 +152,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         public async Task OltMiddlewarePayload_OltRecordNotFoundException()
         {
             //arrange
-            var expectedException = new OltRecordNotFoundException("Person");
+            var expectedException = new OltRecordNotFoundException("Person");            
 
             Task MockNextMiddleware(HttpContext context)
             {
@@ -156,10 +161,10 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
             var httpContext = new DefaultHttpContext();
             
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
 
             //act
-            await exceptionHandlingMiddleware.Invoke(httpContext);
+            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
 
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)httpContext.Response.StatusCode);
@@ -177,10 +182,10 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers.Add("HelloWorld", "true");
 
-            var exceptionHandlingMiddleware = new OltMiddlewarePayload(MockNextMiddleware);
+            var exceptionHandlingMiddleware = new OltMiddlewarePayload(_options);
 
             //act
-            await exceptionHandlingMiddleware.Invoke(httpContext);
+            await exceptionHandlingMiddleware.InvokeAsync(httpContext, MockNextMiddleware);
 
             //assert
             Assert.Equal(HttpStatusCode.OK, (HttpStatusCode)httpContext.Response.StatusCode);
@@ -210,11 +215,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
                 })
                 .Configure(app =>
                 {
-                    app.UseSerilogRequestLogging(
-                        new OltOptionsAspNetSerilog
-                        {
-                            DisableMiddlewareRegistration = true
-                        },
+                    app.UseOltSerilogRequestLogging(
                         options =>
                         {
                             options.MessageTemplate =

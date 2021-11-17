@@ -7,7 +7,7 @@ using Serilog.AspNetCore;
 namespace OLT.Logging.Serilog
 {
 
-    public static partial class OltExtensions
+    public static class OltSerilogExtensions
     {
 
         /// <summary>
@@ -17,54 +17,38 @@ namespace OLT.Logging.Serilog
         /// <returns></returns>
         public static IServiceCollection AddOltSerilog(this IServiceCollection service)
         {
-            return service.AddScoped<OltMiddlewareSession>();
+            return service
+                .AddScoped<OltMiddlewarePayload>()
+                .AddScoped<OltMiddlewareSession>();
         }
 
-        private static IApplicationBuilder UseMiddleware<TOptions>(this IApplicationBuilder app, TOptions options)
-            where TOptions : IOltOptionsAspNetSerilog
+        /// <summary>
+        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/>
+        /// </summary>
+        /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
+        /// <returns><seealso cref="IApplicationBuilder"/></returns>
+        public static IApplicationBuilder UseOltSerilogRequestLogging(this IApplicationBuilder app)
         {
-
-            if (options.DisableMiddlewareRegistration)
-            {
-                return app;
-            }
-
             return app
+                .UseSerilogRequestLogging()
                 .UseMiddleware<OltMiddlewareSession>()
                 .UseMiddleware<OltMiddlewarePayload>();
         }
 
-        /// <summary>
-        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/> using <seealso cref="IOltOptionsAspNetSerilog"/> 
-        /// </summary>
-        /// <typeparam name="TOptions"></typeparam>
-        /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
-        /// <param name="options"><seealso cref="IOltOptionsAspNetSerilog"/></param>
-        /// <returns><seealso cref="IApplicationBuilder"/></returns>
-        public static IApplicationBuilder UseSerilogRequestLogging<TOptions>(this IApplicationBuilder app, TOptions options)
-                where TOptions : IOltOptionsAspNetSerilog
-        {
-            return app
-                .UseSerilogRequestLogging()
-                .UseMiddleware(options);
-        }
-
 
         /// <summary>
-        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/> using <seealso cref="IOltOptionsAspNetSerilog"/> 
+        /// Registers middleware <seealso cref="SerilogApplicationBuilderExtensions"/>, <seealso cref="OltMiddlewareSession"/> and <seealso cref="OltMiddlewarePayload"/>
         /// </summary>
-        /// <typeparam name="TOptions"></typeparam>
         /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
-        /// <param name="options"><seealso cref="IOltOptionsAspNetSerilog"/></param>
         /// <param name="configureOptions"><seealso cref="RequestLoggingOptions"/></param>
         /// <returns><seealso cref="IApplicationBuilder"/></returns>
-        public static IApplicationBuilder UseSerilogRequestLogging<TOptions>(this IApplicationBuilder app, TOptions options, Action<RequestLoggingOptions> configureOptions)
-                where TOptions : IOltOptionsAspNetSerilog
-        {            
+        public static IApplicationBuilder UseOltSerilogRequestLogging(this IApplicationBuilder app, Action<RequestLoggingOptions> configureOptions)
+        {
 
             return app
                 .UseSerilogRequestLogging(configureOptions)
-                .UseMiddleware(options);
+                .UseMiddleware<OltMiddlewareSession>()
+                .UseMiddleware<OltMiddlewarePayload>();
         }
     }
 
