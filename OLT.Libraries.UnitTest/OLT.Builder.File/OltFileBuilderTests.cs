@@ -68,7 +68,7 @@ namespace OLT.Libraries.UnitTest.OLT.Builder.File
             Assert.Equal(expected, result.FileBase64);
 
             var builderName3 = nameof(TestCsvServiceBuilder);
-            var builder3 = _fileBuilderManager.Builders.FirstOrDefault(p => p.BuilderName == builderName3) as TestCsvServiceBuilder;
+            var builder3 = _fileBuilderManager.GetBuilders().FirstOrDefault(p => p.BuilderName == builderName3) as TestCsvServiceBuilder;
             result = _fileBuilderManager.Generate(new TestCsvBuilderRequest(), builderName3);
             expectedText = builder3.Data.CsvString.ToString();
             expected = Convert.ToBase64String(Encoding.ASCII.GetBytes(expectedText));

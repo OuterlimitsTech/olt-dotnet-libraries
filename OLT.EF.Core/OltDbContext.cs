@@ -294,7 +294,7 @@ namespace OLT.Core
 
         #region [ NullableStringPropertyMetaData ]
 
-        private class NullableStringPropertyMetaData
+        private sealed class NullableStringPropertyMetaData
         {
             public EntityEntry EntityEntry { get; set; }
             public string PropertyName { get; set; }
