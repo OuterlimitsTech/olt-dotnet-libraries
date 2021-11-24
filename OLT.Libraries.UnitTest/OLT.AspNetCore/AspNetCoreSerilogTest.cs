@@ -55,25 +55,27 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             _testServer = new TestServer(webBuilder);
         }
 
-        private IOptions<AppSettingsDto> GetOptions(bool showExceptionDetails = false)
+        private IOptions<OltSerilogOptions> GetOptions(bool showExceptionDetails = false, string errorMsg = null)
         {
-            var settings = new AppSettingsDto
+            var settings = new OltSerilogOptions
             {
-                Hosting = new OltAspNetHostingOptions
-                {
-                    ShowExceptionDetails = showExceptionDetails
-                }
+                ShowExceptionDetails = showExceptionDetails,
             };
+
+            if (errorMsg != null)
+            {
+                settings.ErrorMessage = errorMsg;
+            }
             return Options.Create(settings);
         }
 
         
-        private async Task<OltErrorHttp> InvokeMiddlewareAsync(IOptions<AppSettingsDto> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
+        private async Task<OltErrorHttp> InvokeMiddlewareAsync(IOptions<OltSerilogOptions> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
         {
             return await InvokeMiddlewareAsync<OltErrorHttp>(options, next, expectedStatusCode);
         }
 
-        private async Task<T> InvokeMiddlewareAsync<T>(IOptions<AppSettingsDto> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
+        private async Task<T> InvokeMiddlewareAsync<T>(IOptions<OltSerilogOptions> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
         {
             var exceptionHandlingMiddleware = new OltMiddlewarePayload(options);
             var bodyStream = new MemoryStream();
@@ -127,20 +129,31 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         [Fact]
         public async Task OltMiddlewarePayload_Returns500StatusCode()
         {
-       
+            var expectedMsg = "An error has occurred.";
+            var overrideMsg = "Override Error Message";
             var expectedException = new ArgumentNullException();
             RequestDelegate next = (HttpContext hc) => Task.FromException(expectedException);       
 
             var response = await this.InvokeMiddlewareAsync(GetOptions(true), next, HttpStatusCode.InternalServerError);
-            Assert.NotEqual("An error has occurred.", response.Message);
+            Assert.Equal(expectedMsg, response.Message);
             Assert.NotNull(response.ErrorUid);
-            Assert.Empty(response.Errors);
+            Assert.NotEmpty(response.Errors);
+
+
+            response = await this.InvokeMiddlewareAsync(GetOptions(true, overrideMsg), next, HttpStatusCode.InternalServerError);
+            Assert.Equal(overrideMsg, response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.NotEmpty(response.Errors);
 
             response = await this.InvokeMiddlewareAsync(GetOptions(), next, HttpStatusCode.InternalServerError);
-            Assert.Equal("An error has occurred.", response.Message);
+            Assert.Equal(expectedMsg, response.Message);
             Assert.NotNull(response.ErrorUid);
             Assert.Empty(response.Errors);
 
+            response = await this.InvokeMiddlewareAsync(GetOptions(false, overrideMsg), next, HttpStatusCode.InternalServerError);
+            Assert.Equal(overrideMsg, response.Message);
+            Assert.NotNull(response.ErrorUid);
+            Assert.Empty(response.Errors);
 
         }
 
@@ -218,7 +231,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
                 {
                     services
                         .AddOltAspNetCore(new AppSettingsDto(), this.GetType().Assembly, null)
-                        .AddOltSerilog();
+                        .AddOltSerilog(configOptions => configOptions.ShowExceptionDetails = true);
                 })
                 .Configure(app =>
                 {

@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace OLT.Logging.Serilog
 {
+
     public class OltErrorHttp : IOltErrorHttp
     {
         public Guid? ErrorUid { get; set; }

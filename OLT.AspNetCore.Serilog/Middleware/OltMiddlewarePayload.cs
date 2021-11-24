@@ -12,16 +12,16 @@ namespace OLT.Logging.Serilog
 {
     public class OltMiddlewarePayload : IMiddleware
     {
-        private readonly bool _showExceptionDetails;
+        private readonly OltSerilogOptions _options;
 
-        public OltMiddlewarePayload(IOptions<OltAspNetAppSettings> options)
+        public OltMiddlewarePayload(IOptions<OltSerilogOptions> options)
         {
-            _showExceptionDetails = options.Value.Hosting.ShowExceptionDetails;
+            _options = options.Value;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            Guid uid = Guid.NewGuid();            
+            Guid uid = Guid.NewGuid();
             var requestUri = $"{context.Request.Scheme}//{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
             var requestBodyText = await FormatRequestAsync(context.Request);
             var logLevel = LogEventLevel.Debug;
@@ -29,7 +29,7 @@ namespace OLT.Logging.Serilog
             await using MemoryStream responseBodyStream = new MemoryStream();
             var originalResponseBodyReference = context.Response.Body;
             context.Response.Body = responseBodyStream;
-                
+
             try
             {
                 await next(context);
@@ -93,8 +93,12 @@ namespace OLT.Logging.Serilog
             Log.ForContext("OltRequestUid", uid).Error(exception, "{OltRequestUid}:{Message}", exception.Message, uid);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            var responseMessage = _showExceptionDetails ? exception.ToString() : "An error has occurred.";
-            return new OltErrorHttp { ErrorUid = uid, Message = responseMessage };
+            var result = new OltErrorHttp { ErrorUid = uid, Message = _options.ErrorMessage };
+            if (_options.ShowExceptionDetails)
+            {
+                result.Errors = exception.GetInnerExceptions().Select(s => s.Message).ToList();
+            }
+            return result;
         }
 
 
