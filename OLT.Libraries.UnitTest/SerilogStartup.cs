@@ -82,7 +82,7 @@ namespace OLT.Libraries.UnitTest
             services
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)
                 .AddOltInjectionAutoMapper()
-                .AddOltSerilog()
+                .AddOltSerilog(configOptions => configOptions.ShowExceptionDetails = true)
                 .AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
