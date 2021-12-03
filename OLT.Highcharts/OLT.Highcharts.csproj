@@ -1,9 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Classes and Interfacies to assist in building Highchart graphs</Description>
-    <ProjectGuid>f73db781-d0ca-4a8b-9112-3b865a2a0865</ProjectGuid>
-  </PropertyGroup>
-
-</Project>
