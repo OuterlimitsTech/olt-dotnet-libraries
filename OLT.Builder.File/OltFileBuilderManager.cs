@@ -10,10 +10,13 @@ namespace OLT.Core
         private readonly Dictionary<string, IOltFileBuilder> _builders;
         public OltFileBuilderManager(IServiceProvider serviceProvider)
         {
-            _builders = serviceProvider.GetServices<IOltFileBuilder>().ToList().ToDictionary(builder => builder.BuilderName, builder => builder);
+            _builders = serviceProvider.GetServices<IOltFileBuilder>().ToDictionary(builder => builder.BuilderName, builder => builder);
         }
 
-        public List<IOltFileBuilder> Builders => _builders.Values.ToList();
+        public List<IOltFileBuilder> GetBuilders()
+        {
+            return _builders.Values.ToList();
+        }        
 
         /// <summary>
         /// Locates builder <paramref name="name"/> by using <see cref="IOltFileBuilder.BuilderName"/> and calls <see cref="IOltFileBuilder.Build{TRequest}(TRequest)"/>
