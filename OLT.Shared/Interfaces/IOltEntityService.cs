@@ -10,20 +10,20 @@ namespace OLT.Core
         where TEntity : class, IOltEntity
     {
         IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
-        IEnumerable<TModel> GetAll<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
+        IEnumerable<TModel> GetAll<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
         IEnumerable<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new();
 
         Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
-        Task<IEnumerable<TModel>> GetAllAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
+        Task<IEnumerable<TModel>> GetAllAsync<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
         Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new();
 
         TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
         TModel Get<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new();
-        TModel Get<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
+        TModel Get<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
 
         Task<TModel> GetAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new();
         Task<TModel> GetAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new();
-        Task<TModel> GetAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
+        Task<TModel> GetAsync<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new();
 
        IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams) where TModel : class, new();
        IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy) where TModel : class, new();

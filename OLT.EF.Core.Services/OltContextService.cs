@@ -40,9 +40,9 @@ namespace OLT.Core
             return Context.InitializeQueryable<TEntity>(includeDeleted);
         }
 
-        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
         {
-            var queryable = InitializeQueryable<TEntity>(searchers.Any(p => p.IncludeDeleted));
+            var queryable = InitializeQueryable<TEntity>(includeDeleted);
             searchers.ToList().ForEach(builder =>
             {
                 queryable = builder.BuildQueryable(queryable);

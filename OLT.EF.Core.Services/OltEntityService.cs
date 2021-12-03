@@ -41,8 +41,8 @@ namespace OLT.Core
         public virtual TModel Get<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => this.Get<TModel>(GetQueryable(searcher));
 
-        public virtual TModel Get<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => this.Get<TModel>(GetQueryable(searchers));
+        public virtual TModel Get<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => this.Get<TModel>(GetQueryable(includeDeleted, searchers));
 
         public TModel Get<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
@@ -54,8 +54,8 @@ namespace OLT.Core
         public virtual async Task<TModel> GetAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => await this.GetAsync<TModel>(GetQueryable(searcher));
 
-        public virtual async Task<TModel> GetAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => await this.GetAsync<TModel>(GetQueryable(searchers));
+        public virtual async Task<TModel> GetAsync<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => await this.GetAsync<TModel>(GetQueryable(includeDeleted, searchers));
 
         protected virtual async Task<TModel> GetAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
             => await GetAsync<TEntity, TModel>(queryable);
@@ -84,8 +84,8 @@ namespace OLT.Core
         public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => this.GetAll<TModel>(GetQueryable(searcher));
 
-        public virtual IEnumerable<TModel> GetAll<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => this.GetAll<TModel>(GetQueryable(searchers));
+        public virtual IEnumerable<TModel> GetAll<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => this.GetAll<TModel>(GetQueryable(includeDeleted, searchers));
 
         public virtual IEnumerable<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
@@ -97,8 +97,8 @@ namespace OLT.Core
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => await this.GetAllAsync<TModel>(GetQueryable(searcher));
 
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
-            => await this.GetAllAsync<TModel>(GetQueryable(searchers));
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(includeDeleted, searchers));
 
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
