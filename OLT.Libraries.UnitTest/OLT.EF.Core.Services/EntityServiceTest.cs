@@ -17,12 +17,15 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
     public class EntityServiceTest : BaseTest
     {
         private readonly IUserService _service;
+        private readonly IOltAdapterResolver _adapterResolver;
 
         public EntityServiceTest(
+            IOltAdapterResolver adapterResolver,
             IUserService service,
             ITestOutputHelper output) : base(output)
         {
             _service = service;
+            _adapterResolver = adapterResolver;
         }
 
 
@@ -125,6 +128,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             var model = _service.Add(UnitTestHelper.CreateUserModel());
             _service.GetAll<UserModel>(p => p.Id == model.UserId.Value).FirstOrDefault().Should().BeEquivalentTo(model);
+            _adapterResolver.Map(_service.GetRepository().Where(p => p.Id == model.UserId.Value).FirstOrDefault(), new UserModel()).Should().BeEquivalentTo(model);
             _service.GetAll<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid)).FirstOrDefault().Should().BeEquivalentTo(model);
             _service.GetAll<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value)).FirstOrDefault().Should().BeEquivalentTo(model);
         }
