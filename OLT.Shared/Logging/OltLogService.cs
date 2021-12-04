@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
-    public class OltLogService : IOltLogService
+    public class OltLogService : OltDisposable, IOltLogService
     {
         private readonly ILogger<OltLogService> _logger;
 
@@ -49,31 +49,7 @@ namespace OLT.Core
             var logType = loggerMessage.Level.GetValueOrDefault(OltNgxLoggerLevel.Info).ToLogLevel();
             _logger.Log(logType, $"{message}{Environment.NewLine}{Environment.NewLine}{loggerMessage.ToException().Message}");
         }
-
-
-        /// <summary>
-        /// The disposed
-        /// </summary>
-        protected virtual bool Disposed { get; set; } = false;
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected void Dispose(bool disposing)
-        {
-            Disposed = true;
-        }
+      
     }
 }
  
