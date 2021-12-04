@@ -17,12 +17,15 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
     public class EntityServiceTest : BaseTest
     {
         private readonly IUserService _service;
+        private readonly IOltAdapterResolver _adapterResolver;
 
         public EntityServiceTest(
+            IOltAdapterResolver adapterResolver,
             IUserService service,
             ITestOutputHelper output) : base(output)
         {
             _service = service;
+            _adapterResolver = adapterResolver;
         }
 
 
@@ -107,7 +110,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var model = _service.Add(UnitTestHelper.CreateUserModel());
             _service.Get<UserModel>(p => p.Id == model.UserId.Value).Should().BeEquivalentTo(model);
             _service.Get<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid)).Should().BeEquivalentTo(model);
-            _service.Get<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value)).Should().BeEquivalentTo(model);
+            _service.Get<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value)).Should().BeEquivalentTo(model);
         }
 
         [Fact]
@@ -116,7 +119,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var model = await _service.AddAsync(UnitTestHelper.CreateUserModel());
             (await _service.GetAsync<UserModel>(p => p.Id == model.UserId.Value)).Should().BeEquivalentTo(model);
             (await _service.GetAsync<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid))).Should().BeEquivalentTo(model);
-            (await _service.GetAsync<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value))).Should().BeEquivalentTo(model);
+            (await _service.GetAsync<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value))).Should().BeEquivalentTo(model);
         }
 
 
@@ -125,8 +128,9 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         {
             var model = _service.Add(UnitTestHelper.CreateUserModel());
             _service.GetAll<UserModel>(p => p.Id == model.UserId.Value).FirstOrDefault().Should().BeEquivalentTo(model);
+            _adapterResolver.Map(_service.GetRepository().Where(p => p.Id == model.UserId.Value).FirstOrDefault(), new UserModel()).Should().BeEquivalentTo(model);
             _service.GetAll<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid)).FirstOrDefault().Should().BeEquivalentTo(model);
-            _service.GetAll<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value)).FirstOrDefault().Should().BeEquivalentTo(model);
+            _service.GetAll<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value)).FirstOrDefault().Should().BeEquivalentTo(model);
         }
 
         [Fact]
@@ -135,7 +139,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             var model = await _service.AddAsync(UnitTestHelper.CreateUserModel());
             (await _service.GetAllAsync<UserModel>(p => p.Id == model.UserId.Value)).FirstOrDefault().Should().BeEquivalentTo(model);
             (await _service.GetAllAsync<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid))).FirstOrDefault().Should().BeEquivalentTo(model);
-            (await _service.GetAllAsync<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value))).FirstOrDefault().Should().BeEquivalentTo(model);
+            (await _service.GetAllAsync<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value))).FirstOrDefault().Should().BeEquivalentTo(model);
         }
 
         [Fact]

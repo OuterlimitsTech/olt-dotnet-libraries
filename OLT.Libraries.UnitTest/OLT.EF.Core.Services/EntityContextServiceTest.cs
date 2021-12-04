@@ -27,7 +27,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         public void QueryableSearchers()
         {
             var model = _contextService.CreatePerson();
-            var result = _contextService.Get(new PersonFirstNameStartsWithSearcher(model.NameFirst), new PersonLastNameStartsWithSearcher(model.NameLast));
+            var result = _contextService.Get(false, new PersonFirstNameStartsWithSearcher(model.NameFirst), new PersonLastNameStartsWithSearcher(model.NameLast));
             Assert.Equal(model.Id, result.Id);
         }
 

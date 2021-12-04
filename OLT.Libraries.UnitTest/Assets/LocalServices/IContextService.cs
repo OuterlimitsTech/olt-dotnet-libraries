@@ -11,7 +11,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         PersonEntity CreatePerson();
         UserEntity CreateUser();
 
-        PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers);
+        PersonEntity Get(bool includeDeleted, params IOltSearcher<PersonEntity>[] searchers);
         PersonEntity Get(IOltSearcher<PersonEntity> searcher);
         Task<PersonEntity> GetAsync(IOltSearcher<PersonEntity> searcher);
         List<PersonEntity> Get(bool includeDeleted);

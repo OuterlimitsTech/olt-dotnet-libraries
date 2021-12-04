@@ -32,7 +32,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
             return entity;
         }
 
-        public PersonEntity Get(params IOltSearcher<PersonEntity>[] searchers) => GetQueryable(searchers).FirstOrDefault();
+        public PersonEntity Get(bool includeDeleted, params IOltSearcher<PersonEntity>[] searchers) => GetQueryable(includeDeleted, searchers).FirstOrDefault();
         public PersonEntity Get(IOltSearcher<PersonEntity> searcher) => GetQueryable(searcher).FirstOrDefault();
         public async Task<PersonEntity> GetAsync(IOltSearcher<PersonEntity> searcher) => await GetQueryable(searcher).FirstOrDefaultAsync();
 
