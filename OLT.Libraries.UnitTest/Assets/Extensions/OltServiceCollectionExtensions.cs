@@ -12,15 +12,13 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
     {
         /// <summary>
         /// Build Default AspNetCore Service and configures Dependency Injection
-        /// AddOltDefault()
-        /// AddOltAutoMapper()
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
         public static IServiceCollection AddOltUnitTesting(this IServiceCollection services)
         {
             services
-                .AddOltAddMemoryCache()
+                .AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
                 .AddOltInjection()
                 .AddOltInjectionAutoMapper()
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
@@ -31,8 +29,6 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
 
         /// <summary>
         /// Build Default AspNetCore Service and configures Dependency Injection
-        /// AddOltDefault()
-        /// AddOltAutoMapper()
         /// </summary>
         /// <param name="services"></param>
         /// <param name="includeAssemblyScan"></param>
@@ -40,7 +36,7 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
         public static IServiceCollection AddOltUnitTesting(this IServiceCollection services, Assembly includeAssemblyScan)
         {
             services
-                .AddOltAddMemoryCache()
+                .AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
                 .AddOltInjection()
                 .AddOltInjectionAutoMapper(includeAssemblyScan)
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()

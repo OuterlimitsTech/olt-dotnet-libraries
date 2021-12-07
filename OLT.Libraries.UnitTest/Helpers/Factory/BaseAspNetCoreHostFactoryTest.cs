@@ -68,7 +68,7 @@ namespace OLT.Libraries.UnitTest.Helpers.Factory
                 .AddOltUnitTesting(this.GetType().Assembly)
                 .AddOltAspNetCore(appSettings, this.GetType().Assembly, mvcBuilder => mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter())))
                 .AddOltSerilog(configOptions => configOptions.ShowExceptionDetails = true)
-                .AddOltAddMemoryCache()
+                .AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
                 .AddScoped<IOltEmailService, OltSendGridEmailService>()
                 .AddScoped<IOltEmailConfigurationSendGrid, EmailApiConfiguration>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>

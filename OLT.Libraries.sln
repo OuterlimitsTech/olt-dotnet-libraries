@@ -53,6 +53,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.General", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Builder.File", "OLT.Builder.File\OLT.Builder.File.csproj", "{533864B1-5309-4CBF-8E7F-0133E99529FC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.Caching.Memory", "OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj", "{FBEC724F-8CBE-4FE6-A7D1-1C514FF386C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.Caching.Shared", "OLT.Extensions.Caching.Shared\OLT.Extensions.Caching.Shared.csproj", "{D631F3A0-5700-4BB5-9016-887F6095883C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +163,14 @@ Global
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBEC724F-8CBE-4FE6-A7D1-1C514FF386C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBEC724F-8CBE-4FE6-A7D1-1C514FF386C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBEC724F-8CBE-4FE6-A7D1-1C514FF386C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBEC724F-8CBE-4FE6-A7D1-1C514FF386C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D631F3A0-5700-4BB5-9016-887F6095883C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D631F3A0-5700-4BB5-9016-887F6095883C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D631F3A0-5700-4BB5-9016-887F6095883C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D631F3A0-5700-4BB5-9016-887F6095883C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
