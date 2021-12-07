@@ -80,26 +80,7 @@ namespace OLT.Core
         }
 
 
-        /// <summary>
-        /// Adds Memory Cache
-        /// </summary>
-        /// <remarks>
-        /// Registers <see cref="IOltMemoryCache"/> as a singleton
-        /// </remarks>
-        /// <param name="services"><seealso cref="IServiceCollection"/></param>
-        /// <param name="expirationMinutes"></param>
-        /// <returns><seealso cref="IServiceCollection"/></returns>
-        public static IServiceCollection AddOltAddMemoryCache(this IServiceCollection services, int expirationMinutes = 30)
-        {
-            if (expirationMinutes <= 0)
-            {
-                throw new ArgumentNullException(nameof(expirationMinutes));
-            }
 
-            return services
-                .AddSingleton<IOltMemoryCache, OltMemoryCache>()
-                .AddMemoryCache(o => new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddMinutes(expirationMinutes)));
-        }
 
 
     }
