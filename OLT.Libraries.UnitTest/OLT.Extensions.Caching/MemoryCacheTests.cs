@@ -56,6 +56,10 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.Caching
             var memoryCache = provider.GetRequiredService<IMemoryCache>();
             var oltMemoryCache = provider.GetRequiredService<IOltMemoryCache>();
 
+            Assert.Throws<ArgumentNullException>(() => oltMemoryCache.Get(null, () => Clone(personDto)));
+            Assert.Throws<ArgumentException>(() => oltMemoryCache.Get("", () => Clone(personDto)));
+
+
             var cacheKey = $"cache-person-{Guid.NewGuid()}";
             oltMemoryCache.Get(cacheKey, () => Clone(personDto)).Should().BeEquivalentTo(personDto, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
             memoryCache.Get<PersonDto>(cacheKey).Should().BeEquivalentTo(personDto, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
@@ -105,6 +109,10 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.Caching
             var memoryCache = provider.GetRequiredService<IMemoryCache>();
             var oltMemoryCache = provider.GetRequiredService<IOltMemoryCache>();
 
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await oltMemoryCache.GetAsync(null, async () => await _service.GetAsync<PersonDto>(entity1.Id)));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await oltMemoryCache.GetAsync("", async () => await _service.GetAsync<PersonDto>(entity1.Id)));
+            
+
             var cacheKey = $"cache-person-{Guid.NewGuid()}";
             (await oltMemoryCache.GetAsync(cacheKey, async () => await _service.GetAsync<PersonDto>(entity1.Id))).Should().BeEquivalentTo(personDto1, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
             oltMemoryCache.Remove(cacheKey);
@@ -118,9 +126,9 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.Caching
             cacheKey = $"cache-person-{Guid.NewGuid()}";
             (await oltMemoryCache.GetAsync(cacheKey, async () => await _service.GetAsync<PersonDto>(entity2.Id), TimeSpan.FromMilliseconds(1), null)).Should().BeEquivalentTo(personDto2, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
             Assert.False(new ManualResetEvent(false).WaitOne(500));
-            (await oltMemoryCache.GetAsync(cacheKey, async () => await _service.GetAsync<PersonDto>(entity1.Id), TimeSpan.FromMilliseconds(1), null)).Should().NotBeEquivalentTo(personDto2, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
-            
-
+            (await oltMemoryCache.GetAsync(cacheKey, async () => await _service.GetAsync<PersonDto>(entity1.Id), null, TimeSpan.FromMilliseconds(1))).Should().NotBeEquivalentTo(personDto2, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
+            Assert.False(new ManualResetEvent(false).WaitOne(500));
+            (await oltMemoryCache.GetAsync(cacheKey, async () => await _service.GetAsync<PersonDto>(entity2.Id), null, TimeSpan.FromMilliseconds(1))).Should().NotBeEquivalentTo(personDto1, opt => opt.Excluding(t => t.PersonId).Excluding(t => t.UniqueId));
         }
     }
 }

@@ -46,12 +46,12 @@ namespace OLT.Core
                       {
                           entry.SlidingExpiration = slidingExpiration;
                       }
-                      
+
                       if (absoluteExpiration.HasValue)
                       {
                           entry.AbsoluteExpiration = DateTimeOffset.Now.Add(absoluteExpiration.Value);
                       }
-                      
+
                       return await factory();
                   });
             return cacheEntry;

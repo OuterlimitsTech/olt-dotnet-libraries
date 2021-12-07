@@ -22,9 +22,9 @@ namespace OLT.Core
             return key.ToLower();
         }
 
-        public abstract TEntry Get<TEntry>(string key, Func<TEntry> factory, TimeSpan? slidingExpiration, TimeSpan? absoluteExpiration);
+        public abstract TEntry Get<TEntry>(string key, Func<TEntry> factory, TimeSpan? slidingExpiration = null, TimeSpan? absoluteExpiration = null);
 
-        public abstract Task<TEntry> GetAsync<TEntry>(string key, Func<Task<TEntry>> factory, TimeSpan? slidingExpiration, TimeSpan? absoluteExpiration);
+        public abstract Task<TEntry> GetAsync<TEntry>(string key, Func<Task<TEntry>> factory, TimeSpan? slidingExpiration = null, TimeSpan? absoluteExpiration = null);
 
         public abstract void Remove(string key);
     }
