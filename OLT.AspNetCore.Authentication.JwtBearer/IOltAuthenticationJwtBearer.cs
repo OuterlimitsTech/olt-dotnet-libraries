@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using OLT.AspNetCore.Authentication;
 
 namespace OLT.AspNetCore.Authentication
 {

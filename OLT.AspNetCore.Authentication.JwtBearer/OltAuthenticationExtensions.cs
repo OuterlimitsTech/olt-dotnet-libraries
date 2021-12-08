@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using OLT.AspNetCore.Authentication;
 
 namespace OLT.Core
 {
-    public static partial class OltAuthenticationExtensions
+    public static partial class OltAuthenticationJwtExtensions
     {
         /// <summary>
         /// Adds JWT Bearer Token Authentication
@@ -20,6 +18,10 @@ namespace OLT.Core
         public static AuthenticationBuilder AddJwtBearer<TOptions>(this IServiceCollection services, TOptions options)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }  
             return services.AddAuthentication(options, null, null);
         }
 
@@ -34,6 +36,14 @@ namespace OLT.Core
         public static AuthenticationBuilder AddJwtBearer<TOptions>(this IServiceCollection services, TOptions options, Action<JwtBearerOptions> configureOptions)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+            if (configureOptions == null)
+            {
+                throw new ArgumentNullException(nameof(configureOptions));
+            }
             return services.AddAuthentication(options, null, configureOptions);
         }
 
@@ -47,7 +57,11 @@ namespace OLT.Core
         public static AuthenticationBuilder AddAuthentication<TOptions>(this IServiceCollection services, TOptions options)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
-            return services.AddJwtBearer(options, null);
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+            return services.AddAuthentication(options, null, null);
         }
 
         /// <summary>
@@ -61,7 +75,15 @@ namespace OLT.Core
         public static AuthenticationBuilder AddAuthentication<TOptions>(this IServiceCollection services, TOptions options, Action<JwtBearerOptions> configureOptions)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
-            return services.AddJwtBearer(options, configureOptions);
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+            if (configureOptions == null)
+            {
+                throw new ArgumentNullException(nameof(configureOptions));
+            }
+            return services.AddAuthentication(options, null, configureOptions);
         }
 
 
@@ -77,6 +99,14 @@ namespace OLT.Core
         public static AuthenticationBuilder AddAuthentication<TOptions>(this IServiceCollection services, TOptions options, Action<AuthenticationOptions> configureAuthenticationOptions, Action<JwtBearerOptions> configureJwtBearerOptions)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
             return options.Disabled ? new AuthenticationBuilder(services) : options.AddScheme(options.AddAuthentication(services, configureAuthenticationOptions, false), configureJwtBearerOptions);
         }
 
