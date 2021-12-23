@@ -49,7 +49,7 @@ namespace OLT.Core
         {
             try
             {
-                return source.ProjectTo<TDestination>(Mapper.ConfigurationProvider);
+                return ApplyAfterMaps<TEntity, TDestination>(source.ProjectTo<TDestination>(Mapper.ConfigurationProvider));
             }
             catch (Exception exception)
             {
@@ -61,7 +61,7 @@ namespace OLT.Core
         {
             if (HasAutoMap<TEntity, TDestination>())
             {
-                return ProjectFromQueryable<TEntity, TDestination>(source);
+                return ApplyAfterMaps<TEntity, TDestination>(ProjectFromQueryable<TEntity, TDestination>(source));
             }
 
             return base.ProjectTo<TEntity, TDestination>(source, adapter);
@@ -142,7 +142,7 @@ namespace OLT.Core
             {
                 try
                 {
-                    return source.OrderBy(null, orderBy).ProjectTo<TDestination>(Mapper.ConfigurationProvider).ToPaged(pagingParams);
+                    return ApplyAfterMaps<TSource, TDestination>(source.OrderBy(null, orderBy).ProjectTo<TDestination>(Mapper.ConfigurationProvider)).ToPaged(pagingParams);
                 }
                 catch (Exception ex)
                 {

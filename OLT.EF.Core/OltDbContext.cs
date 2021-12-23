@@ -194,7 +194,6 @@ namespace OLT.Core
                 modelBuilder.SetSoftDeleteGlobalFilter();
             }
 
-
             base.OnModelCreating(modelBuilder);
         }
 

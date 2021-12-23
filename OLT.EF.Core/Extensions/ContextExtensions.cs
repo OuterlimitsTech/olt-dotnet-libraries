@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
@@ -15,13 +10,6 @@ using Microsoft.EntityFrameworkCore.Query;
 // ReSharper disable once CheckNamespace
 namespace OLT.Core
 {
-
-    public enum OltConnectionStringTypes
-    {
-        [Code("database.windows.net")]
-        AzureSql
-    }
-
     public static class ContextExtensions
     {
 
@@ -35,7 +23,7 @@ namespace OLT.Core
 
             var schema = entityType.GetSchema();
             var tableName = entityType.GetTableName();
-            return schema.IsNullOrEmpty() ? tableName : $"{schema}.{tableName}";
+            return string.IsNullOrEmpty(schema) ? tableName : $"{schema}.{tableName}";
         }
 
         public static IEnumerable<OltDbColumnInfo> GetColumns<TEntity>(this DbContext dbContext)

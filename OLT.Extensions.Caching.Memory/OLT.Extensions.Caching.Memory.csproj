@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<Description>Auto Mapper Extensions for Data Adapters</Description>
+	<Description>Server Memory Caching Library</Description>
+    <ProjectGuid>bec3840b-b42c-4c71-a2d5-910065d34b36</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

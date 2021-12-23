@@ -50,15 +50,26 @@ namespace OLT.Core
             return queryable;
         }
 
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(bool includeDeleted, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy, params IOltSearcher<TEntity>[] searchers) where TEntity : class, IOltEntity
+        {
+            return orderBy(GetQueryable(includeDeleted, searchers));
+        }
+
         protected virtual IQueryable<TEntity> GetQueryable<TEntity>(bool includeDeleted) where TEntity : class, IOltEntity
         {
             return GetQueryable(new OltSearcherGetAll<TEntity>(includeDeleted));
         }
 
-        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(IOltSearcher<TEntity> queryBuilder)
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(IOltSearcher<TEntity> queryBuilder, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TEntity : class, IOltEntity
         {
-            return queryBuilder.BuildQueryable(InitializeQueryable<TEntity>(queryBuilder.IncludeDeleted));
+            return orderBy(GetQueryable(queryBuilder));
+        }
+
+        protected virtual IQueryable<TEntity> GetQueryable<TEntity>(IOltSearcher<TEntity> searcher)
+            where TEntity : class, IOltEntity
+        {
+            return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
         }
 
         #endregion
@@ -73,6 +84,14 @@ namespace OLT.Core
             return this.GetAll<TEntity, TModel>(queryable);
         }
 
+        protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+            where TEntity : class, IOltEntity
+            where TModel : class, new()
+        {
+            var queryable = this.GetQueryable(searcher, orderBy);
+            return this.GetAll<TEntity, TModel>(queryable);
+        }
+
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
             where TModel : class, new()
@@ -84,6 +103,14 @@ namespace OLT.Core
 
             var entities = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
             return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
+        }
+
+        protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+            where TEntity : class, IOltEntity
+            where TModel : class, new()
+        {
+            var queryable = this.GetQueryable(searcher, orderBy);
+            return await this.GetAllAsync<TEntity, TModel>(queryable);
         }
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher)

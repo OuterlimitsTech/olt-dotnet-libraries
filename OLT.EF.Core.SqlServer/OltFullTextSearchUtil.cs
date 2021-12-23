@@ -3,13 +3,6 @@ using System.Linq;
 
 namespace OLT.Core
 {
-    public enum OltFtsWildCardType
-    {
-        None,
-        BeginsWith,
-        EndsWith,
-        Contains
-    }
 
     public static class OltFullTextSearchUtil
     {

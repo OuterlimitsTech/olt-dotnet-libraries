@@ -7,7 +7,7 @@ using Serilog.Configuration;
 
 namespace OLT.Logging.Serilog
 {
-    public static class OltExtensions
+    public static class OltSerilogExtensions
     {
 
         /// <summary>

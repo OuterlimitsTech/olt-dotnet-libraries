@@ -24,10 +24,16 @@ namespace OLT.Core
 
         protected virtual IQueryable<TEntity> GetQueryable() => Repository;
 
-        protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher)
-        {
-            return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
-        }
+        
+        //protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+        //{
+        //    return orderBy(GetQueryable(searcher));
+        //}
+
+        //protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher)
+        //{
+        //    return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
+        //}
 
         #endregion
 
@@ -84,6 +90,9 @@ namespace OLT.Core
         public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => this.GetAll<TModel>(GetQueryable(searcher));
 
+        public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy) where TModel : class, new()
+            => this.GetAll<TModel>(GetQueryable(searcher, orderBy));
+
         public virtual IEnumerable<TModel> GetAll<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
             => this.GetAll<TModel>(GetQueryable(includeDeleted, searchers));
 
@@ -94,11 +103,17 @@ namespace OLT.Core
             return GetAll<TModel>(queryable);
         }
 
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(searcher, orderBy));
+
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => await this.GetAllAsync<TModel>(GetQueryable(searcher));
 
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
             => await this.GetAllAsync<TModel>(GetQueryable(includeDeleted, searchers));
+
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(bool includeDeleted, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => await this.GetAllAsync<TModel>(GetQueryable(includeDeleted, orderBy, searchers));
 
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {

@@ -58,14 +58,14 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication
                 opts.Audience = "local";
             };
 
-            Action<AuthenticationOptions> authAction = (AuthenticationOptions opts) =>
-            {
-                opts.
-            };
+            //Action<AuthenticationOptions> authAction = (AuthenticationOptions opts) =>
+            //{
+            //    opts.
+            //};
 
             options.Disabled = true;
 
-            OltAuthenticationJwtExtensions.AddAuthentication(services, options, authAction, jwtAction);
+            //OltAuthenticationJwtExtensions.AddAuthentication(services, options, authAction, jwtAction);
 
 
             options.Disabled = false;

@@ -21,6 +21,18 @@ namespace OLT.Core
             return base.BuildName<TSource, TDestination>();
         }
 
+
+        public virtual IEnumerable<TDestination> ApplyAfterMaps<TSource, TDestination>(IEnumerable<TDestination> list)
+        {
+            return OltAfterMapConfig.ApplyAfterMaps<TSource, TDestination>(list.AsQueryable());
+        }
+
+        public virtual IQueryable<TDestination> ApplyAfterMaps<TSource, TDestination>(IQueryable<TDestination> queryable)
+        {
+            return OltAfterMapConfig.ApplyAfterMaps<TSource, TDestination>(queryable);
+        }
+
+
         #region [ Include ]
 
         public virtual IQueryable<TSource> Include<TSource, TDestination>(IQueryable<TSource> queryable)
@@ -95,7 +107,7 @@ namespace OLT.Core
             source = Include(source, adapter);
             if (adapter is IOltAdapterQueryable<TEntity, TDestination> queryableAdapter)
             {
-                return queryableAdapter.Map(source);
+                return ApplyAfterMaps<TEntity, TDestination>(queryableAdapter.Map(source));
             }
 
             throw new OltAdapterNotFoundException(GetAdapterName<TEntity, TDestination>());
@@ -122,7 +134,8 @@ namespace OLT.Core
             }
 
             // ReSharper disable once PossibleNullReferenceException
-            return (adapter as IOltAdapter<TSource, TDestination>).Map(source);
+            var list = (adapter as IOltAdapter<TSource, TDestination>).Map(source);
+            return ApplyAfterMaps<TSource, TDestination>(list);
         }
 
         public virtual List<TDestination> Map<TSource, TDestination>(List<TSource> source)
@@ -160,6 +173,7 @@ namespace OLT.Core
         {
             return GetAdapter(this.GetAdapterName<TSource, TDestination>(), throwException) as IOltAdapter<TSource, TDestination>;
         }
+
 
         protected virtual IOltAdapter GetAdapter(string adapterName, bool throwException)
         {

@@ -10,7 +10,6 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
     {
         DbSet<PersonEntity> People { get; set; }
         DbSet<UserEntity> Users { get; set; }
-        DbSet<ApplicationLogEntity> Logs { get; set; }
         DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
         DbSet<SecondaryTypeCodeEntity> SecondaryTypes { get; set; }
         DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
@@ -38,7 +37,6 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
 
         public virtual DbSet<PersonEntity> People { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
-        public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
         public virtual DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
         public virtual DbSet<SecondaryTypeCodeEntity> SecondaryTypes { get; set; }
         public virtual DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
@@ -77,7 +75,6 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
 
         public virtual DbSet<PersonEntity> People { get; set; }
         public virtual DbSet<UserEntity> Users { get; set; }
-        public virtual DbSet<ApplicationLogEntity> Logs { get; set; }
         public virtual DbSet<PersonTypeCodeEntity> PersonTypes { get; set; }
         public virtual DbSet<SecondaryTypeCodeEntity> SecondaryTypes { get; set; }
         public virtual DbSet<StatusTypeCodeEntity> StatusTypes { get; set; }
