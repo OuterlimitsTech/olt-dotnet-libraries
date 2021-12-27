@@ -244,12 +244,13 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
                 })
                 .UseStartup<SerilogStartup>();
-                
 
-            var testServer = new TestServer(webBuilder);
-            var response = await testServer.CreateRequest("/api/league/2").SendAsync("GET");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
+            using (var testServer = new TestServer(webBuilder))
+            {
+                var response = await testServer.CreateRequest("/api/league/2").SendAsync("GET");
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -6,7 +6,6 @@ namespace OLT.AspNetCore.Authentication
 {
     public abstract class OltAuthenticationSchemeBuilder : IOltAuthenticationBuilder
     {
-        public virtual bool Disabled { get; set; }
         public abstract string Scheme { get; }
 
         public virtual AuthenticationBuilder AddAuthentication(IServiceCollection services)
@@ -14,7 +13,7 @@ namespace OLT.AspNetCore.Authentication
             return AddAuthentication(services, null);
         }
 
-        public virtual AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions, bool addScheme = true)
+        public virtual AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions)
         {
             var builder = services
                 .AddAuthentication(opt =>
@@ -24,7 +23,7 @@ namespace OLT.AspNetCore.Authentication
                     configureOptions?.Invoke(opt);
                 });
 
-            return addScheme ? AddScheme(builder) : builder;
+            return AddScheme(builder);
         }
 
         public abstract AuthenticationBuilder AddScheme(AuthenticationBuilder builder);

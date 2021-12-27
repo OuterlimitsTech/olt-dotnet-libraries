@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public interface IOltAuthenticationBuilder : IOltAuthenticationScheme
+    public interface IOltAuthenticationBuilder
     {
         AuthenticationBuilder AddAuthentication(IServiceCollection services);
-        AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions, bool addScheme = true);
+        AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions);
     }
 }

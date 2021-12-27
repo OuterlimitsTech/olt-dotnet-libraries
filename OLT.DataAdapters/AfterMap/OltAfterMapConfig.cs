@@ -15,8 +15,7 @@ namespace OLT.Core
                 .ToList()
                 .ForEach(item =>
                 {
-                    var afterMap = item as IOltAdapterAfterMap<TSource, TDestination>;
-                    if (afterMap != null)
+                    if (item is IOltAdapterAfterMap<TSource, TDestination> afterMap)
                     {
                         queryable = afterMap.AfterMap(queryable);
                     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using OLT.AspNetCore.Authentication;
 using OLT.Core;
@@ -10,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication
+namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
 {
     public class JwtBearerTests
     {
@@ -21,7 +23,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication
             var services = new ServiceCollection();
             var options = new OltAuthenticationJwtBearer();
             Action<JwtBearerOptions> action = (JwtBearerOptions opts) =>
-            {
+            {                
                 opts.RequireHttpsMetadata = false;
                 opts.Authority = "local";
                 opts.Audience = "local";
@@ -49,26 +51,37 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication
         ////[Fact]
         ////public void AddAuthentication()
         ////{
-        ////    var services = new ServiceCollection();
-        ////    var options = new OltAuthenticationJwtBearer();
-        ////    Action<JwtBearerOptions> jwtAction = (JwtBearerOptions opts) =>
-        ////    {
-        ////        opts.RequireHttpsMetadata = false;
-        ////        opts.Authority = "local";
-        ////        opts.Audience = "local";
-        ////    };
+        ////    var webBuilder = new WebHostBuilder();
+        ////    webBuilder.UseStartup<JwtTokenStartup>();
+
+
+        ////    //var services = new ServiceCollection();
+        ////    //var options = new OltAuthenticationJwtBearer();
+        ////    //Action<JwtBearerOptions> jwtAction = (JwtBearerOptions opts) =>
+        ////    //{
+        ////    //    opts.RequireHttpsMetadata = false;
+        ////    //    opts.Authority = "local";
+        ////    //    opts.Audience = "local";
+        ////    //};
 
         ////    //Action<AuthenticationOptions> authAction = (AuthenticationOptions opts) =>
         ////    //{
         ////    //    opts.
         ////    //};
 
-        ////    options.Disabled = true;
+        ////    //options.Disabled = true;
 
-        ////    //OltAuthenticationJwtExtensions.AddAuthentication(services, options, authAction, jwtAction);
+        ////    ////OltAuthenticationJwtExtensions.AddAuthentication(services, options, authAction, jwtAction);
 
 
-        ////    options.Disabled = false;
+        ////    //options.Disabled = false;
+        ////    //var builder = services.AddAuthentication(options);
+
+        ////    //using (var testServer = new TestServer(webBuilder))
+        ////    //{
+        ////    //    var response = await testServer.CreateRequest("/api/league/2").SendAsync("GET");
+        ////    //    Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        ////    //}
 
 
         ////    //Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, options));

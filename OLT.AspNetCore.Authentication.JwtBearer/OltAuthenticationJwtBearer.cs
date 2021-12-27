@@ -20,6 +20,9 @@ namespace OLT.AspNetCore.Authentication
             JwtSecret = jwtSecret;
         }
 
+        /// <summary>
+        /// Default <seealso cref="JwtBearerDefaults.AuthenticationScheme"/>
+        /// </summary>
         public override string Scheme => JwtBearerDefaults.AuthenticationScheme;
 
 
@@ -69,7 +72,7 @@ namespace OLT.AspNetCore.Authentication
             {
 
 #pragma warning disable S125
-                //x.Events = new JwtBearerEvents
+                //opt.Events = new JwtBearerEvents
                 //{
                 //    OnTokenValidated = context =>
                 //    {
@@ -107,9 +110,5 @@ namespace OLT.AspNetCore.Authentication
         }
 
 
-        public AuthenticationBuilder AddScheme<TSchemeOption>(AuthenticationBuilder builder, Action<TSchemeOption> configureOptions) where TSchemeOption : AuthenticationSchemeOptions
-        {
-            throw new NotImplementedException();
-        }
     }
 }

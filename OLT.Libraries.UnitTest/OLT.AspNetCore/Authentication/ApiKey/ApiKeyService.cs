@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using AspNetCore.Authentication.ApiKey;
+﻿using AspNetCore.Authentication.ApiKey;
 using OLT.AspNetCore.Authentication;
 using OLT.Core;
+using System.Threading.Tasks;
 
-namespace OLT.Libraries.UnitTest.Assets.ApiKey
+namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
 {
-    // ReSharper disable once InconsistentNaming
     public class ApiKeyService : OltCoreService, IOltApiKeyService
     {
         public ApiKeyService(IOltServiceManager serviceManager) : base(serviceManager)

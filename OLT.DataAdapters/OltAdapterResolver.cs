@@ -89,7 +89,7 @@ namespace OLT.Core
         {
             var name = GetAdapterName<TEntity, TDestination>();
             var adapter = GetAdapter(name, false);
-            if (adapter is IOltAdapterQueryable<TEntity, TDestination> queryableAdapter)
+            if (adapter is IOltAdapterQueryable<TEntity, TDestination>)
             {
                 return true;
             }

@@ -107,7 +107,7 @@ namespace OLT.Core
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            return options.Disabled ? new AuthenticationBuilder(services) : options.AddScheme(options.AddAuthentication(services, configureAuthenticationOptions, false), configureJwtBearerOptions);
+            return options.AddScheme(options.AddAuthentication(services, configureAuthenticationOptions), configureJwtBearerOptions);
         }
 
     }

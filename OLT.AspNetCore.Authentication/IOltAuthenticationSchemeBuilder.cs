@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public interface IOltAuthenticationSchemeBuilder : IOltAuthenticationScheme
+    public interface IOltAuthenticationSchemeBuilder
     {
-        bool Disabled { get; }
         AuthenticationBuilder AddScheme(AuthenticationBuilder builder);
     }
 

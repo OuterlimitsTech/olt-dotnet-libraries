@@ -48,7 +48,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new OltEntityTypeConfigurationFromEnum<CodeTableType, CodeTableTypes>());
+            modelBuilder.ApplyConfiguration(new OltEntityTypeConfiguration<CodeTableType, CodeTableTypes>());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SecondaryTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
@@ -86,7 +86,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new OltEntityTypeConfigurationFromEnum<CodeTableType, CodeTableTypes>());
+            modelBuilder.ApplyConfiguration(new OltEntityTypeConfiguration<CodeTableType, CodeTableTypes>());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SecondaryTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
