@@ -11,4 +11,3 @@ namespace OLT.Core
         string ToJson();
     }
 }
-    

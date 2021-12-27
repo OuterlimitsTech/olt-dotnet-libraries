@@ -16,16 +16,16 @@ namespace OLT.Core
         [NonAction]
         public virtual BadRequestObjectResult BadRequest(string error)
         {
-            return BadRequest(new { message = error });
+            return BadRequest(new OltErrorHttp { Message = error });
         }
 
         [NonAction]
-        public OltInternalServerErrorObjectResult InternalServerError()
+        public virtual OltInternalServerErrorObjectResult InternalServerError()
         {
             return new OltInternalServerErrorObjectResult();
         }
         [NonAction]
-        public OltInternalServerErrorObjectResult InternalServerError(object value)
+        public virtual OltInternalServerErrorObjectResult InternalServerError(object value)
         {
             return new OltInternalServerErrorObjectResult(value);
         }

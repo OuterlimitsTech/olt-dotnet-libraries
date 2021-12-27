@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +53,47 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             Assert.False(host?.Environment.IsDevelopment);
             Assert.False(host?.Environment.IsStaging);
             Assert.False(host?.Environment.IsTest);
+        }
+
+        [Fact]
+        public void InternalServerError()
+        {
+            var expectedResult = new OltInternalServerErrorObjectResult();
+            var controller = new OltTestController();
+            var result = controller.TestInternalServerError(null);
+            var viewResult = Assert.IsType<OltInternalServerErrorObjectResult>(result);            
+            Assert.Equal(StatusCodes.Status500InternalServerError, viewResult.StatusCode);
+            Assert.Null(viewResult.Value);
+
+            expectedResult = new OltInternalServerErrorObjectResult("Test Message");
+            result = controller.TestInternalServerError("Test Message");
+            viewResult = Assert.IsType<OltInternalServerErrorObjectResult>(result);
+            Assert.Equal(StatusCodes.Status500InternalServerError, viewResult.StatusCode);
+            Assert.Equal(expectedResult.Value, viewResult.Value);
+
+        }
+
+        [Fact]
+        public void BadRequest()
+        {
+            var expectedResult = new OltErrorHttp {  Message = "Testing Bad Exception" };
+
+            var controller = new OltTestController();
+            var controllerResult = controller.TestBadRequest(null);
+            var viewResult1 = Assert.IsType<Microsoft.AspNetCore.Mvc.BadRequestResult>(controllerResult);
+            Assert.Equal(StatusCodes.Status400BadRequest, viewResult1.StatusCode);
+
+
+            controllerResult = controller.TestBadRequest(expectedResult.Message);
+            var viewResult2 = Assert.IsType<Microsoft.AspNetCore.Mvc.BadRequestObjectResult>(controllerResult);
+            Assert.Equal(StatusCodes.Status400BadRequest, viewResult2.StatusCode);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            };
+            var jsonResult = System.Text.Json.JsonSerializer.Deserialize<OltErrorHttp>(viewResult2.Value.ToString().ToASCIIBytes(), options);
+            jsonResult.Should().BeEquivalentTo(expectedResult);            
         }
 
         protected override void Dispose(bool disposing)

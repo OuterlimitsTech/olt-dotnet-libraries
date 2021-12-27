@@ -13,7 +13,7 @@ namespace OLT.Core
 
         public OltInternalServerErrorObjectResult() : this(null)
         {
-            StatusCode = StatusCodes.Status500InternalServerError;
+            
         }
     }
 }

@@ -36,7 +36,7 @@ namespace OLT.Logging.Serilog
             }
             catch (OltBadRequestException badRequestException)
             {
-                var msg = new OltErrorHttp { ErrorUid = uid, Message = badRequestException.Message };
+                var msg = new OltErrorHttpSerilog { ErrorUid = uid, Message = badRequestException.Message };
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 logLevel = LogEventLevel.Warning;
@@ -44,7 +44,7 @@ namespace OLT.Logging.Serilog
             }
             catch (OltValidationException validationException)
             {
-                var msg = new OltErrorHttp
+                var msg = new OltErrorHttpSerilog
                 {
                     ErrorUid = uid,
                     Message = "A validation error has occurred.",
@@ -57,7 +57,7 @@ namespace OLT.Logging.Serilog
             }
             catch (OltRecordNotFoundException recordNotFoundException)
             {
-                var msg = new OltErrorHttp { ErrorUid = uid, Message = recordNotFoundException.Message };
+                var msg = new OltErrorHttpSerilog { ErrorUid = uid, Message = recordNotFoundException.Message };
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 logLevel = LogEventLevel.Warning;
@@ -88,12 +88,12 @@ namespace OLT.Logging.Serilog
                 .ForContext("RequestUri", requestUri);
         }
 
-        private OltErrorHttp FormatServerError(HttpContext context, Exception exception, Guid uid)
+        private OltErrorHttpSerilog FormatServerError(HttpContext context, Exception exception, Guid uid)
         {
             Log.ForContext("OltRequestUid", uid).Error(exception, "{OltRequestUid}:{Message}", exception.Message, uid);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            var result = new OltErrorHttp { ErrorUid = uid, Message = _options.ErrorMessage };
+            var result = new OltErrorHttpSerilog { ErrorUid = uid, Message = _options.ErrorMessage };
             if (_options.ShowExceptionDetails)
             {
                 result.Errors = exception.GetInnerExceptions().Select(s => s.Message).ToList();
