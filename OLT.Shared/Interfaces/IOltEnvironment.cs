@@ -4,27 +4,27 @@
     {
 
         /// <summary>
-        /// Checks if the current host environment name is <see cref="OltEnvironments.Development"/>.
+        /// Checks if the current host environment name is <see cref="OltDefaults.OltEnvironments.Development"/>.
         /// </summary>
-        /// <returns>True if the environment name is <see cref="OltEnvironments.Development"/>, otherwise false.</returns>
+        /// <returns>True if the environment name is <see cref="OltDefaults.OltEnvironments.Development"/>, otherwise false.</returns>
         bool IsDevelopment { get; }
 
         /// <summary>
-        /// Checks if the current host environment name is <see cref="OltEnvironments.Test"/>.
+        /// Checks if the current host environment name is <see cref="OltDefaults.OltEnvironments.Test"/>.
         /// </summary>
-        /// <returns>True if the environment name is <see cref="OltEnvironments.Test"/>, otherwise false.</returns>
+        /// <returns>True if the environment name is <see cref="OltDefaults.OltEnvironments.Test"/>, otherwise false.</returns>
         bool IsTest { get; }
 
         /// <summary>
-        /// Checks if the current host environment name is <see cref="OltEnvironments.Staging"/>.
+        /// Checks if the current host environment name is <see cref="OltDefaults.OltEnvironments.Staging"/>.
         /// </summary>
-        /// <returns>True if the environment name is <see cref="OltEnvironments.Staging"/>, otherwise false.</returns>
+        /// <returns>True if the environment name is <see cref="OltDefaults.OltEnvironments.Staging"/>, otherwise false.</returns>
         bool IsStaging { get; }
 
         /// <summary>
-        /// Checks if the current host environment name is <see cref="OltEnvironments.Production"/>.
+        /// Checks if the current host environment name is <see cref="OltDefaults.OltEnvironments.Production"/>.
         /// </summary>
-        /// <returns>True if the environment name is <see cref="OltEnvironments.Production"/>, otherwise false.</returns>
+        /// <returns>True if the environment name is <see cref="OltDefaults.OltEnvironments.Production"/>, otherwise false.</returns>
         bool IsProduction { get; }
 
 

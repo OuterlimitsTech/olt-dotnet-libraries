@@ -25,7 +25,9 @@ namespace OLT.AspNetCore.Authentication
         /// </summary>
         public override string Scheme => JwtBearerDefaults.AuthenticationScheme;
 
-
+        /// <summary>
+        /// Secret used to encrypt/decrypt jwt signature <seealso cref="TokenValidationParameters.IssuerSigningKey"/>
+        /// </summary>
         public string JwtSecret { get; set; }
 
         /// <summary>
@@ -56,14 +58,25 @@ namespace OLT.AspNetCore.Authentication
         /// The runtime will consult this value and save the original token that was validated.
         /// </remarks>
         public bool ValidateAudience { get; set; }
-        
-        
 
+
+        /// <summary>
+        /// Builds Jwt Bearer Token Authentication Scheme
+        /// </summary>
+        /// <param name="builder"><seealso cref="AuthenticationBuilder"/></param>
+        /// <param name="configureOptions"><seealso cref="JwtBearerOptions"/></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<JwtBearerOptions> configureOptions)
         {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
             if (string.IsNullOrEmpty(JwtSecret))
             {
-                throw new OltException($"{nameof(JwtSecret)} required");
+                throw new ArgumentNullException(nameof(JwtSecret));
             }
 
             var key = Encoding.ASCII.GetBytes(JwtSecret);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid;
 using OLT.Libraries.UnitTest.Assets.Email.SendGrid.Json;
@@ -167,6 +169,26 @@ namespace OLT.Libraries.UnitTest
                 Directory.CreateDirectory(tempDir);
             }
             return tempDir;
+        }
+
+
+
+        public static IWebHostBuilder WebHostBuilder<T>()
+            where T : class
+        {
+            var webBuilder = new WebHostBuilder();
+            webBuilder
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder
+                        .SetBasePath(AppContext.BaseDirectory)
+                        .AddUserSecrets<T>()
+                        .AddJsonFile("appsettings.json", false, true)
+                        .AddEnvironmentVariables();
+                })
+                .UseStartup<T>();
+
+            return webBuilder;
         }
     }
 }

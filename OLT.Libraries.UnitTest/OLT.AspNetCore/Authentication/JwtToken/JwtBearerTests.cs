@@ -21,7 +21,9 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
         public void ArgumentExceptions()
         {
             var services = new ServiceCollection();
-            var options = new OltAuthenticationJwtBearer();
+            var invalidOptions = new OltAuthenticationJwtBearer();
+            var validOptions = new OltAuthenticationJwtBearer(ApiKeyStartup.Secret);
+
             Action<JwtBearerOptions> action = (JwtBearerOptions opts) =>
             {                
                 opts.RequireHttpsMetadata = false;
@@ -29,21 +31,26 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
                 opts.Audience = "local";
             };
 
-            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, options));
+            Action<AuthenticationOptions> authAction = (AuthenticationOptions opts) =>
+            {
+                opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            };
+
+            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, validOptions));
             Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddJwtBearer<OltAuthenticationJwtBearer>(services, null));
 
 
-            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, options, null));
+            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, validOptions, null));
             Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddJwtBearer<OltAuthenticationJwtBearer>(services, null, action));
-            Assert.Throws<ArgumentNullException>("configureOptions", () => OltAuthenticationJwtExtensions.AddJwtBearer(services, options, null));
+            Assert.Throws<ArgumentNullException>("configureOptions", () => OltAuthenticationJwtExtensions.AddJwtBearer(services, validOptions, null));
 
+            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, validOptions, action, authAction));
+            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddJwtBearer<OltAuthenticationJwtBearer>(services, null, action, authAction));
 
-            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddAuthentication(null, options));
-            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddAuthentication<OltAuthenticationJwtBearer>(services, null));
+            Assert.Throws<ArgumentNullException>("builder", () => invalidOptions.AddScheme(null));
+            Assert.Throws<ArgumentNullException>("JwtSecret", () => invalidOptions.AddScheme(services.AddAuthentication(invalidOptions.Scheme)));
 
-            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddAuthentication(null, options, null));
-            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddAuthentication<OltAuthenticationJwtBearer>(services, null, action));
-            Assert.Throws<ArgumentNullException>("configureOptions", () => OltAuthenticationJwtExtensions.AddAuthentication(services, options, null));
+            Assert.Throws<ArgumentNullException>("services", () => invalidOptions.AddAuthentication(null));
 
         }
 

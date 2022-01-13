@@ -22,7 +22,7 @@ namespace OLT.Core
             {
                 throw new ArgumentNullException(nameof(services));
             }  
-            return services.AddAuthentication(options, null, null);
+            return services.AddJwtBearer(options, null, null);
         }
 
         /// <summary>
@@ -44,48 +44,8 @@ namespace OLT.Core
             {
                 throw new ArgumentNullException(nameof(configureOptions));
             }
-            return services.AddAuthentication(options, null, configureOptions);
+            return services.AddJwtBearer(options, configureOptions, null);
         }
-
-        /// <summary>
-        /// Adds JWT Bearer Token Authentication
-        /// </summary>
-        /// <typeparam name="TOptions"></typeparam>
-        /// <param name="services"><seealso cref="IServiceCollection"/></param>
-        /// <param name="options"><seealso cref="IOltAuthenticationJwtBearer"/></param>
-        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
-        public static AuthenticationBuilder AddAuthentication<TOptions>(this IServiceCollection services, TOptions options)
-            where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
-        {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-            return services.AddAuthentication(options, null, null);
-        }
-
-        /// <summary>
-        /// Adds JWT Bearer Token Authentication
-        /// </summary>
-        /// <typeparam name="TOptions"></typeparam>
-        /// <param name="services"><seealso cref="IServiceCollection"/></param>
-        /// <param name="options"><seealso cref="IOltAuthenticationJwtBearer"/></param>
-        /// <param name="configureOptions"><seealso cref="JwtBearerOptions"/></param>
-        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
-        public static AuthenticationBuilder AddAuthentication<TOptions>(this IServiceCollection services, TOptions options, Action<JwtBearerOptions> configureOptions)
-            where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
-        {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-            if (configureOptions == null)
-            {
-                throw new ArgumentNullException(nameof(configureOptions));
-            }
-            return services.AddAuthentication(options, null, configureOptions);
-        }
-
 
         /// <summary>
         /// Adds JWT Bearer Token Authentication
@@ -96,7 +56,7 @@ namespace OLT.Core
         /// <param name="configureAuthenticationOptions"><seealso cref="AuthenticationOptions"/></param>
         /// <param name="configureJwtBearerOptions"><seealso cref="JwtBearerOptions"/></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
-        public static AuthenticationBuilder AddAuthentication<TOptions>(this IServiceCollection services, TOptions options, Action<AuthenticationOptions> configureAuthenticationOptions, Action<JwtBearerOptions> configureJwtBearerOptions)
+        public static AuthenticationBuilder AddJwtBearer<TOptions>(this IServiceCollection services, TOptions options, Action<JwtBearerOptions> configureJwtBearerOptions, Action<AuthenticationOptions> configureAuthenticationOptions)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
             if (services == null)

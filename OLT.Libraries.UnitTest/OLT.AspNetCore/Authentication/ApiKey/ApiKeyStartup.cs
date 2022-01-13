@@ -9,13 +9,13 @@ using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 using System;
 
-namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
+namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
 {
     public class ApiKeyStartup
     {
         private readonly IConfiguration _configuration;
 
-        public const string Secret = "TopSecretValue";
+        public const string Key1 = "1234";
 
         public ApiKeyStartup(IConfiguration configuration)
         {
@@ -30,7 +30,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
             services
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)                
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
-                .AddJwtBearer(new OltAuthenticationJwtBearer(Secret));
+                .AddApiKey(new OltAuthenticationApiKey<ApiKeyProvider>("API Key Unit Test"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)

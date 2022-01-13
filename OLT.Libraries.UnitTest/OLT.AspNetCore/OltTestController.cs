@@ -12,6 +12,17 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
     [Route("api/olt/tests")]
     public class OltTestController : OltApiControllerBase
     {
+        [HttpGet, Route("simple")]
+        public ActionResult GetSimple()
+        {
+            var result = new
+            {
+                id = 1,
+            };
+
+            return Ok(result);
+        }
+
         [HttpGet, Route("throw-error")]
         public ActionResult TestInternalServerError(string value)
         {

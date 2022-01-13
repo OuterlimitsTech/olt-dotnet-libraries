@@ -8,13 +8,32 @@ namespace OLT.AspNetCore.Authentication
     {
         public abstract string Scheme { get; }
 
+        /// <summary>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// </summary>
+        /// <param name="services"><seealso cref="IServiceCollection"/></param>
+        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public virtual AuthenticationBuilder AddAuthentication(IServiceCollection services)
         {
             return AddAuthentication(services, null);
         }
 
+
+        /// <summary>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// </summary>
+        /// <param name="services"><seealso cref="IServiceCollection"/></param>
+        /// <param name="configureOptions"><seealso cref="AuthenticationOptions" /></param>
+        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public virtual AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions)
         {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
             var builder = services
                 .AddAuthentication(opt =>
                 {
