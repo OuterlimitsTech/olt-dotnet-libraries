@@ -38,14 +38,20 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
         public List<PersonEntity> Get(bool includeDeleted) => GetQueryable<PersonEntity>(includeDeleted).ToList();
         public List<PersonEntity> GetNonDeleted() => InitializeQueryable<PersonEntity>().ToList();
+        public List<PersonEntity> GetPeopleOrdered(bool includeDeleted) => GetQueryable<PersonEntity>(includeDeleted, p => p.OrderBy(t => t.NameLast).ThenBy(t => t.NameFirst)).ToList();
+        public List<PersonEntity> GetPeopleOrdered(IOltSearcher<PersonEntity> searcher) => GetQueryable(searcher, p => p.OrderBy(t => t.NameLast).ThenBy(t => t.NameFirst)).ToList();
+        public List<PersonEntity> GetPeopleOrdered(params IOltSearcher<PersonEntity>[] searchers) => GetQueryable(false, p => p.OrderBy(t => t.NameLast).ThenBy(t => t.NameFirst), searchers).ToList();
+
 
         public List<PersonAutoMapperModel> GetAllPeople() => GetAll<PersonEntity, PersonAutoMapperModel>(Context.People).ToList();
         public List<PersonAutoMapperModel> GetAllPeopleSearcher() => GetAll<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>()).ToList();
+        public List<PersonAutoMapperModel> GetAllPeopleOrdered() => GetAll<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>(), p => p.OrderBy(t => t.NameLast).ThenBy(t => t.NameFirst)).ToList();
         public async Task<List<PersonAutoMapperModel>> GetAllPeopleAsync() => (await GetAllAsync<PersonEntity, PersonAutoMapperModel>(Context.People)).ToList();
         public async Task<List<PersonAutoMapperModel>> GetAllPeopleSearcherAsync() => (await GetAllAsync<PersonEntity, PersonAutoMapperModel>(new OltSearcherGetAll<PersonEntity>())).ToList();
 
         public List<UserModel> GetAllUsers() => GetAll<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>()).ToList();
         public List<UserModel> GetAllUsersSearcher() => GetAll<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>()).ToList();
+        public async Task<List<UserModel>> GetAllUsersOrderedAsync() => (await GetAllAsync<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>(), p => p.OrderBy(t => t.LastName).ThenBy(t => t.FirstName))).ToList();
         public async Task<List<UserModel>> GetAllUsersAsync() => (await GetAllAsync<UserEntity, UserModel>(Context.Users)).ToList();
         public async Task<List<UserModel>> GetAllUsersSearcherAsync() => (await GetAllAsync<UserEntity, UserModel>(new OltSearcherGetAll<UserEntity>())).ToList();
         public UserDto GetDtoUser(int id) => Get<UserEntity, UserDto>(Context.Users.Where(p => p.Id == id));

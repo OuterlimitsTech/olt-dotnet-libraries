@@ -42,14 +42,21 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
         [Fact]
         public void Get()
         {
-            _contextService.CreatePerson();
+            var personEntity = _contextService.CreatePerson();
             var userEntity = _contextService.CreateUser();
             Assert.True(_contextService.GetAllPeople().Any());
             Assert.True(_contextService.GetAllPeopleSearcher().Any());
+            Assert.True(_contextService.GetAllPeopleOrdered().Any());
             Assert.True(_contextService.GetAllUsers().Any());
             Assert.True(_contextService.GetAllUsersSearcher().Any());
             Assert.True(_contextService.GetAllDtoUsers().Any());
             Assert.True(_contextService.GetAllDtoUsersSearcher().Any());
+            Assert.True(_contextService.GetPeopleOrdered(false).Any());
+            Assert.True(_contextService.GetPeopleOrdered(true).Any());
+            Assert.True(_contextService.GetPeopleOrdered(new OltSearcherGetAll<PersonEntity>(false)).Any());
+            Assert.True(_contextService.GetPeopleOrdered(new OltSearcherGetAll<PersonEntity>(true)).Any());
+            Assert.True(_contextService.GetPeopleOrdered(new OltSearcherGetAll<PersonEntity>(true), new OltSearcherGetById<PersonEntity>(personEntity.Id)).Any());
+            Assert.True(_contextService.GetPeopleOrdered(true).Any());
             Assert.NotNull(_contextService.GetDtoUser(userEntity.Id));
         }
 
@@ -61,6 +68,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             Assert.True((await _contextService.GetAllPeopleAsync()).Any());
             Assert.True((await _contextService.GetAllPeopleSearcherAsync()).Any());
             Assert.True((await _contextService.GetAllUsersAsync()).Any());
+            Assert.True((await _contextService.GetAllUsersOrderedAsync()).Any());
             Assert.True((await _contextService.GetAllUsersSearcherAsync()).Any());
             Assert.True((await _contextService.GetAllDtoUsersAsync()).Any());
             Assert.True((await _contextService.GetAllDtoUsersSearcherAsync()).Any());

@@ -131,6 +131,19 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             _adapterResolver.Map(_service.GetRepository().Where(p => p.Id == model.UserId.Value).FirstOrDefault(), new UserModel()).Should().BeEquivalentTo(model);
             _service.GetAll<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid)).FirstOrDefault().Should().BeEquivalentTo(model);
             _service.GetAll<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value)).FirstOrDefault().Should().BeEquivalentTo(model);
+            
+
+            var model2 = _service.Add(UnitTestHelper.CreateUserModel());
+            var compareTo = new List<UserModel>();
+            compareTo.Add(model);
+            compareTo.Add(model2);
+            var searcher = new IdListSearcher<UserEntity>(model.UserId.Value, model2.UserId.Value);
+
+            var compareList = _service.GetAll<UserModel>(searcher, p => p.OrderBy(t => t.LastName).ThenBy(t => t.FirstName));
+            compareList.Should().BeEquivalentTo(compareTo.OrderBy(p => p.Name.Last).ThenBy(p => p.Name.First), options => options.WithStrictOrdering());
+
+            var compareList2 = _service.GetAll<UserModel>(false, p => p.OrderBy(t => t.LastName).ThenBy(t => t.FirstName), new IdListSearcher<UserEntity>(model.UserId.Value, model2.UserId.Value), new OltSearcherGetAll<UserEntity>());
+            compareList2.Should().BeEquivalentTo(compareTo.OrderBy(p => p.Name.Last).ThenBy(p => p.Name.First), options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -140,6 +153,18 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             (await _service.GetAllAsync<UserModel>(p => p.Id == model.UserId.Value)).FirstOrDefault().Should().BeEquivalentTo(model);
             (await _service.GetAllAsync<UserModel>(new OltSearcherGetByUid<UserEntity>(model.UserGuid))).FirstOrDefault().Should().BeEquivalentTo(model);
             (await _service.GetAllAsync<UserModel>(false, new OltSearcherGetByUid<UserEntity>(model.UserGuid), new OltSearcherGetById<UserEntity>(model.UserId.Value))).FirstOrDefault().Should().BeEquivalentTo(model);
+
+            var model2 = await _service.AddAsync(UnitTestHelper.CreateUserModel());
+            var compareTo = new List<UserModel>();
+            compareTo.Add(model);
+            compareTo.Add(model2);
+
+            var compareList = await _service.GetAllAsync<UserModel>(new IdListSearcher<UserEntity>(model.UserId.Value, model2.UserId.Value), p => p.OrderBy(t => t.LastName).ThenBy(t => t.FirstName));
+            compareList.Should().BeEquivalentTo(compareTo.OrderBy(p => p.Name.Last).ThenBy(p => p.Name.First), options => options.WithStrictOrdering());
+
+            var compareList2 = await _service.GetAllAsync<UserModel>(false, p => p.OrderBy(t => t.LastName).ThenBy(t => t.FirstName), new IdListSearcher<UserEntity>(model.UserId.Value, model2.UserId.Value), new OltSearcherGetAll<UserEntity>());
+            compareList2.Should().BeEquivalentTo(compareTo.OrderBy(p => p.Name.Last).ThenBy(p => p.Name.First), options => options.WithStrictOrdering());
+
         }
 
         [Fact]

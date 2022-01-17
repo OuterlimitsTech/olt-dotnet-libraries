@@ -48,7 +48,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
             Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddJwtBearer<OltAuthenticationJwtBearer>(services, null, action, authAction));
 
             Assert.Throws<ArgumentNullException>("builder", () => invalidOptions.AddScheme(null));
-            Assert.Throws<ArgumentNullException>("JwtSecret", () => invalidOptions.AddScheme(services.AddAuthentication(invalidOptions.Scheme)));
+            Assert.Throws<NullReferenceException>(() => invalidOptions.AddScheme(services.AddAuthentication(invalidOptions.Scheme)));
 
             Assert.Throws<ArgumentNullException>("services", () => invalidOptions.AddAuthentication(null));
 

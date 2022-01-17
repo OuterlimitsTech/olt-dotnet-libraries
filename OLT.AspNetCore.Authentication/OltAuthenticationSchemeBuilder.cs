@@ -27,6 +27,7 @@ namespace OLT.AspNetCore.Authentication
         /// <param name="configureOptions"><seealso cref="AuthenticationOptions" /></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         public virtual AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions)
         {
             if (services == null)
@@ -45,18 +46,38 @@ namespace OLT.AspNetCore.Authentication
             return AddScheme(builder);
         }
 
+        /// <summary>
+        /// Adds Authentication 
+        /// </summary>
+        /// <typeparam name="TSchemeOption"></typeparam>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         public abstract AuthenticationBuilder AddScheme(AuthenticationBuilder builder);
     }
+
+
 
     public abstract class OltAuthenticationSchemeBuilder<TSchemeOption> : OltAuthenticationSchemeBuilder, IOltAuthenticationSchemeBuilder<TSchemeOption>
         where TSchemeOption : AuthenticationSchemeOptions
     {
 
+        /// <summary>
+        /// Adds Authentication 
+        /// </summary>
+        /// <typeparam name="TSchemeOption"></typeparam>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder)
         {
             return AddScheme(builder, null);
         }
 
+        /// <summary>
+        /// Adds Authentication 
+        /// </summary>
+        /// <typeparam name="TSchemeOption"></typeparam>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         public abstract AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<TSchemeOption> configureOptions);
 
     }

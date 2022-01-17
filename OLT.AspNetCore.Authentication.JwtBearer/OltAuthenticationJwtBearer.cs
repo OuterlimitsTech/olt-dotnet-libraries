@@ -67,6 +67,7 @@ namespace OLT.AspNetCore.Authentication
         /// <param name="configureOptions"><seealso cref="JwtBearerOptions"/></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<JwtBearerOptions> configureOptions)
         {
             if (builder == null)
@@ -76,7 +77,7 @@ namespace OLT.AspNetCore.Authentication
 
             if (string.IsNullOrEmpty(JwtSecret))
             {
-                throw new ArgumentNullException(nameof(JwtSecret));
+                throw new NullReferenceException(nameof(JwtSecret));
             }
 
             var key = Encoding.ASCII.GetBytes(JwtSecret);

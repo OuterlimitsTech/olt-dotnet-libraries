@@ -24,17 +24,6 @@ namespace OLT.Core
 
         protected virtual IQueryable<TEntity> GetQueryable() => Repository;
 
-        
-        //protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
-        //{
-        //    return orderBy(GetQueryable(searcher));
-        //}
-
-        //protected virtual IQueryable<TEntity> GetQueryable(IOltSearcher<TEntity> searcher)
-        //{
-        //    return searcher.BuildQueryable(InitializeQueryable<TEntity>(searcher.IncludeDeleted));
-        //}
-
         #endregion
 
         #region [ Get ]
@@ -53,7 +42,7 @@ namespace OLT.Core
         public TModel Get<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
             var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.Repository.Where(query);
+            var queryable = this.GetQueryable().Where(query);
             return Get<TModel>(queryable);
         }
 
@@ -69,7 +58,7 @@ namespace OLT.Core
         public async Task<TModel> GetAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
             var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.Repository.Where(query);
+            var queryable = this.GetQueryable().Where(query);
             return await GetAsync<TModel>(queryable);
         }
 
@@ -78,14 +67,10 @@ namespace OLT.Core
         #region [ Get All ]
 
         protected virtual IEnumerable<TModel> GetAll<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
-        {
-            return GetAll<TEntity, TModel>(queryable);
-        }
+            => GetAll<TEntity, TModel>(queryable);
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(IQueryable<TEntity> queryable) where TModel : class, new()
-        {
-            return await GetAllAsync<TEntity, TModel>(queryable);
-        }
+            => await GetAllAsync<TEntity, TModel>(queryable);
 
         public virtual IEnumerable<TModel> GetAll<TModel>(IOltSearcher<TEntity> searcher) where TModel : class, new()
             => this.GetAll<TModel>(GetQueryable(searcher));
@@ -96,10 +81,13 @@ namespace OLT.Core
         public virtual IEnumerable<TModel> GetAll<TModel>(bool includeDeleted, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
             => this.GetAll<TModel>(GetQueryable(includeDeleted, searchers));
 
+        public virtual IEnumerable<TModel> GetAll<TModel>(bool includeDeleted, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy, params IOltSearcher<TEntity>[] searchers) where TModel : class, new()
+            => this.GetAll<TModel>(GetQueryable(includeDeleted, orderBy, searchers));
+
         public virtual IEnumerable<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
             var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.Repository.Where(query);
+            var queryable = this.GetQueryable().Where(query);
             return GetAll<TModel>(queryable);
         }
 
@@ -118,7 +106,7 @@ namespace OLT.Core
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
             var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.Repository.Where(query);
+            var queryable = this.GetQueryable().Where(query);
             return await GetAllAsync<TModel>(queryable);
         }
 

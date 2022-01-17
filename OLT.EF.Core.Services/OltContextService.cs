@@ -79,18 +79,12 @@ namespace OLT.Core
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher)
            where TEntity : class, IOltEntity
            where TModel : class, new()
-        {
-            var queryable = this.GetQueryable(searcher);
-            return this.GetAll<TEntity, TModel>(queryable);
-        }
+            => this.GetAll<TEntity, TModel>(this.GetQueryable(searcher));
 
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TEntity : class, IOltEntity
             where TModel : class, new()
-        {
-            var queryable = this.GetQueryable(searcher, orderBy);
-            return this.GetAll<TEntity, TModel>(queryable);
-        }
+            => this.GetAll<TEntity, TModel>(this.GetQueryable(searcher, orderBy));
 
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
@@ -108,18 +102,12 @@ namespace OLT.Core
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TEntity : class, IOltEntity
             where TModel : class, new()
-        {
-            var queryable = this.GetQueryable(searcher, orderBy);
-            return await this.GetAllAsync<TEntity, TModel>(queryable);
-        }
+            => await this.GetAllAsync<TEntity, TModel>(this.GetQueryable(searcher, orderBy));
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher)
             where TEntity : class, IOltEntity
             where TModel : class, new()
-        {
-            var queryable = this.GetQueryable(searcher);
-            return await this.GetAllAsync<TEntity, TModel>(queryable);
-        }
+            => await this.GetAllAsync<TEntity, TModel>(this.GetQueryable(searcher));
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
