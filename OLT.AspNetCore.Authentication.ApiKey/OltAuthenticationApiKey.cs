@@ -110,7 +110,7 @@ namespace OLT.AspNetCore.Authentication
                         });
             }
 
-            throw new ArgumentOutOfRangeException(nameof(ApiKeyLocation));
+            throw new InvalidOperationException($"{nameof(ApiKeyLocation)} - invalid");
             
         }
 

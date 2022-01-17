@@ -56,7 +56,6 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.Services
             Assert.True(_contextService.GetPeopleOrdered(new OltSearcherGetAll<PersonEntity>(false)).Any());
             Assert.True(_contextService.GetPeopleOrdered(new OltSearcherGetAll<PersonEntity>(true)).Any());
             Assert.True(_contextService.GetPeopleOrdered(new OltSearcherGetAll<PersonEntity>(true), new OltSearcherGetById<PersonEntity>(personEntity.Id)).Any());
-            Assert.True(_contextService.GetPeopleOrdered(true).Any());
             Assert.NotNull(_contextService.GetDtoUser(userEntity.Id));
         }
 

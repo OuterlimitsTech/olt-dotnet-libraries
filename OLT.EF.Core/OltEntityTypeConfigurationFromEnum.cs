@@ -80,7 +80,6 @@ namespace OLT.Core
         where TEnum : struct
     {
 
-        [Obsolete]
         protected virtual void Seed(EntityTypeBuilder<TEntity> builder, Action<TEntity, TEnum> setProperties = null)
         {
 
@@ -121,7 +120,7 @@ namespace OLT.Core
 
         }
 
-        [Obsolete]
+        
         public override void Configure(EntityTypeBuilder<TEntity> builder)
         {
             this.Seed(builder);
