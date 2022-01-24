@@ -72,7 +72,7 @@ namespace OLT.Logging.Serilog
 
             var responseBodyText = await FormatResponseAsync(context.Response);
             var logger = BuildLogger(context, uid, requestUri, requestBodyText, responseBodyText);
-            logger.Write(logLevel, "{OltRequestUid}:OLT PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", uid, context.Request.Method, context.Request.Path, context.Response.StatusCode);
+            logger.Write(logLevel, "{AppRequestUid}:APP PAYLOAD LOG {RequestMethod} {RequestPath} {statusCode}", uid, context.Request.Method, context.Request.Path, context.Response.StatusCode);
 
             await responseBodyStream.CopyToAsync(originalResponseBodyReference);
         }
@@ -80,7 +80,7 @@ namespace OLT.Logging.Serilog
         private static ILogger BuildLogger(HttpContext context, Guid uid, string requestUri, string requestBodyText, string responseBodyText)
         {
             return Log
-                .ForContext("OltRequestUid", uid)
+                .ForContext("AppRequestUid", uid)
                 .ForContext("RequestHeaders", context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("ResponseHeaders", context.Response.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("RequestBody", requestBodyText)
@@ -90,7 +90,7 @@ namespace OLT.Logging.Serilog
 
         private OltErrorHttpSerilog FormatServerError(HttpContext context, Exception exception, Guid uid)
         {
-            Log.ForContext("OltRequestUid", uid).Error(exception, "{OltRequestUid}:{Message}", exception.Message, uid);
+            Log.ForContext("AppRequestUid", uid).Error(exception, "{AppRequestUid}:{Message}", exception.Message, uid);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             var result = new OltErrorHttpSerilog { ErrorUid = uid, Message = _options.ErrorMessage };
