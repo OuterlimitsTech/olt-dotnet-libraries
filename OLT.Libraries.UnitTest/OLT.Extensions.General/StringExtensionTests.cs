@@ -30,11 +30,33 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         }
 
         [Fact]
+        public void RemoveDoubleSpaces()
+        {
+            var value = $"  {UnitTestConstants.StringValues.HelloWorld}  {UnitTestConstants.StringValues.ThisIsATest}";
+            var eval = $"{UnitTestConstants.StringValues.HelloWorld} {UnitTestConstants.StringValues.ThisIsATest}";
+            Assert.Equal(value.RemoveDoubleSpaces(), eval);
+            Assert.Null(OltStringExtensions.RemoveDoubleSpaces(null));
+        }
+
+        [Fact]
         public void CleanForSearch()
         {
             var value = $"   -> ? {UnitTestConstants.StringValues.HelloWorld},   & {UnitTestConstants.StringValues.ThisIsATest}";
             var eval = $"{UnitTestConstants.StringValues.HelloWorld} {UnitTestConstants.StringValues.ThisIsATest}";
-            Assert.True(value.CleanForSearch().Equals(eval), $"|{value.CleanForSearch()}|  |{eval}|");
+            Assert.Equal(value.CleanForSearch(), eval);
+            Assert.Null(OltStringExtensions.CleanForSearch(null));
+        }
+
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(" ", " ")]
+        [InlineData(null, null)]
+        [InlineData("!&*$", "")]
+        [InlineData("Hello &!There", "Hello There")]
+        public void RemoveSpecialCharacters(string value, string expectedResult)
+        {
+            Assert.Equal(expectedResult, value.RemoveSpecialCharacters());
         }
 
         [Fact]
@@ -417,6 +439,7 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
             var encoded = value.Base64Encode();
             Assert.Equal(value, encoded.Base64Decode());
         }
+
         [Theory]
         [InlineData("", "")]
         [InlineData(" ", " ")]
@@ -428,6 +451,7 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         {
             Assert.Equal(expectedResult, value.ToSentenceCase());
         }
+        
 
         [Theory]
         [InlineData(16, true, true, true, true, 16)]

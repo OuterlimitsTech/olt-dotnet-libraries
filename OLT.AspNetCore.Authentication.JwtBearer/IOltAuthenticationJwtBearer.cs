@@ -2,7 +2,7 @@
 
 namespace OLT.AspNetCore.Authentication
 {
-    public interface IOltAuthenticationJwtBearer : IOltAuthenticationBuilder, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
+    public interface IOltAuthenticationJwtBearer : IOltAuthenticationSchemeBuilder<JwtBearerOptions>
     {
 
         string JwtSecret { get; }

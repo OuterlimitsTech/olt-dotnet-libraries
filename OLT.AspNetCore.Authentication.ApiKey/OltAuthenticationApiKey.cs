@@ -6,17 +6,16 @@ using OLT.Core;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public class OltAuthenticationApiKey<TProvider> : OltAuthenticationSchemeBuilder<ApiKeyOptions>, IOltAuthenticationApiKey
-        where TProvider : class, IApiKeyProvider
+    public enum OltApiKeyLocation
     {
+        HeaderOrQueryParams,
+        HeaderOnly,
+        QueryParamsOnly
+    }
 
-        public enum OltApiKeyLocation
-        {
-            HeaderOrQueryParams,
-            HeaderOnly,
-            QueryParamsOnly
-        }
-
+    public class OltAuthenticationApiKey<TProvider> : OltAuthenticationSchemeBuilder<ApiKeyOptions>, IOltAuthenticationApiKey
+        where TProvider : class, IOltApiKeyProvider
+    {
         public OltAuthenticationApiKey(string realm)
         {
             Realm = realm;
@@ -74,10 +73,6 @@ namespace OLT.AspNetCore.Authentication
             if (builder == null)
             {
                 throw new ArgumentNullException(nameof(builder));
-            }
-            if (configureOptions == null)
-            {
-                throw new ArgumentNullException(nameof(configureOptions));
             }
 
             switch (ApiKeyLocation)

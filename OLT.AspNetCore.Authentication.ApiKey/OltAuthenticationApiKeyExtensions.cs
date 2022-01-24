@@ -17,14 +17,7 @@ namespace OLT.AspNetCore.Authentication
         /// <exception cref="ArgumentNullException"></exception>
         public static AuthenticationBuilder AddApiKey<TOptions>(this IServiceCollection services, TOptions options)
             where TOptions : IOltAuthenticationApiKey, IOltAuthenticationSchemeBuilder<ApiKeyOptions>
-        {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
-            return services.AddApiKey(options, null, null);
-        }
+            => services.AddApiKey(options, null, null);
 
         /// <summary>
         /// Adds API Key Authentication
@@ -32,23 +25,12 @@ namespace OLT.AspNetCore.Authentication
         /// <typeparam name="TOptions"></typeparam>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
         /// <param name="options"><seealso cref="IOltAuthenticationApiKey"/></param>
-        /// <param name="configureOptions"><seealso cref="ApiKeyOptions"/></param>
+        /// <param name="apiKeyOptions"><seealso cref="ApiKeyOptions"/></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static AuthenticationBuilder AddApiKey<TOptions>(this IServiceCollection services, TOptions options, Action<ApiKeyOptions> configureOptions)
+        public static AuthenticationBuilder AddApiKey<TOptions>(this IServiceCollection services, TOptions options, Action<ApiKeyOptions> apiKeyOptions)
             where TOptions : IOltAuthenticationApiKey, IOltAuthenticationSchemeBuilder<ApiKeyOptions>
-        {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-            if (configureOptions == null)
-            {
-                throw new ArgumentNullException(nameof(configureOptions));
-            }
-
-            return services.AddApiKey(options, configureOptions, null);
-        }
+            => services.AddApiKey(options, apiKeyOptions, null);
 
         /// <summary>
         /// Adds API Key Authentication
@@ -56,11 +38,11 @@ namespace OLT.AspNetCore.Authentication
         /// <typeparam name="TOptions"></typeparam>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
         /// <param name="options"><seealso cref="IOltAuthenticationApiKey"/></param>
-        /// <param name="configureAuthenticationOptions"><seealso cref="AuthenticationOptions"/></param>
-        /// <param name="configureApiKeyOptions"><seealso cref="ApiKeyOptions"/></param>
+        /// <param name="authOptionsAction"><seealso cref="AuthenticationOptions"/></param>
+        /// <param name="schemeOptions"><seealso cref="ApiKeyOptions"/></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static AuthenticationBuilder AddApiKey<TOptions>(this IServiceCollection services, TOptions options, Action<ApiKeyOptions> configureApiKeyOptions, Action<AuthenticationOptions> configureAuthenticationOptions)
+        public static AuthenticationBuilder AddApiKey<TOptions>(this IServiceCollection services, TOptions options, Action<ApiKeyOptions> schemeOptions, Action<AuthenticationOptions> authOptionsAction)
             where TOptions : IOltAuthenticationApiKey, IOltAuthenticationSchemeBuilder<ApiKeyOptions>
         {
             if (services == null)
@@ -71,7 +53,9 @@ namespace OLT.AspNetCore.Authentication
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            return options.AddScheme(options.AddAuthentication(services, configureAuthenticationOptions), configureApiKeyOptions);
+            
+            var builder = options.AddAuthentication(services, authOptionsAction);
+            return options.AddScheme(builder, schemeOptions);
         }
 
     }

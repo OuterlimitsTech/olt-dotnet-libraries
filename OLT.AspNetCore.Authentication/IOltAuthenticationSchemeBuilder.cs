@@ -8,9 +8,9 @@ namespace OLT.AspNetCore.Authentication
         AuthenticationBuilder AddScheme(AuthenticationBuilder builder);
     }
 
-    public interface IOltAuthenticationSchemeBuilder<out TSchemeOption> : IOltAuthenticationSchemeBuilder
+    public interface IOltAuthenticationSchemeBuilder<out TSchemeOption> : IOltAuthenticationSchemeBuilder, IOltAuthenticationBuilder
         where TSchemeOption : AuthenticationSchemeOptions
-    {
+    {        
         AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<TSchemeOption> configureOptions);
     }
 }

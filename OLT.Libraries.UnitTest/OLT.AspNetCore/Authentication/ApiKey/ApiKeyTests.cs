@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OLT.AspNetCore.Authentication;
 using System;
 using System.Threading.Tasks;
@@ -30,63 +31,88 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
         {
             var services = new ServiceCollection();
             var options = GetOptions("X-API-KEY-TEST");
-            Action<ApiKeyOptions> action = (ApiKeyOptions opts) =>
+            Action<ApiKeyOptions> apiKeyOptionsAction = (ApiKeyOptions opts) =>
             {
                 opts.Realm = "OLT Manual Realm";
             };
 
-            Action<AuthenticationOptions> authAction = (AuthenticationOptions opts) =>
+            Action<AuthenticationOptions> authOptionsAction = (AuthenticationOptions opts) =>
             {
                 opts.DefaultScheme = ApiKeyDefaults.AuthenticationScheme;
             };
 
             Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationApiKeyExtensions.AddApiKey(null, options));
             Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationApiKeyExtensions.AddApiKey<OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>>(services, null));
-
+            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationApiKeyExtensions.AddApiKey<OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>>(services, null, null, null));
 
             Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationApiKeyExtensions.AddApiKey(null, options, null));
-            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationApiKeyExtensions.AddApiKey<OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>>(services, null, action));
-            Assert.Throws<ArgumentNullException>("configureOptions", () => OltAuthenticationApiKeyExtensions.AddApiKey(services, options, null));
+            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationApiKeyExtensions.AddApiKey<OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>>(services, null, apiKeyOptionsAction));
 
-
-            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationApiKeyExtensions.AddApiKey(null, options, action, authAction));
-            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationApiKeyExtensions.AddApiKey<OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>>(services, null, action, authAction));
+            Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationApiKeyExtensions.AddApiKey(null, options, apiKeyOptionsAction, authOptionsAction));
+            Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationApiKeyExtensions.AddApiKey<OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>>(services, null, apiKeyOptionsAction, authOptionsAction));
 
             Assert.Throws<ArgumentNullException>("builder", () => options.AddScheme(null));
-            Assert.Throws<ArgumentNullException>("configureOptions", () => options.AddScheme(services.AddAuthentication(options.Scheme), null));
-
             Assert.Throws<ArgumentNullException>("services", () => options.AddAuthentication(null));
 
         }
 
+        private async Task ApiAuthTest<T>(TestServer testServer) where T : class
+        {
+            var services = testServer.Host.Services;
 
-        ////[Fact]
-        ////public async Task ApiAuth()
-        ////{
 
-        ////    using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartup>()))
-        ////    {
-        ////        var t = testServer.CreateRequest("");
-        ////        var result = await testServer.SendAsync(context =>
-        ////        {
-        ////            context.Request.Headers.Add("X-API-KEY", ApiKeyStartup.Key1);                       
-        ////        });
+            var schemeProvider = services.GetRequiredService<IAuthenticationSchemeProvider>();
+            Assert.NotNull(schemeProvider);
+            var scheme = await schemeProvider.GetDefaultAuthenticateSchemeAsync();
+            Assert.NotNull(scheme);
+            Assert.Equal(typeof(T), scheme.HandlerType);
 
-        ////    }
+            var apiKeyOptionsSnapshot = services.GetService<IOptionsSnapshot<ApiKeyOptions>>();
+            var apiKeyOptions = apiKeyOptionsSnapshot.Get(scheme.Name);
+            Assert.NotNull(apiKeyOptions);
+            Assert.Equal(ApiKeyConstants.Realm, apiKeyOptions.Realm);
 
-        ////    //var context = new DefaultHttpContext();
-        ////    //context.Request.Headers.Add();
-        ////    //var controller = new OltTestController()
-        ////    //{
-        ////    //    ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext()
-        ////    //    {
-        ////    //        HttpContext = context
-        ////    //    }
-        ////    //};
+            Assert.NotNull(services.GetService<IOltApiKeyService>());
+            Assert.NotNull(services.GetService<IOltApiKeyProvider>());
+            Assert.NotNull(services.GetService<IApiKeyProvider>());
 
-        ////    //var actionResult = controller.GetSimple();
-        ////    //Assert.NotNull(actionResult);
+        }
 
-        ////}
+        [Fact]
+        public async Task ApiKeyStartupDefault()
+        {
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupDefault>()))
+            {
+                await ApiAuthTest<ApiKeyInHeaderOrQueryParamsHandler>(testServer);
+            }
+        }
+
+
+        [Fact]
+        public async Task ApiKeyStartupQueryParamsOnly()
+        {
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupQueryParamsOnly>()))
+            {
+                await ApiAuthTest<ApiKeyInQueryParamsHandler>(testServer);
+            }
+        }
+
+        [Fact]
+        public async Task ApiKeyStartupHeaderOnly()
+        {
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupHeaderOnly>()))
+            {
+                await ApiAuthTest<ApiKeyInHeaderHandler>(testServer);
+            }
+        }
+
+        [Fact]
+        public async Task ApiKeyStartupHeaderOrQueryParams()
+        {
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupHeaderOrQueryParams>()))
+            {
+                await ApiAuthTest<ApiKeyInHeaderOrQueryParamsHandler>(testServer);
+            }
+        }
     }
 }

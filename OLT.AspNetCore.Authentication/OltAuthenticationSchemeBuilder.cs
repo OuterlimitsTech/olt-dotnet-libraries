@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public abstract class OltAuthenticationSchemeBuilder : IOltAuthenticationBuilder
+    public abstract class OltAuthenticationBuilder : IOltAuthenticationBuilder
     {
         public abstract string Scheme { get; }
 
@@ -35,29 +35,20 @@ namespace OLT.AspNetCore.Authentication
                 throw new ArgumentNullException(nameof(services));
             }
 
-            var builder = services
+            return services
                 .AddAuthentication(opt =>
                 {
                     opt.DefaultAuthenticateScheme = Scheme;
                     opt.DefaultChallengeScheme = Scheme;
                     configureOptions?.Invoke(opt);
                 });
-
-            return AddScheme(builder);
         }
 
-        /// <summary>
-        /// Adds Authentication 
-        /// </summary>
-        /// <typeparam name="TSchemeOption"></typeparam>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="NullReferenceException"></exception>
-        public abstract AuthenticationBuilder AddScheme(AuthenticationBuilder builder);
     }
 
 
 
-    public abstract class OltAuthenticationSchemeBuilder<TSchemeOption> : OltAuthenticationSchemeBuilder, IOltAuthenticationSchemeBuilder<TSchemeOption>
+    public abstract class OltAuthenticationSchemeBuilder<TSchemeOption> : OltAuthenticationBuilder, IOltAuthenticationSchemeBuilder<TSchemeOption>, IOltAuthenticationBuilder
         where TSchemeOption : AuthenticationSchemeOptions
     {
 
@@ -67,7 +58,7 @@ namespace OLT.AspNetCore.Authentication
         /// <typeparam name="TSchemeOption"></typeparam>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NullReferenceException"></exception>
-        public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder)
+        public virtual AuthenticationBuilder AddScheme(AuthenticationBuilder builder)
         {
             return AddScheme(builder, null);
         }

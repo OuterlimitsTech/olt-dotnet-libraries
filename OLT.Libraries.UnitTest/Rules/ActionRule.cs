@@ -51,7 +51,9 @@ namespace OLT.Libraries.UnitTest.OLT.Rules
         public void GetByInterface()
         {
             var rule = _ruleManager.GetRule<IDoSomethingRuleDb>();
-            Assert.True(rule.Execute(new DoSomethingRuleContextRequest(_context)).Success);
+            var request = new DoSomethingRuleContextRequest(_context);
+            Assert.Equal(_context.ContextId, request.Context.ContextId);
+            Assert.True(rule.Execute(request).Success);
         }
 
         [Fact]

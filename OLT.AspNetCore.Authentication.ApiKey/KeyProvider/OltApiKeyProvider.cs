@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AspNetCore.Authentication.ApiKey;
 using Microsoft.Extensions.Logging;
 using OLT.Core;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public class OltApiKeyProvider<TService> : OltDisposable, IOltApiKeyProvider
+    public abstract class OltApiKeyProvider<TService> : OltDisposable, IOltApiKeyProvider
         where TService : class, IOltApiKeyService
     {
         private readonly ILogger<TService> _logger;
         private readonly TService _service;
 
-        public OltApiKeyProvider(
+        protected OltApiKeyProvider(
             TService service,
             ILogger<TService> logger)
         {
