@@ -34,7 +34,7 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         {
             var value = $"  {UnitTestConstants.StringValues.HelloWorld}  {UnitTestConstants.StringValues.ThisIsATest}";
             var eval = $"{UnitTestConstants.StringValues.HelloWorld} {UnitTestConstants.StringValues.ThisIsATest}";
-            Assert.Equal(value.RemoveDoubleSpaces(), eval);
+            Assert.Equal(OltStringExtensions.RemoveDoubleSpaces(value), eval);
             Assert.Null(OltStringExtensions.RemoveDoubleSpaces(null));
         }
 
@@ -43,7 +43,7 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         {
             var value = $"   -> ? {UnitTestConstants.StringValues.HelloWorld},   & {UnitTestConstants.StringValues.ThisIsATest}";
             var eval = $"{UnitTestConstants.StringValues.HelloWorld} {UnitTestConstants.StringValues.ThisIsATest}";
-            Assert.Equal(value.CleanForSearch(), eval);
+            Assert.Equal(OltStringExtensions.CleanForSearch(value), eval);
             Assert.Null(OltStringExtensions.CleanForSearch(null));
         }
 
@@ -65,6 +65,9 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
             Assert.Collection(UnitTestConstants.StringValues.HelloWorld.ToWords(), 
                 item => Assert.Equal(UnitTestConstants.StringValues.Hello, item), 
                 item => Assert.Equal(UnitTestConstants.StringValues.World, item));
+
+
+            Assert.Null(OltStringExtensions.ToWords(null));
         }
 
         [Theory]

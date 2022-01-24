@@ -52,8 +52,13 @@ namespace OLT.Libraries.UnitTest.OLT.Rules
         {
             var rule = _ruleManager.GetRule<IDoSomethingRuleDb>();
             var request = new DoSomethingRuleContextRequest(_context);
-            Assert.Equal(_context.ContextId, request.Context.ContextId);
+            Assert.Equal(_context.ContextId, request.Context.ContextId);            
             Assert.True(rule.Execute(request).Success);
+
+            var request2 = new DoSomethingRuleContextValueRequest(_context, "1234");
+            Assert.Equal(_context.ContextId, request2.Context.ContextId);
+            Assert.Equal("1234", request2.Value);
+
         }
 
         [Fact]

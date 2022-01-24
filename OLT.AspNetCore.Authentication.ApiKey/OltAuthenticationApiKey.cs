@@ -67,7 +67,7 @@ namespace OLT.AspNetCore.Authentication
         /// <param name="configureOptions"><seealso cref="ApiKeyOptions"/></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<ApiKeyOptions> configureOptions)
         {
             if (builder == null)

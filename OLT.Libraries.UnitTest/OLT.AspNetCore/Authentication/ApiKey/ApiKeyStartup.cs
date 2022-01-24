@@ -52,7 +52,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
-        protected void DefaultServices(IServiceCollection services)
+        public void DefaultServices(IServiceCollection services)
         {
             var settings = Configuration.GetSection("AppSettings").Get<AppSettingsDto>();
 
@@ -64,6 +64,16 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
                 .AddScoped<IApiKeyProvider>(opt => opt.GetRequiredService<IOltApiKeyProvider>())
                 .AddScoped<ApiKeyService>()
                 .AddScoped<IOltApiKeyService>(opt => opt.GetRequiredService<ApiKeyService>());
+        }
+    }
+
+    public class ApiKeyEmpty : BaseApiKeyStartup
+    {
+        public ApiKeyEmpty(IConfiguration configuration) : base(configuration) { }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            base.DefaultServices(services);
         }
     }
 

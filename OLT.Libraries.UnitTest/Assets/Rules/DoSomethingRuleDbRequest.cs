@@ -9,4 +9,12 @@ namespace OLT.Libraries.UnitTest.Assets.Rules
         {
         }
     }
+
+
+    public class DoSomethingRuleContextValueRequest : OltRequestContext<SqlDatabaseContext, string>
+    {
+        public DoSomethingRuleContextValueRequest(SqlDatabaseContext context, string value) : base(context, value)
+        {
+        }
+    }
 }

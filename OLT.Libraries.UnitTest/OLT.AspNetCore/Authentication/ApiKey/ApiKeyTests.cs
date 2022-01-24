@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OLT.AspNetCore.Authentication;
+using OLT.Core;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -54,13 +55,30 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
             Assert.Throws<ArgumentNullException>("builder", () => options.AddScheme(null));
             Assert.Throws<ArgumentNullException>("services", () => options.AddAuthentication(null));
 
+
+        }
+
+
+        [Fact]
+        public async Task Options()
+        {
+            var services = new ServiceCollection();
+            var builder = services.AddAuthentication();
+            var invalidLocation = -1000;
+
+            var invalid = new OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>(Relm, (OltApiKeyLocation)invalidLocation);
+            Assert.Throws<ArgumentNullException>("builder", () => invalid.AddScheme(null, null));
+            Assert.Throws<InvalidOperationException>(() => invalid.AddScheme(builder, null));
+
+            var options = new OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>(Relm, OltApiKeyLocation.HeaderOnly);
+            options.AddScheme(builder, opt => { opt.Realm = "Test1"; });
+
+
         }
 
         private async Task ApiAuthTest<T>(TestServer testServer) where T : class
         {
             var services = testServer.Host.Services;
-
-
             var schemeProvider = services.GetRequiredService<IAuthenticationSchemeProvider>();
             Assert.NotNull(schemeProvider);
             var scheme = await schemeProvider.GetDefaultAuthenticateSchemeAsync();
@@ -75,7 +93,6 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
             Assert.NotNull(services.GetService<IOltApiKeyService>());
             Assert.NotNull(services.GetService<IOltApiKeyProvider>());
             Assert.NotNull(services.GetService<IApiKeyProvider>());
-
         }
 
         [Fact]
@@ -95,6 +112,11 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
             {
                 await ApiAuthTest<ApiKeyInQueryParamsHandler>(testServer);
             }
+
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupQueryParamsOnlyWithOptions>()))
+            {
+                await ApiAuthTest<ApiKeyInHeaderHandler>(testServer);
+            }
         }
 
         [Fact]
@@ -104,12 +126,22 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
             {
                 await ApiAuthTest<ApiKeyInHeaderHandler>(testServer);
             }
+
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupHeaderOnlyWithOptions>()))
+            {
+                await ApiAuthTest<ApiKeyInHeaderHandler>(testServer);
+            }
         }
 
         [Fact]
         public async Task ApiKeyStartupHeaderOrQueryParams()
         {
             using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupHeaderOrQueryParams>()))
+            {
+                await ApiAuthTest<ApiKeyInHeaderOrQueryParamsHandler>(testServer);
+            }
+
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupHeaderOrQueryParamsWithOptions>()))
             {
                 await ApiAuthTest<ApiKeyInHeaderOrQueryParamsHandler>(testServer);
             }

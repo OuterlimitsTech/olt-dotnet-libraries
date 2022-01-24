@@ -76,12 +76,12 @@ namespace System
 
         public static string CleanForSearch(this string self)
         {
-            return self?.RemoveSpecialCharacters()?.Trim()?.RemoveDoubleSpaces();
+            return self?.RemoveSpecialCharacters().Trim().RemoveDoubleSpaces();
         }
 
         public static List<string> ToWords(this string self)
         {
-            return self.RemoveDoubleSpaces()?.Split(' ')?.ToList();
+            return self.RemoveDoubleSpaces().Split(' ').ToList();
         }
 
 
