@@ -43,19 +43,6 @@ namespace OLT.Core
         public static AuthenticationBuilder AddJwtBearer<TOptions>(this IServiceCollection services, TOptions options, Action<JwtBearerOptions> schemeOptions, Action<AuthenticationOptions> authOptionsAction)
             where TOptions : IOltAuthenticationJwtBearer, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
         {
-            //if (services == null)
-            //{
-            //    throw new ArgumentNullException(nameof(services));
-            //}
-            //if (options == null)
-            //{
-            //    throw new ArgumentNullException(nameof(options));
-            //}
-
-            //var authBuilder = options.AddAuthentication(services, configureAuthenticationOptions);
-            //return options.AddScheme(authBuilder, configureJwtBearerOptions);
-
-
             if (services == null)
             {
                 throw new ArgumentNullException(nameof(services));
