@@ -60,20 +60,14 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
 
 
         [Fact]
-        public async Task Options()
+        public void Options()
         {
             var services = new ServiceCollection();
             var builder = services.AddAuthentication();
             var invalidLocation = -1000;
-
             var invalid = new OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>(Relm, (OltApiKeyLocation)invalidLocation);
             Assert.Throws<ArgumentNullException>("builder", () => invalid.AddScheme(null, null));
             Assert.Throws<InvalidOperationException>(() => invalid.AddScheme(builder, null));
-
-            var options = new OltAuthenticationApiKey<OltApiKeyProvider<ApiKeyService>>(Relm, OltApiKeyLocation.HeaderOnly);
-            options.AddScheme(builder, opt => { opt.Realm = "Test1"; });
-
-
         }
 
         private async Task ApiAuthTest<T>(TestServer testServer) where T : class
