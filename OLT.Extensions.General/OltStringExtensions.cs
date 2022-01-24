@@ -81,7 +81,7 @@ namespace System
 
         public static List<string> ToWords(this string self)
         {
-            return self.RemoveDoubleSpaces().Split(' ').ToList();
+            return self?.RemoveDoubleSpaces().Split(' ').ToList();
         }
 
 

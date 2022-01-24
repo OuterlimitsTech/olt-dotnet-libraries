@@ -67,16 +67,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
         }
     }
 
-    public class ApiKeyEmpty : BaseApiKeyStartup
-    {
-        public ApiKeyEmpty(IConfiguration configuration) : base(configuration) { }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            base.DefaultServices(services);
-        }
-    }
-
+   
     public class ApiKeyStartupDefault : BaseApiKeyStartup
     {
         public ApiKeyStartupDefault(IConfiguration configuration) : base(configuration)  { }
@@ -99,6 +90,18 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
         }
     }
 
+    public class ApiKeyStartupQueryParamsOnlyWithOptions : BaseApiKeyStartup
+    {
+        public ApiKeyStartupQueryParamsOnlyWithOptions(IConfiguration configuration) : base(configuration) { }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            base.DefaultServices(services);
+            services.AddApiKey(new OltAuthenticationApiKey<ApiKeyProvider>(ApiKeyConstants.Realm, OltApiKeyLocation.QueryParamsOnly), opt => opt.IgnoreAuthenticationIfAllowAnonymous = false);
+        }
+    }
+
+
     public class ApiKeyStartupHeaderOnly : BaseApiKeyStartup
     {
         public ApiKeyStartupHeaderOnly(IConfiguration configuration) : base(configuration) { }
@@ -110,6 +113,17 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
         }
     }
 
+    public class ApiKeyStartupHeaderOnlyWithOptions : BaseApiKeyStartup
+    {
+        public ApiKeyStartupHeaderOnlyWithOptions(IConfiguration configuration) : base(configuration) { }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            base.DefaultServices(services);
+            services.AddApiKey(new OltAuthenticationApiKey<ApiKeyProvider>(ApiKeyConstants.Realm, OltApiKeyLocation.HeaderOnly), opt => opt.IgnoreAuthenticationIfAllowAnonymous = false);
+        }
+    }
+
     public class ApiKeyStartupHeaderOrQueryParams : BaseApiKeyStartup
     {
         public ApiKeyStartupHeaderOrQueryParams(IConfiguration configuration) : base(configuration) { }
@@ -118,6 +132,18 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
         {
             base.DefaultServices(services);
             services.AddApiKey(new OltAuthenticationApiKey<ApiKeyProvider>(ApiKeyConstants.Realm, OltApiKeyLocation.HeaderOrQueryParams));
+        }
+    }
+
+
+    public class ApiKeyStartupHeaderOrQueryParamsWithOptions : BaseApiKeyStartup
+    {
+        public ApiKeyStartupHeaderOrQueryParamsWithOptions(IConfiguration configuration) : base(configuration) { }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            base.DefaultServices(services);
+            services.AddApiKey(new OltAuthenticationApiKey<ApiKeyProvider>(ApiKeyConstants.Realm, OltApiKeyLocation.HeaderOrQueryParams), opt => opt.IgnoreAuthenticationIfAllowAnonymous = false);
         }
     }
 }

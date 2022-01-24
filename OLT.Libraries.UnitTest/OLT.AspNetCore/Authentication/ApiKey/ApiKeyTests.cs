@@ -109,7 +109,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
 
             using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<ApiKeyStartupQueryParamsOnlyWithOptions>()))
             {
-                await ApiAuthTest<ApiKeyInHeaderHandler>(testServer);
+                await ApiAuthTest<ApiKeyInQueryParamsHandler>(testServer);
             }
         }
 
