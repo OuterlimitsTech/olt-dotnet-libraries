@@ -11,7 +11,7 @@ namespace OLT.Libraries.UnitTest.Assets.Maps
     {
         public NameModelMaps()
         {
-            NameAutoMapperModel.BuildMap(CreateMap<PersonEntity, NameAutoMapperModel>());
+            NameAutoMapperModel.BuildMap(CreateMap<PersonEntity, NameAutoMapperModel>()).AfterMap(p => p.OrderBy(o => o.Last).ThenBy(o => o.First));
             NameAutoMapperModel.BuildMap(CreateMap<UserEntity, NameAutoMapperModel>()).AfterMap(new NameAutoMapperModelAfterMap());
         }     
     }
