@@ -66,7 +66,7 @@ namespace OLT.Core
 
             if (id < MinimumValue)
             {
-                throw new IndexOutOfRangeException($"Enum underlying value must be greater or equal to {MinimumValue}");
+                throw new OltException($"Enum underlying value must be greater or equal to {MinimumValue}");
             }
 
             entity.Id = id;

@@ -77,7 +77,7 @@ namespace OLT.AspNetCore.Authentication
 
             if (string.IsNullOrEmpty(JwtSecret))
             {
-                throw new NullReferenceException(nameof(JwtSecret));
+                throw new OltException(nameof(JwtSecret));
             }
 
             var key = Encoding.ASCII.GetBytes(JwtSecret);

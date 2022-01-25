@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OLT.AspNetCore.Authentication;
 using OLT.Core;
 using System;
@@ -14,6 +14,9 @@ using Xunit;
 
 namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
 {
+
+  
+
     public class JwtBearerTests
     {
 
@@ -53,59 +56,35 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.JwtToken
 
         }
 
+        private async Task AuthTest(TestServer testServer)
+        {
+            var options = JwtTokenTestExts.GetOptions();
+            var services = testServer.Host.Services;
+            var schemeProvider = services.GetRequiredService<IAuthenticationSchemeProvider>();
+            Assert.NotNull(schemeProvider);            
+            var scheme = await schemeProvider.GetDefaultAuthenticateSchemeAsync();
+            Assert.NotNull(scheme);
+            Assert.Equal(typeof(JwtBearerHandler), scheme.HandlerType);
 
-        ////[Fact]
-        ////public void AddAuthentication()
-        ////{
-        ////    var webBuilder = new WebHostBuilder();
-        ////    webBuilder.UseStartup<JwtTokenStartup>();
+            var optionsSnapshot = services.GetService<IOptionsSnapshot<JwtBearerOptions>>();
+            var schemeOptions = optionsSnapshot.Get(scheme.Name);
+            Assert.NotNull(schemeOptions);
 
+            Assert.Equal(options.Scheme, scheme.Name);
+            Assert.Equal(options.RequireHttpsMetadata, schemeOptions.RequireHttpsMetadata);
+            Assert.Equal(options.ValidateIssuer, schemeOptions.TokenValidationParameters.ValidateIssuer);
+            Assert.Equal(options.ValidateAudience, schemeOptions.TokenValidationParameters.ValidateAudience);
+            Assert.Equal(JwtTokenTestExts.Authority, schemeOptions.Authority);
+            Assert.Equal(JwtTokenTestExts.Audience, schemeOptions.Audience);
+        }
 
-        ////    //var services = new ServiceCollection();
-        ////    //var options = new OltAuthenticationJwtBearer();
-        ////    //Action<JwtBearerOptions> jwtAction = (JwtBearerOptions opts) =>
-        ////    //{
-        ////    //    opts.RequireHttpsMetadata = false;
-        ////    //    opts.Authority = "local";
-        ////    //    opts.Audience = "local";
-        ////    //};
-
-        ////    //Action<AuthenticationOptions> authAction = (AuthenticationOptions opts) =>
-        ////    //{
-        ////    //    opts.
-        ////    //};
-
-        ////    //options.Disabled = true;
-
-        ////    ////OltAuthenticationJwtExtensions.AddAuthentication(services, options, authAction, jwtAction);
-
-
-        ////    //options.Disabled = false;
-        ////    //var builder = services.AddAuthentication(options);
-
-        ////    //using (var testServer = new TestServer(webBuilder))
-        ////    //{
-        ////    //    var response = await testServer.CreateRequest("/api/league/2").SendAsync("GET");
-        ////    //    Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        ////    //}
-
-
-        ////    //Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, options));
-        ////    //Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddJwtBearer<OltAuthenticationJwtBearer>(services, null));
-
-
-        ////    //Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddJwtBearer(null, options, null));
-        ////    //Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddJwtBearer<OltAuthenticationJwtBearer>(services, null, action));
-        ////    //Assert.Throws<ArgumentNullException>("configureOptions", () => OltAuthenticationJwtExtensions.AddJwtBearer(services, options, null));
-
-
-        ////    //Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddAuthentication(null, options));
-        ////    //Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddAuthentication<OltAuthenticationJwtBearer>(services, null));
-
-        ////    //Assert.Throws<ArgumentNullException>("services", () => OltAuthenticationJwtExtensions.AddAuthentication(null, options, null));
-        ////    //Assert.Throws<ArgumentNullException>("options", () => OltAuthenticationJwtExtensions.AddAuthentication<OltAuthenticationJwtBearer>(services, null, action));
-        ////    //Assert.Throws<ArgumentNullException>("configureOptions", () => OltAuthenticationJwtExtensions.AddAuthentication(services, options, null));
-
-        ////}
+        [Fact]
+        public async Task ApiKeyStartupDefault()
+        {
+            using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<JwtTokenStartupDefault>()))
+            {
+                await AuthTest(testServer);
+            }
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace OLT.AspNetCore.Authentication
 
 
 
-    public abstract class OltAuthenticationSchemeBuilder<TSchemeOption> : OltAuthenticationBuilder, IOltAuthenticationSchemeBuilder<TSchemeOption>, IOltAuthenticationBuilder
+    public abstract class OltAuthenticationSchemeBuilder<TSchemeOption> : OltAuthenticationBuilder, IOltAuthenticationSchemeBuilder<TSchemeOption>
         where TSchemeOption : AuthenticationSchemeOptions
     {
 
