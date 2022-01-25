@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltEntityCodeValue : IOltEntitySortable
+    public interface IOltEntityCodeValue
     {
         
         /// <summary>

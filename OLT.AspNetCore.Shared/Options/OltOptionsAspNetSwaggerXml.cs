@@ -21,7 +21,4 @@
         public virtual bool IncludeControllerXmlComments { get; set; }
 
     }
-
-
-
 }

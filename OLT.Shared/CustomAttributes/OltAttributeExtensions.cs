@@ -9,9 +9,9 @@ namespace OLT.Core
     public static class OltAttributeExtensions
     {
 
-        public static T GetAttributeInstance<T, TE>(TE item)
+        public static T GetAttributeInstance<T, TEnum>(TEnum item)
             where T : Attribute
-            where TE : struct
+            where TEnum : System.Enum
         {
             var type = item.GetType();
             var field = item.ToString();
@@ -67,15 +67,9 @@ namespace OLT.Core
             return attribute?.Description ?? value.ToString();
         }
 
-        public static T FromDescription<T>(this string source) where T : struct, IConvertible
+        public static TEnum FromDescription<TEnum>(this string source) where TEnum : System.Enum, IConvertible
         {
-
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
-
-            var type = typeof(T);
+            var type = typeof(TEnum);
 
             foreach (var en in Enum.GetValues(type))
             {
@@ -91,7 +85,7 @@ namespace OLT.Core
                         var description = ((DescriptionAttribute)attrs[0]).Description;
                         if (string.Equals(source, description, StringComparison.OrdinalIgnoreCase))
                         {
-                            return (T)en;
+                            return (TEnum)en;
                         }
                     }
 
@@ -99,7 +93,7 @@ namespace OLT.Core
 
             }
 
-            return (T)Enum.Parse(type, source, true);
+            return (TEnum)Enum.Parse(type, source, true);
 
 
 
@@ -142,14 +136,9 @@ namespace OLT.Core
             return attribute?.DefaultSort;
         }
 
-        public static T FromCodeEnum<T>(this string source) where T : struct, IConvertible
+        public static TEnum FromCodeEnum<TEnum>(this string source) where TEnum : System.Enum, IConvertible
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
-
-            var type = typeof(T);
+            var type = typeof(TEnum);
 
             foreach (var en in Enum.GetValues(type))
             {
@@ -164,7 +153,7 @@ namespace OLT.Core
                         var code = ((CodeAttribute)attrs[0]).Code;
                         if (string.Equals(source, code, StringComparison.OrdinalIgnoreCase))
                         {
-                            return (T)en;
+                            return (TEnum)en;
                         }
                     }
 
@@ -172,7 +161,7 @@ namespace OLT.Core
 
             }
 
-            return (T)Enum.Parse(type, source, true);
+            return (TEnum)Enum.Parse(type, source, true);
         }
 
     }

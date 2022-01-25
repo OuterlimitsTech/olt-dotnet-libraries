@@ -1,8 +1,12 @@
 ﻿namespace OLT.Core
 {
-    public interface IOltEntityId : IOltEntity
+    public interface IOltEntityId<T> : IOltEntity
     {
-        int Id { get; set; }
+        T Id { get; set; }
+    }
 
+    public interface IOltEntityId : IOltEntityId<int>
+    {
+        
     }
 }

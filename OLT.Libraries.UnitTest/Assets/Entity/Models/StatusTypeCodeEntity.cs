@@ -24,7 +24,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
 
 
     [Table("Country")]
-    public class CountryCodeEntity : OltEntityIdDeletable, IOltEntityUniqueId, IOltEntityCodeValueAbbrev, IOltEntityCodeValueDescription
+    public class CountryCodeEntity : OltEntityIdDeletable, IOltEntityUniqueId, IOltEntityCodeValueAbbrev, IOltEntityCodeValueDescription, IOltEntitySortable
     {
         public Guid UniqueId { get; set; }
 

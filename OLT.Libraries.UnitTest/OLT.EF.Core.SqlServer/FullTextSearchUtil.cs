@@ -36,18 +36,38 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.SqlServer
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name1.First, OltFtsWildCardType.BeginsWith, false, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.First, OltFtsWildCardType.BeginsWith, true, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.BeginsWith, true, true)]
+        [InlineData(null, OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData(null, OltFtsWildCardType.BeginsWith, true, true)]
+        [InlineData("", OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData("", OltFtsWildCardType.BeginsWith, true, true)]
+        [InlineData(" ", OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData(" ", OltFtsWildCardType.BeginsWith, true, true)]
+
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name1.First, OltFtsWildCardType.EndsWith, false, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.First, OltFtsWildCardType.EndsWith, true, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.EndsWith, true, true)]
+        [InlineData(null, OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData(null, OltFtsWildCardType.EndsWith, true, true)]
+        [InlineData("", OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData("", OltFtsWildCardType.EndsWith, true, true)]
+        [InlineData(" ", OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData(" ", OltFtsWildCardType.EndsWith, true, true)]
+
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name1.First, OltFtsWildCardType.Contains, false, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.First, OltFtsWildCardType.Contains, true, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.Contains, false, true)]
+        [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.Contains, true, true)]
         [InlineData(null, OltFtsWildCardType.Contains, false, true)]
+        [InlineData(null, OltFtsWildCardType.Contains, true, true)]
         [InlineData("", OltFtsWildCardType.Contains, false, true)]
+        [InlineData("", OltFtsWildCardType.Contains, true, true)]
         [InlineData(" ", OltFtsWildCardType.Contains, false, true)]
+        [InlineData(" ", OltFtsWildCardType.Contains, true, true)]
         public void WildCardType(string value, OltFtsWildCardType widCardType, bool matchAllWords, bool expectedResult)
         {
-            var result = OltFullTextSearchUtil.Contains(value, widCardType);
+            var result = OltFullTextSearchUtil.Contains(value, widCardType, matchAllWords);
             var compare = FormatResult(value, widCardType, matchAllWords);
 
             if (expectedResult)
