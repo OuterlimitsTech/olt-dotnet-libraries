@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OLT.Email
 {
     [Obsolete("Move to OltAppSettingsSendGrid")]
+    [ExcludeFromCodeCoverage]
     public class OltSendGridAppSettings 
     {
         public string FromEmail { get; set; }
