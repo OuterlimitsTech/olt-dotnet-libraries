@@ -1,4 +1,5 @@
-﻿using OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode;
+﻿using OLT.Core;
+using OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode;
 using System;
 using Xunit;
 
@@ -15,7 +16,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.EntityTypeConfiguration.Enum
     {
         public override void RunMapTests()
         {
-            Assert.Throws<IndexOutOfRangeException>(() => base.Map());
+            Assert.Throws<OltException>(() => base.Map());
         }
     }
 }

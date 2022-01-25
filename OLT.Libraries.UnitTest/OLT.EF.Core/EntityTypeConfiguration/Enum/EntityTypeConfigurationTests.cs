@@ -49,7 +49,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.EntityTypeConfiguration.Enum
 
             @enum = TestEnumConfiguration.Value3;
             value = System.Enum.GetName(@enum);
-            Assert.Throws<IndexOutOfRangeException>(() => config.RunMapTests(@enum, value, value, sortOrder));            
+            Assert.Throws<OltException>(() => config.RunMapTests(@enum, value, value, sortOrder));            
 
             config.RunMapTests();
         }
