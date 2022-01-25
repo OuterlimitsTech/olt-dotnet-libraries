@@ -87,6 +87,19 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             var afterMap2 = new OltAfterMapOrderBy<UserEntity, NameAutoMapperModel>(orderBy => orderBy.OrderBy(p => p.First).ThenBy(p => p.Last));
             var result2 = afterMap2.AfterMap(list.AsQueryable()).ToList();
             result2.Should().Equal(list.OrderBy(p => p.First).ThenBy(p => p.Last), (c1, c2) => c1.First == c2.First && c1.Last == c2.Last);
+
+
+            var people = new List<PersonEntity>();
+            for (int i = 0; i <= Faker.RandomNumber.Next(10, 35); i++)
+            {
+                var person = UnitTestHelper.AddPerson(_context);
+                people.Add(person);
+            }
+            
+            var personResult = _adapterResolver.Map<PersonEntity, NameAutoMapperModel>(people.AsQueryable()).ToList();
+            var expected = people.Select(s => new NameAutoMapperModel {  First = s.NameFirst, Middle = s.NameMiddle, Last = s.NameLast }).OrderBy(p => p.Last).ThenBy(p => p.First).ToList();
+            personResult.Should().Equal(expected, (c1, c2) => c1.First == c2.First && c1.Last == c2.Last);
+
         }
 
         [Fact]
