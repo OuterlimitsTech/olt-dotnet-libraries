@@ -52,13 +52,13 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             using (var testServer = new TestServer(UnitTestHelper.WebHostBuilder<TestServerStartup>()))
             {
                 var environment = _testServer.Services.GetService<IWebHostEnvironment>();                
-                Assert.False(OltHostEnvironmentExtensions.IsTest(environment));
+                Assert.True(OltHostEnvironmentExtensions.IsTest(environment));
                 var host = _testServer.Services.GetService<IOltHostService>();
                 Assert.Equal(environment?.EnvironmentName, host?.EnvironmentName);
-                Assert.True(host?.Environment.IsProduction);
+                Assert.False(host?.Environment.IsProduction);
                 Assert.False(host?.Environment.IsDevelopment);
                 Assert.False(host?.Environment.IsStaging);
-                Assert.False(host?.Environment.IsTest);
+                Assert.True(host?.Environment.IsTest);
 
                 //environment.EnvironmentName = OltDefaults.OltEnvironments.Test;
                 //Assert.False(host?.Environment.IsProduction);

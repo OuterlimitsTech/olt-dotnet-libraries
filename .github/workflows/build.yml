@@ -45,7 +45,7 @@ jobs:
       - name: Test
         run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release"
         env:
-          ASPNETCORE_ENVIRONMENT: Development
+          ASPNETCORE_ENVIRONMENT: Test
 
       # - name: SonarCloud
       #   uses: highbyte/sonarscan-dotnet@v2.1.2
