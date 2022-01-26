@@ -1,0 +1,53 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+      # - release/**
+      # - feature/**
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  SOURCE_DIRECTORY: ${{ github.workspace }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    # runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
+
+      - name: Test
+        run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release"
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+
+      - name: SonarCloud
+        uses: highbyte/sonarscan-dotnet@v2.1.2
+        with:
+          sonarProjectKey: "OuterlimitsTech_olt-dotnet-libraries"
+          sonarProjectName: "OLT.Libraries"
+          dotnetBuildArguments: ./
+          sonarOrganization: "outerlimitstech"
+          dotnetTestArguments: ./ --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
