@@ -11,6 +11,15 @@ on:
 
 env:
   SOURCE_DIRECTORY: ${{ github.workspace }}
+  SENDGRID_TMPL_JSON: ${{ secrets.SENDGRID_TMPL_JSON }}
+  SENDGRID_TMPL_TAG: ${{ secrets.SENDGRID_TMPL_TAG }}
+  SENDGRID_TOKEN: ${{ secrets.SENDGRID_TOKEN }}
+  SMTP_HOST: ${{ secrets.SMTP_HOST }}
+  SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+  SMTP_PORT: ${{ secrets.SMTP_PORT }}
+  SMTP_FROM_ADDRESS: ${{ secrets.SMTP_FROM_ADDRESS }}
+  SMTP_TO_ADDRESS: ${{ secrets.SMTP_TO_ADDRESS }}
 
 jobs:
   build:
@@ -38,16 +47,15 @@ jobs:
         env:
           ASPNETCORE_ENVIRONMENT: Development
 
-      - name: SonarCloud
-        uses: highbyte/sonarscan-dotnet@v2.1.2
-        with:
-          sonarProjectKey: "OuterlimitsTech_olt-dotnet-libraries"
-          sonarProjectName: "OLT.Libraries"
-          dotnetBuildArguments: ./
-          sonarOrganization: "outerlimitstech"
-          dotnetTestArguments: ./ --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
-
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: SonarCloud
+      #   uses: highbyte/sonarscan-dotnet@v2.1.2
+      #   with:
+      #     sonarProjectKey: "OuterlimitsTech_olt-dotnet-libraries"
+      #     sonarProjectName: "OLT.Libraries"
+      #     dotnetBuildArguments: ./
+      #     sonarOrganization: "outerlimitstech"
+      #     dotnetTestArguments: ./ --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      #     sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
