@@ -70,9 +70,9 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         }
 
         
-        private async Task<OltErrorHttp> InvokeMiddlewareAsync(IOptions<OltSerilogOptions> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
+        private async Task<OltErrorHttpSerilog> InvokeMiddlewareAsync(IOptions<OltSerilogOptions> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
         {
-            return await InvokeMiddlewareAsync<OltErrorHttp>(options, next, expectedStatusCode);
+            return await InvokeMiddlewareAsync<OltErrorHttpSerilog>(options, next, expectedStatusCode);
         }
 
         private async Task<T> InvokeMiddlewareAsync<T>(IOptions<OltSerilogOptions> options, RequestDelegate next, HttpStatusCode expectedStatusCode)
@@ -110,7 +110,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         [Fact]
         public void SerializeErrorHttp()
         {
-            var obj = new OltErrorHttp
+            var obj = new OltErrorHttpSerilog
             {
                 Message = Faker.Lorem.GetFirstWord(),
                 Errors = new List<string>
@@ -244,12 +244,13 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
 
                 })
                 .UseStartup<SerilogStartup>();
-                
 
-            var testServer = new TestServer(webBuilder);
-            var response = await testServer.CreateRequest("/api/league/2").SendAsync("GET");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
+            using (var testServer = new TestServer(webBuilder))
+            {
+                var response = await testServer.CreateRequest("/api/league/2").SendAsync("GET");
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            }
         }
 
         protected override void Dispose(bool disposing)

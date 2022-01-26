@@ -6,8 +6,7 @@ namespace OLT.Core
     {
         private IOltEnvironment _environment;
 
-        protected OltHostServiceBase(
-            IOltLogService loggingService)
+        protected OltHostServiceBase(IOltLogService loggingService)
         {
             LoggingService = loggingService;
         }

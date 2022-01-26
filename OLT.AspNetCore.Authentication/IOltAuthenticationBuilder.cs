@@ -4,9 +4,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public interface IOltAuthenticationBuilder : IOltAuthenticationScheme
+    public interface IOltAuthenticationBuilder
     {
+
+        /// <summary>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// </summary>
+        /// <param name="services"><seealso cref="IServiceCollection"/></param>
+        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         AuthenticationBuilder AddAuthentication(IServiceCollection services);
-        AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions, bool addScheme = true);
+
+        /// <summary>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// </summary>
+        /// <param name="services"><seealso cref="IServiceCollection"/></param>
+        /// <param name="configureOptions"><seealso cref="AuthenticationOptions" /></param>
+        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
+        AuthenticationBuilder AddAuthentication(IServiceCollection services, Action<AuthenticationOptions> configureOptions);
     }
 }

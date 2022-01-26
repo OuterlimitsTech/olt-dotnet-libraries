@@ -7,13 +7,13 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models.GeneralCode
     public enum CodeTableTypes
     {
         [Description("Genders")]
-        [Code("gender")]
+        [Code("gender", 500)]
         [EnumMember(Value = "gender")]
         GenderTypes = 2300,
 
 
         [Description("Sex")]
-        [Code("sex")]
+        [Code("sex", 100)]
         [EnumMember(Value = "sex")]
         SexTypes = 3800,
     }

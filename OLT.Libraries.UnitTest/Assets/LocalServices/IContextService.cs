@@ -15,16 +15,21 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         PersonEntity Get(IOltSearcher<PersonEntity> searcher);
         Task<PersonEntity> GetAsync(IOltSearcher<PersonEntity> searcher);
         List<PersonEntity> Get(bool includeDeleted);
+        List<PersonEntity> GetPeopleOrdered(bool includeDeleted);
+        List<PersonEntity> GetPeopleOrdered(IOltSearcher<PersonEntity> searcher);
+        List<PersonEntity> GetPeopleOrdered(params IOltSearcher<PersonEntity>[] searchers);
         List<PersonEntity> GetNonDeleted();
 
         List<PersonAutoMapperModel> GetAllPeople();
         List<PersonAutoMapperModel> GetAllPeopleSearcher();
+        List<PersonAutoMapperModel> GetAllPeopleOrdered();
         Task<List<PersonAutoMapperModel>> GetAllPeopleAsync();
         Task<List<PersonAutoMapperModel>> GetAllPeopleSearcherAsync();
 
         List<UserModel> GetAllUsers();
         List<UserModel> GetAllUsersSearcher();
         Task<List<UserModel>> GetAllUsersAsync();
+        Task<List<UserModel>> GetAllUsersOrderedAsync();
         Task<List<UserModel>> GetAllUsersSearcherAsync();
 
         UserDto GetDtoUser(int id);

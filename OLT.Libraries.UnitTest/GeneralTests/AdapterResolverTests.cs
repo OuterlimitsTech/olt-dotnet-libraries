@@ -5,6 +5,8 @@ using OLT.Core;
 using OLT.Libraries.UnitTest.Abstract;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Entity.Models;
+using OLT.Libraries.UnitTest.Assets.LocalServices;
+using OLT.Libraries.UnitTest.Assets.Maps;
 using OLT.Libraries.UnitTest.Assets.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,12 +17,15 @@ namespace OLT.Libraries.UnitTest.GeneralTests
     {
         private readonly IOltAdapterResolver _adapterResolver;
         private readonly SqlDatabaseContext _context;
+        private readonly IUserService _userService;
 
         public AdapterResolverTests(
+            IUserService userService,
             SqlDatabaseContext context,
             IOltAdapterResolver adapterResolver,
             ITestOutputHelper output) : base(output)
         {
+            _userService = userService;
             _adapterResolver = adapterResolver;
             _context = context;
             SeedPeople(_context, 50, 75);
@@ -56,6 +61,45 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             result1.Should().Equal(list.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast), (c1, c2) => c1.First == c2.NameFirst && c1.Last == c2.NameLast);
             var result2 = _adapterResolver.Map<PersonEntity, PersonDto>(list.ToArray()).OrderBy(p => p.First).ThenBy(p => p.Last);
             result2.Should().Equal(list.OrderBy(p => p.NameFirst).ThenBy(p => p.NameLast), (c1, c2) => c1.First == c2.NameFirst && c1.Last == c2.NameLast);
+        }
+
+        [Fact]
+        public void AfterMap()
+        {            
+            var afterMap1 = new NameAutoMapperModelAfterMap();
+            var mapName = $"{typeof(UserEntity).FullName}->{typeof(NameAutoMapperModel).FullName}";
+
+            Assert.Equal(afterMap1.Name, mapName);
+
+            var list = new List<NameAutoMapperModel>();
+            for (int i = 0; i <= Faker.RandomNumber.Next(10, 35); i++)
+            {
+                var item = new NameAutoMapperModel
+                {
+                    First = Faker.Name.First(),
+                    Last = Faker.Name.Last()
+                };
+                list.Add(item);
+            }
+            var result1 = afterMap1.AfterMap(list.AsQueryable()).ToList();
+            result1.Should().Equal(list.OrderBy(p => p.Last).ThenBy(p => p.First), (c1, c2) => c1.First == c2.First && c1.Last == c2.Last);
+
+            var afterMap2 = new OltAfterMapOrderBy<UserEntity, NameAutoMapperModel>(orderBy => orderBy.OrderBy(p => p.First).ThenBy(p => p.Last));
+            var result2 = afterMap2.AfterMap(list.AsQueryable()).ToList();
+            result2.Should().Equal(list.OrderBy(p => p.First).ThenBy(p => p.Last), (c1, c2) => c1.First == c2.First && c1.Last == c2.Last);
+
+
+            var people = new List<PersonEntity>();
+            for (int i = 0; i <= Faker.RandomNumber.Next(10, 35); i++)
+            {
+                var person = UnitTestHelper.AddPerson(_context);
+                people.Add(person);
+            }
+            
+            var personResult = _adapterResolver.Map<PersonEntity, NameAutoMapperModel>(people.AsQueryable()).ToList();
+            var expected = people.Select(s => new NameAutoMapperModel {  First = s.NameFirst, Middle = s.NameMiddle, Last = s.NameLast }).OrderBy(p => p.Last).ThenBy(p => p.First).ToList();
+            personResult.Should().Equal(expected, (c1, c2) => c1.First == c2.First && c1.Last == c2.Last);
+
         }
 
         [Fact]

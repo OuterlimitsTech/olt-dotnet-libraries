@@ -2,7 +2,7 @@
 
 namespace OLT.Core
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class CodeAttribute : Attribute
     {
         public string Code { get; private set; }

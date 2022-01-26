@@ -1,9 +1,6 @@
-﻿// ReSharper disable InconsistentNaming
-using System;
-
-namespace OLT.Core
+﻿namespace OLT.Core
 {
-    public static partial class OltDefaults 
+    public static class OltDefaults 
     {
 
         public static class Authentication
@@ -22,14 +19,11 @@ namespace OLT.Core
             }
         }
 
-
-
         public static class CalendarInvite
         {
             public const string FileName = "invite.ics";
             public const string TextCalendar = "text/calendar";
         }
-
 
         /// <summary>
         /// Commonly used environment names. (Cloned from Microsoft.Extensions.Hosting.Environments)
@@ -46,12 +40,6 @@ namespace OLT.Core
         public static readonly char[] LowerCase = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
         public static readonly char[] Numerals = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
         public static readonly char[] Symbols = { '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '{', '[', '}', ']', '-', '_', '=', '+', ':', ';', '|', '/', '?', ',', '<', '.', '>' };
-        public static readonly char[] SpecialCharacters = { '!', '@', '#', '$', '%', '&', '*', '+' };
-
-
-     
+        public static readonly char[] SpecialCharacters = { '!', '@', '#', '$', '%', '&', '*', '+' };     
     }
-
-
-
 }

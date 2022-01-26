@@ -6,19 +6,27 @@ using OLT.Core;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public class OltAuthenticationApiKey<TProvider> : OltAuthenticationSchemeBuilder<ApiKeyOptions>, IOltAuthenticationApiKey
-        where TProvider : class, IApiKeyProvider
+    public enum OltApiKeyLocation
     {
+        HeaderOrQueryParams,
+        HeaderOnly,
+        QueryParamsOnly
+    }
 
+    public class OltAuthenticationApiKey<TProvider> : OltAuthenticationSchemeBuilder<ApiKeyOptions>, IOltAuthenticationApiKey
+        where TProvider : class, IOltApiKeyProvider
+    {
         public OltAuthenticationApiKey(string realm)
         {
             Realm = realm;
         }
 
-        /// <summary>
-        /// Default is true
-        /// </summary>
-        public virtual bool Enabled { get; set; } = true;
+        public OltAuthenticationApiKey(string realm, OltApiKeyLocation apiKeyLocation)
+        {
+            Realm = realm;
+            ApiKeyLocation = apiKeyLocation;
+        }
+
 
         /// <summary>
         /// Default <seealso cref="ApiKeyDefaults.AuthenticationScheme"/>
@@ -42,20 +50,63 @@ namespace OLT.AspNetCore.Authentication
         public virtual string KeyName { get; set; } = "X-API-KEY";
 
 
+        /// <summary>
+        /// API Key location <seealso cref="OltApiKeyLocation"/>
+        /// </summary>
+        /// <remarks>
+        /// Defaults to <seealso cref="OltApiKeyLocation.HeaderOrQueryParams"/>
+        /// </remarks>
+        public virtual OltApiKeyLocation ApiKeyLocation { get; set; } = OltApiKeyLocation.HeaderOrQueryParams;
+
+
+
+        /// <summary>
+        /// Adds API Key Scheme middlware authentication to ASP.Net Core
+        /// </summary>
+        /// <param name="builder"><seealso cref="AuthenticationBuilder"/></param>
+        /// <param name="configureOptions"><seealso cref="ApiKeyOptions"/></param>
+        /// <returns><seealso cref="AuthenticationBuilder"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<ApiKeyOptions> configureOptions)
         {
-            if (Enabled)
+            if (builder == null)
             {
-                builder
-                    .AddApiKeyInHeaderOrQueryParams<TProvider>(opt =>
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            switch (ApiKeyLocation)
+            {
+                case OltApiKeyLocation.HeaderOnly:
+                    return builder
+                        .AddApiKeyInHeader<TProvider>(opt =>
+                        {
+                            opt.Realm = Realm;
+                            opt.KeyName = KeyName;
+                            configureOptions?.Invoke(opt);
+                        });
+
+                case OltApiKeyLocation.QueryParamsOnly:
+                    return builder
+                    .AddApiKeyInQueryParams<TProvider>(opt =>
                     {
                         opt.Realm = Realm;
                         opt.KeyName = KeyName;
                         configureOptions?.Invoke(opt);
                     });
+
+                case OltApiKeyLocation.HeaderOrQueryParams:
+                    return builder
+                        .AddApiKeyInHeaderOrQueryParams<TProvider>(opt =>
+                        {
+                            opt.Realm = Realm;
+                            opt.KeyName = KeyName;
+                            configureOptions?.Invoke(opt);
+                        });
             }
 
-            return builder;
+            throw new InvalidOperationException($"{nameof(ApiKeyLocation)} - invalid");
+            
         }
 
        

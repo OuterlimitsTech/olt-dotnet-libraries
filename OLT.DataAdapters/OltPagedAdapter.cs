@@ -27,7 +27,7 @@ namespace OLT.Core
 
         public virtual IOltPaged<TDestination> Map(IQueryable<TSource> queryable, IOltPagingParams pagingParams, Func<IQueryable<TSource>, IQueryable<TSource>> orderBy)
         {
-            var mapped = Map(orderBy(queryable));
+            var mapped = OltAfterMapConfig.ApplyAfterMaps<TSource, TDestination>(Map(orderBy(queryable)));
             return mapped.ToPaged(pagingParams);
         }
 

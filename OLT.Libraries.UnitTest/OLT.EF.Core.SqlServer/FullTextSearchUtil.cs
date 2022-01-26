@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,11 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.SqlServer
 
         private static string FormatResult(string search, OltFtsWildCardType wildCardType, bool matchAllWords)
         {
+            if (string.IsNullOrWhiteSpace(search))
+            {
+                return search;
+            }
+
             search = search.CleanForSearch();
             var words = search.Split(' ', '　', StringSplitOptions.None).ToList();
 
@@ -30,19 +36,57 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core.SqlServer
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name1.First, OltFtsWildCardType.BeginsWith, false, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.First, OltFtsWildCardType.BeginsWith, true, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.BeginsWith, true, true)]
+        [InlineData(null, OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData(null, OltFtsWildCardType.BeginsWith, true, true)]
+        [InlineData("", OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData("", OltFtsWildCardType.BeginsWith, true, true)]
+        [InlineData(" ", OltFtsWildCardType.BeginsWith, false, true)]
+        [InlineData(" ", OltFtsWildCardType.BeginsWith, true, true)]
+
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name1.First, OltFtsWildCardType.EndsWith, false, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.First, OltFtsWildCardType.EndsWith, true, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.EndsWith, true, true)]
+        [InlineData(null, OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData(null, OltFtsWildCardType.EndsWith, true, true)]
+        [InlineData("", OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData("", OltFtsWildCardType.EndsWith, true, true)]
+        [InlineData(" ", OltFtsWildCardType.EndsWith, false, true)]
+        [InlineData(" ", OltFtsWildCardType.EndsWith, true, true)]
+
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name1.First, OltFtsWildCardType.Contains, false, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.First, OltFtsWildCardType.Contains, true, true)]
         [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.Contains, false, true)]
+        [InlineData(UnitTestConstants.StringValues.PersonNames.Name2.FullName, OltFtsWildCardType.Contains, true, true)]
+        [InlineData(null, OltFtsWildCardType.Contains, false, true)]
+        [InlineData(null, OltFtsWildCardType.Contains, true, true)]
+        [InlineData("", OltFtsWildCardType.Contains, false, true)]
+        [InlineData("", OltFtsWildCardType.Contains, true, true)]
+        [InlineData(" ", OltFtsWildCardType.Contains, false, true)]
+        [InlineData(" ", OltFtsWildCardType.Contains, true, true)]
         public void WildCardType(string value, OltFtsWildCardType widCardType, bool matchAllWords, bool expectedResult)
         {
-            var result = OltFullTextSearchUtil.Contains(value, widCardType);
+            var result = OltFullTextSearchUtil.Contains(value, widCardType, matchAllWords);
             var compare = FormatResult(value, widCardType, matchAllWords);
-            Assert.Equal(result.Equals(compare), expectedResult);
+
+            if (expectedResult)
+            {
+                Assert.Equal(result, compare);
+            }
+            else
+            {
+                Assert.NotEqual(result, compare);
+            }
         }
 
+        [Fact]
+        public void Invalid()
+        {
+            var word = Faker.Name.First();
+            var invalidValue = -1000;
+            Assert.Throws<InvalidEnumArgumentException>(() => OltFullTextSearchUtil.Contains(word, (OltFtsWildCardType)invalidValue));
+        }
 
         [Fact]
         public void FreeText()

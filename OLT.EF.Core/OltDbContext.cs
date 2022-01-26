@@ -194,7 +194,6 @@ namespace OLT.Core
                 modelBuilder.SetSoftDeleteGlobalFilter();
             }
 
-
             base.OnModelCreating(modelBuilder);
         }
 
@@ -229,7 +228,7 @@ namespace OLT.Core
                 createModel.ModifyUser = AuditUser;
                 createModel.ModifyDate = DateTimeOffset.UtcNow;
             }
-
+         
             if (entityEntry.Entity is IOltEntityUniqueId uniqueModel && uniqueModel.UniqueId == Guid.Empty)
             {
                 uniqueModel.UniqueId = Guid.NewGuid();

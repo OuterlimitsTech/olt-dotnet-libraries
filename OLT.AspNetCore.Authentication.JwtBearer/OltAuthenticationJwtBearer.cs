@@ -20,9 +20,14 @@ namespace OLT.AspNetCore.Authentication
             JwtSecret = jwtSecret;
         }
 
+        /// <summary>
+        /// Default <seealso cref="JwtBearerDefaults.AuthenticationScheme"/>
+        /// </summary>
         public override string Scheme => JwtBearerDefaults.AuthenticationScheme;
 
-
+        /// <summary>
+        /// Secret used to encrypt/decrypt jwt signature <seealso cref="TokenValidationParameters.IssuerSigningKey"/>
+        /// </summary>
         public string JwtSecret { get; set; }
 
         /// <summary>
@@ -53,14 +58,26 @@ namespace OLT.AspNetCore.Authentication
         /// The runtime will consult this value and save the original token that was validated.
         /// </remarks>
         public bool ValidateAudience { get; set; }
-        
-        
 
+
+        /// <summary>
+        /// Builds Jwt Bearer Token Authentication Scheme
+        /// </summary>
+        /// <param name="builder"><seealso cref="AuthenticationBuilder"/></param>
+        /// <param name="configureOptions"><seealso cref="JwtBearerOptions"/></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         public override AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<JwtBearerOptions> configureOptions)
         {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
             if (string.IsNullOrEmpty(JwtSecret))
             {
-                throw new OltException($"{nameof(JwtSecret)} required");
+                throw new OltException(nameof(JwtSecret));
             }
 
             var key = Encoding.ASCII.GetBytes(JwtSecret);
@@ -69,7 +86,7 @@ namespace OLT.AspNetCore.Authentication
             {
 
 #pragma warning disable S125
-                //x.Events = new JwtBearerEvents
+                //opt.Events = new JwtBearerEvents
                 //{
                 //    OnTokenValidated = context =>
                 //    {
@@ -107,9 +124,5 @@ namespace OLT.AspNetCore.Authentication
         }
 
 
-        public AuthenticationBuilder AddScheme<TSchemeOption>(AuthenticationBuilder builder, Action<TSchemeOption> configureOptions) where TSchemeOption : AuthenticationSchemeOptions
-        {
-            throw new NotImplementedException();
-        }
     }
 }

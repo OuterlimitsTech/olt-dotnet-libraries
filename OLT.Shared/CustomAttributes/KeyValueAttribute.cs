@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OLT.Core
 {
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class KeyValueAttribute : Attribute
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]

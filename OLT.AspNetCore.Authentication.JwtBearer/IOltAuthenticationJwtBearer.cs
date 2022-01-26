@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using OLT.AspNetCore.Authentication;
 
 namespace OLT.AspNetCore.Authentication
 {
-    public interface IOltAuthenticationJwtBearer : IOltAuthenticationBuilder, IOltAuthenticationSchemeBuilder<JwtBearerOptions>
+    public interface IOltAuthenticationJwtBearer : IOltAuthenticationSchemeBuilder<JwtBearerOptions>
     {
 
         string JwtSecret { get; }

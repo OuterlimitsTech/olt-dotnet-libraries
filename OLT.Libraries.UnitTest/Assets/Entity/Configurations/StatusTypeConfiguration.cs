@@ -4,7 +4,7 @@ using OLT.Libraries.UnitTest.Assets.Enums;
 
 namespace OLT.Libraries.UnitTest.Assets.Entity.Configurations
 {
-    public class StatusTypeConfiguration : OltEntityTypeConfigurationFromEnum<StatusTypeCodeEntity, StatusTypes>
+    public class StatusTypeConfiguration : OltEntityTypeConfiguration<StatusTypeCodeEntity, StatusTypes>
     {
 
     }

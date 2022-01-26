@@ -57,23 +57,31 @@ namespace System
 
         public static string RemoveDoubleSpaces(this string self)
         {
+            if (string.IsNullOrEmpty(self))
+            {
+                return self;
+            }
             return OltRegExPatterns.Spaces.Replace(self.Trim(), " ");
         }
 
         public static string RemoveSpecialCharacters(this string self)
         {
+            if (string.IsNullOrEmpty(self))
+            {
+                return self;
+            }
             Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
             return r.Replace(self, string.Empty);
         }
 
         public static string CleanForSearch(this string self)
         {
-            return self.RemoveSpecialCharacters().Trim().RemoveDoubleSpaces();
+            return self?.RemoveSpecialCharacters().Trim().RemoveDoubleSpaces();
         }
 
         public static List<string> ToWords(this string self)
         {
-            return self.RemoveDoubleSpaces().Split(' ').ToList();
+            return self?.RemoveDoubleSpaces().Split(' ').ToList();
         }
 
 

@@ -15,7 +15,7 @@ namespace OLT.Core
         /// Configures Default Assembly Scan along with the mentioned interfaces
         /// </summary>
         /// <remarks>
-        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// Adds <see cref="IOltLogService"/> as singletons
         /// </remarks>
         /// <remarks>
         /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
@@ -32,7 +32,7 @@ namespace OLT.Core
         /// Configures Default Assembly Scan along with the mentioned interfaces
         /// </summary>
         /// <remarks>
-        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// Adds <see cref="IOltLogService"/> as singletons
         /// </remarks>
         /// <remarks>
         /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
@@ -50,7 +50,7 @@ namespace OLT.Core
         /// Scans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
         /// </summary>
         /// <remarks>
-        /// Adds <see cref="IOltConfigManager"/> and <see cref="IOltLogService"/> as singletons
+        /// Adds <see cref="IOltLogService"/> as singletons
         /// </remarks>
         /// <remarks>
         /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
@@ -78,10 +78,5 @@ namespace OLT.Core
                 .AddSingleton<IOltLogService, OltLogService>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
         }
-
-
-
-
-
     }
 }
