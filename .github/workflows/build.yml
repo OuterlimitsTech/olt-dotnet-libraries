@@ -51,8 +51,8 @@ jobs:
       - name: Print branch name
         run: echo 'The branch name is' ${{ steps.branch-name.outputs.current_branch }}
 
-      # dotnet tool install --global dotnet-sonarscanner
       # https://www.seeleycoder.com/blog/sonarqube-with-github-actions-and-net-core-5-x/
+      # this process reads the .config -> dotnet-tools.json to restore packages
       - name: Sonarqube Begin
         run: |
           dotnet tool restore

@@ -87,8 +87,9 @@ namespace OLT.Core
         public bool HasPermission<TPermissionEnum>(params TPermissionEnum[] permissions) where TPermissionEnum : System.Enum
         {
             var val = false;
-            foreach (var permission in permissions)
+            for (int i = 0; i < permissions.Length; i++)
             {
+                TPermissionEnum permission = permissions[i];
                 if (HasRoleClaim(permission.GetCodeEnum()))
                 {
                     val = true;

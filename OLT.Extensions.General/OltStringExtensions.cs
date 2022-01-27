@@ -482,8 +482,9 @@ namespace System
             {
                 return false;
             }
-            foreach (string x in comparisons)
+            for (int i = 0; i < comparisons.Length; i++)
             {
+                string x = comparisons[i];
                 if (self.StartsWith(x))
                     return true;
             }
@@ -497,8 +498,9 @@ namespace System
             {
                 return false;
             }
-            foreach (string x in comparisons)
+            for (int i = 0; i < comparisons.Length; i++)
             {
+                string x = comparisons[i];
                 if (self.Equals(x))
                     return true;
             }
