@@ -63,7 +63,7 @@ jobs:
           ASPNETCORE_ENVIRONMENT: Test
 
       - name: Sonarqube end
-        run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
+        run: dotnet tool run sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
