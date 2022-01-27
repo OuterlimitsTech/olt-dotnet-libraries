@@ -1,7 +1,4 @@
-param(
-    [string] $sonarSecret
-    [string] $branch
-)
+param([string] $sonarSecret, [string] $branch)
 
 # Copied From
 # https://github.com/alkampfergit/DotNetCoreCryptography/blob/master/sonarcloud.ps1
