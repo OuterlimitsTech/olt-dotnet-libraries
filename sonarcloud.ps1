@@ -29,8 +29,8 @@ dotnet tool restore
 # dotnet tool run dotnet-sonarscanner begin /k:"OuterlimitsTech_olt-dotnet-libraries" /v:"$assemblyVer" /o:"outerlimitstech" /d:sonar.login="$sonarSecret" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths=TestResults/*.trx /d:sonar.cs.opencover.reportsPaths=TestResults/*/coverage.opencover.xml /d:sonar.coverage.exclusions="**Test*.cs" /d:sonar.branch.name="$branch"
 dotnet tool run dotnet-sonarscanner begin /k:"OuterlimitsTech_olt-dotnet-libraries" /o:"outerlimitstech" /d:sonar.login="$sonarSecret" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths=TestResults/*.trx /d:sonar.cs.opencover.reportsPaths=TestResults/*/coverage.opencover.xml /d:sonar.coverage.exclusions="**Test*.cs" /d:sonar.branch.name="$branch"
 
-dotnet restore src
-dotnet build src --configuration release
+dotnet restore "OLT.Libraries.sln"
+dotnet build "OLT.Libraries.sln" --configuration release
 dotnet test "OLT.Libraries.sln" --collect:"XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unittests.trx" --no-build --no-restore --configuration release -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
          
 
