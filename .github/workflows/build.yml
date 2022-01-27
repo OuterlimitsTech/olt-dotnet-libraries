@@ -36,18 +36,8 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      # - name: Restore dependencies
-      #   run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
-
-      # https://www.seeleycoder.com/blog/sonarqube-with-github-actions-and-net-core-5-x/
-      - name: Install Sonarqube
-        run: |
-          dotnet tool install --global dotnet-sonarscanner
-
-      # - name: Extract branch name
-      #   shell: bash
-      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      #   id: extract_branch
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
 
       - name: Get branch name
         id: branch-name
@@ -56,21 +46,33 @@ jobs:
       - name: Print branch name
         run: echo 'The branch name is' ${{ steps.branch-name.outputs.current_branch }}
 
-      # - name: Build
-      #   run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
-
-      # - name: Test
-      #   run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release"
-      #   env:
-      #     ASPNETCORE_ENVIRONMENT: Test
-
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
+      # https://www.seeleycoder.com/blog/sonarqube-with-github-actions-and-net-core-5-x/
+      - name: Sonarqube Begin
         run: |
-          .\sonarcloud.ps1 -sonarSecret ${{ secrets.SONAR_TOKEN }} -branch ${{ steps.branch-name.outputs.current_branch }}
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool run dotnet-sonarscanner begin /k:"OuterlimitsTech_olt-dotnet-libraries" /o:"outerlimitstech" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths=TestResults/*.trx /d:sonar.cs.opencover.reportsPaths=TestResults/*/coverage.opencover.xml /d:sonar.coverage.exclusions="**Test*.cs" /d:sonar.branch.name="${{ steps.branch-name.outputs.current_branch }}"
+
+      - name: Build
+        run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
+
+      - name: Test
+        run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release" --collect:"XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unittests.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        # --collect:"XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unittests.trx" --no-build --no-restore --configuration release -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        env:
+          ASPNETCORE_ENVIRONMENT: Test
+
+      - name: Sonarqube end
+        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Build and analyze
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: |
+      #     .\sonarcloud.ps1 -sonarSecret ${{ secrets.SONAR_TOKEN }} -branch ${{ steps.branch-name.outputs.current_branch }}
 
       # - name: SonarCloud
       #   uses: highbyte/sonarscan-dotnet@v2.1.2
