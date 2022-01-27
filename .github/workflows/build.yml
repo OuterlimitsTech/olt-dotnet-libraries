@@ -44,13 +44,17 @@ jobs:
         run: |
           dotnet tool install --global dotnet-sonarscanner
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+      # - name: Extract branch name
+      #   shell: bash
+      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      #   id: extract_branch
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.1
 
       - name: Print branch name
-        run: echo 'The branch name is' ${{ steps.extract_branch.outputs.branch }}
+        run: echo 'The branch name is' ${{ steps.branch-name.outputs.current_branch }}
 
       # - name: Build
       #   run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
