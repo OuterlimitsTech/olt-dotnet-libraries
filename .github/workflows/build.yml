@@ -40,7 +40,7 @@ jobs:
       #   run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
 
       # https://www.seeleycoder.com/blog/sonarqube-with-github-actions-and-net-core-5-x/
-      - name: Sonarqube Begin
+      - name: Install Sonarqube
         run: |
           dotnet tool install --global dotnet-sonarscanner
 
@@ -64,13 +64,13 @@ jobs:
       #   env:
       #     ASPNETCORE_ENVIRONMENT: Test
 
-      # - name: Build and analyze
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   shell: powershell
-      #   run: |
-      #     .\sonarcloud.ps1 -sonarSecret ${{ secrets.SONAR_TOKEN }}
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\sonarcloud.ps1 -sonarSecret ${{ secrets.SONAR_TOKEN }} -branch ${{ steps.branch-name.outputs.current_branch }}
 
       # - name: SonarCloud
       #   uses: highbyte/sonarscan-dotnet@v2.1.2
