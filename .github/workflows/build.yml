@@ -24,8 +24,8 @@ env:
 jobs:
   build:
     name: Build
-    # runs-on: windows-latest
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+    # runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -47,14 +47,22 @@ jobs:
         env:
           ASPNETCORE_ENVIRONMENT: Test
 
-      - name: SonarCloud
-        uses: highbyte/sonarscan-dotnet@v2.1.2
-        with:
-          sonarProjectKey: "OuterlimitsTech_olt-dotnet-libraries"
-          sonarProjectName: "OLT.Libraries"
-          sonarOrganization: "outerlimitstech"
-          dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+      - name: Build and analyze
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: powershell
+        run: |
+          .\sonarcloud.ps1 -sonarSecret ${{ secrets.SONAR_TOKEN }}
+
+      # - name: SonarCloud
+      #   uses: highbyte/sonarscan-dotnet@v2.1.2
+      #   with:
+      #     sonarProjectKey: "OuterlimitsTech_olt-dotnet-libraries"
+      #     sonarProjectName: "OLT.Libraries"
+      #     sonarOrganization: "outerlimitstech"
+      #     dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      #     sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
