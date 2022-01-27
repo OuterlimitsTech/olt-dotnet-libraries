@@ -39,6 +39,11 @@ jobs:
       # - name: Restore dependencies
       #   run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
 
+      # https://www.seeleycoder.com/blog/sonarqube-with-github-actions-and-net-core-5-x/
+      - name: Sonarqube Begin
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+
       # - name: Build
       #   run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
 
