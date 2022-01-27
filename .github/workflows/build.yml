@@ -36,16 +36,16 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
+      # - name: Restore dependencies
+      #   run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
 
-      - name: Build
-        run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
+      # - name: Build
+      #   run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
 
-      - name: Test
-        run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release"
-        env:
-          ASPNETCORE_ENVIRONMENT: Test
+      # - name: Test
+      #   run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release"
+      #   env:
+      #     ASPNETCORE_ENVIRONMENT: Test
 
       - name: Build and analyze
         env:
