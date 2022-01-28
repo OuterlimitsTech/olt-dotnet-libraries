@@ -3,7 +3,9 @@
     "OLT.Libraries.UnitTest": {
       "commandName": "Project",
       "environmentVariables": {
-        "Testing": "Testing"
+        "Testing": "Testing",
+        "DOTNET_ENVIRONMENT": "Test",
+        "ASPNETCORE_ENVIRONMENT": "Test"
       }
     }
   }

@@ -19,8 +19,9 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         private readonly TestServer _testServer;
 
         public AspNetCoreTests()
-
         {
+            Startup.LoadLocalEnvironmentVariables();
+
             var webBuilder = new WebHostBuilder();
             webBuilder
                 .ConfigureAppConfiguration(builder =>

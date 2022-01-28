@@ -92,8 +92,13 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
     public class FakeUserIdentity
     {
 
-        public FakeUserIdentity() 
+        public FakeUserIdentity(bool loadFakeData) 
         {
+            if (!loadFakeData)
+            {
+                return;
+            }
+
             NameIdentifier = Faker.Internet.UserName();
             Email = Faker.Internet.Email();
             UserPrincipalName = Faker.RandomNumber.Next(1000, 9000);
@@ -115,6 +120,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         public string MobilePhone { get; }
         public OltPersonName PersonName { get; }
 
+
         public List<TestSecurityRoles> Roles => new List<TestSecurityRoles> { TestSecurityRoles.RoleOne, TestSecurityRoles.RoleTwo };
         public List<TestSecurityPermissions> Permissions => new List<TestSecurityPermissions> { TestSecurityPermissions.PermissionOne, TestSecurityPermissions.PermissionThree };
 
@@ -127,17 +133,29 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
                     return _claims;
                 }
 
-                _claims.Add(new Claim(ClaimTypes.Upn, UserPrincipalName.ToString()));
-                _claims.Add(new Claim(ClaimTypes.NameIdentifier, NameIdentifier));
-                _claims.Add(new Claim(ClaimTypes.GivenName, PersonName.First));
-                _claims.Add(new Claim(OltClaimTypes.MiddleName, PersonName.Middle));
-                _claims.Add(new Claim(ClaimTypes.Surname, PersonName.Last));
-                _claims.Add(new Claim(ClaimTypes.Name, PersonName.FullName));
-                _claims.Add(new Claim(ClaimTypes.Email, Email));
-                _claims.Add(new Claim(ClaimTypes.HomePhone, Phone));
-                _claims.Add(new Claim(ClaimTypes.MobilePhone, MobilePhone));
+                if (UserPrincipalName > 0)
+                {
+                    AddClaim(ClaimTypes.Upn, UserPrincipalName.ToString());
+                }
+                
+                AddClaim(ClaimTypes.NameIdentifier, NameIdentifier);
+                AddClaim(ClaimTypes.GivenName, PersonName?.First);
+                AddClaim(OltClaimTypes.MiddleName, PersonName?.Middle);
+                AddClaim(ClaimTypes.Surname, PersonName?.Last);
+                //AddClaim(ClaimTypes.Name, PersonName.FullName)); //Added by Generic Identity
+                AddClaim(ClaimTypes.Email, Email);
+                AddClaim(ClaimTypes.HomePhone, Phone);
+                AddClaim(ClaimTypes.MobilePhone, MobilePhone);
                 return _claims;
             }
+        }
+
+        private void AddClaim(string type, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                _claims.Add(new Claim(type, value));
+            }            
         }
     }
 
@@ -155,8 +173,14 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         {
             get
             {
+                if (FakeUser == null)
+                {
+                    return null;
+                }
+
                 //var roles = new List<string>();
-                var identity = new GenericIdentity(FakeUser.UserPrincipalName.ToString());
+                var identity = new GenericIdentity(FakeUser.PersonName?.FullName ?? "unknown");
+
                 FakeUser.Claims.ForEach(claim => identity.AddClaim(claim));
 
                 FakeUser.Roles.ForEach(role =>
