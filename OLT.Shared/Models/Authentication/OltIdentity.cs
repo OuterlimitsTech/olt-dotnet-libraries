@@ -59,7 +59,7 @@ namespace OLT.Core
         /// </summary>
         public virtual bool HasRoleClaim(string claimName)
         {
-            return GetRoleClaims()?.Any(p => string.Equals(p.Value, claimName, StringComparison.OrdinalIgnoreCase)) ?? false;
+            return GetRoleClaims().Any(p => string.Equals(p.Value, claimName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

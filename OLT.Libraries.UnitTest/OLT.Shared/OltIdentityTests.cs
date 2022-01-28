@@ -77,6 +77,11 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
 
             Assert.False(identity.HasRoleClaim(null));
             Assert.False(identity.HasRoleClaim(Faker.Lorem.GetFirstWord()));
+            Assert.True(identity.HasRoleClaim(TestSecurityRoles.RoleOne.GetCodeEnum().ToLower()));
+            Assert.False(identity.HasRoleClaim(TestSecurityRoles.RoleTwo.GetCodeEnum().ToLower()));
+
+            Assert.True(identity.HasRoleClaim(TestSecurityRoles.RoleOne.GetCodeEnum().ToUpper()));
+            Assert.False(identity.HasRoleClaim(TestSecurityRoles.RoleTwo.GetCodeEnum().ToUpper()));
         }
 
 
