@@ -72,6 +72,8 @@ namespace OLT.Core
 
         public bool HasRole<TRoleEnum>(params TRoleEnum[] roles) where TRoleEnum : System.Enum
         {
+            if (roles == null) return false;
+
             var val = false;
             foreach (var role in roles)
             {
@@ -86,17 +88,7 @@ namespace OLT.Core
 
         public bool HasPermission<TPermissionEnum>(params TPermissionEnum[] permissions) where TPermissionEnum : System.Enum
         {
-            var val = false;
-            for (int i = 0; i < permissions.Length; i++)
-            {
-                TPermissionEnum permission = permissions[i];
-                if (HasRoleClaim(permission.GetCodeEnum()))
-                {
-                    val = true;
-                    break;
-                }
-            }
-            return val;
+            return HasRole(permissions);
         }
 
     }

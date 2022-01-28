@@ -21,8 +21,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.NotNull(identity.Identity);
             Assert.NotEmpty(identity.GetAllClaimTypes());
             Assert.NotEmpty(identity.GetRoleClaims());
-            Assert.False(identity.IsAnonymous);
-            var x = identity.GetClaimTypes(ClaimTypes.Name);
+            Assert.False(identity.IsAnonymous);            
             Assert.Single(identity.GetClaimTypes(ClaimTypes.Upn));
             Assert.Single(identity.GetClaimTypes(ClaimTypes.NameIdentifier));
             Assert.Single(identity.GetClaimTypes(ClaimTypes.GivenName));
@@ -51,7 +50,33 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.Equal(fakeUser.Email, identity.Email);
             Assert.Equal(fakeUser.Phone, identity.Phone);
             Assert.Equal(fakeUser.PersonName.FullName, identity.FullName);
-            
+            Assert.Equal(fakeUser.NameIdentifier, identity.GetDbUsername());
+
+            Assert.True(identity.HasRole(TestSecurityRoles.RoleOne));
+            Assert.True(identity.HasRole(TestSecurityRoles.RoleTwo));
+            Assert.False(identity.HasRole(TestSecurityRoles.RoleThree));
+            Assert.True(identity.HasRole(TestSecurityRoles.RoleThree, TestSecurityRoles.RoleTwo));
+            Assert.True(identity.HasRole(TestSecurityRoles.RoleThree, TestSecurityRoles.RoleOne));
+            Assert.True(identity.HasRole(TestSecurityRoles.RoleTwo, TestSecurityRoles.RoleOne));
+            Assert.False(identity.HasRole(TestSecurityRoles.RoleThree, TestSecurityRoles.RoleFour));
+
+            Assert.False(identity.HasRole<TestSecurityRoles>(null));
+
+
+            Assert.True(identity.HasPermission(TestSecurityPermissions.PermissionOne));
+            Assert.False(identity.HasPermission(TestSecurityPermissions.PermissionTwo));
+            Assert.True(identity.HasPermission(TestSecurityPermissions.PermissionThree));
+            Assert.False(identity.HasPermission(TestSecurityPermissions.PermissionFour));
+            Assert.True(identity.HasPermission(TestSecurityPermissions.PermissionThree, TestSecurityPermissions.PermissionTwo));
+            Assert.True(identity.HasPermission(TestSecurityPermissions.PermissionThree, TestSecurityPermissions.PermissionOne));
+            Assert.True(identity.HasPermission(TestSecurityPermissions.PermissionTwo, TestSecurityPermissions.PermissionOne));
+            Assert.True(identity.HasPermission(TestSecurityPermissions.PermissionThree, TestSecurityPermissions.PermissionFour));
+            Assert.False(identity.HasPermission(TestSecurityPermissions.PermissionTwo, TestSecurityPermissions.PermissionFour));
+
+            Assert.False(identity.HasPermission<TestSecurityPermissions>(null));
+
+            Assert.False(identity.HasRoleClaim(null));
+            Assert.False(identity.HasRoleClaim(Faker.Lorem.GetFirstWord()));
         }
 
 
@@ -65,20 +90,43 @@ namespace OLT.Libraries.UnitTest.OLT.Shared
             Assert.Empty(identity.GetClaimTypes(ClaimTypes.Name));
             Assert.Empty(identity.GetClaimTypes(Faker.Lorem.GetFirstWord()));
             Assert.True(identity.IsAnonymous);
+
+            Assert.Null(identity.UserPrincipalName);
+            Assert.Null(identity.Username);
+            Assert.Null(identity.FirstName);
+            Assert.Null(identity.MiddleName);
+            Assert.Null(identity.LastName);
+            Assert.Null(identity.Email);
+            Assert.Null(identity.Phone);
+            Assert.Null(identity.FullName);
+            Assert.Null(identity.GetDbUsername());
+
+            Assert.False(identity.HasRole(TestSecurityRoles.RoleThree));
+            Assert.False(identity.HasPermission(TestSecurityPermissions.PermissionOne));
+
+            Assert.False(identity.HasRoleClaim(null));
+            Assert.False(identity.HasRoleClaim(Faker.Lorem.GetFirstWord()));
+
         }
 
-        //[Fact]
-        //public void NullUser()
-        //{
-        //    var fakeUser = new FakeUserIdentity(false);
-        //    var identity = new UnitTestingAppIdentity(fakeUser);
-            
-        //    Assert.NotNull(identity.Identity);
-        //    Assert.Empty(identity.GetAllClaimTypes());
-        //    Assert.Empty(identity.GetRoleClaims());
-        //    Assert.Empty(identity.GetClaimTypes(ClaimTypes.Name));
-        //    Assert.Empty(identity.GetClaimTypes(Faker.Lorem.GetFirstWord()));
-        //    Assert.True(identity.IsAnonymous);
-        //}
+        [Fact]
+        public void NullUser()
+        {
+            var fakeUser = new FakeUserIdentity(false);
+            var identity = new UnitTestingAppIdentity(fakeUser);
+
+            Assert.NotNull(identity.Identity);
+            Assert.Single(identity.GetAllClaimTypes());
+            Assert.Empty(identity.GetRoleClaims());
+            Assert.Equal("unknown", identity.FullName);
+            Assert.Empty(identity.GetClaimTypes(Faker.Lorem.GetFirstWord()));
+            Assert.True(identity.IsAnonymous);
+            Assert.False(identity.HasRole(TestSecurityRoles.RoleThree));
+            Assert.False(identity.HasPermission(TestSecurityPermissions.PermissionOne));
+            Assert.False(identity.HasRoleClaim(null));
+            Assert.False(identity.HasRoleClaim(Faker.Lorem.GetFirstWord()));
+
+
+        }
     }
 }

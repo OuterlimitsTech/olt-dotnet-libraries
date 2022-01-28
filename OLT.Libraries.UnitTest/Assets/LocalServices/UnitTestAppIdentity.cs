@@ -74,6 +74,10 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
         [Code("role-three")]
         RoleThree,
+
+        [Code("role-four")]
+        RoleFour,
+
     }
 
     public enum TestSecurityPermissions
@@ -86,6 +90,10 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
         [Code("perm-three")]
         PermissionThree,
+
+
+        [Code("perm-four")]
+        PermissionFour,
     }
 
 
@@ -111,6 +119,9 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
                 Middle = Faker.Name.Middle(),
                 Last = Faker.Name.Last(),
             };
+
+            Roles = new List<TestSecurityRoles> { TestSecurityRoles.RoleOne, TestSecurityRoles.RoleTwo };
+            Permissions = new List<TestSecurityPermissions> { TestSecurityPermissions.PermissionOne, TestSecurityPermissions.PermissionThree };
         }
         private List<Claim> _claims = new List<Claim>();
         public string NameIdentifier { get; }
@@ -121,8 +132,8 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         public OltPersonName PersonName { get; }
 
 
-        public List<TestSecurityRoles> Roles => new List<TestSecurityRoles> { TestSecurityRoles.RoleOne, TestSecurityRoles.RoleTwo };
-        public List<TestSecurityPermissions> Permissions => new List<TestSecurityPermissions> { TestSecurityPermissions.PermissionOne, TestSecurityPermissions.PermissionThree };
+        public List<TestSecurityRoles> Roles { get; }
+        public List<TestSecurityPermissions> Permissions { get; }
 
         public List<Claim> Claims
         {
@@ -183,12 +194,12 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
 
                 FakeUser.Claims.ForEach(claim => identity.AddClaim(claim));
 
-                FakeUser.Roles.ForEach(role =>
+                FakeUser.Roles?.ForEach(role =>
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, role.GetCodeEnum()));
                     //roles.Add(role.GetCodeEnum());
                 });
-                FakeUser.Permissions.ForEach(perm =>
+                FakeUser.Permissions?.ForEach(perm =>
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, perm.GetCodeEnum()));
                     //roles.Add(perm.GetCodeEnum())
