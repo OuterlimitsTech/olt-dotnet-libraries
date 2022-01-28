@@ -159,13 +159,10 @@ namespace OLT.Core
             if (DefaultStringType == DefaultStringTypes.Varchar)
             {
                 foreach (var property in modelBuilder.Model.GetEntityTypes()
-                    .SelectMany(t => t.GetProperties())
-                    .Where(p => p.ClrType == typeof(string)))
+                                    .SelectMany(t => t.GetProperties())
+                                    .Where(p => p.ClrType == typeof(string)).Where(property => property.IsUnicode().GetValueOrDefault(true)))
                 {
-                    if (property.IsUnicode().GetValueOrDefault(true))
-                    {
-                        property.SetIsUnicode(false);
-                    }
+                    property.SetIsUnicode(false);
                 }
             }
 

@@ -59,7 +59,7 @@ namespace OLT.Core
         /// </summary>
         public virtual bool HasRoleClaim(string claimName)
         {
-            return GetRoleClaims()?.Any(p => string.Equals(p.Value, claimName, StringComparison.OrdinalIgnoreCase)) ?? false;
+            return GetRoleClaims().Any(p => string.Equals(p.Value, claimName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -72,6 +72,8 @@ namespace OLT.Core
 
         public bool HasRole<TRoleEnum>(params TRoleEnum[] roles) where TRoleEnum : System.Enum
         {
+            if (roles == null) return false;
+
             var val = false;
             foreach (var role in roles)
             {
@@ -86,16 +88,7 @@ namespace OLT.Core
 
         public bool HasPermission<TPermissionEnum>(params TPermissionEnum[] permissions) where TPermissionEnum : System.Enum
         {
-            var val = false;
-            foreach (var permission in permissions)
-            {
-                if (HasRoleClaim(permission.GetCodeEnum()))
-                {
-                    val = true;
-                    break;
-                }
-            }
-            return val;
+            return HasRole(permissions);
         }
 
     }

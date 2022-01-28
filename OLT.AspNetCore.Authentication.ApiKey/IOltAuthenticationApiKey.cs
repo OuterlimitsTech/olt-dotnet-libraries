@@ -2,7 +2,7 @@
 
 namespace OLT.AspNetCore.Authentication
 {
-    public interface IOltAuthenticationApiKey : IOltAuthenticationBuilder, IOltAuthenticationSchemeBuilder<ApiKeyOptions>
+    public interface IOltAuthenticationApiKey : IOltAuthenticationSchemeBuilder<ApiKeyOptions>
     {
         /// <summary>
         /// <seealso cref="AspNetCore.Authentication.ApiKey.ApiKeyOptions.Realm"/>

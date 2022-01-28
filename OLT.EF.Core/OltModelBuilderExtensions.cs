@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,10 +15,11 @@ namespace OLT.Core
 
         public static ModelBuilder EntitiesOfType(this ModelBuilder modelBuilder, Type type,
             Action<EntityTypeBuilder> buildAction)
-        {
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-                if (type.IsAssignableFrom(entityType.ClrType))
-                    buildAction(modelBuilder.Entity(entityType.ClrType));
+        {         
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(entityType => type.IsAssignableFrom(entityType.ClrType)))
+            {
+                buildAction(modelBuilder.Entity(entityType.ClrType));
+            }
 
             return modelBuilder;
         }

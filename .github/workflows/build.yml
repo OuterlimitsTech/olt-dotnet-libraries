@@ -1,0 +1,93 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+      # - release/**
+      # - feature/**
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  SOURCE_DIRECTORY: ${{ github.workspace }}
+  SENDGRID_TMPL_JSON: ${{ secrets.SENDGRID_TMPL_JSON }}
+  SENDGRID_TMPL_TAG: ${{ secrets.SENDGRID_TMPL_TAG }}
+  SENDGRID_TOKEN: ${{ secrets.SENDGRID_TOKEN }}
+  SMTP_HOST: ${{ secrets.SMTP_HOST }}
+  SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+  SMTP_PORT: ${{ secrets.SMTP_PORT }}
+  SMTP_FROM_ADDRESS: ${{ secrets.SMTP_FROM_ADDRESS }}
+  SMTP_TO_ADDRESS: ${{ secrets.SMTP_TO_ADDRESS }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    # runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.1
+
+      - name: Print branch name
+        run: echo 'The branch name is' ${{ steps.branch-name.outputs.current_branch }}
+
+      # https://www.seeleycoder.com/blog/sonarqube-with-github-actions-and-net-core-5-x/
+      # this process reads the .config -> dotnet-tools.json to restore packages
+      - name: Sonarqube Begin
+        run: |
+          dotnet tool restore
+          dotnet tool run dotnet-sonarscanner begin /k:"OuterlimitsTech_olt-dotnet-libraries" /o:"outerlimitstech" /d:sonar.login=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths=TestResults/*.trx /d:sonar.cs.opencover.reportsPaths=TestResults/*/coverage.opencover.xml /d:sonar.coverage.exclusions="**Test*.cs" /d:sonar.branch.name=${{ steps.branch-name.outputs.current_branch }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration "Release" --no-restore
+
+      - name: Test
+        run: dotnet test ${{ env.SOURCE_DIRECTORY }} --no-build --verbosity normal --no-restore --configuration "Release" --collect:"XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unittests.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        # --collect:"XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unittests.trx" --no-build --no-restore --configuration release -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        env:
+          ASPNETCORE_ENVIRONMENT: Test
+
+      - name: Sonarqube end
+        run: dotnet tool run dotnet-sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Build and analyze
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: |
+      #     .\sonarcloud.ps1 -sonarSecret ${{ secrets.SONAR_TOKEN }} -branch ${{ steps.branch-name.outputs.current_branch }}
+
+      # - name: SonarCloud
+      #   uses: highbyte/sonarscan-dotnet@v2.1.2
+      #   with:
+      #     sonarProjectKey: "OuterlimitsTech_olt-dotnet-libraries"
+      #     sonarProjectName: "OLT.Libraries"
+      #     sonarOrganization: "outerlimitstech"
+      #     dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      #     sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
