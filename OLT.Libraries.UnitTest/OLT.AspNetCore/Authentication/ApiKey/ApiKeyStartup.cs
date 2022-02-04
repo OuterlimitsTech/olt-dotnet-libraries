@@ -1,18 +1,14 @@
-﻿using AspNetCore.Authentication.ApiKey;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OLT.AspNetCore.Authentication;
 using OLT.Core;
-using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.Extensions;
 using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 using AspNetCore.Authentication.ApiKey;
-using System;
 
 
 namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey

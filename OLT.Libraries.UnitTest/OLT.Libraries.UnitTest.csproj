@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <SonarQubeExclude>true</SonarQubeExclude>
     <UserSecretsId>a1ca46fa-4371-49cb-b686-334363ca01f1</UserSecretsId>

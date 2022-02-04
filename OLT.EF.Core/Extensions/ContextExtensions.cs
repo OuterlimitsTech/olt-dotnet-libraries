@@ -111,6 +111,15 @@ namespace OLT.Core
             {
                 var clrType = builder.Metadata.ClrType;
 
+#if NET6_0_OR_GREATER
+                //TPH class?
+                if (!builder.Metadata.GetDefaultTableName().Equals(builder.Metadata.GetTableName(), StringComparison.OrdinalIgnoreCase) && builder.Metadata.GetDiscriminatorPropertyName() != null)
+                {
+                    //Console.WriteLine($"GetDiscriminatorProperty: {builder.Metadata.GetDiscriminatorProperty()} of type {builder.Metadata.ClrType.FullName}");
+                    clrType = clrType.BaseType;
+                    //Console.WriteLine($"{builder.Metadata.GetTableName()} not equal to {builder.Metadata.GetDefaultTableName()} of type {builder.Metadata.ClrType.FullName}");
+                }
+#else
                 //TPH class?
                 if (!builder.Metadata.GetDefaultTableName().Equals(builder.Metadata.GetTableName(), StringComparison.OrdinalIgnoreCase) &&
                     builder.Metadata.GetDiscriminatorProperty()?.GetColumnName(StoreObjectIdentifier.Table(builder.Metadata.GetTableName(), builder.Metadata.GetSchema())) != null)
@@ -124,10 +133,11 @@ namespace OLT.Core
                 var newParam = Expression.Parameter(clrType);
                 var newBody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
                 modelBuilder.Entity(clrType).HasQueryFilter(Expression.Lambda(newBody, newParam));
+#endif
             });
-
 #pragma warning restore S125
-        }
+
+        }        
 
 
 
