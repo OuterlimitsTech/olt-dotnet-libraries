@@ -34,7 +34,7 @@ jobs:
         uses: battila7/get-version-action@v2.2.1
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
+        run: dotnet restore ${{ env.SOURCE_DIRECTORY }} --force
 
       - name: Build
         run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration Release -p:Version=${{ steps.version.outputs.version-without-v }} --no-restore

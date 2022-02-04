@@ -5,6 +5,8 @@ on:
       - master
       # - release/**
       # - feature/**
+    paths-ignore:
+      - "**/README.md"
 
   pull_request:
     types: [opened, synchronize, reopened]
@@ -42,7 +44,7 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.SOURCE_DIRECTORY }}
+        run: dotnet restore ${{ env.SOURCE_DIRECTORY }} --force
 
       - name: Get branch name
         id: branch-name
