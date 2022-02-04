@@ -94,6 +94,7 @@
     <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Shared\OLT.Extensions.Caching.Shared.csproj" />
+    <ProjectReference Include="..\OLT.Extensions.Configuration\OLT.Extensions.Configuration.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />

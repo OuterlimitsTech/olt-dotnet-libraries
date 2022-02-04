@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace OLT.Core
 {
-    public static class ConfigurationExtensions
+    public static class OltConfigurationExtensions
     {
         /// <summary>
         /// Looks for the connection string
@@ -14,11 +14,11 @@ namespace OLT.Core
         /// <param name="settings"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string GetOltConnectionString(this IConfiguration settings, string name)
+        public static string GetOltConnectionString(this IConfiguration config, string name)
         {
-            return settings.GetValue<string>($"connection-strings:{name}") ??
+            return config.GetValue<string>($"connection-strings:{name}") ??
                    Environment.GetEnvironmentVariable(name) ??
-                   settings.GetConnectionString(name);
+                   config.GetConnectionString(name);
         }
     }
 }
