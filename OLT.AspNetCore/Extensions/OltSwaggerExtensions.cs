@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+//using Microsoft.OpenApi.Models;
+//using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 
 namespace OLT.Core
 {
-    public static partial class OltSwaggerExtensions
+    public static class OltSwaggerExtensions
     {
         /// <summary>
         /// Adds Swagger Configuration
@@ -17,67 +17,68 @@ namespace OLT.Core
         /// <param name="options"><see cref="IOltOptionsAspNetSwaggerUI"/></param>
         /// <param name="setupAction"><see cref="SwaggerGenOptions"/></param>
         /// <returns><seealso cref="IServiceCollection"/></returns>
-        public static IServiceCollection AddSwaggerGen<TOptions>(this IServiceCollection services, TOptions options, Action<SwaggerGenOptions> setupAction = null)
+        public static IServiceCollection AddSwaggerGen<TOptions>(this IServiceCollection services, TOptions options) //, Action<SwaggerGenOptions> setupAction = null)
             where TOptions : IOltOptionsAspNetSwaggerUI
         {
-            if (!options.Enabled)
-            {
-                return services;
-            }
+            return services;
+            //if (!options.Enabled)
+            //{
+            //    return services;
+            //}
             
 
-            return services
-                .AddSwaggerGen(
-                    opt =>
-                    {
-                        // Resolve the temp IApiVersionDescriptionProvider service  
-                        var provider = services.BuildServiceProvider()
-                            .GetRequiredService<IApiVersionDescriptionProvider>();
+            ////return services
+            ////    .AddSwaggerGen(
+            ////        opt =>
+            ////        {
+            ////            // Resolve the temp IApiVersionDescriptionProvider service  
+            ////            var provider = services.BuildServiceProvider()
+            ////                .GetRequiredService<IApiVersionDescriptionProvider>();
 
-                        // Add a swagger document for each discovered API version  
-                        foreach (var description in provider.ApiVersionDescriptions)
-                        {
-                            opt.SwaggerDoc(description.GroupName, new OpenApiInfo
-                            {
-                                Title = $"{options.Title}  {description.ApiVersion}",
-                                Version = description.ApiVersion.ToString(),
-                                Description = description.IsDeprecated ? $"{options.Description} - DEPRECATED" : options.Description,
-                            });
-                        }
+            ////            // Add a swagger document for each discovered API version  
+            ////            foreach (var description in provider.ApiVersionDescriptions)
+            ////            {
+            ////                opt.SwaggerDoc(description.GroupName, new OpenApiInfo
+            ////                {
+            ////                    Title = $"{options.Title}  {description.ApiVersion}",
+            ////                    Version = description.ApiVersion.ToString(),
+            ////                    Description = description.IsDeprecated ? $"{options.Description} - DEPRECATED" : options.Description,
+            ////                });
+            ////            }
 
-                        // Add a custom filter for setting the default values  
-                        opt.OperationFilter<OltSwaggerDefaultValues>();
+            ////            // Add a custom filter for setting the default values  
+            ////            opt.OperationFilter<OltSwaggerDefaultValues>();
 
-                        opt.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
-                        {
-                            Type = SecuritySchemeType.Http,
-                            Scheme = "bearer",
-                            BearerFormat = "JWT",
-                            Description = "JWT Authorization header using the Bearer scheme."
-                        });
+            ////            opt.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+            ////            {
+            ////                Type = SecuritySchemeType.Http,
+            ////                Scheme = "bearer",
+            ////                BearerFormat = "JWT",
+            ////                Description = "JWT Authorization header using the Bearer scheme."
+            ////            });
 
-                        opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-                        {
-                            {
-                                new OpenApiSecurityScheme
-                                {
-                                    Reference = new OpenApiReference
-                                    {
-                                        Type = ReferenceType.SecurityScheme, 
-                                        Id = "bearerAuth"
-                                    }
-                                },
-                                Array.Empty<string>()
-                            }
-                        });
+            ////            opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+            ////            {
+            ////                {
+            ////                    new OpenApiSecurityScheme
+            ////                    {
+            ////                        Reference = new OpenApiReference
+            ////                        {
+            ////                            Type = ReferenceType.SecurityScheme, 
+            ////                            Id = "bearerAuth"
+            ////                        }
+            ////                    },
+            ////                    Array.Empty<string>()
+            ////                }
+            ////            });
 
-                        if (options.XmlSettings.CommentsFilePath.IsNotEmpty())
-                        {
-                            opt.IncludeXmlComments(options.XmlSettings.CommentsFilePath, options.XmlSettings.IncludeControllerXmlComments);
-                        }
+            ////            if (options.XmlSettings.CommentsFilePath.IsNotEmpty())
+            ////            {
+            ////                opt.IncludeXmlComments(options.XmlSettings.CommentsFilePath, options.XmlSettings.IncludeControllerXmlComments);
+            ////            }
 
-                        setupAction?.Invoke(opt);
-                    });
+            ////            setupAction?.Invoke(opt);
+            ////        });
         }
 
 
@@ -92,10 +93,10 @@ namespace OLT.Core
             where TOptions : IOltOptionsAspNetSwagger
         {
 
-            if (options.Enabled)
-            {
-                app.UseSwagger();
-            }
+            ////if (options.Enabled)
+            ////{
+            ////    app.UseSwagger();
+            ////}
 
             return app;
         }
@@ -111,19 +112,19 @@ namespace OLT.Core
             where TOptions : IOltOptionsAspNetSwaggerUI
         {
 
-            if (options.Enabled)
-            {
-                app.UseSwaggerUI(c =>
-                {
-                    var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-                    // Add a swagger UI for each discovered API version  
-                    foreach (var description in provider.ApiVersionDescriptions)
-                    {
-                        var deprecated = description.IsDeprecated ? " DEPRECATED" : string.Empty;
-                        c.SwaggerEndpoint($"{description.GroupName}/swagger.json", $"{options.Title} API {description.GroupName}{deprecated}");
-                    }
-                });
-            }
+            ////if (options.Enabled)
+            ////{
+            ////    app.UseSwaggerUI(c =>
+            ////    {
+            ////        var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
+            ////        // Add a swagger UI for each discovered API version  
+            ////        foreach (var description in provider.ApiVersionDescriptions)
+            ////        {
+            ////            var deprecated = description.IsDeprecated ? " DEPRECATED" : string.Empty;
+            ////            c.SwaggerEndpoint($"{description.GroupName}/swagger.json", $"{options.Title} API {description.GroupName}{deprecated}");
+            ////        }
+            ////    });
+            ////}
 
             return app;
         }
