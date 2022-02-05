@@ -129,11 +129,11 @@ namespace OLT.Core
                     clrType = clrType.BaseType;
                     //Console.WriteLine($"{builder.Metadata.GetTableName()} not equal to {builder.Metadata.GetDefaultTableName()} of type {builder.Metadata.ClrType.FullName}");
                 }
-
+#endif
                 var newParam = Expression.Parameter(clrType);
                 var newBody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
                 modelBuilder.Entity(clrType).HasQueryFilter(Expression.Lambda(newBody, newParam));
-#endif
+
             });
 #pragma warning restore S125
 
