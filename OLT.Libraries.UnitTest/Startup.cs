@@ -151,10 +151,10 @@ namespace OLT.Libraries.UnitTest
         }
 
 
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)
-        {
+        //public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)
+        //{
 
-        }
+        //}
     }
 
     
