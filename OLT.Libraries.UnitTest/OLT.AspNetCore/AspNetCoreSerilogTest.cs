@@ -208,7 +208,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             };
 
             var response = await this.InvokeMiddlewareAsync<PersonDto>(GetOptions(true), next, HttpStatusCode.OK);
-            response.Should().Equals(dto);
+            response.Should().BeEquivalentTo(dto);
         }
 
 

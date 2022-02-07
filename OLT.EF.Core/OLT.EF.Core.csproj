@@ -20,7 +20,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
 		<ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
 	</ItemGroup>
 

@@ -14,7 +14,7 @@ namespace OLT.Libraries.UnitTest.Assets
             public static readonly Guid Value2 = new Guid(String2);
 
             public const string String3 = "3b8c07927ec7445491d6a07ededd2e57";
-            public static readonly Guid Value3 = new Guid(String2);
+            public static readonly Guid Value3 = new Guid(String3);
         }
 
         #region [ String Values ]

@@ -32,7 +32,7 @@ namespace OLT.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
-        /// <returns>First instance of <see cref="Attribute"/> to search for or <see cref="null"/></returns>
+        /// <returns>First instance of <see cref="Attribute"/> to search for or <see langword="null"/></returns>
         /// <exception cref="InvalidOperationException">Sequence contains more than one element</exception>
         public static T GetAttributeInstance<T>(Enum item)
             where T : Attribute
@@ -49,7 +49,7 @@ namespace OLT.Core
         /// <typeparam name="T">Type of <see cref="Attribute"/> to search for</typeparam>
         /// <param name="property"><see cref="PropertyInfo"/></param>
         /// <param name="inherit">include inherited attributes</param>
-        /// <returns>First instance of <see cref="Attribute"/> to search for or <see cref="null"/></returns>
+        /// <returns>First instance of <see cref="Attribute"/> to search for or <see langword="null"/></returns>
         /// <exception cref="InvalidOperationException">Sequence contains more than one element</exception>
         public static T GetAttributeInstance<T>(this PropertyInfo property, bool inherit = false) where T : Attribute
         {
@@ -72,7 +72,7 @@ namespace OLT.Core
         /// Gets <see cref="DescriptionAttribute"/>
         /// </summary>
         /// <param name="value"></param>
-        /// <returns><see cref="DescriptionAttribute.Description"/> or <typeparamref name="TEnum"/> ToString() or <see cref="null"/></returns>
+        /// <returns><see cref="DescriptionAttribute.Description"/> or <typeparamref name="TEnum"/> ToString() or <see langword="null"/></returns>
         public static string GetDescription(this Enum value)
         {
             var attribute = GetAttributeInstance<DescriptionAttribute>(value);

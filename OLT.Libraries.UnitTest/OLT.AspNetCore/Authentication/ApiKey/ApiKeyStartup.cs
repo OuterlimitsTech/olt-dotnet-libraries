@@ -42,7 +42,6 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore.Authentication.ApiKey
             app.UseHttpsRedirection(settings.Hosting);
             app.UseAuthentication();
             //app.UseOltSerilogRequestLogging();
-            //app.UseSwaggerWithUI(settings.Swagger);
             app.UseRouting();
             //app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

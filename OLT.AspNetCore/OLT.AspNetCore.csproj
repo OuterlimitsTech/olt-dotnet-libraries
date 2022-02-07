@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-		<TargetFramework>net6.0</TargetFramework>
+		<!--<TargetFramework>net6.0</TargetFramework>-->
 		<RootNamespace>OLT.Core</RootNamespace>
 		<Description>OLT AspNetCore Library</Description>
 		<ProjectGuid>f7464890-ef2e-48cf-9ea0-3fed39757135</ProjectGuid>
@@ -14,7 +14,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Scrutor" Version="4.0.0" />
-		<!--<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />-->
 	</ItemGroup>
 
 
@@ -25,7 +24,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Scrutor" Version="4.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
@@ -34,7 +32,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Scrutor" Version="4.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	</ItemGroup>
 
 

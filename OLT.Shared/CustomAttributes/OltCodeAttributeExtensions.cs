@@ -14,7 +14,7 @@ namespace OLT.Core
         /// Returns Code value from <see cref="CodeAttribute"/> attribute
         /// </summary>
         /// <param name="value"></param>
-        /// <returns><see cref="string"/> Code from <see cref="CodeAttribute"/> or <see cref="null"/></returns>
+        /// <returns><see cref="string"/> Code from <see cref="CodeAttribute"/> or <see langword="null"/></returns>
         public static string GetCodeEnum(this Enum value)
         {
             var attribute = value?.GetType()
@@ -29,7 +29,7 @@ namespace OLT.Core
         /// Returns DefaultSort value from <see cref="CodeAttribute"/> attribute
         /// </summary>
         /// <param name="value"></param>
-        /// <returns><see cref="short?"/> DefaultSort from <see cref="CodeAttribute"/> or <see cref="null"/></returns>
+        /// <returns><see cref="short?"/> DefaultSort from <see cref="CodeAttribute"/> or <see langword="null"/></returns>
         public static short? GetCodeEnumSort(this Enum value)
         {
             var attribute = value?.GetType()

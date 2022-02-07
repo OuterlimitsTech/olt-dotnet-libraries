@@ -98,7 +98,6 @@
 ////            app.UseHttpsRedirection(appSettings.Hosting);
 ////            app.UseAuthentication();
 ////            app.UseOltSerilogRequestLogging();
-////            app.UseSwaggerWithUI(appSettings.Swagger);
 ////            app.UseRouting();
 ////            app.UseAuthorization();
 ////            app.UseEndpoints(endpoints => endpoints.MapControllers());

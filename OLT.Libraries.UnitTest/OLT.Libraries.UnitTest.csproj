@@ -46,9 +46,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
-    <PackageReference Include="EPPlus" Version="5.7.2" />
+    <PackageReference Include="EPPlus" Version="5.8.6" />
     <PackageReference Include="Faker.Net" Version="2.0.154" />
-    <PackageReference Include="FluentAssertions" Version="6.0.0" />
+    <PackageReference Include="FluentAssertions" Version="6.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.1" />
     <PackageReference Include="Microsoft.CodeCoverage" Version="17.0.0" />
