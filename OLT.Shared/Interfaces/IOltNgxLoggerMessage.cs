@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace OLT.Core
 {
+
     public interface IOltNgxLoggerMessage
     {
         string Message { get; set; }
@@ -11,8 +12,8 @@ namespace OLT.Core
         DateTimeOffset? Timestamp { get; set; }
         string FileName { get; set; }
         string LineNumber { get; set; }
-        string Username { get; }
-        bool IsError { get; }
+        string GetUsername();
         Exception ToException();
+        string FormatMessage();
     }
 }

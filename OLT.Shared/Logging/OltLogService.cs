@@ -40,14 +40,14 @@ namespace OLT.Core
 
         public virtual void Write(IOltNgxLoggerMessage loggerMessage, string userName)
         {
-            var message = $"Token User: {userName}{Environment.NewLine}{loggerMessage.Message}";
-            if (loggerMessage.IsError)
+            var message = $"Token User: {userName}{Environment.NewLine}{loggerMessage.Message}";            
+            if (loggerMessage.Level == OltNgxLoggerLevel.Error || loggerMessage.Level == OltNgxLoggerLevel.Fatal)
             {
                 _logger.LogError(loggerMessage.ToException(), message);
                 return;
             }
             var logType = loggerMessage.Level.GetValueOrDefault(OltNgxLoggerLevel.Info).ToLogLevel();
-            _logger.Log(logType, $"{message}{Environment.NewLine}{Environment.NewLine}{loggerMessage.ToException().Message}");
+            _logger.Log(logType, $"{message}{Environment.NewLine}{Environment.NewLine}{loggerMessage.FormatMessage()}");
         }
       
     }

@@ -86,7 +86,7 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
                 };
             }
 
-            Result.Add("Username", msg.Username);
+            Result.Add("Username", msg.GetUsername());
             Result.Add("Level", msg.Level?.ToString());
             Result.Add("LineNumber", msg.LineNumber);
             Result.Add("FileName", msg.FileName);

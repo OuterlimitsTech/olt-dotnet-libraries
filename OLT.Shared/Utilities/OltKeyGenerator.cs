@@ -6,6 +6,7 @@ using System.Text;
 
 namespace OLT.Core
 {
+    [Obsolete("Move to OLT.Common.General.OltConstants")]
     public static class OltKeyGenerator
     {
 
