@@ -2,8 +2,8 @@
 {
     public interface IOltSortParams
     {
-        string PropertyName { get; set; }
-        bool IsAscending { get; set; }
+        string PropertyName { get; }
+        bool IsAscending { get; }
     }
 
    

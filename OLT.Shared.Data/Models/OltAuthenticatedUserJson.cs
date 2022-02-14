@@ -14,13 +14,10 @@ namespace OLT.Core
         public virtual string FullName => Name.FullName;
         public virtual TNameModel Name { get; set; } = new TNameModel();
 
-        [JsonProperty("token_type")]
-        public virtual string AuthenticationType { get; set; } = OltDefaults.Authentication.Jwt.AuthenticationScheme;
-        [JsonProperty("access_token")]
+        public virtual string AuthenticationType { get; set; } = OltDefaults.Authentication.Jwt.AuthenticationScheme;        
         public virtual string Token { get; set; }
         public virtual DateTimeOffset Issued { get; set; }
         public virtual DateTimeOffset Expires { get; set; }
-        [JsonProperty("expires_in")]
         public virtual string ExpiresIn => $"{(Expires - Issued).TotalSeconds}";
 
         public virtual IEnumerable<string> Roles { get; set; }

@@ -6,9 +6,4 @@
 		<ProjectGuid>d9adbe24-83a0-4272-a926-63f476bcc4d0</ProjectGuid>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-		<NoWarn>$(NoWarn);1591</NoWarn>
-	</PropertyGroup>
-
 </Project>

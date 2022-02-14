@@ -14,10 +14,30 @@ namespace System
     /// </summary>
     public static class OltStringExtensions
     {
+        public static byte[] ToBytes<T>(this string value) where T : System.Text.Encoding, new()
+        {
+            var encoding = new T();
+            return encoding.GetBytes(value);
+        }
+
+        public static byte[] ToASCIIBytes(this char value)
+        {
+            return value.ToString().ToASCIIBytes();
+        }
+
         public static byte[] ToASCIIBytes(this string value)
         {
-            var encoding = new System.Text.ASCIIEncoding();
-            return encoding.GetBytes(value);
+            return ToBytes<System.Text.ASCIIEncoding>(value);
+        }
+
+        public static byte[] ToUTF8Bytes(this char value)
+        {
+            return value.ToString().ToUTF8Bytes();
+        }
+
+        public static byte[] ToUTF8Bytes(this string value)
+        {            
+            return ToBytes<System.Text.UTF8Encoding>(value);
         }
 
         #region [ Empty/Null Checks ]
@@ -64,14 +84,17 @@ namespace System
             return OltRegExPatterns.Spaces.Replace(self.Trim(), " ");
         }
 
+        /// <summary>
+        /// Removes special characters from <see cref="string"/> using <see cref="OltRegExPatterns.RemoveSpecialCharacters"/>
+        /// </summary>
+        /// <param name="self">Extends <see cref="string"/>.</param>
         public static string RemoveSpecialCharacters(this string self)
         {
             if (string.IsNullOrEmpty(self))
             {
                 return self;
-            }
-            Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            return r.Replace(self, string.Empty);
+            }            
+            return OltRegExPatterns.RemoveSpecialCharacters.Replace(self, string.Empty);
         }
 
         public static string CleanForSearch(this string self)
