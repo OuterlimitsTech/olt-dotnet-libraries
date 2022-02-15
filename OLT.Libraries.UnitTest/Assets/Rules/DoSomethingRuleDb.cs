@@ -11,7 +11,7 @@ namespace OLT.Libraries.UnitTest.Assets.Rules
             {
                 return Valid;
             }
-            return BadRequest(OltSeverityTypes.Error, "No People");
+            return BadRequest("No People");
         }
 
         public override IOltResult Execute(DoSomethingRuleContextRequest request)
