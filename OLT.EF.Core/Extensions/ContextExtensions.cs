@@ -98,9 +98,13 @@ namespace OLT.Core
 
 
         /// <summary>
-        /// modelBuilder.Entity<EF_POCO>().HasQueryFilter(p => p.DeletedOn == null)
-        /// https://davecallan.com/entity-framework-core-query-filters-multiple-entities/
+        /// <see href="https://davecallan.com/entity-framework-core-query-filters-multiple-entities"/>
         /// </summary>
+        /// <example>
+        /// <code>
+        /// modelBuilder.HasQueryFilter(p => p.DeletedOn == null)
+        /// </code>
+        /// </example>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="modelBuilder"></param>
         /// <param name="expression"></param>

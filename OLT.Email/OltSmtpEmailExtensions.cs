@@ -62,7 +62,6 @@ namespace OLT.Core
         /// </summary>
         /// <param name="ex"></param>
         /// <param name="email"></param>
-        /// <param name="fromAddress"></param>
         /// <param name="throwException"></param>
         public static bool OltEmailError(this Exception ex, IOltApplicationErrorEmail email, bool throwException)
         {

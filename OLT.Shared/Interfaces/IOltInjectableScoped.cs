@@ -1,10 +1,10 @@
-﻿using System;
+﻿////using System;
 
-namespace OLT.Core
-{
+////namespace OLT.Core
+////{
 
-    public interface IOltInjectableScoped : IDisposable
-    {
+////    public interface IOltInjectableScoped : IDisposable
+////    {
 
-    }
-}
+////    }
+////}

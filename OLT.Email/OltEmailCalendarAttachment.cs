@@ -4,8 +4,11 @@ namespace OLT.Email
 {
     public class OltEmailCalendarAttachment : IOltEmailAttachment
     {
-        public virtual string ContentType => OltDefaults.CalendarInvite.TextCalendar;
-        public virtual string FileName => OltDefaults.CalendarInvite.FileName;
+        protected const string DefaultFileName = "invite.ics";
+        protected const string DefaultTextCalendar = "text/calendar";
+
+        public virtual string ContentType => DefaultTextCalendar;
+        public virtual string FileName => DefaultFileName;
         public virtual byte[] Bytes { get; set; }
     }
 }

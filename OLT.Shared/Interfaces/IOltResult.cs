@@ -1,7 +1,7 @@
-﻿namespace OLT.Core
-{
-    public interface IOltResult
-    {
-        bool Success { get; }
-    }
-}
+﻿////namespace OLT.Core
+////{
+////    public interface IOltResult
+////    {
+////        bool Success { get; }
+////    }
+////}

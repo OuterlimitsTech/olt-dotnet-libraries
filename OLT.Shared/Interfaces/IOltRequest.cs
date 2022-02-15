@@ -1,9 +1,9 @@
-﻿namespace OLT.Core
-{
-    public interface IOltRequest
-    {
+﻿////namespace OLT.Core
+////{
+////    public interface IOltRequest
+////    {
 
-    }
+////    }
 
   
-}
+////}

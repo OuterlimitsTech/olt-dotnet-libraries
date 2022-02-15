@@ -174,7 +174,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
         [Fact]
         public async Task OltMiddlewarePayload_OltValidationException()
         {
-            var expectedException = new OltValidationException(new List<IOltValidationError> { new OltValidationError { Message = "Test Validation" } });
+            var expectedException = new OltValidationException(new List<IOltValidationError> { new OltValidationError("Test Validation")});
             RequestDelegate next = (HttpContext hc) => Task.FromException(expectedException);
             var response = await this.InvokeMiddlewareAsync(GetOptions(true), next, HttpStatusCode.BadRequest);
 

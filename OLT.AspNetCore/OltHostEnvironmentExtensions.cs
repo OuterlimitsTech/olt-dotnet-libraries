@@ -6,10 +6,10 @@ namespace OLT.Core
     public static class OltHostEnvironmentExtensions
     {
         /// <summary>
-        /// Checks if the current host environment name is <see cref="OltDefaults.OltEnvironments.Test"/>.
+        /// Checks if the current host environment name is <see cref="OltEnvironments.Test"/>.
         /// </summary>
         /// <param name="hostEnvironment">An instance of <see cref="IHostEnvironment"/>.</param>
-        /// <returns>True if the environment name is <see cref="OltDefaults.OltEnvironments.Test"/>, otherwise false.</returns>
+        /// <returns>True if the environment name is <see cref="OltEnvironments.Test"/>, otherwise false.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool IsTest(this IHostEnvironment hostEnvironment)
         {
@@ -17,7 +17,7 @@ namespace OLT.Core
             {
                 throw new ArgumentNullException(nameof(hostEnvironment));
             }
-            return hostEnvironment.IsEnvironment(OltDefaults.OltEnvironments.Test);
+            return hostEnvironment.IsEnvironment(OltEnvironments.Test);
         }
     }
 }
