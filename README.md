@@ -35,4 +35,4 @@
 | OLT.Highcharts                                | [![Nuget](https://img.shields.io/nuget/v/OLT.Highcharts)](https://www.nuget.org/packages/OLT.Highcharts)                                                               |            |
 | OLT.Logging.Serilog                           | [![Nuget](https://img.shields.io/nuget/v/OLT.Logging.Serilog)](https://www.nuget.org/packages/OLT.Logging.Serilog)                                                     |            |
 | OLT.Shared                                    | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared)](https://www.nuget.org/packages/OLT.Shared)                                                                       |            |
-| OLT.Shared.Data                               | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared.Data)](https://www.nuget.org/packages/OLT.Shared.Data)                                                             |            |
+| OLT.Shared.Data                               | [![Nuget](https://img.shields.io/nuget/v/OLT.Shared.Data)](https://www.nuget.org/packages/OLT.Shared.Data)                                                             |    Yes     |
