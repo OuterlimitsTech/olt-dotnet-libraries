@@ -6,13 +6,15 @@ namespace OLT.Core
     public abstract class OltAuthenticatedUserJson<TNameModel> 
         where TNameModel : class, IOltPersonName, new()
     {
+        protected const string DefaultAuthenticationScheme = "Bearer";
+
         public virtual int UserPrincipalName { get; set; }
         public virtual string Username { get; set; }
         public virtual string EmailAddress { get; set; }
         public virtual string FullName => Name.FullName;
         public virtual TNameModel Name { get; set; } = new TNameModel();
 
-        public virtual string AuthenticationType { get; set; } = OltDefaults.Authentication.Jwt.AuthenticationScheme;
+        public virtual string AuthenticationType { get; set; } = DefaultAuthenticationScheme;
         public virtual string Token { get; set; }
         public virtual DateTimeOffset Issued { get; set; }
         public virtual DateTimeOffset Expires { get; set; }

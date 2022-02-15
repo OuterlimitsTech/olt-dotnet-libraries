@@ -1,8 +1,6 @@
 ﻿using System;
-using AspNetCore.Authentication.ApiKey;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.DependencyInjection;
-using OLT.Core;
+using AspNetCore.Authentication.ApiKey;
 
 namespace OLT.AspNetCore.Authentication
 {
@@ -34,7 +32,7 @@ namespace OLT.AspNetCore.Authentication
         public override string Scheme => ApiKeyDefaults.AuthenticationScheme;
 
         /// <summary>
-        /// <seealso cref="AspNetCore.Authentication.ApiKey.ApiKeyOptions.Realm"/>
+        /// <seealso cref="ApiKeyOptions.Realm"/>
         /// Gets or sets the realm property. It is used with WWW-Authenticate response header when challenging un-authenticated requests.
         /// Required to be set if SuppressWWWAuthenticateHeader is not set to true.
         /// <see href="https://tools.ietf.org/html/rfc7235#section-2.2"/>

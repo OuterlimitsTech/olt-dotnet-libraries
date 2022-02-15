@@ -510,9 +510,9 @@ namespace OLT.Libraries.UnitTest.OLT.Extensions.General
         {
             var result = new Dictionary<char, double>();
             var chars = (new char[0])
-                .Concat(OltDefaults.UpperCase)
-                .Concat(OltDefaults.LowerCase)
-                .Concat(OltDefaults.Numerals)
+                .Concat(OltDefaults.Characters.UpperCase)
+                .Concat(OltDefaults.Characters.LowerCase)
+                .Concat(OltDefaults.Characters.Numerals)
                 .ToArray();
 
             Dictionary<char, int> counts = new Dictionary<char, int>();

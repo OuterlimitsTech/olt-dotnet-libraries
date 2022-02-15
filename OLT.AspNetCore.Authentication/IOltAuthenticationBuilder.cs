@@ -8,7 +8,7 @@ namespace OLT.AspNetCore.Authentication
     {
 
         /// <summary>
-        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationBuilder.Scheme"/>
         /// </summary>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
@@ -16,7 +16,7 @@ namespace OLT.AspNetCore.Authentication
         AuthenticationBuilder AddAuthentication(IServiceCollection services);
 
         /// <summary>
-        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationBuilder.Scheme"/>
         /// </summary>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
         /// <param name="configureOptions"><seealso cref="AuthenticationOptions" /></param>

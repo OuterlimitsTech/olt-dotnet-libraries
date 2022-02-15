@@ -40,11 +40,11 @@ namespace OLT.Core
         }
 
         /// <summary>
-        /// Registers middleware <seealso cref="CorsMiddlewareExtensions"/> using <seealso cref="IOltAspNetHostingOptions.CorsPolicyName"/> 
+        /// Registers middleware <seealso cref="CorsMiddlewareExtensions"/> using <seealso cref="IOltOptionsAspNetHosting.CorsPolicyName"/> 
         /// </summary>
         /// <typeparam name="TOptions"></typeparam>
         /// <param name="app"><seealso cref="IApplicationBuilder"/></param>
-        /// <param name="options"><seealso cref="IOltAspNetHostingOptions"/></param>
+        /// <param name="options"><seealso cref="IOltOptionsAspNetHosting"/></param>
         /// <returns><seealso cref="IApplicationBuilder"/></returns>
         public static IApplicationBuilder UseCors<TOptions>(this IApplicationBuilder app, TOptions options)
             where TOptions : IOltOptionsAspNetHosting

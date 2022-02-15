@@ -1,7 +1,7 @@
-﻿namespace OLT.Core
-{
-    public interface IOltValidationError
-    {
-        string Message { get; } 
-    }
-}
+﻿////namespace OLT.Core
+////{
+////    public interface IOltValidationError
+////    {
+////        string Message { get; } 
+////    }
+////}

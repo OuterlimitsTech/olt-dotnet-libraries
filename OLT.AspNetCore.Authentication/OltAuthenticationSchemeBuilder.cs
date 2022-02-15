@@ -9,7 +9,7 @@ namespace OLT.AspNetCore.Authentication
         public abstract string Scheme { get; }
 
         /// <summary>
-        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="Scheme"/>
         /// </summary>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
         /// <returns><seealso cref="AuthenticationBuilder"/></returns>
@@ -21,7 +21,7 @@ namespace OLT.AspNetCore.Authentication
 
 
         /// <summary>
-        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="OltAuthenticationSchemeBuilder.Scheme"/>
+        /// Adds Authentication setting <seealso cref="AuthenticationOptions.DefaultAuthenticateScheme"/> and <seealso cref="AuthenticationOptions.DefaultChallengeScheme"/> to <seealso cref="Scheme"/>
         /// </summary>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
         /// <param name="configureOptions"><seealso cref="AuthenticationOptions" /></param>
@@ -55,7 +55,6 @@ namespace OLT.AspNetCore.Authentication
         /// <summary>
         /// Adds Authentication 
         /// </summary>
-        /// <typeparam name="TSchemeOption"></typeparam>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NullReferenceException"></exception>
         public virtual AuthenticationBuilder AddScheme(AuthenticationBuilder builder)
@@ -66,7 +65,6 @@ namespace OLT.AspNetCore.Authentication
         /// <summary>
         /// Adds Authentication 
         /// </summary>
-        /// <typeparam name="TSchemeOption"></typeparam>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NullReferenceException"></exception>
         public abstract AuthenticationBuilder AddScheme(AuthenticationBuilder builder, Action<TSchemeOption> configureOptions);

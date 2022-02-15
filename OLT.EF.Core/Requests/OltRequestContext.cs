@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public abstract class OltRequestContext<TContext> : OltRequest
+    public abstract class OltRequestContext<TContext> : IOltRequest
         where TContext : class, IOltDbContext
     {
         protected OltRequestContext(TContext context)
