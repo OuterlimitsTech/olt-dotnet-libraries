@@ -7,6 +7,7 @@ namespace OLT.Core
     /// Defines the NotNullAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
+    [Obsolete("Removed in 6.x. Use https://fluentvalidation.net/ instead")]
     public sealed class NotNullAttribute : ValidationAttribute
     {
         /// <summary>
