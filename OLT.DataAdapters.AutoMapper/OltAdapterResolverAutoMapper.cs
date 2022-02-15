@@ -126,10 +126,6 @@ namespace OLT.Core
             {
                 var mapAdapter = GetPagedAdapterMap<TSource, TDestination>(true);
                 Func<IQueryable<TSource>, IQueryable<TSource>> orderBy = orderByQueryable => orderByQueryable.OrderBy(null, mapAdapter.DefaultOrderBy);
-                if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
-                {
-                    orderBy = orderByQueryable => orderByQueryable.OrderBy(pagingWithSortParams, mapAdapter.DefaultOrderBy);
-                }
                 return this.Paged<TSource, TDestination>(source, pagingParams, orderBy);
             }
 

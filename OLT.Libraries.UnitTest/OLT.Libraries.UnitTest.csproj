@@ -99,7 +99,6 @@
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
     <ProjectReference Include="..\OLT.Logging.Serilog\OLT.Logging.Serilog.csproj" />
-    <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 

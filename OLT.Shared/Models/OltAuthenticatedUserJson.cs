@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace OLT.Core
 {
-
-    public class OltAuthenticatedUserJson<TNameModel> 
+    public abstract class OltAuthenticatedUserJson<TNameModel> 
         where TNameModel : class, IOltPersonName, new()
     {
         public virtual int UserPrincipalName { get; set; }
@@ -14,7 +12,7 @@ namespace OLT.Core
         public virtual string FullName => Name.FullName;
         public virtual TNameModel Name { get; set; } = new TNameModel();
 
-        public virtual string AuthenticationType { get; set; } = OltDefaults.Authentication.Jwt.AuthenticationScheme;        
+        public virtual string AuthenticationType { get; set; } = OltDefaults.Authentication.Jwt.AuthenticationScheme;
         public virtual string Token { get; set; }
         public virtual DateTimeOffset Issued { get; set; }
         public virtual DateTimeOffset Expires { get; set; }

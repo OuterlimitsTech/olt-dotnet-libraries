@@ -64,8 +64,6 @@ namespace OLT.Core
             where TSource : class, IOltEntity
         {
             var adapter = GetPagedAdapter<TSource, TDestination>(true);
-            if (pagingParams is IOltPagingWithSortParams pagingWithSortParams)
-                return adapter.Map(source, pagingParams, pagingWithSortParams);
             return adapter.Map(source, pagingParams);
         }
 

@@ -15,11 +15,6 @@ namespace OLT.Core
             return queryable.OrderBy(sortParams, DefaultOrderBy);
         }
 
-        public virtual IOltPaged<TDestination> Map(IQueryable<TSource> queryable, IOltPagingWithSortParams pagingParams)
-        {
-            return Map(queryable, pagingParams, pagingParams);
-        }
-
         public virtual IOltPaged<TDestination> Map(IQueryable<TSource> queryable, IOltPagingParams pagingParams, IOltSortParams sortParams = null)
         {
             return this.Map(queryable, pagingParams, sortQueryable => OrderBy(sortQueryable, sortParams));
