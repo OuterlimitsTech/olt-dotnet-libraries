@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace OLT.Core
 {
+    [Obsolete("Removed in 6.x")]
     public class OltPagingWithSortParams : OltPagingParams, IOltPagingWithSortParams
     {
         [JsonProperty("sort")]

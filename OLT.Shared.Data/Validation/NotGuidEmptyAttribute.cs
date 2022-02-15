@@ -8,6 +8,7 @@ namespace OLT.Core
     /// </summary>
     /// <seealso cref="System.ComponentModel.DataAnnotations.ValidationAttribute" />
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [Obsolete("Removed in 6.x. Use https://fluentvalidation.net/ instead")]
     public sealed class NotGuidEmptyAttribute : ValidationAttribute
     {
         /// <summary>

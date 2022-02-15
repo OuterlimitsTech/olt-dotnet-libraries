@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using Newtonsoft.Json;
 
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 namespace OLT.Core
 {
     // https://github.com/dotnet/aspnetcore/issues/4008
+    [Obsolete("Moved to package https://www.nuget.org/packages/OLT.Serialization.Json.Newtonsoft with a new name of OltEnumRouteConverter")]
     public class OltCustomEnumJsonConverter<T> : TypeConverter
     {
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
