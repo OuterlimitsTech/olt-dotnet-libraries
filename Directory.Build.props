@@ -5,7 +5,7 @@
     <Company>OuterLimits Technologies, Inc</Company>
     <Product>OuterLimits Technologies Scaffolding Libraries</Product>
     <Authors>Chris Straw</Authors>
-    <Copyright>Copyright © 2003-2021, OuterLimits Technologies, Inc Plainfield, IN</Copyright>
+    <Copyright>Copyright © 2003-2022, OuterLimits Technologies, Inc Plainfield, IN</Copyright>
     <RepositoryUrl>https://github.com/OuterlimitsTech/olt-dotnet-libraries</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -17,6 +17,10 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
@@ -29,8 +33,8 @@
   </ItemGroup>
 
 
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  <PropertyGroup>		
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 

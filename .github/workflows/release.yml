@@ -5,16 +5,10 @@ on:
     tags:
       - "*.*.*"
 
-# on:
-#   push:
-#     branches:
-#       - "*"
-#   pull_request:
-#     branches: [ master ]
-
 env:
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
-  SOURCE_DIRECTORY: ${{ github.workspace }}/src
+  SOURCE_DIRECTORY: ${{ github.workspace }}
+  SOLUTION_FILE: "OLT.Core.sln"
   NUGET_SOURCE_URL: "https://api.nuget.org/v3/index.json"
 
 jobs:
@@ -27,23 +21,22 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: |
+            5.0.x
+            6.0.x
 
       - name: Get Version
         id: version
         uses: battila7/get-version-action@v2.2.1
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.SOURCE_DIRECTORY }} --force
+        run: dotnet restore ${{ format('{0}/{1}', env.SOURCE_DIRECTORY, env.SOLUTION_FILE) }}
 
       - name: Build
-        run: dotnet build ${{ env.SOURCE_DIRECTORY }} --configuration Release -p:Version=${{ steps.version.outputs.version-without-v }} --no-restore
-
-      #     - name: Test
-      #       run: dotnet test --no-build --verbosity normal
+        run: dotnet build ${{ format('{0}/{1}', env.SOURCE_DIRECTORY, env.SOLUTION_FILE) }} --configuration Release -p:Version=${{ steps.version.outputs.version-without-v }} --no-restore
 
       - name: "Pack project"
-        run: dotnet pack ${{ env.SOURCE_DIRECTORY }} --no-restore --no-build --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+        run: dotnet pack ${{ format('{0}/{1}', env.SOURCE_DIRECTORY, env.SOLUTION_FILE) }} --no-restore --no-build --configuration Release -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
       - name: "Push package"
         run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/**/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s ${{ env.NUGET_SOURCE_URL }}
