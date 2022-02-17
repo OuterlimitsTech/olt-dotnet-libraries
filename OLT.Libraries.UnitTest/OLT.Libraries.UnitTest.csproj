@@ -89,9 +89,6 @@
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.SqlServer\OLT.EF.Core.SqlServer.csproj" />
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj" />
-    <ProjectReference Include="..\OLT.Email.SendGrid\OLT.Email.SendGrid.csproj" />
-    <ProjectReference Include="..\OLT.Email\OLT.Email.csproj" />
     <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Shared\OLT.Extensions.Caching.Shared.csproj" />
