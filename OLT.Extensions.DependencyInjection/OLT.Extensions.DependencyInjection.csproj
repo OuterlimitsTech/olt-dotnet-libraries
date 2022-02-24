@@ -13,8 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
-    <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 
 </Project>
