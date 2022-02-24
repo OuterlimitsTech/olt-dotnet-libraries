@@ -8,7 +8,7 @@ on:
 env:
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
   SOURCE_DIRECTORY: ${{ github.workspace }}
-  SOLUTION_FILE: "OLT.Core.sln"
+  SOLUTION_FILE: "OLT.Libraries.sln"
   NUGET_SOURCE_URL: "https://api.nuget.org/v3/index.json"
 
 jobs:
