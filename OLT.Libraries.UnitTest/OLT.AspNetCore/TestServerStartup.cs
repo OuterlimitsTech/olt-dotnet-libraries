@@ -52,7 +52,6 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             app.UseHsts(settings.Hosting);
             app.UseCors(settings.Hosting);
             app.UseHttpsRedirection(settings.Hosting);
-            app.UseSwaggerWithUI(settings.Swagger);
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }

@@ -6,7 +6,7 @@ namespace OLT.Libraries.UnitTest.Assets.Rules
     {
         public override IOltResultValidation Validate(DoSomethingRuleIntRequest request)
         {
-            return request.Value > 5 ? Valid : BadRequest(OltSeverityTypes.Error, "Invalid Value, must be greater than 5");
+            return request.Value > 5 ? Valid : BadRequest("Invalid Value, must be greater than 5");
         }
 
         public override IOltResult Execute(DoSomethingRuleIntRequest request)

@@ -188,21 +188,21 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.Equal(paged.Data.Count(), paged.Size);
         }
 
-        [Fact]
-        public void SortParams()
-        {
-            var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
-            var pagingParams = new OltPagingWithSortParams
-            {
-                Page = 1, 
-                Size = 10, 
-                IsAscending = false, 
-                PropertyName = nameof(PersonEntity.NameLast)
-            };
+        //[Fact]
+        //public void SortParams()
+        //{
+        //    var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
+        //    var pagingParams = new OltPagingWithSortParams
+        //    {
+        //        Page = 1, 
+        //        Size = 10, 
+        //        IsAscending = false, 
+        //        PropertyName = nameof(PersonEntity.NameLast)
+        //    };
 
-            var paged = _adapterResolver.Paged<PersonEntity, PersonDto>(queryable, pagingParams);
-            Assert.Equal(paged.Data.Count(), paged.Size);
-        }
+        //    var paged = _adapterResolver.Paged<PersonEntity, PersonDto>(queryable, pagingParams);
+        //    Assert.Equal(paged.Data.Count(), paged.Size);
+        //}
 
         [Fact]
         public void Include()

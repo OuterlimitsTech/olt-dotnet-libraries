@@ -1,29 +1,58 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>OLT.Core</RootNamespace>
-    <Description>OLT AspNetCore Library</Description>
-    <ProjectGuid>f7464890-ef2e-48cf-9ea0-3fed39757135</ProjectGuid>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+		<!--<TargetFramework>net6.0</TargetFramework>-->
+		<RootNamespace>OLT.Core</RootNamespace>
+		<Description>OLT AspNetCore Library</Description>
+		<ProjectGuid>f7464890-ef2e-48cf-9ea0-3fed39757135</ProjectGuid>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Scrutor" Version="3.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Scrutor" Version="4.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OLT.AspNetCore.Authentication\OLT.AspNetCore.Authentication.csproj" />
-    <ProjectReference Include="..\OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj" />
-    <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
-    <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
-  </ItemGroup>
+
+	<!--
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Scrutor" Version="4.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Scrutor" Version="4.0.0" />
+	</ItemGroup>
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Scrutor" Version="4.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
+	-->
+
+	<ItemGroup>
+		<ProjectReference Include="..\OLT.AspNetCore.Authentication\OLT.AspNetCore.Authentication.csproj" />
+		<ProjectReference Include="..\OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj" />
+		<ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
+		<ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
+		<ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
+		<ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
+	</ItemGroup>
 
 
 </Project>

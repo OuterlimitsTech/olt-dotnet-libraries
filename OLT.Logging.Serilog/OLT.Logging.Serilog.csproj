@@ -11,8 +11,5 @@
     <PackageReference Include="Serilog" Version="2.10.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
-  </ItemGroup>
 
 </Project>

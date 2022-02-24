@@ -1,9 +1,9 @@
-﻿using System;
+﻿////using System;
 
-namespace OLT.Core
-{
-    public interface IOltInjectableTransient : IDisposable
-    {
+////namespace OLT.Core
+////{
+////    public interface IOltInjectableTransient : IDisposable
+////    {
 
-    }
-}
+////    }
+////}

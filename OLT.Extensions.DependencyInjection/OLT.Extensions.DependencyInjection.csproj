@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <RootNamespace>OLT.Core</RootNamespace>
     <Description>Add Exenestions to service collection for OLT Default injection</Description>
     <ProjectGuid>d98afc07-7d80-47cd-9567-074d017c2c59</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scrutor" Version="3.3.0" />
+    <PackageReference Include="Scrutor" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
-    <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 
 </Project>

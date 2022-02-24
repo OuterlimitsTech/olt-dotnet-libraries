@@ -15,7 +15,8 @@ namespace OLT.Core
         /// Registers <see cref="IOltMemoryCache"/> as a singleton
         /// </remarks>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
-        /// <param name="expirationMinutes"></param>
+        /// <param name="defaultSlidingExpiration">Default expire cache after sliding Expiration. (uses default if not supplied)</param>
+        /// <param name="defaultAbsoluteExpiration">Default expire cache at. (uses default if not supplied)</param>
         /// <returns><seealso cref="IServiceCollection"/></returns>
         public static IServiceCollection AddOltAddMemoryCache(this IServiceCollection services, TimeSpan defaultSlidingExpiration, TimeSpan defaultAbsoluteExpiration)
         {
@@ -38,7 +39,7 @@ namespace OLT.Core
         /// Registers <see cref="IOltMemoryCache"/> as a singleton
         /// </remarks>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
-        /// <param name="expirationMinutes"></param>
+        /// <param name="setupAction"></param>
         /// <returns><seealso cref="IServiceCollection"/></returns>
         public static IServiceCollection AddOltAddMemoryCache(this IServiceCollection services, Action<MemoryCacheOptions> setupAction) 
         {

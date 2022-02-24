@@ -16,10 +16,10 @@ namespace OLT.Core
         public List<IOltFileBuilder> GetBuilders()
         {
             return _builders.Values.ToList();
-        }        
+        }
 
         /// <summary>
-        /// Locates builder <paramref name="name"/> by using <see cref="IOltFileBuilder.BuilderName"/> and calls <see cref="IOltFileBuilder.Build{TRequest}(TRequest)"/>
+        /// Locates builder <paramref name="name"/> by using <see cref="IOltBuilder.BuilderName"/> and calls <see cref="IOltFileBuilder.Build{TRequest}(TRequest)"/>
         /// </summary>
         /// <typeparam name="TRequest"></typeparam>
         /// <param name="request"></param>

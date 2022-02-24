@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <SonarQubeExclude>true</SonarQubeExclude>
     <UserSecretsId>a1ca46fa-4371-49cb-b686-334363ca01f1</UserSecretsId>
@@ -45,26 +45,27 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="EfCore.TestSupport" Version="5.0.0" />
-    <PackageReference Include="EPPlus" Version="5.7.2" />
-    <PackageReference Include="Faker.Net" Version="1.5.138" />
-    <PackageReference Include="FluentAssertions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.3" />
-    <PackageReference Include="Microsoft.CodeCoverage" Version="16.10.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
+    <PackageReference Include="EPPlus" Version="5.8.6" />
+    <PackageReference Include="Faker.Net" Version="2.0.154" />
+    <PackageReference Include="FluentAssertions" Version="6.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.1" />
+    <PackageReference Include="Microsoft.CodeCoverage" Version="17.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="MimeMapping" Version="1.0.1.37" />
     <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="OLT.Core.Common" Version="0.1.0-beta-0002" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.TestCorrelator" Version="3.2.0" />
-    <PackageReference Include="Serilog.Sinks.XUnit" Version="2.0.4" />
-    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="7.2.1" />
+    <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.3" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="8.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="Xunit.DependencyInjection" Version="7.3.0" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="8.3.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -88,17 +89,13 @@
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.SqlServer\OLT.EF.Core.SqlServer.csproj" />
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj" />
-    <ProjectReference Include="..\OLT.Email.SendGrid\OLT.Email.SendGrid.csproj" />
-    <ProjectReference Include="..\OLT.Email\OLT.Email.csproj" />
     <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Shared\OLT.Extensions.Caching.Shared.csproj" />
+    <ProjectReference Include="..\OLT.Extensions.Configuration\OLT.Extensions.Configuration.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
     <ProjectReference Include="..\OLT.Logging.Serilog\OLT.Logging.Serilog.csproj" />
-    <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>
 
@@ -106,6 +103,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

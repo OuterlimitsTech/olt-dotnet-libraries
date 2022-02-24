@@ -163,21 +163,21 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.Throws<OltAutoMapperException<PersonEntity, PersonAddressInvalidPagedModel>>(() => _adapterResolver.Paged<PersonEntity, PersonAddressInvalidPagedModel>(queryable, new OltPagingParams { Page = 1, Size = 10 }));
         }
 
-        [Fact]
-        public void SortParams()
-        {
-            var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
-            var pagingParams = new OltPagingWithSortParams
-            {
-                Page = 1,
-                Size = 10,
-                IsAscending = false,
-                PropertyName = nameof(PersonEntity.NameLast)
-            };
+        //[Fact]
+        //public void SortParams()
+        //{
+        //    var queryable = _context.People.Where(new OltSearcherGetAll<PersonEntity>());
+        //    var pagingParams = new OltPagingWithSortParams
+        //    {
+        //        Page = 1,
+        //        Size = 10,
+        //        IsAscending = false,
+        //        PropertyName = nameof(PersonEntity.NameLast)
+        //    };
 
-            var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperPagedDto>(queryable, pagingParams);
-            Assert.Equal(paged.Data.Count(), paged.Size);
-        }
+        //    var paged = _adapterResolver.Paged<PersonEntity, PersonAutoMapperPagedDto>(queryable, pagingParams);
+        //    Assert.Equal(paged.Data.Count(), paged.Size);
+        //}
 
         [Fact]
         public void DefaultOrderByException()

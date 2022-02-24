@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Shared.Data\OLT.Shared.Data.csproj" />
   </ItemGroup>
 
 

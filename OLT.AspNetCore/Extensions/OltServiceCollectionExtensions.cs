@@ -64,7 +64,6 @@ namespace OLT.Core
             services
                 .AddCors(baseAssemblies)
                 .AddApiVersioning(new OltOptionsApiVersion())
-                .AddSwaggerGen(settings.Swagger)
                 .AddOltInjection(baseAssemblies)
                 .AddSingleton<IOltHostService, OltHostAspNetCoreService>()
                 .AddScoped<IOltIdentity, OltIdentityAspNetCore>()

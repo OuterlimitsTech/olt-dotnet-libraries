@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+
 
 namespace OLT.Core
 {
+    
     public class OltNgxLoggerMessage : IOltNgxLoggerMessage
     {
         public virtual string Message { get; set; }
@@ -14,17 +15,21 @@ namespace OLT.Core
         public virtual string FileName { get; set; }
         public virtual string LineNumber { get; set; }
 
-        [JsonIgnore]
-        public virtual string Username => Additional.FirstOrDefault()?.FirstOrDefault()?.User ?? "Unknown";
+        public virtual string GetUsername()
+        {
+            return Additional.FirstOrDefault()?.FirstOrDefault()?.User ?? "Unknown";
+        }
 
-        [JsonIgnore]
-        public virtual bool IsError => Level == OltNgxLoggerLevel.Error || Level == OltNgxLoggerLevel.Fatal;
+        public string FormatMessage()
+        {
+            return ToException().Message;
+        }
 
         public virtual Exception ToException()
         {
             var detail = Additional.FirstOrDefault()?.FirstOrDefault();
             var ex = detail != null ? detail.ToException() : new Exception(Message);
-            ex.Data.Add("Username", Username);
+            ex.Data.Add("Username", GetUsername());
             ex.Data.Add("Level", Level?.ToString());
             ex.Data.Add("LineNumber", LineNumber);
             ex.Data.Add("FileName", FileName);

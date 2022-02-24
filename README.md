@@ -1,6 +1,6 @@
 <img src="https://user-images.githubusercontent.com/1365728/127748628-47575d74-a2fb-4539-a31e-74d8b435fc21.png" width="30%" >
 
-![Build Status](https://dev.azure.com/outerlimitstech/OLT/_apis/build/status/OuterlimitsTech.olt-dotnet-libraries) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=OuterlimitsTech_olt-dotnet-libraries&metric=alert_status)](https://sonarcloud.io/dashboard?id=OuterlimitsTech_olt-dotnet-libraries)
+[![Release](https://github.com/OuterlimitsTech/olt-dotnet-libraries/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/OuterlimitsTech/olt-dotnet-libraries/actions/workflows/release.yml) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=OuterlimitsTech_olt-dotnet-libraries&metric=alert_status)](https://sonarcloud.io/dashboard?id=OuterlimitsTech_olt-dotnet-libraries)
 
 # Packages
 
@@ -27,6 +27,7 @@
 | OLT.EPPlus                                    | [![Nuget](https://img.shields.io/nuget/v/OLT.EPPlus)](https://www.nuget.org/packages/OLT.EPPlus)                                                                       |            |
 | OLT.Extensions.Caching.Memory                 | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.Caching.Memory)](https://www.nuget.org/packages/OLT.Extensions.Caching.Memory)                                 |            |
 | OLT.Extensions.Caching.Shared                 | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.Caching.Shared)](https://www.nuget.org/packages/OLT.Extensions.Caching.Shared)                                 |            |
+| OLT.Extensions.Configuration                  | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.Configuration)](https://www.nuget.org/packages/OLT.Extensions.Configuration)                                   |            |
 | OLT.Extensions.DependencyInjection            | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection)                       |            |
 | OLT.Extensions.DependencyInjection.AutoMapper | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection.AutoMapper)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection.AutoMapper) |            |
 | OLT.Extensions.DependencyInjection.SqlServer  | [![Nuget](https://img.shields.io/nuget/v/OLT.Extensions.DependencyInjection.SqlServer)](https://www.nuget.org/packages/OLT.Extensions.DependencyInjection.SqlServer)   |    Yes     |

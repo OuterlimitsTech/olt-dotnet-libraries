@@ -65,10 +65,8 @@ namespace OLT.Libraries.UnitTest.OLT.Shared.NgxLoggerMessage
             var exceptionMessage = msg.Additional.FirstOrDefault()?.FirstOrDefault()?.Message ?? msg.Message;
             Assert.Equal(exceptionMessage, exception.Message);
 
-            if (level.HasValue)
-            {
-                Assert.Equal(level == OltNgxLoggerLevel.Error || level == OltNgxLoggerLevel.Fatal, msg.IsError);
-            }
+            var formattedLogMsg = msg.FormatMessage();
+            Assert.Equal(exception.Message, formattedLogMsg);
 
             Assert.Throws<Exception>(() => ThrowException(data));
 

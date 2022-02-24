@@ -83,37 +83,37 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             Assert.True(deleted.PersonId > 0 && nonDeleted.PersonId > 0);
         }
 
-        [Fact]
-        public void OrderByPropertyName()
-        {
-            var list = new List<PersonEntity>()
-            {
-                new PersonEntity
-                {
-                    NameFirst = "Todd",
-                    NameLast = "Gabriel"
-                },
-                new PersonEntity
-                {
-                    NameFirst = "Charlie",
-                    NameLast = "Apple"
-                },
-                new PersonEntity
-                {
-                    NameFirst = "Jamie",
-                    NameLast = "Beatriz"
-                },
+        //[Fact]
+        //public void OrderByPropertyName()
+        //{
+        //    var list = new List<PersonEntity>()
+        //    {
+        //        new PersonEntity
+        //        {
+        //            NameFirst = "Todd",
+        //            NameLast = "Gabriel"
+        //        },
+        //        new PersonEntity
+        //        {
+        //            NameFirst = "Charlie",
+        //            NameLast = "Apple"
+        //        },
+        //        new PersonEntity
+        //        {
+        //            NameFirst = "Jamie",
+        //            NameLast = "Beatriz"
+        //        },
 
-            };
+        //    };
 
-            var compareToAsc = list.OrderBy(p => p.NameLast).ToList();
-            var actualAsc = list.AsQueryable().OrderByPropertyName(nameof(PersonEntity.NameLast), true).ToList();
+        //    var compareToAsc = list.OrderBy(p => p.NameLast).ToList();
+        //    var actualAsc = list.AsQueryable().OrderByPropertyName(nameof(PersonEntity.NameLast), true).ToList();
 
-            actualAsc.Should().BeEquivalentTo(compareToAsc, options => options.WithStrictOrdering());
+        //    actualAsc.Should().BeEquivalentTo(compareToAsc, options => options.WithStrictOrdering());
 
-            var compareToDesc = list.OrderByDescending(p => p.NameLast).ToList();
-            var actualDesc = list.AsQueryable().OrderByPropertyName(nameof(PersonEntity.NameLast), false).ToList();
-            actualDesc.Should().BeEquivalentTo(compareToDesc, options => options.WithStrictOrdering());
-        }
+        //    var compareToDesc = list.OrderByDescending(p => p.NameLast).ToList();
+        //    var actualDesc = list.AsQueryable().OrderByPropertyName(nameof(PersonEntity.NameLast), false).ToList();
+        //    actualDesc.Should().BeEquivalentTo(compareToDesc, options => options.WithStrictOrdering());
+        //}
     }
 }

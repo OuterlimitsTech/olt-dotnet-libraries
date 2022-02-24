@@ -119,7 +119,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
-            var jsonResult = System.Text.Json.JsonSerializer.Deserialize<OltErrorHttp>(viewResult2.Value.ToString().ToASCIIBytes(), options);
+            var jsonResult = System.Text.Json.JsonSerializer.Deserialize<OltErrorHttp>(viewResult2.Value.ToString().ToBytes<System.Text.ASCIIEncoding>(), options);
             jsonResult.Should().BeEquivalentTo(expectedResult);            
         }
 
