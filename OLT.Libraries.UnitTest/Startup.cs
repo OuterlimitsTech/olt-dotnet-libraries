@@ -74,7 +74,7 @@ namespace OLT.Libraries.UnitTest
             var appSettingsSection = hostBuilderContext.Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsDto>(appSettingsSection);
             var settings = appSettingsSection.Get<AppSettingsDto>();
-            var sendGridSettings = settings.SendGrid;
+            //var sendGridSettings = settings.SendGrid;
             
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings

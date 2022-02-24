@@ -178,13 +178,13 @@ namespace OLT.Core
         protected virtual async Task<List<TEntity>> AddFromListAsync<TModel>(List<TModel> list) where TModel : class, new()
         {
             var entities = new List<TEntity>();
-            await list.ForEachAsync(async item =>
+            foreach(var item in list)
             {
                 var entity = new TEntity();
                 ServiceManager.AdapterResolver.Map(item, entity);
                 entities.Add(entity);
                 await Repository.AddAsync(entity);
-            });
+            }
             await SaveChangesAsync();
             return entities;
         }

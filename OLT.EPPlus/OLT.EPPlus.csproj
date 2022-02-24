@@ -9,10 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.8.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
+    <PackageReference Include="OLT.Extensions.General" Version="6.0.0-beta-0001" />
   </ItemGroup>
 
 
