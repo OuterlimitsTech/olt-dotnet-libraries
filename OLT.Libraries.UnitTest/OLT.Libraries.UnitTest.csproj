@@ -89,16 +89,12 @@
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.SqlServer\OLT.EF.Core.SqlServer.csproj" />
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.Email.SendGrid.Shared\OLT.Email.SendGrid.Shared.csproj" />
-    <ProjectReference Include="..\OLT.Email.SendGrid\OLT.Email.SendGrid.csproj" />
-    <ProjectReference Include="..\OLT.Email\OLT.Email.csproj" />
     <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Caching.Shared\OLT.Extensions.Caching.Shared.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Configuration\OLT.Extensions.Configuration.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\OLT.Extensions.General\OLT.Extensions.General.csproj" />
     <ProjectReference Include="..\OLT.Logging.Serilog\OLT.Logging.Serilog.csproj" />
     <ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
   </ItemGroup>

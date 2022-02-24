@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
-		<Description>General Extensions</Description>
-		<ProjectGuid>d9adbe24-83a0-4272-a926-63f476bcc4d0</ProjectGuid>
-	</PropertyGroup>
-
-</Project>
