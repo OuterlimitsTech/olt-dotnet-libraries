@@ -1,4 +1,6 @@
-﻿namespace OLT.Core
+﻿using Microsoft.Extensions.Logging;
+
+namespace OLT.Core
 {
     public class OltServiceManager : OltDisposable, IOltServiceManager
     {
@@ -7,7 +9,7 @@
             IOltMemoryCache memoryCache,
             IOltAdapterResolver adapterResolver,
             IOltRuleManager ruleManager,
-            IOltLogService logService)
+            ILogger<OltServiceManager> logService)
         {
             AdapterResolver = adapterResolver;
             LogService = logService;
@@ -16,7 +18,7 @@
         }
 
         public IOltAdapterResolver AdapterResolver { get; }
-        public IOltLogService LogService { get; }
+        public ILogger<OltServiceManager> LogService { get; }
         public IOltMemoryCache MemoryCache { get; }
         public IOltRuleManager RuleManager { get; }
     }
