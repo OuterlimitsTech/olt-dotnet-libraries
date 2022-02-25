@@ -1,8 +1,11 @@
-﻿namespace OLT.Core
+﻿using System;
+
+namespace OLT.Core
 {
     /// <summary>
     /// see <seealso cref="Microsoft.Extensions.Logging.LogLevel"/>
     /// </summary>
+    [Obsolete]
     public enum OltLogType
     {
         /// <summary>

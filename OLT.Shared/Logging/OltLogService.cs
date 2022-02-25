@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
+    [Obsolete]
+    [ExcludeFromCodeCoverage]
     public class OltLogService : OltDisposable, IOltLogService
     {
         private readonly ILogger<OltLogService> _logger;

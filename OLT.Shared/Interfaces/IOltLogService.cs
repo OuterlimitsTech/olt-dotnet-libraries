@@ -2,6 +2,7 @@
 
 namespace OLT.Core
 {
+    [Obsolete]
     public interface IOltLogService : IOltInjectableSingleton
     {
 
