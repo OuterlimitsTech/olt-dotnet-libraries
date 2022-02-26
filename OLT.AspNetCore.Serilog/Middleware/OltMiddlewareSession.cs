@@ -18,9 +18,9 @@ namespace OLT.Logging.Serilog
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
 
-            using (LogContext.PushProperty(OltDefaultsSerilog.Properties.UserPrincipalName, _identity.UserPrincipalName))
-            using (LogContext.PushProperty(OltDefaultsSerilog.Properties.Username, _identity.Username))
-            using (LogContext.PushProperty(OltDefaultsSerilog.Properties.DbUsername, _identity.GetDbUsername()))
+            using (LogContext.PushProperty(OltSerilogConstants.Properties.UserPrincipalName, _identity.UserPrincipalName))
+            using (LogContext.PushProperty(OltSerilogConstants.Properties.Username, _identity.Username))
+            using (LogContext.PushProperty(OltSerilogConstants.Properties.DbUsername, _identity.GetDbUsername()))
             {
                 await next(context);
             }

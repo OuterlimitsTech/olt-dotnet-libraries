@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace OLT.Core
 {
-    public abstract class OltEntityExpression<TEntity, TValueType> : OltEntityQueryBuilder<TEntity, TValueType>, IOltEntityExpression<TEntity, TValueType>
+    public abstract class OltEntityExpression<TEntity, TValueType> : OltEntityExpressionBuilder<TEntity, TValueType>, IOltEntityExpression<TEntity, TValueType>
         where TEntity : class, IOltEntity
     {
         public abstract Expression<Func<TValueType, bool>> WhereExpression { get; }
