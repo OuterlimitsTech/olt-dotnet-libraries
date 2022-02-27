@@ -36,23 +36,23 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
 
 
 
-        [Fact]
-        public void WhereSearcher()
-        {
-            var entity = PersonEntity.FakerEntity();
-            _context.People.Add(entity);
-            _context.SaveChanges();
-            Assert.True(_context.People.Where(new PersonLastNameStartsWithSearcher(entity.NameLast.Left(1))).Any());
-        }
+        //[Fact]
+        //public void WhereSearcher()
+        //{
+        //    var entity = PersonEntity.FakerEntity();
+        //    _context.People.Add(entity);
+        //    _context.SaveChanges();
+        //    Assert.True(_context.People.Where(new PersonLastNameStartsWithSearcher(entity.NameLast.Left(1))).Any());
+        //}
 
-        [Fact]
-        public void WhereSearcherParams()
-        {
-            var entity = PersonEntity.FakerEntity();
-            _context.People.Add(entity);
-            _context.SaveChanges();
-            Assert.True(_context.People.Where(new PersonLastNameStartsWithSearcher(entity.NameLast.Left(1)), new PersonFirstNameStartsWithSearcher(entity.NameFirst.Left(1))).Any());
-        }
+        //[Fact]
+        //public void WhereSearcherParams()
+        //{
+        //    var entity = PersonEntity.FakerEntity();
+        //    _context.People.Add(entity);
+        //    _context.SaveChanges();
+        //    Assert.True(_context.People.Where(new PersonLastNameStartsWithSearcher(entity.NameLast.Left(1)), new PersonFirstNameStartsWithSearcher(entity.NameFirst.Left(1))).Any());
+        //}
 
 
         [Fact]
