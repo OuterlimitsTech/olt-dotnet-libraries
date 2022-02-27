@@ -3,7 +3,7 @@
 namespace OLT.Core
 {
 
-    public abstract class OltEntityQueryBuilder<TEntity, TValueType> : IOltEntityQueryBuilder<TEntity>
+    public abstract class OltEntityExpressionBuilder<TEntity, TValueType> : IOltEntityQueryBuilder<TEntity>
         where TEntity : class, IOltEntity
     {
         public virtual TValueType Value { get; set; }

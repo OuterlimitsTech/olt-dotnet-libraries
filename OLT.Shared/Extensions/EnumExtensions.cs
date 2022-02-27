@@ -1,36 +1,13 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
+    [ExcludeFromCodeCoverage]
+    [Obsolete]
     public static class EnumExtensions
-    {
-        public static LogLevel ToLogLevel(this OltNgxLoggerLevel ngxLoggerLevel)
-        {
-            switch (ngxLoggerLevel)
-            {
-                case OltNgxLoggerLevel.Trace:
-                    return LogLevel.Trace;
-                case OltNgxLoggerLevel.Debug:
-                    return LogLevel.Debug;
-                case OltNgxLoggerLevel.Info:
-                    return LogLevel.Information;
-                case OltNgxLoggerLevel.Log:
-                    return LogLevel.Information;
-                case OltNgxLoggerLevel.Warn:
-                    return LogLevel.Warning;
-                case OltNgxLoggerLevel.Error:
-                    return LogLevel.Error;
-                case OltNgxLoggerLevel.Fatal:
-                    return LogLevel.Critical;
-                case OltNgxLoggerLevel.Off:
-                    return LogLevel.None;
-                default:
-                    return LogLevel.Information;
-            }
-        }
-
-
+    {             
         public static LogLevel ToLogLevel(this OltLogType logType)
         {
             switch (logType)

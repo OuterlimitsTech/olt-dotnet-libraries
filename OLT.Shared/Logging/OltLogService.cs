@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
+    [Obsolete]
+    [ExcludeFromCodeCoverage]
     public class OltLogService : OltDisposable, IOltLogService
     {
         private readonly ILogger<OltLogService> _logger;
@@ -38,17 +41,17 @@ namespace OLT.Core
             _logger.LogError(exception, message, args);
         }
 
-        public virtual void Write(IOltNgxLoggerMessage loggerMessage, string userName)
-        {
-            var message = $"Token User: {userName}{Environment.NewLine}{loggerMessage.Message}";            
-            if (loggerMessage.Level == OltNgxLoggerLevel.Error || loggerMessage.Level == OltNgxLoggerLevel.Fatal)
-            {
-                _logger.LogError(loggerMessage.ToException(), message);
-                return;
-            }
-            var logType = loggerMessage.Level.GetValueOrDefault(OltNgxLoggerLevel.Info).ToLogLevel();
-            _logger.Log(logType, $"{message}{Environment.NewLine}{Environment.NewLine}{loggerMessage.FormatMessage()}");
-        }
+        //public virtual void Write(IOltNgxLoggerMessage loggerMessage, string userName)
+        //{
+        //    var message = $"Token User: {userName}{Environment.NewLine}{loggerMessage.Message}";            
+        //    if (loggerMessage.Level == OltNgxLoggerLevel.Error || loggerMessage.Level == OltNgxLoggerLevel.Fatal)
+        //    {
+        //        _logger.LogError(loggerMessage.ToException(), message);
+        //        return;
+        //    }
+        //    var logType = loggerMessage.Level.GetValueOrDefault(OltNgxLoggerLevel.Info).ToLogLevel();
+        //    _logger.Log(logType, $"{message}{Environment.NewLine}{Environment.NewLine}{loggerMessage.FormatMessage()}");
+        //}
       
     }
 }

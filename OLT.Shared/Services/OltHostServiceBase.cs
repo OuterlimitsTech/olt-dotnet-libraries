@@ -1,4 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
+﻿using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
@@ -6,15 +6,9 @@ namespace OLT.Core
     {
         private IOltEnvironment _environment;
 
-        protected OltHostServiceBase(IOltLogService loggingService)
-        {
-            LoggingService = loggingService;
-        }
-
         public abstract string ResolveRelativePath(string filePath);
         public abstract string EnvironmentName { get; }
         public virtual IOltEnvironment Environment => _environment ?? (_environment = new OltEnvironment(EnvironmentName));
-        public virtual IOltLogService LoggingService { get; }
 
     }
 }

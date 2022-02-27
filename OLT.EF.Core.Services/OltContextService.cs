@@ -89,15 +89,7 @@ namespace OLT.Core
         protected virtual IEnumerable<TModel> GetAll<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
             where TModel : class, new()
-        {
-            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
-            {
-                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
-            }
-
-            var entities = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
-            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
-        }
+            => MapList<TEntity, TModel>(queryable);
 
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IOltSearcher<TEntity> searcher, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TEntity : class, IOltEntity
@@ -112,15 +104,7 @@ namespace OLT.Core
         protected virtual async Task<IEnumerable<TModel>> GetAllAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TEntity : class, IOltEntity
             where TModel : class, new()
-        {
-            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
-            {
-                return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToListAsync();
-            }
-
-            var entities = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToListAsync();
-            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
-        }
+            => await MapListAsync<TEntity, TModel>(queryable);
 
 
         #endregion
@@ -130,32 +114,12 @@ namespace OLT.Core
         protected virtual TModel Get<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
-        {
-
-            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
-            {
-                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefault();
-            }
-
-            var model = new TModel();
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefault();
-            return ServiceManager.AdapterResolver.Map(entity, model);
-        }
+            => MapFirst<TEntity, TModel>(queryable);
 
         protected virtual async Task<TModel> GetAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
             where TModel : class, new()
             where TEntity : class, IOltEntity
-        {
-
-            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
-            {
-                return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefaultAsync();
-            }
-
-            var model = new TModel();
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefaultAsync();
-            return ServiceManager.AdapterResolver.Map(entity, model);
-        }
+            => await MapFirstAsync<TEntity, TModel>(queryable);
 
 
         #endregion
@@ -195,5 +159,63 @@ namespace OLT.Core
 
         #endregion
 
+        #region [ Mapping ]
+
+        protected virtual IEnumerable<TModel> MapList<TEntity, TModel>(IQueryable<TEntity> queryable)
+            where TModel : class, new()
+            where TEntity : class, IOltEntity
+
+        {
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
+            {
+                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
+            }
+
+            var entities = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
+            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
+        }
+
+        protected virtual async Task<IEnumerable<TModel>> MapListAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
+            where TModel : class, new()
+            where TEntity : class, IOltEntity
+        {
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
+            {
+                return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToListAsync();
+            }
+
+            var entities = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToListAsync();
+            return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
+        }
+
+        protected virtual TModel MapFirst<TEntity, TModel>(IQueryable<TEntity> queryable)
+            where TModel : class, new()
+            where TEntity : class, IOltEntity
+        {
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
+            {
+                return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefault();
+            }
+
+            var model = new TModel();
+            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefault();
+            return ServiceManager.AdapterResolver.Map(entity, model);
+        }
+
+        protected virtual async Task<TModel> MapFirstAsync<TEntity, TModel>(IQueryable<TEntity> queryable)
+            where TModel : class, new()
+            where TEntity : class, IOltEntity
+        {
+            if (ServiceManager.AdapterResolver.CanProjectTo<TEntity, TModel>())
+            {
+                return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).FirstOrDefaultAsync();
+            }
+
+            var model = new TModel();
+            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefaultAsync();
+            return ServiceManager.AdapterResolver.Map(entity, model);
+        }
+
+        #endregion
     }
 }

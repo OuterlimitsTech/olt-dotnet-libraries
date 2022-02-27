@@ -2,6 +2,7 @@
 
 namespace OLT.Core
 {
+    [Obsolete]
     public interface IOltLogService : IOltInjectableSingleton
     {
 
@@ -37,15 +38,6 @@ namespace OLT.Core
         /// <param name="args">An object array that contains zero or more objects to format.</param>
         /// <example>logger.LogError(exception, "Error while processing request from {Address}", address)</example>
         void Write(Exception exception, string message, params object[] args);
-
-        /// <summary>
-        /// Writes the specified exception.
-        /// </summary>
-        /// <param name="loggerMessage">Angular NGX Log Body</param>
-        /// <param name="userName">The current logged in user (if applicable).</param>
-        void Write(IOltNgxLoggerMessage loggerMessage, string userName);
-
-
 
 
     }

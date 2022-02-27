@@ -1,6 +1,6 @@
 ﻿namespace OLT.Core
 {
-    public class OltAspNetAppSettings : OltAppSettings, IOltOptionsAspNet
+    public class OltAspNetAppSettings : IOltOptionsAspNet
     {
         /// <summary>
         /// Hosting Settings

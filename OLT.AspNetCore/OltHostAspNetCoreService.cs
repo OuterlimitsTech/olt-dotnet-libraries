@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace OLT.Core
 {
@@ -7,9 +8,7 @@ namespace OLT.Core
     {
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public OltHostAspNetCoreService(
-            IWebHostEnvironment environment,
-            IOltLogService loggingService) : base(loggingService)
+        public OltHostAspNetCoreService(IWebHostEnvironment environment)
         {
             _hostEnvironment = environment;
         }
