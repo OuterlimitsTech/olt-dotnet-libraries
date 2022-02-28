@@ -13,7 +13,7 @@ namespace OLT.EPPlus
         /// <param name="worksheet"></param>
         /// <param name="row">Current Row</param>
         /// <param name="col">Current Col</param>
-        /// <returns><param name="col"></param> + 1</returns>
+        /// <returns>col + 1</returns>
         int Write(ExcelWorksheet worksheet, int col, int row);
 
 
