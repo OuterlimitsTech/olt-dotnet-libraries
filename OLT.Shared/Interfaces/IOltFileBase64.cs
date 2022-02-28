@@ -4,8 +4,8 @@ namespace OLT.Core
 {
     public interface IOltFileBase64 : IOltResult
     {
-        string ContentType { get; }
-        string FileBase64 { get; }
-        string FileName { get; }
+        string ContentType { get; set; }
+        string FileBase64 { get; set; }
+        string FileName { get; set; }
     }
 }

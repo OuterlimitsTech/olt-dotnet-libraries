@@ -205,13 +205,14 @@ namespace OLT.Core
 
             foreach (var entry in changed)
             {
+                SetAuditFields(entry);
                 SetAbstractFields(entry);
                 CallTriggers(entry);
                 CheckNullableStringFields(entry);
             }
         }
 
-        protected virtual void SetAbstractFields(EntityEntry entityEntry)
+        protected virtual void SetAuditFields(EntityEntry entityEntry)
         {
             if (entityEntry.Entity is IOltEntityAudit createModel)
             {
@@ -225,7 +226,10 @@ namespace OLT.Core
                 createModel.ModifyUser = AuditUser;
                 createModel.ModifyDate = DateTimeOffset.UtcNow;
             }
-         
+        }
+
+        protected virtual void SetAbstractFields(EntityEntry entityEntry)
+        {         
             if (entityEntry.Entity is IOltEntityUniqueId uniqueModel && uniqueModel.UniqueId == Guid.Empty)
             {
                 uniqueModel.UniqueId = Guid.NewGuid();
