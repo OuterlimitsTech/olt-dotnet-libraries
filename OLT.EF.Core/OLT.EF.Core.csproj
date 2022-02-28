@@ -7,6 +7,10 @@
 		<ProjectGuid>15d0bf6d-f636-4dbd-a7d5-5d0b97829b49</ProjectGuid>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="OLT.EF.Common" Version="6.0.0-beta-0004" />
+	</ItemGroup>
+	
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.13" />
