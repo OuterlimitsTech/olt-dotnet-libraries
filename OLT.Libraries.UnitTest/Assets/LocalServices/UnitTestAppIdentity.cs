@@ -22,7 +22,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         public override string UserPrincipalName => null;
         public override string Email => null;
 
-        public override bool HasRoleClaim(string claimName)
+        public override bool HasRole(string claimName)
         {
             return true;
         }
@@ -57,7 +57,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
         public override string UserPrincipalName => Email;
         public override string Email => StaticEmail;
 
-        public override bool HasRoleClaim(string claimName)
+        public override bool HasRole(string claimName)
         {
             return true;
         }

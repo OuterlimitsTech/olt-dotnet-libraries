@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.8.6" />
-    <PackageReference Include="OLT.Extensions.General" Version="6.0.0-beta-0004" />
+    <PackageReference Include="OLT.Extensions.General" Version="6.0.0-beta-0010" />
   </ItemGroup>
 
 

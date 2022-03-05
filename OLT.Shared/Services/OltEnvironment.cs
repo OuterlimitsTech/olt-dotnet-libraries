@@ -1,18 +1,8 @@
-﻿using System;
+﻿using OLT.Constants;
+using System;
 
 namespace OLT.Core
 {
-    /// <summary>
-    /// Commonly used environment names. (Cloned from Microsoft.Extensions.Hosting.Environments)
-    /// </summary>
-    public static class OltEnvironments
-    {
-        public static readonly string Development = "Development";
-        public static readonly string Test = "Test";
-        public static readonly string Staging = "Staging";
-        public static readonly string Production = "Production";
-    }
-
     public class OltEnvironment : OltDisposable, IOltEnvironment
     {
 
