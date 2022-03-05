@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -13,7 +13,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0010" />
-		<ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
 	</ItemGroup>
 
 </Project>
