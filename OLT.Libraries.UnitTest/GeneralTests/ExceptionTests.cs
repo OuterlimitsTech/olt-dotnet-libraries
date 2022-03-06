@@ -15,11 +15,6 @@ namespace OLT.Libraries.UnitTest.GeneralTests
 {
     public class ExceptionTests
     {
-        private enum RecordNotFound
-        {
-            [Description("Person")]
-            Person
-        }
 
         private const string DefaultMessage = "Test Error";
 
@@ -32,30 +27,30 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             return (T)formatter.Deserialize(s);
         }
 
-        [Fact]
-        public void ExceptionTest()
-        {
-            var ex = new OltException(DefaultMessage);
-            var result = ToSerialize(ex);
-            Assert.Equal(ex.Message, result.Message);
-        }
+        //[Fact]
+        //public void ExceptionTest()
+        //{
+        //    var ex = new OltException(DefaultMessage);
+        //    var result = ToSerialize(ex);
+        //    Assert.Equal(ex.Message, result.Message);
+        //}
 
-        [Fact]
-        public void InnerExceptionTest()
-        {
-            var innerException = new Exception($"Inner {DefaultMessage}");
-            var ex = new OltException(DefaultMessage, innerException);
-            var result = ToSerialize(ex);
-            Assert.Equal(ex.Message, result.Message);
-        }
+        //[Fact]
+        //public void InnerExceptionTest()
+        //{
+        //    var innerException = new Exception($"Inner {DefaultMessage}");
+        //    var ex = new OltException(DefaultMessage, innerException);
+        //    var result = ToSerialize(ex);
+        //    Assert.Equal(ex.Message, result.Message);
+        //}
 
-        [Fact]
-        public void BadRequestExceptionTest()
-        {
-            var ex = new OltBadRequestException(DefaultMessage);
-            var result = ToSerialize(ex);
-            Assert.Equal(ex.Message, result.Message);
-        }
+        //[Fact]
+        //public void BadRequestExceptionTest()
+        //{
+        //    var ex = new OltBadRequestException(DefaultMessage);
+        //    var result = ToSerialize(ex);
+        //    Assert.Equal(ex.Message, result.Message);
+        //}
 
         [Fact]
         public void AdapterNotFoundExceptionTest()
@@ -73,21 +68,21 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.Equal(ex.Message, result.Message);
         }
 
-        [Fact]
-        public void RecordNotFoundException()
-        {
-            var ex = new OltRecordNotFoundException(DefaultMessage);
-            var result = ToSerialize(ex);
-            Assert.Equal(ex.Message, result.Message);
-        }
+        //[Fact]
+        //public void RecordNotFoundException()
+        //{
+        //    var ex = new OltRecordNotFoundException(DefaultMessage);
+        //    var result = ToSerialize(ex);
+        //    Assert.Equal(ex.Message, result.Message);
+        //}
 
-        [Fact]
-        public void RecordNotFoundExceptionEnum()
-        {
-            var ex = new OltRecordNotFoundException<RecordNotFound>(RecordNotFound.Person);
-            var result = ToSerialize(ex);
-            Assert.Equal(ex.Message, result.Message);
-        }
+        //[Fact]
+        //public void RecordNotFoundExceptionEnum()
+        //{
+        //    var ex = new OltRecordNotFoundException<RecordNotFound>(RecordNotFound.Person);
+        //    var result = ToSerialize(ex);
+        //    Assert.Equal(ex.Message, result.Message);
+        //}
 
         [Fact]
         public void RuleNotFoundExceptionTest()
@@ -113,14 +108,14 @@ namespace OLT.Libraries.UnitTest.GeneralTests
             Assert.Equal(ex.Message, result.Message);
         }
 
-        [Fact]
-        public void ValidationExceptionTest()
-        {
-            var list = new List<OltValidationError> { new OltValidationError(DefaultMessage) };
-            var ex = new OltValidationException(list);
-            var result = ToSerialize(ex);
-            Assert.Equal(ex.Message, result.Message);
-        }
+        //[Fact]
+        //public void ValidationExceptionTest()
+        //{
+        //    var list = new List<OltValidationError> { new OltValidationError(DefaultMessage) };
+        //    var ex = new OltValidationException(list);
+        //    var result = ToSerialize(ex);
+        //    Assert.Equal(ex.Message, result.Message);
+        //}
 
         [Fact]
         public void AutoMapperExceptionTest()

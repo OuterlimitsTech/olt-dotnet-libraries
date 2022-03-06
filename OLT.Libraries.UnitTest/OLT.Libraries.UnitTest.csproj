@@ -59,7 +59,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="MimeMapping" Version="1.0.1.37" />
     <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0004" />
+    <PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0011" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.TestCorrelator" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.3" />
@@ -77,10 +77,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OLT.AspNetCore.Authentication.ApiKey\OLT.AspNetCore.Authentication.ApiKey.csproj" />
-    <ProjectReference Include="..\OLT.AspNetCore.Authentication.JwtBearer\OLT.AspNetCore.Authentication.JwtBearer.csproj" />
-    <ProjectReference Include="..\OLT.AspNetCore.Serilog\OLT.AspNetCore.Serilog.csproj" />
-    <ProjectReference Include="..\OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj" />
     <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
     <ProjectReference Include="..\OLT.Builder.File\OLT.Builder.File.csproj" />
     <ProjectReference Include="..\OLT.DataAdapters.AutoMapper\OLT.DataAdapters.AutoMapper.csproj" />

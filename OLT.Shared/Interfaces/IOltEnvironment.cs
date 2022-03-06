@@ -1,4 +1,6 @@
-﻿namespace OLT.Core
+﻿using OLT.Constants;
+
+namespace OLT.Core
 {
     public interface IOltEnvironment
     {

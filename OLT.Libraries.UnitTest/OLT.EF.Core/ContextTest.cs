@@ -386,7 +386,7 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
                         .AddJsonFile("appsettings.json", false, true)
                         .AddEnvironmentVariables();
                 })
-                .UseStartup<SerilogStartup>();
+                .UseStartup<AnonymousUserStartup>();
 
             var testServer = new TestServer(webBuilder);
 

@@ -1,27 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<RootNamespace>OLT.Core</RootNamespace>
 		<Description>Base Context, Context Extensions, Seed Helpers, Entity Interfaces, Base Entity Models</Description>
 		<ProjectGuid>15d0bf6d-f636-4dbd-a7d5-5d0b97829b49</ProjectGuid>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OLT.EF.Common" Version="6.0.0-beta-0004" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.13" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.13" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.1" />
+		<PackageReference Include="OLT.EF.Common" Version="6.0.0-beta-0011" />
 	</ItemGroup>
+	
 	
 	<ItemGroup>
 		<ProjectReference Include="..\OLT.Shared\OLT.Shared.csproj" />
