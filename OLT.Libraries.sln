@@ -27,16 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.DependencyIn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Libraries.UnitTest", "OLT.Libraries.UnitTest\OLT.Libraries.UnitTest.csproj", "{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Shared", "OLT.AspNetCore.Shared\OLT.AspNetCore.Shared.csproj", "{5C22588F-CF15-44C5-830B-5D63819A6DF1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Serilog", "OLT.AspNetCore.Serilog\OLT.AspNetCore.Serilog.csproj", "{A4F69F7F-FD35-4B3C-A48A-AEA0DBC0E280}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Authentication.ApiKey", "OLT.AspNetCore.Authentication.ApiKey\OLT.AspNetCore.Authentication.ApiKey.csproj", "{6BEDF8D5-0303-408E-B9C9-06AD7885D3A3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Authentication", "OLT.AspNetCore.Authentication\OLT.AspNetCore.Authentication.csproj", "{0518122C-A418-4EBA-A8D5-7211C4B4EAD0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.AspNetCore.Authentication.JwtBearer", "OLT.AspNetCore.Authentication.JwtBearer\OLT.AspNetCore.Authentication.JwtBearer.csproj", "{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Builder.File", "OLT.Builder.File\OLT.Builder.File.csproj", "{533864B1-5309-4CBF-8E7F-0133E99529FC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.Caching.Memory", "OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj", "{BEC3840B-B42C-4C71-A2D5-910065D34B36}"
@@ -99,26 +89,6 @@ Global
 		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C22588F-CF15-44C5-830B-5D63819A6DF1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4F69F7F-FD35-4B3C-A48A-AEA0DBC0E280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4F69F7F-FD35-4B3C-A48A-AEA0DBC0E280}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4F69F7F-FD35-4B3C-A48A-AEA0DBC0E280}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4F69F7F-FD35-4B3C-A48A-AEA0DBC0E280}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BEDF8D5-0303-408E-B9C9-06AD7885D3A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BEDF8D5-0303-408E-B9C9-06AD7885D3A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BEDF8D5-0303-408E-B9C9-06AD7885D3A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BEDF8D5-0303-408E-B9C9-06AD7885D3A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0518122C-A418-4EBA-A8D5-7211C4B4EAD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0518122C-A418-4EBA-A8D5-7211C4B4EAD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0518122C-A418-4EBA-A8D5-7211C4B4EAD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0518122C-A418-4EBA-A8D5-7211C4B4EAD0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1D8D9AD-65BE-4D5B-BA3E-1DD4526F8C0A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using OLT.AspNetCore.Authentication;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.LocalServices;
@@ -36,8 +35,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
                     optionsBuilder.UseInMemoryDatabase(databaseName: $"TestServer_{Guid.NewGuid()}");
-                })
-                .AddJwtBearer(new OltAuthenticationJwtBearer(jwtSecret));
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)

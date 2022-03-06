@@ -14,7 +14,7 @@ namespace OLT.Libraries.UnitTest.Assets.LocalServices
             get
             {
                 var roles = new List<string>();
-                return new GenericPrincipal(new GenericIdentity("bogus"), roles.ToArray());
+                return new GenericPrincipal(new GenericIdentity(null), roles.ToArray());
             }
         }
 

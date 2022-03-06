@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -8,25 +6,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using OLT.AspNetCore.Authentication;
 using OLT.Core;
 using OLT.Libraries.UnitTest.Assets.Entity;
 using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
-using OLT.Logging.Serilog;
-using Serilog;
 
 namespace OLT.Libraries.UnitTest
 {
   
 
     // ReSharper disable once InconsistentNaming
-    public class SerilogStartup
+    public class AnonymousUserStartup
     {
         private readonly IConfiguration _configuration;
 
-        public SerilogStartup(IConfiguration configuration)
+        public AnonymousUserStartup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -35,18 +29,16 @@ namespace OLT.Libraries.UnitTest
         public void ConfigureServices(IServiceCollection services)
         {
             var settings = _configuration.GetSection("AppSettings").Get<AppSettingsDto>();
-            var jwtSecret = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
             services
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)
-                .AddOltInjectionAutoMapper()
-                .AddOltSerilog(configOptions => configOptions.ShowExceptionDetails = true)
-                .AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
+                .AddOltInjectionAutoMapper()                
+                //.AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
-                    optionsBuilder.UseInMemoryDatabase(databaseName: $"{nameof(SerilogStartup)}_{Guid.NewGuid()}");
-                })
-                .AddJwtBearer(new OltAuthenticationJwtBearer(jwtSecret));
+                    optionsBuilder.UseInMemoryDatabase(databaseName: $"{nameof(AnonymousUserStartup)}_{Guid.NewGuid()}");
+                });
+                
 
             // services.AddControllers().AddApplicationPart(Assembly.Load("RoundTheCode.CrudApi.Web")).AddControllersAsServices();
         }
@@ -63,10 +55,7 @@ namespace OLT.Libraries.UnitTest
             app.UseHsts(settings.Hosting);
             app.UseCors(settings.Hosting);
             app.UseHttpsRedirection(settings.Hosting);
-            //app.UseAuthentication();
-            app.UseOltSerilogRequestLogging();
             app.UseRouting();
-            //app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
