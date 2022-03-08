@@ -31,7 +31,7 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             services
                 .AddOltAspNetCore(settings, this.GetType().Assembly, null)
                 .AddOltInjectionAutoMapper()
-                .AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
+                //.AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
                 .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
                 {
                     optionsBuilder.UseInMemoryDatabase(databaseName: $"TestServer_{Guid.NewGuid()}");

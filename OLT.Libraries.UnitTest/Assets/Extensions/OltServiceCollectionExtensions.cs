@@ -18,7 +18,7 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
         public static IServiceCollection AddOltUnitTesting(this IServiceCollection services)
         {
             services
-                .AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
+                //.AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
                 .AddOltInjection()
                 .AddOltInjectionAutoMapper()
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()
@@ -36,7 +36,7 @@ namespace OLT.Libraries.UnitTest.Assets.Extensions
         public static IServiceCollection AddOltUnitTesting(this IServiceCollection services, Assembly includeAssemblyScan)
         {
             services
-                .AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
+                //.AddOltAddMemoryCache(TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30))
                 .AddOltInjection()
                 .AddOltInjectionAutoMapper(includeAssemblyScan)
                 .AddScoped<IOltIdentity, OltUnitTestAppIdentity>()

@@ -9,6 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
 {
+    public class OltServiceManager : OltDisposable, IOltServiceManager
+    {
+
+        public OltServiceManager(IOltAdapterResolver adapterResolver)
+        {
+            AdapterResolver = adapterResolver;
+        }
+
+        public IOltAdapterResolver AdapterResolver { get; }
+
+    }
+
     public abstract class OltContextService<TContext> : OltCoreService
         where TContext : class, IOltDbContext
     {

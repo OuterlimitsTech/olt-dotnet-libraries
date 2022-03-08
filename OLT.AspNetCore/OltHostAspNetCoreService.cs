@@ -17,7 +17,8 @@ namespace OLT.Core
         {
             return Path.Combine(_hostEnvironment.WebRootPath, filePath.Replace("~/", string.Empty));
         }
-
+               
         public override string EnvironmentName => _hostEnvironment.EnvironmentName;
+        public override string ApplicationName => _hostEnvironment.ApplicationName;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OLT.Core
 {
@@ -6,6 +7,7 @@ namespace OLT.Core
     /// see <seealso cref="Microsoft.Extensions.Logging.LogLevel"/>
     /// </summary>
     [Obsolete]
+    [ExcludeFromCodeCoverage]
     public enum OltLogType
     {
         /// <summary>

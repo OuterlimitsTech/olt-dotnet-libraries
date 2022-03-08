@@ -13,7 +13,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-		<PackageReference Include="OLT.AspNetCore.Authentication" Version="6.0.0-beta-0011" />
+		<PackageReference Include="OLT.AspNetCore.Authentication" Version="6.0.0-beta-0015" />
 		<PackageReference Include="Scrutor" Version="4.0.0" />
 	</ItemGroup>
 
