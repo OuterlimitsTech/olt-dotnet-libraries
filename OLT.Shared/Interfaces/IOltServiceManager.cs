@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿////using Microsoft.Extensions.Logging;
+////using System;
 
-namespace OLT.Core
-{
-    public interface IOltServiceManager : IOltInjectableScoped
-    {
-        IOltAdapterResolver AdapterResolver { get; }
-    }
-}
+////namespace OLT.Core
+////{
+////    public interface IOltServiceManager : IOltInjectableScoped
+////    {
+////        IOltAdapterResolver AdapterResolver { get; }
+////    }
+////}

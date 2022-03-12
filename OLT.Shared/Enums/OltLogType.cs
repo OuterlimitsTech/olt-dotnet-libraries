@@ -6,8 +6,7 @@ namespace OLT.Core
     /// <summary>
     /// see <seealso cref="Microsoft.Extensions.Logging.LogLevel"/>
     /// </summary>
-    [Obsolete]
-    [ExcludeFromCodeCoverage]
+    [Obsolete("Removing in future release")]
     public enum OltLogType
     {
         /// <summary>

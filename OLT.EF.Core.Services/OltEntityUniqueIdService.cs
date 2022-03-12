@@ -93,7 +93,7 @@ namespace OLT.Core
         public virtual TModel Update<TModel>(Guid uid, TModel model)
             where TModel : class, new()
         {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
+            var entity = ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
             ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TModel>(uid);
@@ -104,7 +104,7 @@ namespace OLT.Core
             where TModel : class, new()
             where TResponseModel : class, new()
         {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
+            var entity = ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(GetQueryable(uid)).FirstOrDefault();
             ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TResponseModel>(uid);
@@ -113,7 +113,7 @@ namespace OLT.Core
         public virtual async Task<TModel> UpdateAsync<TModel>(Guid uid, TModel model)
             where TModel : class, new()
         {
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefaultAsync();
+            var entity = await ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(GetQueryable(uid)).FirstOrDefaultAsync();
             ServiceManager.AdapterResolver.Map(model, entity);
             await SaveChangesAsync();
             return await GetAsync<TModel>(uid);
@@ -123,7 +123,7 @@ namespace OLT.Core
             where TModel : class, new()
             where TResponseModel : class, new()
         {
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(uid)).FirstOrDefaultAsync();
+            var entity = await ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(GetQueryable(uid)).FirstOrDefaultAsync();
             ServiceManager.AdapterResolver.Map(model, entity);
             await SaveChangesAsync();
             return await GetAsync<TResponseModel>(uid);

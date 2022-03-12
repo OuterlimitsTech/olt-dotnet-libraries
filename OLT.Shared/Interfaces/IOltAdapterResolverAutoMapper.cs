@@ -1,7 +1,7 @@
-﻿namespace OLT.Core
-{
-    public interface IOltAdapterResolverAutoMapper : IOltAdapterResolver
-    {
+﻿//namespace OLT.Core
+//{
+//    public interface IOltAdapterResolverAutoMapper : IOltAdapterResolver
+//    {
 
-    }
-}
+//    }
+//}
