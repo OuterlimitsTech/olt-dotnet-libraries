@@ -77,18 +77,9 @@ namespace OLT.Core
             }
             else if (!includeDeleted)
             {
-                query = NonDeletedQueryable(context, query);
+                query = OltGeneralQueryableExtensions.NonDeletedQueryable(query);
             }
             return query;
-        }
-
-        public static IQueryable<TEntity> NonDeletedQueryable<TEntity>(this IOltDbContext context, IQueryable<TEntity> queryable)
-            where TEntity : class, IOltEntity
-        {
-            if (!typeof(IOltEntityDeletable).IsAssignableFrom(typeof(TEntity))) return queryable;
-            Expression<Func<TEntity, bool>> getNonDeleted = deletableQuery => ((IOltEntityDeletable)deletableQuery).DeletedOn == null;
-            getNonDeleted = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(getNonDeleted);
-            return queryable.Where(getNonDeleted);
         }
 
         public static void SetSoftDeleteGlobalFilter(this ModelBuilder modelBuilder)

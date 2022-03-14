@@ -10,7 +10,7 @@ namespace OLT.Core
 
         public OltHostAspNetCoreService(IWebHostEnvironment environment)
         {
-            _hostEnvironment = environment;
+            _hostEnvironment = environment;            
         }
 
         public override string ResolveRelativePath(string filePath)

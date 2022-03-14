@@ -9,7 +9,7 @@ namespace OLT.Core
 {
     public abstract class OltEntityService<TContext, TEntity> : OltContextService<TContext>, IOltEntityService<TEntity>
      where TEntity : class, IOltEntity, new()
-     where TContext : DbContext, IOltDbContext
+     where TContext : class, IOltDbContext
     {
 
         protected OltEntityService(
@@ -41,8 +41,8 @@ namespace OLT.Core
 
         public TModel Get<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return Get<TModel>(queryable);
         }
 
@@ -57,8 +57,8 @@ namespace OLT.Core
 
         public async Task<TModel> GetAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return await GetAsync<TModel>(queryable);
         }
 
@@ -86,8 +86,8 @@ namespace OLT.Core
 
         public virtual IEnumerable<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return GetAll<TModel>(queryable);
         }
 
@@ -105,8 +105,8 @@ namespace OLT.Core
 
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return await GetAllAsync<TModel>(queryable);
         }
 
