@@ -19,19 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.EPPlus", "OLT.EPPlus\OL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.DependencyInjection", "OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj", "{D98AFC07-7D80-47CD-9567-074D017C2C59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.DataAdapters.AutoMapper", "OLT.DataAdapters.AutoMapper\OLT.DataAdapters.AutoMapper.csproj", "{A2C1D7CE-6D46-43FB-AF9C-357C2949E98B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.DataAdapters", "OLT.DataAdapters\OLT.DataAdapters.csproj", "{2571F65F-CDCC-4AF8-A4CE-124FD347B0A0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.DependencyInjection.AutoMapper", "OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj", "{C956C04F-4523-4F68-961C-8174803AA073}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Libraries.UnitTest", "OLT.Libraries.UnitTest\OLT.Libraries.UnitTest.csproj", "{5F8DA82F-F3E0-4529-A619-481A6D2C01DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Builder.File", "OLT.Builder.File\OLT.Builder.File.csproj", "{533864B1-5309-4CBF-8E7F-0133E99529FC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.Caching.Memory", "OLT.Extensions.Caching.Memory\OLT.Extensions.Caching.Memory.csproj", "{BEC3840B-B42C-4C71-A2D5-910065D34B36}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.Caching.Shared", "OLT.Extensions.Caching.Shared\OLT.Extensions.Caching.Shared.csproj", "{D055CDC9-EA56-4745-9D37-3D4AEF139F1D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OLT.Extensions.Configuration", "OLT.Extensions.Configuration\OLT.Extensions.Configuration.csproj", "{1ECFB969-C4A7-4C17-AEDE-6263E779F56B}"
 EndProject
@@ -73,14 +65,6 @@ Global
 		{D98AFC07-7D80-47CD-9567-074D017C2C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D98AFC07-7D80-47CD-9567-074D017C2C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D98AFC07-7D80-47CD-9567-074D017C2C59}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2C1D7CE-6D46-43FB-AF9C-357C2949E98B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2C1D7CE-6D46-43FB-AF9C-357C2949E98B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2C1D7CE-6D46-43FB-AF9C-357C2949E98B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2C1D7CE-6D46-43FB-AF9C-357C2949E98B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2571F65F-CDCC-4AF8-A4CE-124FD347B0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2571F65F-CDCC-4AF8-A4CE-124FD347B0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2571F65F-CDCC-4AF8-A4CE-124FD347B0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2571F65F-CDCC-4AF8-A4CE-124FD347B0A0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C956C04F-4523-4F68-961C-8174803AA073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C956C04F-4523-4F68-961C-8174803AA073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C956C04F-4523-4F68-961C-8174803AA073}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,14 +77,6 @@ Global
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{533864B1-5309-4CBF-8E7F-0133E99529FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEC3840B-B42C-4C71-A2D5-910065D34B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEC3840B-B42C-4C71-A2D5-910065D34B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEC3840B-B42C-4C71-A2D5-910065D34B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEC3840B-B42C-4C71-A2D5-910065D34B36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D055CDC9-EA56-4745-9D37-3D4AEF139F1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D055CDC9-EA56-4745-9D37-3D4AEF139F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D055CDC9-EA56-4745-9D37-3D4AEF139F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D055CDC9-EA56-4745-9D37-3D4AEF139F1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1ECFB969-C4A7-4C17-AEDE-6263E779F56B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1ECFB969-C4A7-4C17-AEDE-6263E779F56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ECFB969-C4A7-4C17-AEDE-6263E779F56B}.Release|Any CPU.ActiveCfg = Release|Any CPU

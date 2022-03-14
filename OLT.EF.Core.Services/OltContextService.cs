@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OLT.Core
 {
-    public abstract class OltContextService<TContext> : OltCoreService
+    public abstract class OltContextService<TContext> : OltCoreService<OltEfCoreServiceManager>
         where TContext : class, IOltDbContext
     {
         protected OltContextService(
@@ -171,7 +171,7 @@ namespace OLT.Core
                 return ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToList();
             }
 
-            var entities = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToList();
+            var entities = ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(queryable).ToList();
             return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
         }
 
@@ -184,7 +184,7 @@ namespace OLT.Core
                 return await ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable).ToListAsync();
             }
 
-            var entities = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).ToListAsync();
+            var entities = await ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(queryable).ToListAsync();
             return ServiceManager.AdapterResolver.Map<TEntity, TModel>(entities);
         }
 
@@ -198,7 +198,7 @@ namespace OLT.Core
             }
 
             var model = new TModel();
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefault();
+            var entity = ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(queryable).FirstOrDefault();
             return ServiceManager.AdapterResolver.Map(entity, model);
         }
 
@@ -212,7 +212,7 @@ namespace OLT.Core
             }
 
             var model = new TModel();
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(queryable).FirstOrDefaultAsync();
+            var entity = await ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(queryable).FirstOrDefaultAsync();
             return ServiceManager.AdapterResolver.Map(entity, model);
         }
 

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OLT.Core
 {
     /// <summary>
     /// see <seealso cref="Microsoft.Extensions.Logging.LogLevel"/>
     /// </summary>
-    [Obsolete]
+    [Obsolete("Removing in future release")]
     public enum OltLogType
     {
         /// <summary>

@@ -217,17 +217,17 @@ namespace OLT.Libraries.UnitTest.OLT.EF.Core
             Assert.True(updated.NameFirst.Equals(entity.NameFirst) && updated.NameMiddle == null);
         }
 
-        [Fact]
-        public void NonDeletedQueryable()
-        {
-            var expectedUsers = _context.Users.Where(p => p.Id > 0);
-            var queryUsers = _context.NonDeletedQueryable(expectedUsers);
-            Assert.Equal(expectedUsers.ToQueryString(), queryUsers.ToQueryString());
+        //[Fact]
+        //public void NonDeletedQueryable()
+        //{
+        //    var expectedUsers = _context.Users.Where(p => p.Id > 0);
+        //    var queryUsers = _context.NonDeletedQueryable(expectedUsers);
+        //    Assert.Equal(expectedUsers.ToQueryString(), queryUsers.ToQueryString());
 
-            var expectedPeople = _context.People.Where(p => p.Id > 0);
-            var queryPeople = _context.NonDeletedQueryable(expectedPeople);
-            Assert.NotEqual(expectedPeople.ToQueryString(), queryPeople.ToQueryString());
-        }
+        //    var expectedPeople = _context.People.Where(p => p.Id > 0);
+        //    var queryPeople = _context.NonDeletedQueryable(expectedPeople);
+        //    Assert.NotEqual(expectedPeople.ToQueryString(), queryPeople.ToQueryString());
+        //}
 
         [Fact]
         public async Task ExceedMaxLengthAsync()

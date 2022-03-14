@@ -4,6 +4,6 @@
     {
         string ResolveRelativePath(string filePath);
         string EnvironmentName { get; }
-        IOltEnvironment Environment { get; }
+        string ApplicationName { get; }
     }
 }

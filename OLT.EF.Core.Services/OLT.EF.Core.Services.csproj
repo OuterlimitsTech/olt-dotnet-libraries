@@ -8,6 +8,9 @@
     <ProjectGuid>43a16ce6-abae-4d8c-9682-0339703c9590</ProjectGuid>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="OLT.DataAdapters" Version="6.0.0-beta-0025" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />

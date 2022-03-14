@@ -9,9 +9,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.1" />
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.1" />-->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.1" />
-		<PackageReference Include="OLT.EF.Common" Version="6.0.0-beta-0011" />
+		<PackageReference Include="OLT.Core.Services" Version="6.0.0-beta-0025" />
 	</ItemGroup>
 	
 	

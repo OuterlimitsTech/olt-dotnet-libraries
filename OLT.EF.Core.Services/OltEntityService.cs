@@ -9,7 +9,7 @@ namespace OLT.Core
 {
     public abstract class OltEntityService<TContext, TEntity> : OltContextService<TContext>, IOltEntityService<TEntity>
      where TEntity : class, IOltEntity, new()
-     where TContext : DbContext, IOltDbContext
+     where TContext : class, IOltDbContext
     {
 
         protected OltEntityService(
@@ -41,8 +41,8 @@ namespace OLT.Core
 
         public TModel Get<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return Get<TModel>(queryable);
         }
 
@@ -57,8 +57,8 @@ namespace OLT.Core
 
         public async Task<TModel> GetAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return await GetAsync<TModel>(queryable);
         }
 
@@ -86,8 +86,8 @@ namespace OLT.Core
 
         public virtual IEnumerable<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return GetAll<TModel>(queryable);
         }
 
@@ -105,15 +105,15 @@ namespace OLT.Core
 
         public virtual async Task<IEnumerable<TModel>> GetAllAsync<TModel>(Expression<Func<TEntity, bool>> predicate) where TModel : class, new()
         {
-            var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
-            var queryable = this.GetQueryable().Where(query);
+            //var query = (Expression<Func<TEntity, bool>>)OltRemoveCastsVisitor.Visit(predicate);
+            var queryable = this.GetQueryable().Where(predicate);
             return await GetAllAsync<TModel>(queryable);
         }
 
         #endregion
 
         #region [ Get Paged ]
-
+                
         public virtual IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams)
             where TModel : class, new()
         {
@@ -123,7 +123,7 @@ namespace OLT.Core
         protected virtual IOltPaged<TModel> GetPaged<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
            where TModel : class, new()
         {
-            return ServiceManager.AdapterResolver.Paged<TEntity, TModel>(queryable, pagingParams);
+            return this.GetPaged<TModel>(queryable, pagingParams, null);
         }
 
         public virtual IOltPaged<TModel> GetPaged<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
@@ -135,7 +135,19 @@ namespace OLT.Core
         protected virtual IOltPaged<TModel> GetPaged<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TModel : class, new()
         {
-            return ServiceManager.AdapterResolver.Paged<TEntity, TModel>(queryable, pagingParams, orderBy);
+            if (ServiceManager.AdapterResolver.CanMapPaged<TEntity, TModel>())
+            {
+                return orderBy == null ? 
+                    ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable, pagingParams) :
+                    ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable, pagingParams, orderBy);
+            }
+
+            if (orderBy != null)
+            {
+                queryable = orderBy(queryable);
+            }
+            var mapped = ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable);
+            return mapped.ToPaged(pagingParams);            
         }
 
         public virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IOltSearcher<TEntity> searcher, IOltPagingParams pagingParams)
@@ -147,13 +159,17 @@ namespace OLT.Core
         protected virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams)
             where TModel : class, new()
         {
-            return await GetPagedAsync<TModel>(queryable, pagingParams, ServiceManager.AdapterResolver.DefaultOrderBy<TEntity, TModel>());
+            return await GetPagedAsync<TModel>(queryable, pagingParams, null);
         }
 
-        protected virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> source, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
+        protected virtual async Task<IOltPaged<TModel>> GetPagedAsync<TModel>(IQueryable<TEntity> queryable, IOltPagingParams pagingParams, Func<IQueryable<TEntity>, IQueryable<TEntity>> orderBy)
             where TModel : class, new()
         {
-            var mapped = ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(orderBy(source));
+            if (orderBy != null)
+            {
+                queryable = orderBy(queryable);
+            }
+            var mapped = ServiceManager.AdapterResolver.ProjectTo<TEntity, TModel>(queryable);
             return await mapped.ToPagedAsync(pagingParams);
         }
 
@@ -306,7 +322,7 @@ namespace OLT.Core
 
         public virtual TModel Update<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
         {
-            var entity = ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefault();
+            var entity = ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefault();
             ServiceManager.AdapterResolver.Map(model, entity);
             SaveChanges();
             return Get<TModel>(searcher);
@@ -314,7 +330,7 @@ namespace OLT.Core
 
         public virtual async Task<TModel> UpdateAsync<TModel>(IOltSearcher<TEntity> searcher, TModel model) where TModel : class, new()
         {
-            var entity = await ServiceManager.AdapterResolver.Include<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefaultAsync();
+            var entity = await ServiceManager.AdapterResolver.ApplyBeforeMaps<TEntity, TModel>(GetQueryable(searcher)).FirstOrDefaultAsync();
             ServiceManager.AdapterResolver.Map(model, entity);
             await SaveChangesAsync();
             return await GetAsync<TModel>(searcher);
