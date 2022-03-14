@@ -8,7 +8,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OLT.Core.Services" Version="6.0.0-beta-0021" />
+		<PackageReference Include="OLT.Core.Services" Version="6.0.0-beta-0025" />
 	</ItemGroup>
 	
   <ItemGroup>
