@@ -135,15 +135,5 @@ namespace OLT.Core
         }        
 
 
-
-        public static bool IsProductionDb(this DbContext context, string searchFor)
-        {
-            return context.Database.GetConnectionString().Contains(searchFor, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsProductionDb(this DbContext context, OltConnectionStringTypes searchFor)
-        {
-            return IsProductionDb(context, searchFor.GetCodeEnum());
-        }
     }
 }
