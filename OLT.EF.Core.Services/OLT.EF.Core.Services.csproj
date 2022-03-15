@@ -9,8 +9,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OLT.DataAdapters" Version="6.0.0-beta-0026" />
-		<PackageReference Include="OLT.EF.Core" Version="6.0.0-beta-0026" />
+		<PackageReference Include="OLT.DataAdapters" Version="6.0.0-beta-0030" />
+		<PackageReference Include="OLT.EF.Core" Version="6.0.0-beta-0030" />
 	</ItemGroup>
 
 
