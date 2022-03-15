@@ -15,9 +15,6 @@ namespace OLT.Core
         /// Configures Default Assembly Scan along with the mentioned interfaces
         /// </summary>
         /// <remarks>
-        /// Adds <see cref="IOltLogService"/> as singletons
-        /// </remarks>
-        /// <remarks>
         /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
         /// </remarks>
         /// <param name="services"><seealso cref="IServiceCollection"/></param>
@@ -31,9 +28,6 @@ namespace OLT.Core
         /// <summary>
         /// Configures Default Assembly Scan along with the mentioned interfaces
         /// </summary>
-        /// <remarks>
-        /// Adds <see cref="IOltLogService"/> as singletons
-        /// </remarks>
         /// <remarks>
         /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
         /// </remarks>
@@ -49,9 +43,6 @@ namespace OLT.Core
         /// <summary>
         /// Scans <see cref="IOltInjectableScoped"/>, <see cref="IOltInjectableSingleton"/>, and <see cref="IOltInjectableTransient"/> to associated DI by name 
         /// </summary>
-        /// <remarks>
-        /// Adds <see cref="IOltLogService"/> as singletons
-        /// </remarks>
         /// <remarks>
         /// Adds <see cref="IOltDbAuditUser"/> to resolve to <see cref="IOltIdentity"/> as scoped
         /// </remarks>
@@ -75,7 +66,6 @@ namespace OLT.Core
                         .AddClasses(classes => classes.AssignableTo<IOltInjectableSingleton>())
                         .AsImplementedInterfaces()
                         .WithSingletonLifetime())
-                .AddSingleton<IOltLogService, OltLogService>()
                 .AddScoped<IOltDbAuditUser>(x => x.GetRequiredService<IOltIdentity>());
         }
     }

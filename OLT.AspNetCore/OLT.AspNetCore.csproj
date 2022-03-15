@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<!--<TargetFramework>net6.0</TargetFramework>-->
 		<RootNamespace>OLT.Core</RootNamespace>
 		<Description>OLT AspNetCore Library</Description>
 		<ProjectGuid>f7464890-ef2e-48cf-9ea0-3fed39757135</ProjectGuid>
@@ -13,7 +12,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-		<PackageReference Include="OLT.AspNetCore.Authentication" Version="6.0.0-beta-0025" />
+		<PackageReference Include="OLT.AspNetCore.Authentication" Version="6.0.0-beta-0030" />
 		<PackageReference Include="Scrutor" Version="4.0.0" />
 	</ItemGroup>
 

@@ -60,7 +60,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="MimeMapping" Version="1.0.1.37" />
     <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0025" />
+    <PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0030" />
+		<PackageReference Include="OLT.EF.Core.SqlServer" Version="6.0.0-beta-0030" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.TestCorrelator" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.3" />
@@ -79,12 +80,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLT.AspNetCore\OLT.AspNetCore.csproj" />
-    <ProjectReference Include="..\OLT.Builder.File\OLT.Builder.File.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.SeedHelpers.Csv\OLT.EF.Core.SeedHelpers.Csv.csproj" />
     <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
-    <ProjectReference Include="..\OLT.EF.Core.SqlServer\OLT.EF.Core.SqlServer.csproj" />
-    <ProjectReference Include="..\OLT.EF.Core\OLT.EF.Core.csproj" />
-    <ProjectReference Include="..\OLT.EPPlus\OLT.EPPlus.csproj" />
     <ProjectReference Include="..\OLT.Extensions.Configuration\OLT.Extensions.Configuration.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection.AutoMapper\OLT.Extensions.DependencyInjection.AutoMapper.csproj" />
     <ProjectReference Include="..\OLT.Extensions.DependencyInjection\OLT.Extensions.DependencyInjection.csproj" />

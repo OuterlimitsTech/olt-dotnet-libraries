@@ -30,7 +30,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
 
         public override string DefaultSchema => "Data";
         public override bool DisableCascadeDeleteConvention => true;
-        public override DefaultStringTypes DefaultStringType => DefaultStringTypes.Varchar;
+        public override OltContextStringTypes DefaultStringType => OltContextStringTypes.Varchar;
         protected override int IdentitySeed => 3100;
         protected override int IdentityIncrement => 1;
         public override bool ApplyGlobalDeleteFilter => true;
@@ -68,7 +68,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity
 
         public override string DefaultSchema => null;
         public override bool DisableCascadeDeleteConvention => false;
-        public override DefaultStringTypes DefaultStringType => DefaultStringTypes.NVarchar;
+        public override OltContextStringTypes DefaultStringType => OltContextStringTypes.NVarchar;
         protected override int IdentitySeed => 6780;
         protected override int IdentityIncrement => 5;
         public override bool ApplyGlobalDeleteFilter => false;
