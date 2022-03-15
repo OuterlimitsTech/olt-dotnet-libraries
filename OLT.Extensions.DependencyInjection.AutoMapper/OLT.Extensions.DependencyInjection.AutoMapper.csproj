@@ -10,7 +10,7 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Collection" Version="7.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-		<PackageReference Include="OLT.DataAdapters.AutoMapper" Version="6.0.0-beta-0025" />
+		<PackageReference Include="OLT.DataAdapters.AutoMapper" Version="6.0.0-beta-0026" />
 	</ItemGroup>
 
 	<ItemGroup>

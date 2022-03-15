@@ -11,7 +11,7 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
 {
     // ReSharper disable once InconsistentNaming
     [Table("People")]
-    public class PersonEntity : OltEntityIdDeletable, IOltInsertingRecord, IOltUpdatingRecord, IOltDeletingRecord, IOltEntityUniqueId
+    public class PersonEntity : OltEntityIdDeletable, IOltInsertingRecord, IOltUpdatingRecord, IOltEntityUniqueId
     {
         public Guid UniqueId { get; set; }
 
@@ -58,13 +58,6 @@ namespace OLT.Libraries.UnitTest.Assets.Entity.Models
         {
             ActionCode = "Update";
         }
-
-        public void DeletingRecord(IOltDbContext db, EntityEntry entityEntry)
-        {
-            DeletedOn = DateTimeOffset.Now;
-            DeletedBy = db.AuditUser;
-        }
-
 
         public static PersonEntity FakerEntity()
         {
