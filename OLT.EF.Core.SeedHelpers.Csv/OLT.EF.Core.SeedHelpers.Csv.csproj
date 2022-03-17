@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
-		<PackageReference Include="OLT.EF.Core" Version="6.0.0-beta-0030" />
+		<PackageReference Include="OLT.EF.Core" Version="6.0.0-beta-0035" />
   </ItemGroup>
 
 

@@ -112,38 +112,38 @@ namespace OLT.Libraries.UnitTest
                 //    optionsBuilder.UseInMemoryDatabase(databaseName: "test-db-2");
                 //})
 
-                .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
-                {
-                    //optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
-                    optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db-1;Integrated Security=True;");
-                    optionsBuilder.UseLazyLoadingProxies(false);
+                //.AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
+                //{
+                //    //optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
+                //    optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db-1;Integrated Security=True;");
+                //    optionsBuilder.UseLazyLoadingProxies(false);
 
-                    var options = optionsBuilder.Options as DbContextOptions<SqlDatabaseContext>;
-                    using (var context = new SqlDatabaseContext(options))
-                    {
-                        context.Database.EnsureDeleted();
-                    }
-                    using (var context = new SqlDatabaseContext(options))
-                    {
-                        context.Database.EnsureCreated();
-                    }
-                })
-                .AddDbContextPool<SqlDatabaseContext2>((serviceProvider, optionsBuilder) =>
-                {
+                //    var options = optionsBuilder.Options as DbContextOptions<SqlDatabaseContext>;
+                //    using (var context = new SqlDatabaseContext(options))
+                //    {
+                //        context.Database.EnsureDeleted();
+                //    }
+                //    using (var context = new SqlDatabaseContext(options))
+                //    {
+                //        context.Database.EnsureCreated();
+                //    }
+                //})
+                //.AddDbContextPool<SqlDatabaseContext2>((serviceProvider, optionsBuilder) =>
+                //{
 
-                    optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db-2;Integrated Security=True;");
-                    optionsBuilder.UseLazyLoadingProxies(false);
+                //    optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db-2;Integrated Security=True;");
+                //    optionsBuilder.UseLazyLoadingProxies(false);
 
-                    var options = optionsBuilder.Options as DbContextOptions<SqlDatabaseContext2>;
-                    using (var context = new SqlDatabaseContext2(options))
-                    {
-                        context.Database.EnsureDeleted();
-                    }
-                    using (var context = new SqlDatabaseContext2(options))
-                    {
-                        context.Database.EnsureCreated();
-                    }
-                })
+                //    var options = optionsBuilder.Options as DbContextOptions<SqlDatabaseContext2>;
+                //    using (var context = new SqlDatabaseContext2(options))
+                //    {
+                //        context.Database.EnsureDeleted();
+                //    }
+                //    using (var context = new SqlDatabaseContext2(options))
+                //    {
+                //        context.Database.EnsureCreated();
+                //    }
+                //})
                 .AddControllers();
         }
 

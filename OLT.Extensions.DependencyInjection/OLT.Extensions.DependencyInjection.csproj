@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scrutor" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OLT.EF.Core.Services\OLT.EF.Core.Services.csproj" />
+		<PackageReference Include="OLT.EF.Core.Services" Version="6.0.0-beta-0035" />
+		<PackageReference Include="Scrutor" Version="4.0.0" />		
   </ItemGroup>
 
 </Project>

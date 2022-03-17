@@ -1,9 +1,9 @@
-﻿using OLT.Core;
+﻿////using OLT.Core;
 
-namespace OLT.Libraries.UnitTest.Assets.Rules
-{
-    public interface IDoSomethingRuleDb : IOltRuleAction<DoSomethingRuleContextRequest>
-    {
+////namespace OLT.Libraries.UnitTest.Assets.Rules
+////{
+////    public interface IDoSomethingRuleDb : IOltRuleAction<DoSomethingRuleContextRequest>
+////    {
 
-    }
-}
+////    }
+////}
