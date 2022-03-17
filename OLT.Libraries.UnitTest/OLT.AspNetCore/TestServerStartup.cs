@@ -7,8 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OLT.Core;
-using OLT.Libraries.UnitTest.Assets.Entity;
-using OLT.Libraries.UnitTest.Assets.LocalServices;
 using OLT.Libraries.UnitTest.Assets.Models;
 
 namespace OLT.Libraries.UnitTest.OLT.AspNetCore
@@ -29,13 +27,13 @@ namespace OLT.Libraries.UnitTest.OLT.AspNetCore
             var jwtSecret = Guid.NewGuid().ToString().Replace("-", string.Empty);
 
             services
-                .AddOltAspNetCore(settings, this.GetType().Assembly, null)
-                .AddOltInjectionAutoMapper()
+                .AddOltAspNetCore(settings, this.GetType().Assembly, null);
+                //.AddOltInjectionAutoMapper()
                 //.AddScoped<IOltIdentity, OltUnitTestNullIdentity>()
-                .AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
-                {
-                    optionsBuilder.UseInMemoryDatabase(databaseName: $"TestServer_{Guid.NewGuid()}");
-                });
+                //.AddDbContextPool<SqlDatabaseContext>((serviceProvider, optionsBuilder) =>
+                //{
+                //    optionsBuilder.UseInMemoryDatabase(databaseName: $"TestServer_{Guid.NewGuid()}");
+                //});
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettingsDto> options)
