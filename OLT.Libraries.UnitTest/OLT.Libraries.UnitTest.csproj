@@ -60,9 +60,9 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="MimeMapping" Version="1.0.1.37" />
     <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0031" />
-		<PackageReference Include="OLT.EF.Core.SqlServer" Version="6.0.0-beta-0031" />
-		<PackageReference Include="OLT.EF.Core.Services" Version="6.0.0-beta-0031" />
+    <PackageReference Include="OLT.Core.Common" Version="6.0.0-beta-0035" />
+		<PackageReference Include="OLT.EF.Core.SqlServer" Version="6.0.0-beta-0035" />
+		<PackageReference Include="OLT.EF.Core.Services" Version="6.0.0-beta-0035" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.TestCorrelator" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.3" />

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-		<PackageReference Include="OLT.EF.Core.Services" Version="6.0.0-beta-0031" />
+		<PackageReference Include="OLT.EF.Core.Services" Version="6.0.0-beta-0035" />
 		<PackageReference Include="Scrutor" Version="4.0.0" />		
   </ItemGroup>
 
