@@ -1,6 +1,6 @@
 <img src="https://user-images.githubusercontent.com/1365728/127748628-47575d74-a2fb-4539-a31e-74d8b435fc21.png" width="30%" >
 
-## THIS REPO WAS MOVED TO AND REOGRANIZED
+## THIS REPO WAS MOVED AND REOGRANIZED
 
 https://github.com/OuterlimitsTech/olt-dotnet-core
 
